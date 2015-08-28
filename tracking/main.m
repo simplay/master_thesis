@@ -1,6 +1,6 @@
-img1 = imread('data/ldof/cars1_01.ppm');
+img1 = imread('../data/ldof/cars1_01.ppm');
 img1 =im2double(img1);
-img2 = imread('data/ldof/cars1_02.ppm');
+img2 = imread('../data/ldof/cars1_02.ppm');
 img2 =im2double(img2);
 
 [D1x,D1y] = mat2gradfield(img1(:,:,1));
