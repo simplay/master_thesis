@@ -39,7 +39,7 @@ function [ ew2_avg ] = avg_eigenvalue( img_x, img_y )
     end
     
     % avg of 2nd eigenvalue
-    ew2_avg = eigval_sum / (m*n)
+    ew2_avg = eigval_sum / (m*n);
 
 end
 

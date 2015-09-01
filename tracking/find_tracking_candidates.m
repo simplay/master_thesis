@@ -1,4 +1,4 @@
-function [ candidate_pixels ] = find_tracking_candidates( img1, sigma, eps )
+function [ candidate_pixels, mask ] = find_tracking_candidates( img1, sigma, scale )
 %FIND_TRACKING_CANDIDATES Summary of this function goes here
 %   Detailed explanation goes here
     
@@ -6,7 +6,7 @@ function [ candidate_pixels ] = find_tracking_candidates( img1, sigma, eps )
     [m,n, ~] = size(img1);    
 
     
-    g = fspecial('gaussian', 1);
+    g = fspecial('gaussian', sigma);
     
     
     dx = [-1 0 1; -1 0 1; -1 0 1];
@@ -28,8 +28,7 @@ function [ candidate_pixels ] = find_tracking_candidates( img1, sigma, eps )
     DY = mat2img(D1y,D2y,D3y);
     
     thresh = avg_eigenvalue(DX,DY);
-    [candidate_pixels, ~, ~] = harris3d(img1, 1, thresh, 1);
-
+    [candidate_pixels, mask,  ~, ~] = harris3d(img1, sigma, thresh*scale, 1);
 
 end
 

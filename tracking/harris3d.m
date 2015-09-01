@@ -33,13 +33,11 @@
 %
 % March 2002
 
-function [cim, r, c] = harris3d(im, sigma, thresh, radius)
-    
-    error(nargchk(2,5,nargin));
-    thresh = 0.5137;
-    [cim_r] = harris1d(im(:,:,1), sigma, thresh, radius);
-    [cim_g] = harris1d(im(:,:,2), sigma, thresh, radius);
-    [cim_b] = harris1d(im(:,:,3), sigma, thresh, radius);
+function [cim, mask, r, c] = harris3d(im, sigma, thresh, radius)
+   
+    [cim_r] = harris1d(im(:,:,1), sigma);
+    [cim_g] = harris1d(im(:,:,2), sigma);
+    [cim_b] = harris1d(im(:,:,3), sigma);
     
     cim = cim_r+cim_g+cim_b;
     
@@ -57,9 +55,8 @@ function [cim, r, c] = harris3d(im, sigma, thresh, radius)
 end
 
 
-function [cim] = harris1d(im, sigma, thresh, radius)
-    
-    error(nargchk(2,5,nargin));
+function [cim] = harris1d(im, sigma)
+   
     
     dx = [-1 0 1; -1 0 1; -1 0 1]; % Derivative masks
     dy = dx';
