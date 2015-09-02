@@ -39,13 +39,23 @@ function [ mask ] = flow_sanity_check( foreward_flow, backward_flow )
                 w_tilde = [u_tilde, v_tilde];
                 
                 if norm(w+w_tilde)^2 < 0.01*(norm(w)^2 + norm(w_tilde)^2)+0.5
-                    mask(x_t, y_t) = 1;
-                end
-                
-            end
-            
+                    if x_t+1 <= m && y_t+1 <= n
+                        u_next_x = fw_u_flow(x_t+1, y_t);
+                        u_next_y = fw_u_flow(x_t, y_t+1);
+                        v_next_x = fw_v_flow(x_t+1, y_t);
+                        v_next_y = fw_v_flow(x_t, y_t+1);
+                        
+                        grad_u2 = (u-u_next_x)^2 + (u-u_next_y)^2;
+                        grad_v2 = (v-v_next_x)^2 + (v-v_next_y)^2;
+                        
+                        if grad_u2 + grad_v2 <= 0.01*norm(w)^2 + 0.002
+                            mask(x_t, y_t) = 1;
+                        end
+                         
+                    end 
+                end 
+            end 
         end
     end
-    disp('foobar');
 end
 
