@@ -8,8 +8,8 @@ addpath('../libs/flow-code-matlab');
 
 FILTER_FOR_CANDIDATES = true;
 sigma = 1;
-thresh = 0.3;
-img_range = 4:4;
+thresh = 0.1;
+img_range = 1:1;
 
 %%
 
@@ -29,8 +29,8 @@ for base_img_idx=img_range,
     img1_filepath = [path,file,prefix,num2str(base_img_idx),format];
     img2_filepath = [path,file,prefix,num2str(base_img_idx+1),format];
 
-    foreward_flow_filepath = [path,file,'ForwardFlow00',num2str(base_img_idx),'.flo'];
-    backward_flow_filepath = [path,file,'BackwardFlow00',num2str(base_img_idx),'.flo'];
+    foreward_flow_filepath = [path,file,'ForwardFlow00',num2str(base_img_idx-1),'.flo'];
+    backward_flow_filepath = [path,file,'BackwardFlow00',num2str(base_img_idx-1),'.flo'];
 
     img1 = imread(img1_filepath);
     img1 =im2double(img1);
@@ -38,7 +38,7 @@ for base_img_idx=img_range,
     img2 =im2double(img2);
 
     if FILTER_FOR_CANDIDATES
-        variant = 2;
+        variant = 1;
         [pixel_values, pixel_mask] = find_tracking_candidates(img1, sigma, thresh, variant);
     end
     
@@ -60,7 +60,16 @@ for base_img_idx=img_range,
 
     %%
     dummy = zeros(m,n);
+    
+    vectors = mat2img(pm,dummy,dummy)+mat2img(dummy,dummy,other);
+    
     figure;
-    imshow(mat2img(pm,dummy,dummy)+mat2img(dummy,dummy,other));
+    imshow( (mat2img(pm,pm,pm) > 0).*mat2img(pm,pm,pm) + (1-(mat2img(pm,pm,pm) > 0)).*img1 )
+    
+    figure;
+    imshow( (mat2img(other,other,other) > 0).*mat2img(other,other,other) + (1-(mat2img(other,other,other) > 0)).*img2 )
+    
+    figure;
+    imshow(vectors);
     disp('red: features frame t AND blue: shift to same features in frame t + 1')
 end
