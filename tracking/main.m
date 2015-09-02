@@ -14,7 +14,7 @@ img_range = 4:4;
 %%
 
 path = '../data/ldof/';
-file = 'cars1_';
+file = 'cars1/';
 format = '.ppm';
 prefix = '0';
 
@@ -29,8 +29,8 @@ for base_img_idx=img_range,
     img1_filepath = [path,file,prefix,num2str(base_img_idx),format];
     img2_filepath = [path,file,prefix,num2str(base_img_idx+1),format];
 
-    foreward_flow_filepath = [path,'ForwardFlow00',num2str(base_img_idx),'.flo'];
-    backward_flow_filepath = [path,'BackwardFlow00',num2str(base_img_idx),'.flo'];
+    foreward_flow_filepath = [path,file,'ForwardFlow00',num2str(base_img_idx),'.flo'];
+    backward_flow_filepath = [path,file,'BackwardFlow00',num2str(base_img_idx),'.flo'];
 
     img1 = imread(img1_filepath);
     img1 =im2double(img1);
