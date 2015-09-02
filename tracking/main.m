@@ -8,7 +8,7 @@ addpath('../libs/flow-code-matlab');
 
 FILTER_FOR_CANDIDATES = true;
 sigma = 1;
-thresh = 0.1;
+thresh = 0.3;
 img_range = 4:4;
 
 %%
@@ -38,7 +38,8 @@ for base_img_idx=img_range,
     img2 =im2double(img2);
 
     if FILTER_FOR_CANDIDATES
-        [pixel_values, pixel_mask] = find_tracking_candidates(img1, sigma, thresh);
+        variant = 2;
+        [pixel_values, pixel_mask] = find_tracking_candidates(img1, sigma, thresh, variant);
     end
     
     optical_flow = readFlowFile(foreward_flow_filepath);

@@ -1,3 +1,4 @@
+% code-source: http://web.engr.illinois.edu/~slazebni/spring14/harris.m
 % HARRIS - Harris corner detector
 %
 % Usage:  [cim, r, c] = harris(im, sigma, thresh, radius, disp)
