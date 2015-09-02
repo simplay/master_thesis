@@ -4,19 +4,26 @@ close all;
 
 addpath('../libs/flow-code-matlab');
 
+%%
+
+FILTER_FOR_CANDIDATES = true;
 sigma = 1;
-thresh = 0.8;
+thresh = 0.1;
+img_range = 4:4;
 
-
-img_range = 1:2;
+%%
 
 path = '../data/ldof/';
 file = 'cars1_';
 format = '.ppm';
 prefix = '0';
 
-%
+%%
 
+img1_filepath = [path,file,prefix,num2str(1),format];
+dummyImg = imread(img1_filepath);
+[m,n,~] = size(dummyImg);
+pixel_mask = ones(m,n);
 for base_img_idx=img_range,
 
     img1_filepath = [path,file,prefix,num2str(base_img_idx),format];
@@ -25,15 +32,15 @@ for base_img_idx=img_range,
     foreward_flow_filepath = [path,'ForwardFlow00',num2str(base_img_idx),'.flo'];
     backward_flow_filepath = [path,'BackwardFlow00',num2str(base_img_idx),'.flo'];
 
-    dummyImg = imread(img1_filepath);
-    [m,n,~] = size(dummyImg);
-
     img1 = imread(img1_filepath);
     img1 =im2double(img1);
     img2 = imread(img2_filepath);
     img2 =im2double(img2);
 
-    [pixel_values, pixel_mask] = find_tracking_candidates(img1, sigma, thresh);
+    if FILTER_FOR_CANDIDATES
+        [pixel_values, pixel_mask] = find_tracking_candidates(img1, sigma, thresh);
+    end
+    
     optical_flow = readFlowFile(foreward_flow_filepath);
     backward_optical_flow = readFlowFile(backward_flow_filepath);
 
