@@ -5,12 +5,12 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
     [m,n] = size(fw_flow);
     
     % extract forward u,v flow
-    fw_u_flow = fw_flow(:,:,1);
-    fw_v_flow = fw_flow(:,:,2);
+    fw_u_flow = fw_flow(:,:,2);
+    fw_v_flow = fw_flow(:,:,1);
     
     % extract backward u,v flow
-    bw_u_flow = bw_flow(:,:,1);
-    bw_v_flow = bw_flow(:,:,2);
+    bw_u_flow = bw_flow(:,:,2);
+    bw_v_flow = bw_flow(:,:,1);
     
     % compute |du|^2 + |dv|^2 from fw flow.
     d_fw_u_flow = mat2gradfield(fw_u_flow);

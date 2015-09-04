@@ -7,8 +7,8 @@ function [ pixel_trackings, trackable_pixels, invalid_regions ] = perform_tracki
     
     [m,n,~] = size(img);
 
-    fw_u_flow = foreward_flow(:,:,1);
-    fw_v_flow = foreward_flow(:,:,2);
+    fw_u_flow = foreward_flow(:,:,2);
+    fw_v_flow = foreward_flow(:,:,1);
     
     % bw_u_flow = backward_flow(:,:,1);
     % bw_v_flow = backward_flow(:,:,2);
