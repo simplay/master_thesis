@@ -2,7 +2,7 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-    [m,n] = size(fw_flow);
+    [m,n, ~] = size(fw_flow);
     
     % extract forward u,v flow
     fw_u_flow = fw_flow(:,:,2);
@@ -48,8 +48,8 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
             b = (1.0-alpha_x)*bw_u_flow(x1,y2) + alpha_x*bw_u_flow(x2,y2);
             u = (1.0-alpha_y)*a + alpha_y*b;
             
-            a = (1.0-alpha_x)*bw_flow_v(x1,y1) + alpha_x*bw_v_flow(x2,y1);
-            b = (1.0-alpha_x)*bw_flow_v(x1,y2) + alpha_x*bw_v_flow(x2,y2);
+            a = (1.0-alpha_x)*bw_v_flow(x1,y1) + alpha_x*bw_v_flow(x2,y1);
+            b = (1.0-alpha_x)*bw_v_flow(x1,y2) + alpha_x*bw_v_flow(x2,y2);
             v = (1.0-alpha_y)*a + alpha_y*b;
             
             cx = bx + u;

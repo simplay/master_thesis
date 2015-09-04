@@ -28,8 +28,8 @@ function [ pixel_trackings, trackable_pixels, invalid_regions ] = perform_tracki
     %[~, candidate_indices] = find_tracking_candidates(img, sigma, thresh_scale, variant);
     [ tracking_candidates ] = findTrackingCandidates( img, step_size );
     % Check consistency of forward flow via backward flow: See paper
-    [ invalid_regions ] = flow_sanity_check( foreward_flow, backward_flow );
-
+    % [ invalid_regions ] = flow_sanity_check( foreward_flow, backward_flow );
+    [ invalid_regions ] = consistency_check( foreward_flow, backward_flow );
     trackable_pixels = tracking_candidates .* (1-invalid_regions);
     %imshow(mat2img(1-invalid_regions, candidate_indices, zeros(m,n)));
     %imshow(mat2img((1-invalid_regions),(1-invalid_regions),(1-invalid_regions)).*img);
