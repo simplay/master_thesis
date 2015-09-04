@@ -35,7 +35,7 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
             y2 = y1+1;
             
             % sanity check
-            if (x1 < 0 || x2 >= m || y1 < 0 || y2 >= n)
+            if (x1 <= 0 || x2 > m || y1 <= 0 || y2 > n)
                 unreliables(ax,ay) = 1.0;
                 continue;
             end
