@@ -17,13 +17,7 @@ function [ avg_eigenvalue, corners ] = computeCorners( img )
 % @return corners smallest eigenvalue for every pixel in the image
 
 %   Detailed explanation goes here
-        [m,n, ~] = size(img);    
-
-
-        
-
-
-
+        eps = 0.0;
 
         [D1x, D1y] = compute_smoothed_centraldiff(img(:,:,1));
         [D2x, D2y] = compute_smoothed_centraldiff(img(:,:,2));
@@ -49,8 +43,6 @@ function [ avg_eigenvalue, corners ] = computeCorners( img )
         
         % avoid taking square roots of negative numbers
         discrim = (discrim >= 0).*discrim;
-        eps = 0.001;
-        eps = 0.0;
         corners = base - sqrt(discrim);
         corners = corners .* (discrim >= 0);
         non_zeros = length(find(corners > eps));

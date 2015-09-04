@@ -3,6 +3,7 @@ function [ pixel_trackings, trackable_pixels, invalid_regions ] = perform_tracki
     sigma = 1;
     thresh_scale = 0.3;
     variant = 1;
+    step_size = 4;
     
     [m,n,~] = size(img);
 
@@ -25,7 +26,7 @@ function [ pixel_trackings, trackable_pixels, invalid_regions ] = perform_tracki
     % candidate_indices logical mxn matrix that indicates/hints pixels 
     % that depict good trackable candidates.
     %[~, candidate_indices] = find_tracking_candidates(img, sigma, thresh_scale, variant);
-    [ tracking_candidates ] = findTrackingCandidates( img, 1 );
+    [ tracking_candidates ] = findTrackingCandidates( img, step_size );
     % Check consistency of forward flow via backward flow: See paper
     [ invalid_regions ] = flow_sanity_check( foreward_flow, backward_flow );
 
