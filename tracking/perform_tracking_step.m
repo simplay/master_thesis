@@ -31,34 +31,6 @@ function [ pixel_trackings, trackable_pixels, invalid_regions ] = perform_tracki
     % [ invalid_regions ] = flow_sanity_check( foreward_flow, backward_flow );
     [ invalid_regions ] = consistency_check( foreward_flow, backward_flow );
     trackable_pixels = tracking_candidates .* (1-invalid_regions);
-    %imshow(mat2img(1-invalid_regions, candidate_indices, zeros(m,n)));
-    %imshow(mat2img((1-invalid_regions),(1-invalid_regions),(1-invalid_regions)).*img);
-% for ax=1:m,
-%     for ay=1:n,
-%         
-%         
-%         if trackable_pixels(ax,ay) == 0
-%             
-%         else
-% 
-% 
-%             bx = ax + fw_u_flow(ax,ay);
-%             by = ay + fw_v_flow(ax,ay);
-% 
-%             ibx = round(bx);
-%             iby = round(by);
-% 
-%             if (ibx <= 0 || iby <= 0 || ibx > m || iby > n)
-%                 % remeber that track has finished here
-%                 pixel_trackings(ax, ay, 2) = 1;
-%                 continue;
-%             else
-% 
-%                 pixel_trackings(ibx, iby, 1) = 1;
-%             end 
-%         end
-%     end
-% end
 
     %% tracking step
     % only iterate over trackable pixels
