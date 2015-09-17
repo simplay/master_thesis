@@ -4,13 +4,10 @@ close all;
 
 addpath('../libs/flow-code-matlab');
 
+step_size = 4;
 
 img1 = imread('../data/ldof/cars1/01.ppm');
 img2 = imread('../data/ldof/cars1/02.ppm');
-
-% img1 = imread('../data/teddy/im_001.png');
-% img2 = imread('../data/teddy/im_002.png');
-
 img1 =im2double(img1);
 img2 =im2double(img2);
 
@@ -23,7 +20,7 @@ backward_flow = readFlowFile('../data/ldof/cars1/BackwardFlow000.flo');
 % foreward_flow = readFlowFile('../data/teddy/fw001.flo');
 % backward_flow = readFlowFile('../data/teddy/bw001.flo');
 
-[ tracked_pixels, trackable_pixels, invalid_regions ] = perform_tracking_step(img1, foreward_flow, backward_flow);
+[ tracked_pixels, trackable_pixels, invalid_regions ] = perform_tracking_step(img1, foreward_flow, backward_flow, step_size);
 
 
 %%
