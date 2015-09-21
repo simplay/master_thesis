@@ -17,13 +17,17 @@ DISPLAY = true; % show tracking points
 % img2 = imread('../data/ldof/cars1/02.ppm');
 % foreward_flow = readFlowFile('../data/ldof/cars1/ForwardFlow000.flo');
 % backward_flow = readFlowFile('../data/ldof/cars1/BackwardFlow000.flo');
+
+[m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
+start_mask = zeros(m,n);
 for t=1:1,
     im_t = strcat(BASE_FILE_PATH,'0',num2str(t), IM_EXT);
     im_tp1 = strcat(BASE_FILE_PATH,'0',num2str(t+1), IM_EXT);
     fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
     bw_flow_t = strcat(BASE_FILE_PATH, 'BackwardFlow','00',num2str(t-1),'.flo');
-    [ tracked_pixels, trackable_pixels, invalid_regions ] = process_frame_pair( im_t, fw_flow_t, bw_flow_t, STEP_SIZE );
-    
+    [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
+        process_frame_pair( im_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask );
+    start_mask = old_start_mask;
     if DISPLAY
         display_tracking_figures(im_t, im_tp1, trackable_pixels, tracked_pixels);
     end

@@ -1,4 +1,4 @@
-function [ tracked_pixels, trackable_pixels, invalid_regions ] = process_frame_pair( frame_t, fw_flow_t, bw_flow_t, step_size )
+function [ tracked_pixels, trackable_pixels, invalid_regions, start_mask ] = process_frame_pair( frame_t, fw_flow_t, bw_flow_t, step_size, start_mask )
 %PROCESS_FRAME_PAIR Summary of this function goes here
 %   Detailed explanation goes here
 
