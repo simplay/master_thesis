@@ -13,56 +13,64 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
     % 3rd dimension denotes has track finished
     % track is supposed to be finished IFF label is > 0 AND
     % tracked_pixels(i,j,2) is 1
-    pixel_trackings = zeros(m,n,4);
+    pixel_trackings = zeros(m,n,5);
     
     
     
     % only iterate over trackable pixels
     [idx, idy, ~] = find(trackable_pixels == 1);
     for k = 1:length(idx),
+        
+        % tracked from positions
         ax = idx(k);
         ay = idy(k);
         
+        % real tracked to positions (floats)
         bx = ax + fw_u_flow(ax,ay);
         by = ay + fw_v_flow(ax,ay);
 
+        % tracked to positions (rounded)
         ibx = round(bx);
         iby = round(by);
+        
 
+        % keyboard;
+        
+        % case: tracked to out of image viewport
         if (ibx <= 0 || iby <= 0 || ibx > m || iby > n)
+            
             % remeber that track has finished here
+            % prev_tacked_pixels(ax, ay, 5) = 0;
+            continue;
+            
+            
+
+            
+            
+        % case: in viewport    
+        else
+            % case: working with tracking candidates
+            
+            % remember prev. position
+            pixel_trackings(ibx, iby, 3) = ax;
+            pixel_trackings(ibx, iby, 4) = ay;
+            
             if is_continuing_tracking
+
+                % use prev label that was assigned
                 prev_label_value = prev_tacked_pixels(ax, ay, 2);
+                pixel_trackings(ibx, iby, 2) = prev_label_value;
                 
-                % lookup coords sind falsch
-                pixel_trackings(ax, ay, 2) = prev_label_value; 
-                inc_global_label_idx
+                % mark track as continuing
+                pixel_trackings(ibx, iby, 5) = 1;
+            
+            % case: working with tracking candidates
             else
+                inc_global_label_idx;
                 label_value = get_global_label_idx;
-                pixel_trackings(ax, ay, 2) = label_value;   
+                pixel_trackings(ibx, iby, 2) = label_value;
             end
 
-            continue;
-        else
-            if is_continuing_tracking
-                % use prev label that was assigned
-                prev_idx = prev_tacked_pixels(ax, ay, 3);
-                prev_idy = prev_tacked_pixels(ax, ay, 4);
-                if prev_idx > 0 && prev_idy > 0
-                    % lookup coords sind nicht best?tigt
-                    prev_label_value = prev_tacked_pixels(prev_idx, prev_idy, 2);
-                    pixel_trackings(ax, ay, 2) = prev_label_value;
-                end
- 
-            else
-                inc_global_label_idx
-                label_value = get_global_label_idx;
-                pixel_trackings(ax, ay, 2) = label_value;
-                to_idx = ibx;
-                to_idy = iby;
-                pixel_trackings(ax, ay, 3) = to_idx;
-                pixel_trackings(ax, ay, 4) = to_idy;
-            end
             pixel_trackings(ibx, iby, 1) = 1;
         end 
     end

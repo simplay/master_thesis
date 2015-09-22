@@ -27,7 +27,7 @@ FRAME_END_IDX = 4; % for car example max 4
 
 [m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
 start_mask = ones(m,n);
-prev_tacked_pixels = zeros(m,n,4);
+prev_tacked_pixels = zeros(m,n,5);
 % initially, there are no tracked to positions
 tracked_to_positions = zeros(m,n);
 for t=START_END_IDX:FRAME_END_IDX,

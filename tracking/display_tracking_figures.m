@@ -7,7 +7,11 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         img2 =im2double(img2);
         
         img_title = strcat(num2str(t_idx), ' to ', num2str(tp1_idx));
-        keyboard;
+        % keyboard;
+        
+        % [pcidx, pcidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
+        % [cidx, cidy, ~] = find([cidx, cidy, ~](:,:,1) == 1);
+        
         %% trackable refers to points that can be tracked
         if mode >= 0
             figure('name', strcat('trackable points (blue) on 1st img ', img_title));
