@@ -1,4 +1,4 @@
-function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_flow, is_continuing_tracking)
+function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_flow, is_continuing_tracking, prev_tacked_pixels)
 %TRACK_POINTS Summary of this function goes here
 %   Detailed explanation goes here
 %   @param is_continuing_tracking [Boolean] true if track is continued

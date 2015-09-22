@@ -1,4 +1,4 @@
-function [ tracked_pixels, trackable_pixels, invalid_regions, start_mask ] = process_frame_pair( frame_t, fw_flow_t, bw_flow_t, step_size, start_mask, tracked_to_positions )
+function [ tracked_pixels, trackable_pixels, invalid_regions, start_mask ] = process_frame_pair( frame_t, fw_flow_t, bw_flow_t, step_size, start_mask, tracked_to_positions, prev_tacked_pixels )
 %PROCESS_FRAME_PAIR Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,7 +11,7 @@ img1 =im2double(img1);
 foreward_flow = readFlowFile(fw_flow_t);
 backward_flow = readFlowFile(bw_flow_t);
 
-[ tracked_pixels, trackable_pixels, invalid_regions, start_mask ] = perform_tracking_step(img1, foreward_flow, backward_flow, step_size, start_mask, tracked_to_positions);
+[ tracked_pixels, trackable_pixels, invalid_regions, start_mask ] = perform_tracking_step(img1, foreward_flow, backward_flow, step_size, start_mask, tracked_to_positions, prev_tacked_pixels);
 
 
 end

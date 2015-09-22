@@ -27,7 +27,7 @@ FRAME_END_IDX = 4; % for car example max 4
 
 [m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
 start_mask = ones(m,n);
-
+prev_tacked_pixels = zeros(m,n,4);
 % initially, there are no tracked to positions
 tracked_to_positions = zeros(m,n);
 for t=START_END_IDX:FRAME_END_IDX,
@@ -36,9 +36,10 @@ for t=START_END_IDX:FRAME_END_IDX,
     fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
     bw_flow_t = strcat(BASE_FILE_PATH, 'BackwardFlow','00',num2str(t-1),'.flo');
     [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
-        process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions );
+        process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels);
     start_mask = old_start_mask;
     tracked_to_positions = tracked_pixels(:,:,1);
+    prev_tacked_pixels = tracked_pixels;
     t_idx = t; tp1_idx = t+1;
     if DISPLAY
         display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE);
