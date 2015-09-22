@@ -37,12 +37,15 @@ for t=START_END_IDX:FRAME_END_IDX,
     bw_flow_t = strcat(BASE_FILE_PATH, 'BackwardFlow','00',num2str(t-1),'.flo');
     [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
         process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels);
+
+    t_idx = t; tp1_idx = t+1;
+    if DISPLAY
+        display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE, prev_tacked_pixels);
+    end
+    
+    % overwrite data after having plotted them
     start_mask = old_start_mask;
     tracked_to_positions = tracked_pixels(:,:,1);
     prev_tacked_pixels = tracked_pixels;
-    t_idx = t; tp1_idx = t+1;
-    if DISPLAY
-        display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE);
-    end
 end
 

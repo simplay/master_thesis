@@ -32,6 +32,10 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
         if (ibx <= 0 || iby <= 0 || ibx > m || iby > n)
             % remeber that track has finished here
             if is_continuing_tracking
+                prev_label_value = prev_tacked_pixels(ax, ay, 2);
+                
+                % lookup coords sind falsch
+                pixel_trackings(ax, ay, 2) = prev_label_value; 
                 inc_global_label_idx
             else
                 label_value = get_global_label_idx;
@@ -42,10 +46,22 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
         else
             if is_continuing_tracking
                 % use prev label that was assigned
+                prev_idx = prev_tacked_pixels(ax, ay, 3);
+                prev_idy = prev_tacked_pixels(ax, ay, 4);
+                if prev_idx > 0 && prev_idy > 0
+                    % lookup coords sind nicht best?tigt
+                    prev_label_value = prev_tacked_pixels(prev_idx, prev_idy, 2);
+                    pixel_trackings(ax, ay, 2) = prev_label_value;
+                end
+ 
             else
                 inc_global_label_idx
                 label_value = get_global_label_idx;
-                pixel_trackings(ax, ay, 2) = label_value; 
+                pixel_trackings(ax, ay, 2) = label_value;
+                to_idx = ibx;
+                to_idy = iby;
+                pixel_trackings(ax, ay, 3) = to_idx;
+                pixel_trackings(ax, ay, 4) = to_idy;
             end
             pixel_trackings(ibx, iby, 1) = 1;
         end 
