@@ -8,7 +8,7 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         img2 =im2double(img2);
         
         img_title = strcat(num2str(t_idx), ' to ', num2str(tp1_idx));
-        keyboard;
+        % keyboard;
         
         % [pcidx, pcidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
         % [cidx, cidy, ~] = find([cidx, cidy, ~](:,:,1) == 1);
@@ -16,33 +16,40 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         if mode == 5 && t_idx > 1
             % find all cont. tracks
             [ccidx, ccidy, ~] = find(tracked_pixels(:,:,5) == 1);
-            keyboard;
+
             figure('name', 'foobar');
-            imshow(img2);
+            imshow(img1);
             hold on;
-            [cidx, cidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
-            [tidx, tidy, ~] = find(tracked_pixels(:,:,1) == 1);
-            plot(tidy, tidx, '.r')
-            plot(cidy, cidx, '.b')
+
             hold on
+            % keyboard
             for k=1:8:length(ccidx)
                 x0 = tracked_pixels(ccidx(k),ccidy(k),3);
                 y0 = tracked_pixels(ccidx(k),ccidy(k),4);
                 x1 = ccidx(k);
                 y1 = ccidy(k);
-                x = [x0 x1];
-                y = [y0 y1];
-                if abs(1-tracked_pixels(ccidx(k),ccidy(k),1)) > 0
-                    disp('error QQ');
+                x = [x1, x0 ];
+                y = [y1, y0];
+                
+                if tracked_pixels(x1, y1, 1) == 1 ...
+                    && prev_tacked_pixels(x0, y0, 1) == 1 ...
+                    && tracked_pixels(x1, y1, 2) == prev_tacked_pixels(x0, y0, 2)
+                    plot(x0, y0, '.r')
+                    plot(x1, y1, '.b')
+                    drawArrow(x,y);
+                    hold on
                 end
-                drawArrow(x,y);
-                hold on
+                
+                
+
             end
 
             
             return;
         end
-        
+        if (mode == 5)
+            return;
+        end
         
         %% trackable refers to points that can be tracked
         if mode >= 0
