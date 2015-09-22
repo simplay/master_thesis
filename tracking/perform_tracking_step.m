@@ -22,6 +22,7 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     pixel_trackings_from_known = track_points(tracked_to_positions, fw_u_flow, fw_v_flow, true, prev_tacked_pixels);
     
     %% no overlapping pixels
+    % TODO: simplify this
     same_tracked_to_pixels = pixel_trackings_from_disocclusion(:,:,1).*pixel_trackings_from_known(:,:,1);
     same_tracked_to_pixels = 1 - same_tracked_to_pixels;
     pixel_trackings_from_disocclusion(:,:,1) = pixel_trackings_from_disocclusion(:,:,1).*same_tracked_to_pixels;
@@ -31,10 +32,7 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     pixel_trackings_from_disocclusion(:,:,5) = pixel_trackings_from_disocclusion(:,:,5).*same_tracked_to_pixels;
     
     
-    
-    
-    
-    
+
     
     pixel_trackings = pixel_trackings_from_disocclusion + pixel_trackings_from_known;
 

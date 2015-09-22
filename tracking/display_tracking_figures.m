@@ -1,45 +1,50 @@
 function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, mode, prev_tacked_pixels)
 %DISPLAY_TRACKING_FIGURES Summary of this function goes here
 %   Detailed explanation goes here
+        BASE_FILE_PATH = '../data/ldof/cars1/'; % dataset that should be used
+        IM_EXT = '.ppm'; % input img file extension
         drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1),y(2)-y(1),0 ); 
         img1 = imread(im_t);
         img2 = imread(im_tp1);
         img1 =im2double(img1);
         img2 =im2double(img2);
-        [m,n,~] = size(img2);
         img_title = strcat(num2str(t_idx), ' to ', num2str(tp1_idx));
-        % keyboard;
-        
-        % [pcidx, pcidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
-        % [cidx, cidy, ~] = find([cidx, cidy, ~](:,:,1) == 1);
-        keyboard;
+        img_title2 = strcat(num2str(t_idx-1), ' to ', num2str(t_idx));
+
         if mode == 5 && t_idx > 1
+            frame_t = strcat(BASE_FILE_PATH,'0',num2str(t_idx-1), IM_EXT);
+            tm1_img = imread(frame_t);
+            tm1_img =im2double(tm1_img); % from image next is img1
+            
             % find all cont. tracks
             [ccidx, ccidy, ~] = find(tracked_pixels(:,:,5) == 1);
             [ccnidx, ccnidy, ~] = find(tracked_pixels(:,:,5) == 0 & tracked_pixels(:,:,1) == 1);
-            figure('name', 'foobar');
-            imshow(img1);
+            figure('name', strcat('showing from img: ', img_title2));
+            display('green: new started tracking point');
+            display('blaue: from point');
+            display('red: to point');
+            imshow(tm1_img);
             hold on;
             
             % plot all new starting track positions in green.
             plot(ccnidy,ccnidx, '.g')
 
             hold on
-            for k=1:1:length(ccidx)
+            for k=1:8:length(ccidx)
                 % keyboard;
                 x0 = tracked_pixels(ccidx(k),ccidy(k),3);
                 y0 = tracked_pixels(ccidx(k),ccidy(k),4);
                 x1 = ccidx(k);
                 y1 = ccidy(k);
-                y = [x1, x0 ];
-                x = [y1, y0];
+                x = [x1, x0];
+                y = [y1, y0];
   
                 if tracked_pixels(x1, y1, 1) == 1 ...
                     && prev_tacked_pixels(x0, y0, 1) == 1
                     if tracked_pixels(x1, y1, 2) == prev_tacked_pixels(x0, y0, 2)
                         plot(y0,x0, '.r')
                         plot(y1,x1, '.b')
-                        drawArrow(x,y);
+                        drawArrow(y,x);
                     end
                     hold on
                 end
