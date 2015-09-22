@@ -13,20 +13,28 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         % [pcidx, pcidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
         % [cidx, cidy, ~] = find([cidx, cidy, ~](:,:,1) == 1);
         
-        if mode == 5
+        if mode == 5 && t_idx > 1
             % find all cont. tracks
             [ccidx, ccidy, ~] = find(tracked_pixels(:,:,5) == 1);
-            
+            keyboard;
             figure('name', 'foobar');
             imshow(img2);
             hold on;
-            for k=1:4:length(ccidx)
+            [cidx, cidy, ~] = find(prev_tacked_pixels(:,:,1) == 1);
+            [tidx, tidy, ~] = find(tracked_pixels(:,:,1) == 1);
+            plot(tidy, tidx, '.r')
+            plot(cidy, cidx, '.b')
+            hold on
+            for k=1:8:length(ccidx)
                 x0 = tracked_pixels(ccidx(k),ccidy(k),3);
                 y0 = tracked_pixels(ccidx(k),ccidy(k),4);
                 x1 = ccidx(k);
                 y1 = ccidy(k);
                 x = [x0 x1];
                 y = [y0 y1];
+                if abs(1-tracked_pixels(ccidx(k),ccidy(k),1)) > 0
+                    disp('error QQ');
+                end
                 drawArrow(x,y);
                 hold on
             end
@@ -59,6 +67,8 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
             figure('name', strcat('blue: trackable points, red: tracked to points', img_title));
             imshow(img2);
             hold on;
+            [cidx, cidy, ~] = find(trackable_pixels(:,:,1) == 1);
+            [tidx, tidy, ~] = find(tracked_pixels(:,:,1) == 1);
             plot(tidy, tidx, '.r')
             plot(cidy, cidx, '.b')
         end

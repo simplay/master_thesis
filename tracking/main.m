@@ -12,7 +12,7 @@ STEP_SIZE = 8; % tracking density
 BASE_FILE_PATH = '../data/ldof/cars1/'; % dataset that should be used
 IM_EXT = '.ppm'; % input img file extension
 DISPLAY = true; % show tracking points
-MODE = 1; % display mode
+MODE = 5; % display mode
 START_END_IDX = 1; % inital index 1
 FRAME_END_IDX = 4; % for car example max 4
 
