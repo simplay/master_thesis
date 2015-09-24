@@ -3,21 +3,22 @@ classdef Point
     %   Detailed explanation goes here
     
     properties
-        x % from x coordinate
-        y % from y coordinate
-        x_next % to x coordinate
-        y_next % to y coordinate
-        u_fw % u component fw flow
-        v_fw % v component fw flow
-        u_by % u component bw flow
-        v_bw % v component bw flow
-        
+        ax  % frame t:   x coordinate
+        ay  % frame t:   y coordinate
+        bx  % frame t+1: x coordinate
+        by  % frame t+1: y coordinate
+        ibx % frame t+1: x coordinate (rounded)
+        iby % frame t+1: y coordinate (rounded)
     end
     
     methods
-        function obj = Point(x,y, x_n, y_n, )
-            obj.x = x;
-            obj.y = y;
+        function obj = Point(ax, ay, bx, by, ibx, iby)
+            obj.ax = ax;
+            obj.ay = ay;
+            obj.bx = bx;
+            obj.by = by;
+            obj.ibx = ibx;
+            obj.iby = iby;
         end
     end
     
