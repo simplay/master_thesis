@@ -1,3 +1,4 @@
 *.m~
 tags
 .DS_Store
+output/**/*.txt

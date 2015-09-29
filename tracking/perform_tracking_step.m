@@ -3,6 +3,10 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     fw_u_flow = foreward_flow(:,:,2);
     fw_v_flow = foreward_flow(:,:,1);
     
+    
+    bw_u_flow = backward_flow(:,:,2);
+    bw_v_flow = backward_flow(:,:,1);
+    
     % candidate_indices logical mxn matrix that indicates/hints pixels 
     % that depict good trackable candidates.
     [ tracking_candidates ] = findTrackingCandidates( img, step_size );
@@ -17,9 +21,9 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     trackable_pixels = tracking_candidates .* (1-invalid_regions);
     %keyboard;
     % tracking step
-    pixel_trackings_from_disocclusion = track_points(trackable_pixels, fw_u_flow, fw_v_flow, false, prev_tacked_pixels);
+    pixel_trackings_from_disocclusion = track_points(trackable_pixels, fw_u_flow, fw_v_flow, false, prev_tacked_pixels, bw_u_flow, bw_v_flow);
     % similar as tracking step but for prev.trackings.
-    pixel_trackings_from_known = track_points(tracked_to_positions, fw_u_flow, fw_v_flow, true, prev_tacked_pixels);
+    pixel_trackings_from_known = track_points(tracked_to_positions, fw_u_flow, fw_v_flow, true, prev_tacked_pixels, bw_u_flow, bw_v_flow);
     
     %% no overlapping pixels
     % TODO: simplify this

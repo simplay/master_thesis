@@ -12,9 +12,10 @@ STEP_SIZE = 4; % tracking density
 BASE_FILE_PATH = '../data/ldof/cars1/'; % dataset that should be used
 IM_EXT = '.ppm'; % input img file extension
 DISPLAY = true; % show tracking points
-MODE = 5; % display mode
+MODE = 0; % display mode
 START_FRAME_IDX = 1; % inital index 1
 END_FRAME_IDX = 2; % for car example max 4
+WRITE_TRACKINGS_INTO_FILES = true;
 
 %% working example
 % fix naming of files: since image naming indices start counting by 1 and
@@ -27,7 +28,7 @@ END_FRAME_IDX = 2; % for car example max 4
 
 [m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
 start_mask = ones(m,n);
-prev_tacked_pixels = zeros(m,n,5);
+prev_tacked_pixels = zeros(m,n,7);
 % initially, there are no tracked to positions
 tracked_to_positions = zeros(m,n);
 for t=START_FRAME_IDX:END_FRAME_IDX,
@@ -38,6 +39,12 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
         process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels);
 
+    
+    % write data into file
+    if WRITE_TRACKINGS_INTO_FILES
+        write_flow_data(tracked_pixels,t);
+    end
+    
     t_idx = t; tp1_idx = t+1;
     if DISPLAY
         display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE, prev_tacked_pixels);

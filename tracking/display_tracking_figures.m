@@ -17,8 +17,8 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
             tm1_img =im2double(tm1_img); % from image next is img1
             
             % find all cont. tracks
-            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,5) == 1);
-            [ccnidx, ccnidy, ~] = find(tracked_pixels(:,:,5) == 0 & tracked_pixels(:,:,1) == 1);
+            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,7) == 1);
+            [ccnidx, ccnidy, ~] = find(tracked_pixels(:,:,7) == 0 & tracked_pixels(:,:,1) == 1);
             figure('name', strcat('showing from img: ', img_title2));
             display('green: new started tracking point');
             display('blaue: from point');
@@ -34,14 +34,16 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
                 % keyboard;
                 x0 = tracked_pixels(ccidx(k),ccidy(k),3);
                 y0 = tracked_pixels(ccidx(k),ccidy(k),4);
-                x1 = ccidx(k);
-                y1 = ccidy(k);
+                x1 = tracked_pixels(ccidx(k),ccidy(k),5);
+                y1 = tracked_pixels(ccidx(k),ccidy(k),6);
+                idx = ccidx(k);
+                idy = ccidy(k);
                 x = [x1, x0];
                 y = [y1, y0];
   
-                if tracked_pixels(x1, y1, 1) == 1 ...
+                if tracked_pixels(idx, idy, 1) == 1 ...
                     && prev_tacked_pixels(x0, y0, 1) == 1
-                    if tracked_pixels(x1, y1, 2) == prev_tacked_pixels(x0, y0, 2)
+                    if tracked_pixels(idx, idy, 2) == prev_tacked_pixels(x0, y0, 2)
                         plot(y0,x0, '.r')
                         plot(y1,x1, '.b')
                         drawArrow(y,x);
