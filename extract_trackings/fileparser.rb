@@ -12,22 +12,26 @@ class Fileparser
     @tm = TrajectoryManager.new
     $run_debug_mode = mode
     @filepath = filepath
+    parse
   end
 
   def parse
-    file_count = 0
+    @file_count = 0
     Dir.foreach(@filepath) do |filename|
       # skip hidden files
       next if filename =~ /^\..*/
-      puts "parsing file #{filename.to_s}..."
+      puts "parsing file #{filename.to_s}..." if $run_debug_mode
       File.open(@filepath+filename, "r") do |file|
         file_id = filename.split("_").last.split(".txt").first.to_i
         parse_file_lines(file, file_id)
-        file_count = file_count + 1
+        @file_count = @file_count + 1
       end
-      puts "finished parsing file #{filename}"
+      puts "finished parsing file #{filename}" if $run_debug_mode
     end
-    output_filename = @filepath.split("/").last+"_fc_#{file_count}"
+  end
+
+  def write_file
+    output_filename = @filepath.split("/").last+"_fc_#{@file_count}"
     puts "writing trajectory file ..."
     filename = "#{OUT_PATH}traj_out_#{output_filename}.txt"
     generate_trajectory_file(filename)
@@ -41,7 +45,7 @@ class Fileparser
   end
 
   def perform_trajectory_sanity_check
-
+    @tm.trajectories.values.all? &:points_ok?
   end
 
   # TRACKED = 0;

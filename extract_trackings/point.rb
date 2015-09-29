@@ -1,5 +1,7 @@
 class Point
 
+  attr_reader :ax, :ay, :bx, :by
+
   # @param point_data [Array] Float values
   #   point_data[0] is from x component
   #   point_data[1] is from y component
