@@ -2,7 +2,7 @@ class Trajectory
 
   # @param start_frame [Integer] number of frame this trajectory starts at.
   # @param label [Integer] label of points this trajectory belongs to.
-  def initialize(start_frame, label, is_debug=$RUN_DEBUG_MODE)
+  def initialize(start_frame, label, is_debug=$run_debug_mode)
     @points = []
     @start_frame = start_frame
     @label = label

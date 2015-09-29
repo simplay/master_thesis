@@ -5,7 +5,7 @@ class Point
   #   point_data[1] is from y component
   #   point_data[2] is to x component
   #   point_data[3] is to y component
-  def initialize(point_data, is_debug=$RUN_DEBUG_MODE)
+  def initialize(point_data, is_debug=$run_debug_mode)
     @ax = point_data[0]
     @ay = point_data[1]
     @bx = point_data[2]
