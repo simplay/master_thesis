@@ -22,4 +22,8 @@ class TrajectoryManager
     @trajectories[label] = trajectory
   end
 
+  def to_s
+    @trajectories.values.map {|traj| traj.to_s + "\n"}.join
+  end
+
 end
