@@ -5,15 +5,21 @@ class Point
   #   point_data[1] is from y component
   #   point_data[2] is to x component
   #   point_data[3] is to y component
-  def initialize(point_data)
+  def initialize(point_data, is_debug=$RUN_DEBUG_MODE)
     @ax = point_data[0]
     @ay = point_data[1]
     @bx = point_data[2]
     @by = point_data[3]
+    @is_debug = is_debug
   end
 
   def to_s
-    "#{@ax} #{@ay} #{@bx} #{@by}"
+    delimiter = (@is_debug)? " " : "\n"
+    "#{@ax} #{@ay}#{delimiter}#{@bx} #{@by} \n"
+  end
+
+  def collapsed_to_s
+    "#{@bx} #{@by} \n"
   end
 
 end

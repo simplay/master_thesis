@@ -5,6 +5,7 @@ require 'pry'
 class Fileparser
 
   OUT_PATH = "../output/trajectories/"
+  $RUN_DEBUG_MODE = false
 
   # @param filepath [String] path to target tracking files.
   def initialize(filepath)

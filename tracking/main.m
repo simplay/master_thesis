@@ -15,7 +15,7 @@ IM_EXT = '.ppm'; % input img file extension
 DISPLAY = true; % show tracking points
 MODE = 0; % display mode
 START_FRAME_IDX = 1; % inital index 1
-END_FRAME_IDX = 2; % for car example max 4
+END_FRAME_IDX = 4; % for car example max 4
 WRITE_TRACKINGS_INTO_FILES = true;
 
 %% working example
