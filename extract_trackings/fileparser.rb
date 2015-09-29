@@ -4,9 +4,12 @@ require 'pry'
 
 class Fileparser
 
+  OUT_PATH = "../output/trajectories/"
+
   # @param filepath [String] path to target tracking files.
   def initialize(filepath)
     @tm = TrajectoryManager.new
+    file_count = 0
     Dir.foreach(filepath) do |filename|
       # skip hidden files
       next if filename =~ /^\..*/
@@ -14,9 +17,20 @@ class Fileparser
       File.open(filepath+filename, "r") do |file|
         file_id = filename.split("_").last.split(".txt").first.to_i
         parse_file_lines(file, file_id)
+        file_count = file_count + 1
       end
       puts "finished parsing file #{filename}"
-      binding.pry
+    end
+    output_filename = filepath.split("/").last+"_fc_#{file_count}"
+    puts "writing trajectory file ..."
+    filename = "#{OUT_PATH}traj_out_#{output_filename}.txt"
+    generate_trajectory_file(filename)
+    puts "wrote trajectories into file #{filename}"
+  end
+
+  def generate_trajectory_file(name)
+    File.open(name, 'w') do |file|
+      file.write(@tm.to_s)
     end
   end
 

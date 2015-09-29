@@ -27,7 +27,7 @@ class Trajectory
 
   def to_s
     header = "### L:#{label} S:#{start_frame} C:#{count} \n"
-    header + @points.map {|point| point.to_s + "\n"}.join
+    header + @points.map {|point| point.to_s + "\n"}.join.rstrip
   end
 
 end

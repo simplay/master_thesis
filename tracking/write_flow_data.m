@@ -1,4 +1,4 @@
-function write_flow_data(data, idx)
+function write_flow_data(data, idx, output_dir)
 %WRITE_FLOW_DATA Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -20,7 +20,7 @@ function write_flow_data(data, idx)
     %         10    11    12
     D = reshape(data, [m*n,k]);
     
-    fName = strcat('../output/trackings/tracking_t_',num2str(idx),'.txt');
+    fName = strcat('../output/trackings/',output_dir,'tracking_t_',num2str(idx),'.txt');
     fid = fopen(fName,'w');
     if fid ~= -1
         for k=1:m*n

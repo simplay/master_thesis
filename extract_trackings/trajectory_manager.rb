@@ -23,7 +23,7 @@ class TrajectoryManager
   end
 
   def to_s
-    @trajectories.values.map {|traj| traj.to_s + "\n"}.join
+    @trajectories.values.map {|traj| traj.to_s + "\n"}.join.rstrip
   end
 
 end
