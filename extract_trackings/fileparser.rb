@@ -1,6 +1,5 @@
 require_relative 'trajectory_manager'
 require_relative 'point'
-require 'pry'
 
 class Fileparser
 
