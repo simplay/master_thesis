@@ -57,3 +57,23 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     prev_tacked_pixels = tracked_pixels;
 end
 
+%% compute global variance
+global_variances = [];
+for t=START_FRAME_IDX:END_FRAME_IDX+1
+    fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
+    fw_flow = readFlowFile(fw_flow_t);
+    global_variances = [global_variances, var(fw_flow(:))];
+end
+fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
+fid = fopen(fName,'w');
+if fid ~= -1
+    for k=1:length(global_variances)
+     row_k = global_variances(k);
+
+     % print only tracked pixels locations
+     if row_k(1) ~= 0
+        fprintf(fid,'%s\r\n',num2str(row_k));
+     end
+    end    
+    fclose(fid);
+end

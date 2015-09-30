@@ -1,5 +1,6 @@
 require 'pry'
 require_relative 'point'
+require_relative 'flow_variance'
 
 class SimilarityMatrix
 
@@ -80,7 +81,7 @@ class SimilarityMatrix
   # perform lookup in appropriate sigma value frame.
   # TODO implement me
   def sigma_t_at(frame_idx)
-    1
+    FlowVariance.at_frame(frame_idx)
   end
 
   # implementation of formula 3

@@ -1,11 +1,12 @@
 require_relative 'trajectory_manager'
 require_relative 'point'
 require_relative 'similarity_matrix'
+require_relative 'flow_variance'
 require 'pry'
 
 class Fileparser
 
-  OUT_PATH = "../output/trajectories/"
+  OUT_PATH = "../output/trackings/"
   RUN_DEBUG_MODE = false
 
   # @param filepath [String] path to target tracking files.
@@ -14,6 +15,8 @@ class Fileparser
     @sim_mat = SimilarityMatrix.new(@tm)
     @filepath = filepath
     parse
+    dataset = filepath.split("out_").last.split("_").first
+    FlowVariance.build(OUT_PATH+dataset+"/"+"global_variances.txt")
     @sim_mat.to_mat
   end
 
