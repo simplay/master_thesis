@@ -1,6 +1,11 @@
 require 'pry'
+require_relative 'point'
 
 class SimilarityMatrix
+
+  # see: segmentation of moving objects, section 4.
+  LAMBDA = 0.1
+
   def initialize(tracking_manager)
     @tm = tracking_manager
   end
@@ -11,11 +16,20 @@ class SimilarityMatrix
 
   private
 
+  def trajectories
+    @tm.trajectories.first(200)
+  end
+
+  # @todo: REMOVE the first(200) from @tm.trajectories.first(200)
+  #   is used for debugging purposes.
   def traverse_all_pairs
     count = 0
-    @tm.trajectories.each do |a|
-      @tm.trajectories.each do |b|
-        similarity(a,b)
+    trs = trajectories
+    trs.each do |a|
+      trs.each do |b|
+        value = similarity(a,b)
+        a.append_similarity(b.label, value)
+        b.append_similarity(a.label, value)
       end
       count = count + 1
       puts "progress: #{(count*@tm.count/(@tm.count**2).to_f)*100}%" if count % 20 == 0
@@ -35,8 +49,49 @@ class SimilarityMatrix
     # find earliest end frame of trajectory pair
     min_max_frame = [a,b].map(&:end_frame).min
 
-    d_sp_a_b = avg_spatial_distance_between(a, b, max_min_frame, min_max_frame)
+    # set them correctly
+    binding.pry
+    d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    d_t_a_b = d2_t_a_b.map {|item| Math.sqrt(item)}
+    d2_a_b = d_t_a_b.max
+    w_a_b = Math.exp(-LAMBDA*d2_a_b)
+  end
 
+  def temporal_distances_between(a, b, lower_idx, upper_idx)
+    return [] if upper_idx-lower_idx == -1
+    d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
+    common_frame_count = upper_idx-lower_idx+1
+    (lower_idx..upper_idx).map do |idx|
+
+      # compute foreward diff over T for A,B
+      dt_A = foreward_differece_on(a, common_frame_count, idx)
+      dt_B = foreward_differece_on(b, common_frame_count, idx)
+      dt_AB = dt_A.sub(dt_B).length_squared
+
+      # TODO: compute these values
+      sigma_t = sigma_t_at(idx)
+
+      # formula 4
+      d_sp_a_b*(dt_AB/(sigma_t**2))
+      # do something here
+    end
+  end
+
+  # perform lookup in appropriate sigma value frame.
+  # TODO implement me
+  def sigma_t_at(frame_idx)
+    1
+  end
+
+  # @todo: implement me
+  # implementation of formula 3
+  def foreward_differece_on(trajectory, common_frame_count, idx)
+    t = [common_frame_count, 5].min-1
+    p_i = trajectory.point_at(idx)
+    p_i_pl_t = trajectory.point_at(idx+t)
+    p = p_i_pl_t.copy.sub(p_i)
+    c = common_frame_count.to_f
+    Point.new([p.x/c,p.y/c])
   end
 
   # compute the average spatial distance between all overlapping points of two given

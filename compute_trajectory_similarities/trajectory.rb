@@ -6,10 +6,15 @@ class Trajectory
     @points = []
     @start_frame = start_frame
     @label = label
+    @similarities = {}
   end
 
   def label
     @label
+  end
+
+  def append_similarity(other_label, value)
+    @similarities[other_label] = value
   end
 
   def start_frame
@@ -25,7 +30,18 @@ class Trajectory
   # first frame is supposed to denote the index 0
   def point_at(frame_idx)
     idx = frame_idx - start_frame
-    @points[idx]
+    if idx >= count
+      boundary_value
+    else
+      @points[idx]
+    end
+  end
+
+  # replicate boundary value
+  # @todo: check validity of this assumption
+  #   maybe return 0
+  def boundary_value
+    @points[count-1]
   end
 
   # @return number of points contained in trajectory
