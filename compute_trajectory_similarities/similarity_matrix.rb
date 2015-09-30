@@ -49,9 +49,9 @@ class SimilarityMatrix
     # find earliest end frame of trajectory pair
     min_max_frame = [a,b].map(&:end_frame).min
 
-    # set them correctly
-    binding.pry
+    # Compute affinities w(A,B)
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    return 0.0 if d2_t_a_b.empty?
     d_t_a_b = d2_t_a_b.map {|item| Math.sqrt(item)}
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-LAMBDA*d2_a_b)
@@ -83,7 +83,6 @@ class SimilarityMatrix
     1
   end
 
-  # @todo: implement me
   # implementation of formula 3
   def foreward_differece_on(trajectory, common_frame_count, idx)
     t = [common_frame_count, 5].min-1
