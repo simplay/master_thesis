@@ -11,3 +11,15 @@ Implementation of [this paper](http://lmb.informatik.uni-freiburg.de/people/brox
 
 ## Segmentation via Spectral clustering of Trajectories
 Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6682905)
+
+## Requirements and Installation
++ Matlab
++ Ruby
+
+## Usages
++ Run the **extract trajectories script**: 
+ + Enter `cd ./extract_trackings/`
+ + Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
++ Run the **compute similarity script**: 
+ + Enter `cd ./compute_trajectory_similarities/`
+ + Enter `ruby compute_similarities.rb traj_out_cars1_fc_4.txt` to compute the similarities bewtween the trajectories stored the in file `traj_out_cars1_fc_4.txt`. Note that the script assumes, that the file is stored in `./output/trajectories/`.
