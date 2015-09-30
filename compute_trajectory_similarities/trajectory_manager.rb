@@ -12,6 +12,10 @@ class TrajectoryManager
     @trajectories.values
   end
 
+  def count
+    trajectories.count
+  end
+
   # @param label [Integer] trajectory point label
   # @param frame_id [Integer] start frame id
   # @param point [Point] trajectory point to append.

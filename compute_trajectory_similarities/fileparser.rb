@@ -1,5 +1,6 @@
 require_relative 'trajectory_manager'
 require_relative 'point'
+require_relative 'similarity_matrix'
 require 'pry'
 
 class Fileparser
@@ -10,9 +11,10 @@ class Fileparser
   # @param filepath [String] path to target tracking files.
   def initialize(filepath)
     @tm = TrajectoryManager.new
+    @sim_mat = SimilarityMatrix.new(@tm)
     @filepath = filepath
     parse
-    binding.pry
+    @sim_mat.to_mat
   end
 
   private
