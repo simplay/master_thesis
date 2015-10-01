@@ -2,3 +2,5 @@
 tags
 .DS_Store
 output/**/*.txt
+output/similarities/*.txt
+output/similarities/*.dat
