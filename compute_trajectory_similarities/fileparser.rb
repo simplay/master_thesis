@@ -16,6 +16,7 @@ class Fileparser
     @filepath = filepath
     parse
     dataset = filepath.split("out_").last.split("_").first
+    $global_ds_name = dataset
     FlowVariance.build(OUT_PATH+dataset+"/"+"global_variances.txt")
     @sim_mat.to_mat
   end

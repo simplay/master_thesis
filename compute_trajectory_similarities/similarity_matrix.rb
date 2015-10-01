@@ -3,7 +3,7 @@ require_relative 'point'
 require_relative 'flow_variance'
 
 class SimilarityMatrix
-
+  BASE_PATH = "../output/similarities/"
   $is_debugging = true
 
   # see: segmentation of moving objects, section 4.
@@ -15,9 +15,36 @@ class SimilarityMatrix
 
   def to_mat
     traverse_all_pairs
+    generate_dat_file
   end
 
   private
+
+  # Generate a .dat file from the computed similaries stored in @tm
+  #
+  # @example: a regular matlab data file containing a 3x3 matrix
+  #  0.81472,0.91338,0.2785
+  #  0.90579,0.63236,0.54688
+  #  0.12699,0.09754,0.95751
+  def generate_dat_file
+    base_filepathname = "#{BASE_PATH}#{$global_ds_name}"
+
+    sim_filepath = "#{base_filepathname}_sim.dat"
+    labels_filepath = "#{base_filepathname}_labels.txt"
+
+    File.open(sim_filepath, 'w') do |file|
+      trajectories.each do |trajectory|
+        sorted_sim = trajectory.similarities.sort.to_h
+        a_row = sorted_sim.values.map(&:to_s).join(",")
+        file.puts a_row
+      end
+    end
+    File.open(labels_filepath, 'w') do |file|
+      sorted_keys = trajectories.first.similarities.keys.sort
+      a_row = sorted_keys.map(&:to_s).join(" ")
+      file.puts a_row
+    end
+  end
 
   def trajectories
     @tm.trajectories.first(200)
@@ -37,7 +64,6 @@ class SimilarityMatrix
       count = count + 1
       puts "progress: #{(count*@tm.count/(@tm.count**2).to_f)*100}%" if count % 20 == 0
     end
-    binding.pry
   end
 
   # Compute similarity between two given trajectories a and b
@@ -72,7 +98,6 @@ class SimilarityMatrix
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
 
-      # TODO: compute these values
       sigma_t = sigma_t_at(idx)
 
       # formula 4
@@ -82,7 +107,6 @@ class SimilarityMatrix
   end
 
   # perform lookup in appropriate sigma value frame.
-  # TODO implement me
   def sigma_t_at(frame_idx)
     FlowVariance.at_frame(frame_idx)
   end
