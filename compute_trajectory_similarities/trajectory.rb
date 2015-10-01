@@ -9,6 +9,10 @@ class Trajectory
     @similarities = {}
   end
 
+  def similarities
+    @similarities
+  end
+
   def label
     @label
   end
