@@ -1,5 +1,6 @@
 require_relative 'trajectory_manager'
 require_relative 'point'
+require 'pry'
 
 class Fileparser
 
@@ -18,7 +19,7 @@ class Fileparser
     @file_count = 0
     Dir.foreach(@filepath) do |filename|
       # skip hidden files
-      next if filename =~ /^\..*/
+      next if filename =~ /^\..*/ or filename.include? "global_variances"
       puts "parsing file #{filename.to_s}..." if $run_debug_mode
       File.open(@filepath+filename, "r") do |file|
         file_id = filename.split("_").last.split(".txt").first.to_i

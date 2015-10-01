@@ -8,7 +8,7 @@ addpath('../libs/flow-code-matlab');
 % global variable used for assigning unique label indices
 set_global_label_idx(1);
 
-STEP_SIZE = 4; % tracking density
+STEP_SIZE = 8; % tracking density
 DATASET = 'cars1/';
 BASE_FILE_PATH = strcat('../data/ldof/',DATASET); % dataset that should be used
 IM_EXT = '.ppm'; % input img file extension
