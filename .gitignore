@@ -4,3 +4,4 @@ tags
 output/**/*.txt
 output/similarities/*.txt
 output/similarities/*.dat
+**/*.mat

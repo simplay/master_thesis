@@ -47,7 +47,7 @@ class SimilarityMatrix
   end
 
   def trajectories
-    @tm.trajectories.first(200)
+    @tm.trajectories#.first(200)
   end
 
   # @todo: REMOVE the first(200) from @tm.trajectories.first(200)
