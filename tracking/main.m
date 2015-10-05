@@ -9,7 +9,8 @@ addpath('../libs/flow-code-matlab');
 set_global_label_idx(1);
 
 STEP_SIZE = 8; % tracking density
-DATASET = 'cars1/';
+DATASETNAME = 'cars1';
+DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/ldof/',DATASET); % dataset that should be used
 IM_EXT = '.ppm'; % input img file extension
 DISPLAY = true; % show tracking points
@@ -40,7 +41,7 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
         process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels);
 
-    
+    save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'.mat'),'tracked_pixels');
     % write data into file
     if WRITE_TRACKINGS_INTO_FILES
         write_flow_data(tracked_pixels,t,DATASET);
