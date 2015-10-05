@@ -49,19 +49,23 @@ pixeltensor = pixeltensor.tracked_pixels;
 
 % evcolors = eigenvector_to_color( U_small, 1 );
 % evc_to_color( f )
-idx = 10;
+idx = 1250;
 USE_W_VEC = true;
 
 if USE_W_VEC
     ev = W(:,idx);
 else
     ev = U_small(:,idx);
+    ev = ev-min(ev(:));
+    ev = ev ./ max(ev(:));
 end
 %ev = ev / norm(ev);
-ev = ev-min(ev(:));
-ev = ev ./ max(ev(:));
+
 USE_CLUSTERING_CUE = false;
-imshow('../data/ldof/cars1/01.ppm');
+img = imread('../data/ldof/cars1/01.ppm');
+I = mat2img(img(:,:,1),img(:,:,1),img(:,:,1));
+imshow(I);
+
 hold on
 for k=1:length(idk),
     label = pixeltensor(idi(k), idj(k), 2);
@@ -84,7 +88,14 @@ for k=1:length(idk),
     end
     
     %plot(ay, ax, 'Color', color_value);
-    plot(ay,ax,'Color',color_value,'Marker','.');
+    plot(ay,ax,'Color',color_value,'Marker','*');
     hold on
-   
+    
 end
+[idi,idj,idk] = find(pixeltensor(:,:,2) == idx);
+    label = pixeltensor(idi(1), idj(1), 2);
+    ax = pixeltensor(idi(1), idj(1), 3);
+    ay = pixeltensor(idi(1), idj(1), 4);
+        plot(ay,ax,'Color',[1,0,0],'Marker','O');
+    hold on
+colorbar;
