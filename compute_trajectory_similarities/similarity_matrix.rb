@@ -32,8 +32,10 @@ class SimilarityMatrix
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
 
+    @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|
+    binding.pry
         sorted_sim = trajectory.similarities.sort.to_h
         a_row = sorted_sim.values.map(&:to_s).join(",")
         file.puts a_row
@@ -55,7 +57,7 @@ class SimilarityMatrix
   def traverse_all_pairs
     count = 0
     trs = trajectories
-    trs.each do |a|
+    trs.first(2).each do |a|
       trs.each do |b|
         value = similarity(a,b)
         a.append_similarity(b.label, value)
@@ -77,7 +79,6 @@ class SimilarityMatrix
     max_min_frame = [a,b].map(&:start_frame).max
     # find earliest end frame of trajectory pair
     min_max_frame = [a,b].map(&:end_frame).min
-
     # Compute affinities w(A,B)
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
     return 0.0 if d2_t_a_b.empty?

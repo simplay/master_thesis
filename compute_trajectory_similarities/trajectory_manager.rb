@@ -16,6 +16,10 @@ class TrajectoryManager
     trajectories.count
   end
 
+  def sort_trajectories
+    @trajectories = (@trajectories.sort_by{|label,tra| label}).to_h
+  end
+
   # @param label [Integer] trajectory point label
   # @param frame_id [Integer] start frame id
   # @param point [Point] trajectory point to append.
