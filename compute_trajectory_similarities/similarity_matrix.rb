@@ -35,7 +35,6 @@ class SimilarityMatrix
     @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|
-    binding.pry
         sorted_sim = trajectory.similarities.sort.to_h
         a_row = sorted_sim.values.map(&:to_s).join(",")
         file.puts a_row
@@ -57,7 +56,7 @@ class SimilarityMatrix
   def traverse_all_pairs
     count = 0
     trs = trajectories
-    trs.first(2).each do |a|
+    trs.each do |a|
       trs.each do |b|
         value = similarity(a,b)
         a.append_similarity(b.label, value)
