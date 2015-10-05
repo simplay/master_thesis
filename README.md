@@ -23,3 +23,4 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 + Run the **compute similarity script**: 
  + Enter `cd ./compute_trajectory_similarities/`
  + Enter `ruby compute_similarities.rb traj_out_cars1_fc_4.txt` to compute the similarities bewtween the trajectories stored the in file `traj_out_cars1_fc_4.txt`. Note that the script assumes, that the file is stored in `./output/trajectories/`.
+ + Enter to use 8gb memory while running the script: `ruby -J-Xmx8000m compute_similarities.rb traj_out_cars1_fc_4.txt`
