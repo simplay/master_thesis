@@ -16,6 +16,7 @@ if PERFORM_RECOMP
 
     D12 = D^(-0.5);
     B = D12*(D-W)*D12;
+    keyboard;
     [U,S,V] = eig(B);
     else
         load('cars1_9k_usv.mat');
@@ -28,20 +29,22 @@ if PERFORM_RECOMP
     s = s /norm(s);
 
     [idx,jdx,value] = find(s > 0.0);
-    U_small = U_small(:,idx(:));
-    V_small = V_small(:,idx(:));
-    S_small = S_small(:,idx(:));
-
-    s = (diag(S_small));
-    s = s /norm(s);
-    [idx,jdx,value] = find(s < 0.01);
     U_small = aggregate_mat_cols(U_small, idx);
     V_small = aggregate_mat_cols(V_small, idx);
     S_small = aggregate_mat_cols(S_small, idx);
+
+    s = (diag(S_small));
+    s = s /norm(s);
+    [idx,jdx,value] = find(s < 0.005);
+    U_small = aggregate_mat_cols(U_small, idx);
+    V_small = aggregate_mat_cols(V_small, idx);
+    S_small = aggregate_mat_cols(S_small, idx);
+    
 else
     load('cars1_9k_small_usv.mat');
 end
-[idx,C,sumd,D] = kmeans(real(U_small),CLUSTER_CENTER_COUNT);
+%%
+[labels,C,sumd,D] = spectral_custering( U_small, CLUSTER_CENTER_COUNT );
 pixeltensor = load('../output/trackingdata/cars1_step_8_frame_1.mat');
 pixeltensor = pixeltensor.tracked_pixels;
 
@@ -49,53 +52,14 @@ pixeltensor = pixeltensor.tracked_pixels;
 
 % evcolors = eigenvector_to_color( U_small, 1 );
 % evc_to_color( f )
-idx = 1250;
-USE_W_VEC = true;
-
-if USE_W_VEC
-    ev = W(:,idx);
-else
-    ev = U_small(:,idx);
-    ev = ev-min(ev(:));
-    ev = ev ./ max(ev(:));
+col_sel = 4;
+USE_W_VEC = false;
+USE_CLUSTERING_CUE = true;
+if ~exist('W','var') && USE_W_VEC
+    W = load('../output/similarities/cars1_sim.dat');
 end
+ev = extract_vector( U_small, W, col_sel, USE_W_VEC );
 %ev = ev / norm(ev);
 
-USE_CLUSTERING_CUE = false;
-img = imread('../data/ldof/cars1/01.ppm');
-I = mat2img(img(:,:,1),img(:,:,1),img(:,:,1));
-imshow(I);
 
-hold on
-for k=1:length(idk),
-    label = pixeltensor(idi(k), idj(k), 2);
-    ax = pixeltensor(idi(k), idj(k), 3);
-    ay = pixeltensor(idi(k), idj(k), 4);
-    
-    if USE_CLUSTERING_CUE
-        labelcolor = idx(label);
-        if labelcolor == 1
-            color_value = [1,0,0];
-        elseif labelcolor == 2
-            color_value = [0,1,0];
-        elseif labelcolor == 3
-            color_value = [0,0,1];
-        else
-            color_value = [1,1,1];
-        end
-    else    
-        color_value = evc_to_color(ev(label));
-    end
-    
-    %plot(ay, ax, 'Color', color_value);
-    plot(ay,ax,'Color',color_value,'Marker','*');
-    hold on
-    
-end
-[idi,idj,idk] = find(pixeltensor(:,:,2) == idx);
-    label = pixeltensor(idi(1), idj(1), 2);
-    ax = pixeltensor(idi(1), idj(1), 3);
-    ay = pixeltensor(idi(1), idj(1), 4);
-        plot(ay,ax,'Color',[1,0,0],'Marker','O');
-    hold on
-colorbar;
+display_segmentation( pixeltensor, ev, idi, idj, labels, idk, col_sel, USE_CLUSTERING_CUE);
