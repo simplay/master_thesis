@@ -74,12 +74,15 @@ end
 
 % evcolors = eigenvector_to_color( U_small, 1 );
 % evc_to_color( f )
-for t=1:4
+
+USE_W_VEC = false;
+USE_CLUSTERING_CUE = true;
+
+for t=1:1
     figure
 
 col_sel = t;
-USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
 end
@@ -87,7 +90,15 @@ ev = extract_vector( U_small, W, col_sel, USE_W_VEC );
 %ev = ev / norm(ev);
 
 for tt = 1:1
-[labels] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
+
+if USE_CLUSTERING_CUE    
+    [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
+    [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+    pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(tt),'.mat'));
+    pixeltensor = pixeltensor.tracked_pixels;
+    display_clustering(pixeltensor, label_assignments, row_ids, col_ids, tt);
+else    
+    
 pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(tt),'.mat'));
 pixeltensor = pixeltensor.tracked_pixels;
 
@@ -96,5 +107,7 @@ pixeltensor = pixeltensor.tracked_pixels;
 
 %subplot(2,2, tt)
 display_segmentation( pixeltensor, ev, row_ids, col_ids, labels, vals, col_sel, USE_CLUSTERING_CUE, S_small, tt);
+
+end
 end
 end
