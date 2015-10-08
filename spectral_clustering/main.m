@@ -5,7 +5,7 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 2;
 THRESH = 0.001;
 RUN_EIGS = false;
 addpath('../libs/flow-code-matlab');
