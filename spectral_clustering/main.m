@@ -9,6 +9,8 @@ CLUSTER_CENTER_COUNT = 3;
 THRESH = 0.0001;
 RUN_EIGS = false;
 addpath('../libs/flow-code-matlab');
+
+%% load appropriate data
 if RUN_EIGS
     W = load('../output/similarities/cars1_sim.dat');
     WW = W + ones(size(W))*THRESH;
@@ -75,37 +77,39 @@ else
         load('cars1_9k_eigs_uv_small.mat');
     end
 end
-%%
 
-% evcolors = eigenvector_to_color( U_small, 1 );
-% evc_to_color( f )
+%% display segmentation and its data.
 
-USE_W_VEC = true;
+USE_W_VEC = false;
 USE_CLUSTERING_CUE = false;
 for t=1:1
     figure
 
-% nice indices for w
-%   300 - shows car
-col_sel = 300;
+    % nice indices for w
+    %   300 - shows car
+    col_sel = 4;
 
-if ~exist('W','var') && USE_W_VEC
-    W = load('../output/similarities/cars1_sim.dat');
-end
-displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
-%ev = ev / norm(ev);
+    if ~exist('W','var') && USE_W_VEC
+        W = load('../output/similarities/cars1_sim.dat');
+    end
+    displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
+    %ev = ev / norm(ev);
 
-for tt = 1:1
-    
-    pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(tt),'.mat'));
-    pixeltensor = pixeltensor.tracked_pixels;
-    [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+    for tt = 1:1
+        pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(tt),'.mat'));
+        pixeltensor = pixeltensor.tracked_pixels;
+        [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
 
         if USE_CLUSTERING_CUE    
             [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
             display_clustering(pixeltensor, label_assignments, row_ids, col_ids, tt);
-        else    
-           display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, tt, col_sel); 
+        else
+            if USE_W_VEC
+                display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, tt, col_sel);
+            else
+                eigenvalue = S_small(col_sel);
+                display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, tt, eigenvalue);
+            end
         end
-end
+    end
 end
