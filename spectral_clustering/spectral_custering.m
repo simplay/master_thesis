@@ -3,7 +3,9 @@ function [idx,C,sumd,D] = spectral_custering( U, cluster_count )
 %   Detailed explanation goes here
 u = real(U);
 u = u / norm(u);
-[idx,C,sumd,D] = kmeans(u, cluster_count);
-
+disp('foo');
+opts = statset('Display','final');
+[idx,C,sumd,D] = kmeans(u, cluster_count, 'Replicates',100, 'Start', 'sample', 'Options', opts);
+disp(C);
 end
 

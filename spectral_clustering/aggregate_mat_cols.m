@@ -8,7 +8,8 @@ function [ aggregated ] = aggregate_mat_cols( Mat, col_set )
     [m,~] = size(Mat);
     aggregated = zeros(m,length(col_set));
     for k=1:length(col_set),
-        aggregated(:,k) = Mat(:,k);
+        idx = col_set(k);
+        aggregated(:,k) = Mat(:,idx);
     end
 end
 
