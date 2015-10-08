@@ -5,7 +5,7 @@ u = real(U);
 u = u / norm(u);
 disp('foo');
 opts = statset('Display','final');
-[idx,C,sumd,D] = kmeans(u, cluster_count, 'Replicates',1, 'Start', 'sample', 'Options', opts);
+[idx,C,sumd,D] = kmeans(u, cluster_count, 'Replicates',100, 'Start', 'sample', 'Options', opts);
 disp(C);
 end
 
