@@ -12,13 +12,15 @@ function display_segmentation( pixeltensor, ev, idi, idj, labels, idk, col_sel, 
         ax = pixeltensor(idi(k), idj(k), 3);
         ay = pixeltensor(idi(k), idj(k), 4);
         if display_clustering_labels
-            labelcolor = labels(label_idx-1);
+            labelcolor = labels(label_idx);
             if labelcolor == 1
                 color_value = [1,0,0];
             elseif labelcolor == 2
                 color_value = [0,1,0];
             elseif labelcolor == 3
                 color_value = [0,0,1];
+            elseif labelcolor == 4
+                color_value = [1,0,1];    
             else
                 color_value = [1,1,1];
             end
