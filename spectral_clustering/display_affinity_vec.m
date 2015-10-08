@@ -1,4 +1,4 @@
-function display_affinities( pixeltensor, vector, row_inds, col_inds, img_index, col_sel)
+function display_affinity_vec( pixeltensor, vector, row_inds, col_inds, img_index, col_sel)
 %DISPLAY_AFFINITIES Summary of this function goes here
 %   Detailed explanation goes here
     filename = strcat('../data/ldof/cars1/0',num2str(img_index),'.ppm');
@@ -10,7 +10,7 @@ function display_affinities( pixeltensor, vector, row_inds, col_inds, img_index,
     vec = vector;
     vec = vec - min(vec(:));
     vec = vec ./ max(vec(:));
-    for k=1:length(row_inds),
+    for k=1:length(row_inds)
         pixel_label = pixeltensor(row_inds(k), col_inds(k), 2);
         ax = pixeltensor(row_inds(k), col_inds(k), 3);
         ay = pixeltensor(row_inds(k), col_inds(k), 4);
@@ -21,7 +21,7 @@ function display_affinities( pixeltensor, vector, row_inds, col_inds, img_index,
         hold on
 
     end
-    transformed_marker_label = col_sel-1;
+    transformed_marker_label = col_sel+1;
     [mark_row_idx,mark_col_idx,~] = find(pixeltensor(:,:,2) == transformed_marker_label);
     ax = pixeltensor(mark_row_idx, mark_col_idx, 3);
     ay = pixeltensor(mark_row_idx, mark_col_idx, 4);
