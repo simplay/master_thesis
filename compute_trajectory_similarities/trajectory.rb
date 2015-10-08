@@ -9,6 +9,14 @@ class Trajectory
     @similarities = {}
   end
 
+  # The lenght of a trajectory is the total number of
+  # vertices minus one, i.e. the number of edges.
+  #
+  # @return [Integer] length of trajectory
+  def length
+    @points.count - 1
+  end
+
   def similarities
     @similarities
   end

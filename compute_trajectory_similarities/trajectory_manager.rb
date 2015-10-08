@@ -12,6 +12,25 @@ class TrajectoryManager
     @trajectories.values
   end
 
+  def min_label
+    @trajectories.keys.min
+  end
+
+  def max_label
+    @trajectories.keys.max
+  end
+
+  def find_trajectory_by(label)
+    @trajectories.find {|traj| traj == label}
+  end
+
+  def filter_zero_length_trajectories
+    trs = trajectories.select do |traj|
+      traj.length > 0
+    end
+    binding.pry
+  end
+
   def count
     trajectories.count
   end
