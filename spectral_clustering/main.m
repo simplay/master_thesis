@@ -6,7 +6,7 @@ PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
 CLUSTER_CENTER_COUNT = 3;
-THRESH = 0.0001;
+THRESH = 0.001;
 RUN_EIGS = false;
 addpath('../libs/flow-code-matlab');
 
@@ -20,9 +20,7 @@ if RUN_EIGS
     B = D12*(D-WW)*D12;
     [U_small,S_small,FLAG] = eigs(B,50, 'SM');
     d = diag(S_small);
-    %d = d-min(d);
-    %d = d ./max(d);
-    [aa,bb,cc] = find(d > 0 & d < 0.2);
+    [aa,~,~] = find(d > 0 & d < 0.2);
     U_small = aggregate_mat_cols(U_small, aa);
     S_small = d(aa);
 elseif RUN_EIGS == false && PERFORM_RECOMP      
@@ -80,36 +78,53 @@ end
 
 %% display segmentation and its data.
 
+% the following flag define what data should be displayed.
+% USE_CLUSTERING_CUE true => display segmentation
+% USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
+% USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
-for t=1:1
-    figure
+USE_CLUSTERING_CUE = true;
 
-    % nice indices for w
-    %   300 - shows car
-    col_sel = 4;
+figure
 
-    if ~exist('W','var') && USE_W_VEC
-        W = load('../output/similarities/cars1_sim.dat');
-    end
-    displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
-    %ev = ev / norm(ev);
+% NOTICE: col_sel stands for the target column of the dataset that should
+%   be plotted. Since eigenvectors, affinitires and label_assignments
+%   have different vector dimensionalities, this affects the possible 
+%   indexing (querry) range. Therefore, when
+%       plotting eigenvectors, then do not pass a bigger index than
+%           size(U_small,2)
+%       plotting affinities, then do not pass a bigger index than length(W)
+%   when plotting cluster assignments, the chosen index value has no
+%   effect.
+%
+% HINT: nice indices when working with affinities:
+%   300 - car in background
+%   2033 - right wheel front car (issue case: no neighboring assignments)
+%   975 - front car car front (issue case: no neighboring assignments)
 
-    for tt = 1:1
-        pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(tt),'.mat'));
-        pixeltensor = pixeltensor.tracked_pixels;
-        [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+col_sel = 1975;
 
-        if USE_CLUSTERING_CUE    
-            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
-            display_clustering(pixeltensor, label_assignments, row_ids, col_ids, tt);
+% load W matrix in case it is needed.
+if ~exist('W','var') && USE_W_VEC
+    W = load('../output/similarities/cars1_sim.dat');
+end
+
+% display data
+for img_index = 1:1
+    pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
+    pixeltensor = pixeltensor.tracked_pixels;
+    [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+
+    if USE_CLUSTERING_CUE    
+        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
+        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index);
+    else
+        displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
+        if USE_W_VEC
+            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel);
         else
-            if USE_W_VEC
-                display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, tt, col_sel);
-            else
-                eigenvalue = S_small(col_sel);
-                display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, tt, eigenvalue);
-            end
+            eigenvalue = S_small(col_sel);
+            display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue);
         end
     end
 end
