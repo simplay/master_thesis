@@ -1,5 +1,16 @@
 # My Master Thesis Pipeline
 
+**Given**: A sequence of temporal coherent images (movie) and their depth maps.
+
+**Goal**: Segment all objects that have a certain velocity such that objects moving equally are in the same segment. In oder to do so, perform the following steps:
+
+1. Compute their Optical (foreward and backward) Flow.
+ + The methods that are used can be found [here](https://github.com/simplay/ma_pipeline)
+2. Track sparsely appropriate moveable points.
+3. Extract corresponding trajectories
+4. compute similarites between all determined trajectoires.
+5. compute the segmentation using a special variant of spectral clustering using the trajectory similarities as a cue.
+
 ## Information:
 + **.flo** file format [specification](http://vision.middlebury.edu/flow/code/flow-code/README.txt).
 
@@ -37,6 +48,7 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 7. Install required ruby plugins and setup their dependencies: `bundle`
 
 ## Usages
+
 + Run the **extract trajectories script**: 
  + Enter `cd ./extract_trackings/`
  + Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
