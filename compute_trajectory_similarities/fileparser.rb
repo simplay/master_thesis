@@ -22,7 +22,7 @@ class Fileparser
 
 
     puts "computing sims for traj"
-    a = @sim_mat.trajectory_similarities_for(2033)
+    a = @sim_mat.trajectory_similarities_for(2034)
     top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
     binding.pry
 
