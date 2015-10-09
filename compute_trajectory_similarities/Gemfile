@@ -1,7 +1,11 @@
 source "http://rubygems.org"
 
 group :development do
+  # ruby debugger: allows to change code during debugging runtime.
   gem 'pry'
+  # pretty printed debugging info
   gem 'awesome_print'
+  # allows handy navigation during debugging, such as
+  # next, continue, exit, conditional debugging.
   gem 'pry-nav'
 end
