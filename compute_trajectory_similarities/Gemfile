@@ -1,0 +1,7 @@
+source "http://rubygems.org"
+
+group :development do
+  gem 'pry'
+  gem 'awesome_print'
+  gem 'pry-nav'
+end
