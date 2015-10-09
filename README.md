@@ -25,14 +25,16 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 First, install a recent Matlab version. Next, open your terminal of choice and enter the following commands in the given order:
 
 1. Install RVM: `\curl -sSL https://get.rvm.io | bash -s stable`
- + Ruby version manager to have clean ruby dependency management.
+ + Ruby version manager to have clean ruby dependency management. Allows to have several ruby versions installed on your os, without having too much trouble. no need to manually install required plugin dependencies for every ruby version. in ruby, plugins/libraries are called **gems*.
 2. Install Jruby: `rvm install jruby-9.0.1.0`
  + Special version of Ruby supporting real multi threading, running on java's vm.
-3. Install Bundler: `gem install bundler`
+3. Switch to your global gemset: `rvm gemset use global`
+ + a gemset holds a set of ruby dependencies (plugins, dynlinks, etc). These dependencies are only active if and only if the gemset is loaded. I have added rvm hooks to dynamically load the appropriate dependencies, when cd-ing into a particular directory.
+4. Install Bundler in global gemset: `gem install bundler`
  + Ruby Plugin manager: makes sure all required dependencies are installed. Dependencies are in the **Gemfile** defined.
-4. Fetch source of this Repsitory: `git clone https://github.com/simplay/ma_my_pipeline.git`
-5. Change path to target directory: `cd path_to_target_directory_in_cloned_repo`
-6. Install required ruby plugins and setup their dependencies: `bundle`
+5. Fetch source of this Repsitory: `git clone https://github.com/simplay/ma_my_pipeline.git`
+6. Change path to target directory: `cd path_to_target_directory_in_cloned_repo`
+7. Install required ruby plugins and setup their dependencies: `bundle`
 
 ## Usages
 + Run the **extract trajectories script**: 
