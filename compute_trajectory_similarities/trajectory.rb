@@ -9,14 +9,61 @@ class Trajectory
     @similarities = {}
   end
 
+  # Retrieve the most similar neighbor trajectories
+  def most_similar_neighbors(n)
+    smallest_top_n = @similarities.values.max(n).last
+    most_similar_neighs = @similarities.select do |_, similarity|
+      similarity >= smallest_top_n
+    end
+  end
+
+  def contains_weird_points?
+    @points.any? do |p|
+      p.x > 480 || p.y > 640
+    end
+  end
+
+  # Retrieve all trajectory points.
+  #
+  # @return [Array] of Point instances.
+  def points
+    @points
+  end
+
+  # The lenght of a trajectory is the total number of
+  # vertices minus one, i.e. the number of edges.
+  #
+  # @return [Integer] length of trajectory
+  def length
+    @points.count - 1
+  end
+
+  # Does this trajectory contain only one point?
+  #
+  # @return [Boolean] true if trajectory has length 0
+  def one_pointed?
+    length == 0
+  end
+
   def similarities
     @similarities
   end
 
+  # Retrieve the label of this trajectory. This label
+  # is the identifying point label among all points that belong to
+  # this trajectory.
+  #
+  # @return [Integer] label.
   def label
     @label
   end
 
+  # Append a similarity value computed by this trajectory
+  # and another having the given label.
+  #
+  # @param other_label [Integer] label of other trajectory
+  #   we used to compute the similarity value between us.
+  # @param value [Float] computed simularity value
   def append_similarity(other_label, value)
     @similarities[other_label] = value
   end
@@ -25,8 +72,10 @@ class Trajectory
     @start_frame
   end
 
-  # convention: very first frame has index 1
-  # therefore subtract 1 from final index.
+  # Retrieve the frame index in which this trajectory ends.
+  # @hint: very first frame has index 1
+  #   therefore subtract 1 from final index.
+  # @return [Integer] index of last frame.
   def end_frame
     start_frame+count-1
   end
@@ -55,6 +104,10 @@ class Trajectory
 
   def append_point(point)
     @points << point
+  end
+
+  def to_s
+    "#{@label} #{count} #{start_frame} #{end_frame}"
   end
 
 end

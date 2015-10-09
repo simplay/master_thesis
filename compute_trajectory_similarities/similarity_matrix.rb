@@ -18,6 +18,21 @@ class SimilarityMatrix
     generate_dat_file
   end
 
+  # Compute the similarities between a trajectory with a given label
+  # and all other trajectories.
+  #
+  # @param label [Integer] label of target trajectory
+  # @return [Trajectory] we computed its similarities.
+  def trajectory_similarities_for(label)
+    a = @tm.find_trajectory_by(label)
+    trajectories.each do |b|
+        value = similarity(a,b)
+        a.append_similarity(b.label, value)
+        b.append_similarity(a.label, value)
+    end
+    a
+  end
+
   private
 
   # Generate a .dat file from the computed similaries stored in @tm
@@ -80,7 +95,11 @@ class SimilarityMatrix
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
-    return 0.0 if d2_t_a_b.empty?
+    if d2_t_a_b.empty?
+      # mark as deletable
+      # @tm.filter_zero_length_trajectories
+      return 0.0
+    end
     d_t_a_b = d2_t_a_b
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-LAMBDA*d2_a_b)

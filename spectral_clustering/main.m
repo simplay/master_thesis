@@ -5,14 +5,14 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 2;
+CLUSTER_CENTER_COUNT = 3;
 THRESH = 0.001;
 RUN_EIGS = false;
 addpath('../libs/flow-code-matlab');
 
 %% load appropriate data
 if RUN_EIGS
-    W = load('../output/similarities/cars1_sim.dat');
+    W = load('../output/similarities/cars1_sim_9k_p.dat');
     WW = W + ones(size(W))*THRESH;
     d_a = sum(WW,2);
     D = diag(d_a);
@@ -100,9 +100,10 @@ figure
 % HINT: nice indices when working with affinities:
 %   300 - car in background
 %   2033 - right wheel front car (issue case: no neighboring assignments)
+%       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 1975;
+col_sel = 3;
 
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
@@ -110,7 +111,7 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 1:1
+for img_index = 2:2
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
