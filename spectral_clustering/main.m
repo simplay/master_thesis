@@ -7,7 +7,7 @@ RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
 CLUSTER_CENTER_COUNT = 3;
 THRESH = 0.001;
-RUN_EIGS = false;
+RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 
 %% load appropriate data
@@ -85,7 +85,7 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
-USE_W_VEC = false;
+USE_W_VEC = true;
 USE_CLUSTERING_CUE = true;
 
 figure
@@ -125,7 +125,7 @@ for img_index = 3:3
     else
         displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
         if USE_W_VEC
-            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel);
+            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings);
         else
             eigenvalue = S_small(col_sel);
             display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue);
