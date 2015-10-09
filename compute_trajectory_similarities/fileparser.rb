@@ -11,7 +11,7 @@ class Fileparser
   IS_TRA_DEBUG = true
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath)
+  def initialize(filepath, run_in_debugging_stage=false)
     @tm = TrajectoryManager.new
     @sim_mat = SimilarityMatrix.new(@tm)
     @filepath = filepath
@@ -20,13 +20,14 @@ class Fileparser
     $global_ds_name = dataset
     FlowVariance.build(OUT_PATH+dataset+"/"+"global_variances.txt")
 
-
-    puts "computing sims for traj"
-    a = @sim_mat.trajectory_similarities_for(2034)
-    top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
-    binding.pry
-
-    @sim_mat.to_mat unless IS_TRA_DEBUG
+    if run_in_debugging_stage
+      puts "computing sims for traj"
+      a = @sim_mat.trajectory_similarities_for(2034)
+      top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
+      binding.pry
+    else
+      @sim_mat.to_mat
+    end
   end
 
   private

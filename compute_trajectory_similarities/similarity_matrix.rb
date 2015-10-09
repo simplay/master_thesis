@@ -15,7 +15,7 @@ class SimilarityMatrix
 
   def to_mat
     traverse_all_pairs
-    #generate_dat_file
+    generate_dat_file
   end
 
   # Compute the similarities between a trajectory with a given label
