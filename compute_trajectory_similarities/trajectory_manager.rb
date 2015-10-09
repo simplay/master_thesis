@@ -20,6 +20,18 @@ class TrajectoryManager
     @trajectories.keys.max
   end
 
+  # Fetch all trajectories in this manager that have points
+  # that tracked outside of their image.
+  def find_issue_trajectories
+    @trajectories.select do |_, trajectory|
+      trajectory.contains_weird_points?
+    end
+  end
+
+  def issue_trajectory_labels
+    find_issue_trajectories.values.map &:label
+  end
+
   # Find the most n similar neighbors of a given trajectory that start all
   # at a given frame.
   #

@@ -17,6 +17,12 @@ class Trajectory
     end
   end
 
+  def contains_weird_points?
+    @points.any? do |p|
+      p.x > 480 || p.y > 640
+    end
+  end
+
   # Retrieve all trajectory points.
   #
   # @return [Array] of Point instances.
