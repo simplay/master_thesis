@@ -22,6 +22,8 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 
 ### Mac OS X / Linux
 
+First, install a recent Matlab version. Next, open your terminal of choice and enter the following commands in the given order:
+
 1. Install RVM: `\curl -sSL https://get.rvm.io | bash -s stable`
  + Ruby version manager to have clean ruby dependency management.
 2. Install Jruby: `rvm install jruby-9.0.1.0`
