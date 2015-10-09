@@ -86,7 +86,7 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = true;
-USE_CLUSTERING_CUE = true;
+USE_CLUSTERING_CUE = false;
 
 figure
 
@@ -106,7 +106,7 @@ figure
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 3;
+col_sel = 2033;
 
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
@@ -123,7 +123,7 @@ for img_index = 3:3
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
         display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings);
     else
-        displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
+        displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
         if USE_W_VEC
             display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings);
         else
