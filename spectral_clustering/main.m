@@ -114,7 +114,7 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 3:3
+for img_index = 1:1
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);

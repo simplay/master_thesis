@@ -21,7 +21,7 @@ function display_affinity_vec( pixeltensor, vector, row_inds, col_inds, img_inde
         hold on
 
     end
-    transformed_marker_label = col_sel+1;
+    transformed_marker_label = label_as_local(label_mappings, col_sel);
     [mark_row_idx,mark_col_idx,~] = find(pixeltensor(:,:,2) == transformed_marker_label);
     ax = pixeltensor(mark_row_idx, mark_col_idx, 3);
     ay = pixeltensor(mark_row_idx, mark_col_idx, 4);
