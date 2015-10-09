@@ -1,5 +1,16 @@
 # My Master Thesis Pipeline
 
+**Given**: A sequence of temporal coherent images (movie) and their depth maps.
+
+**Goal**: Segment all objects that have a certain velocity such that objects moving equally are in the same segment. In oder to do so, perform the following steps:
+
+1. Compute their Optical (foreward and backward) Flow.
+ + The methods that are used can be found [here](https://github.com/simplay/ma_pipeline)
+2. Track sparsely appropriate moveable points.
+3. Extract corresponding trajectories
+4. compute similarites between all determined trajectoires.
+5. compute the segmentation using a special variant of spectral clustering using the trajectory similarities as a cue.
+
 ## Information:
 + **.flo** file format [specification](http://vision.middlebury.edu/flow/code/flow-code/README.txt).
 
@@ -12,11 +23,32 @@ Implementation of [this paper](http://lmb.informatik.uni-freiburg.de/people/brox
 ## Segmentation via Spectral clustering of Trajectories
 Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6682905)
 
-## Requirements and Installation
+## Requirements
 + Matlab
-+ Ruby
++ JRuby
++ Bundler
++ Git
+
+## Installation
+
+### Mac OS X / Linux
+
+First, install a recent Matlab version. Next, open your terminal of choice and enter the following commands in the given order:
+
+1. Install RVM: `\curl -sSL https://get.rvm.io | bash -s stable`
+ + Ruby version manager to have clean ruby dependency management. Allows to have several ruby versions installed on your os, without having too much trouble. no need to manually install required plugin dependencies for every ruby version. in ruby, plugins/libraries are called **gems*.
+2. Install Jruby: `rvm install jruby-9.0.1.0`
+ + Special version of Ruby supporting real multi threading, running on java's vm.
+3. Switch to your global gemset: `rvm gemset use global`
+ + a gemset holds a set of ruby dependencies (plugins, dynlinks, etc). These dependencies are only active if and only if the gemset is loaded. I have added rvm hooks to dynamically load the appropriate dependencies, when cd-ing into a particular directory.
+4. Install Bundler in global gemset: `gem install bundler`
+ + Ruby Plugin manager: makes sure all required dependencies are installed. Dependencies are in the **Gemfile** defined.
+5. Fetch source of this Repsitory: `git clone https://github.com/simplay/ma_my_pipeline.git`
+6. Change path to target directory: `cd path_to_target_directory_in_cloned_repo`
+7. Install required ruby plugins and setup their dependencies: `bundle`
 
 ## Usages
+
 + Run the **extract trajectories script**: 
  + Enter `cd ./extract_trackings/`
  + Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
