@@ -78,6 +78,9 @@ end
 
 %% display segmentation and its data.
 
+label_mappings = labelfile2mat;
+
+
 % the following flag define what data should be displayed.
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
@@ -111,14 +114,14 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 2:2
+for img_index = 3:3
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
 
     if USE_CLUSTERING_CUE    
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
-        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index);
+        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings);
     else
         displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC );
         if USE_W_VEC
