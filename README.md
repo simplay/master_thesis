@@ -12,9 +12,25 @@ Implementation of [this paper](http://lmb.informatik.uni-freiburg.de/people/brox
 ## Segmentation via Spectral clustering of Trajectories
 Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6682905)
 
-## Requirements and Installation
+## Requirements
 + Matlab
-+ Ruby
++ JRuby
++ Bundler
++ Git
+
+## Installation
+
+### Mac OS X / Linux
+
+1. Install RVM: `\curl -sSL https://get.rvm.io | bash -s stable`
+ + Ruby version manager to have clean ruby dependency management.
+2. Install Jruby: `rvm install jruby-9.0.1.0`
+ + Special version of Ruby supporting real multi threading, running on java's vm.
+3. Install Bundler: `gem install bundler`
+ + Ruby Plugin manager: makes sure all required dependencies are installed. Dependencies are in the **Gemfile** defined.
+4. Fetch source of this Repsitory: `git clone https://github.com/simplay/ma_my_pipeline.git`
+5. Change path to target directory: `cd path_to_target_directory_in_cloned_repo`
+6. Install required ruby plugins and setup their dependencies: `bundle`
 
 ## Usages
 + Run the **extract trajectories script**: 
