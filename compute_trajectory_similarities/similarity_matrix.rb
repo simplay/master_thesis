@@ -15,7 +15,22 @@ class SimilarityMatrix
 
   def to_mat
     traverse_all_pairs
-    generate_dat_file
+    #generate_dat_file
+  end
+
+  # Compute the similarities between a trajectory with a given label
+  # and all other trajectories.
+  #
+  # @param label [Integer] label of target trajectory
+  # @return [Trajectory] we computed its similarities.
+  def trajectory_similarities_for(label)
+    a = @tm.find_trajectory_by(label)
+    trajectories.each do |b|
+        value = similarity(a,b)
+        a.append_similarity(b.label, value)
+        b.append_similarity(a.label, value)
+    end
+    a
   end
 
   private
@@ -82,7 +97,7 @@ class SimilarityMatrix
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
     if d2_t_a_b.empty?
       # mark as deletable
-      @tm.filter_zero_length_trajectories
+      # @tm.filter_zero_length_trajectories
       return 0.0
     end
     d_t_a_b = d2_t_a_b

@@ -9,6 +9,14 @@ class Trajectory
     @similarities = {}
   end
 
+  # Retrieve the most similar neighbor trajectories
+  def most_similar_neighbors(n)
+    smallest_top_n = @similarities.values.max(n).last
+    most_similar_neighs = @similarities.select do |_, similarity|
+      similarity >= smallest_top_n
+    end
+  end
+
   # Retrieve all trajectory points.
   #
   # @return [Array] of Point instances.
@@ -90,6 +98,10 @@ class Trajectory
 
   def append_point(point)
     @points << point
+  end
+
+  def to_s
+    "#{@label} #{count} #{start_frame} #{end_frame}"
   end
 
 end
