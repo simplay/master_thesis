@@ -7,9 +7,15 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     bw_u_flow = backward_flow(:,:,2);
     bw_v_flow = backward_flow(:,:,1);
     
+    
+    % only allow to sample around not continued tracking regions.
+    save_from_oversampling_mask = cont_tracking_mask(tracked_to_positions, step_size);
+    
     % candidate_indices logical mxn matrix that indicates/hints pixels 
     % that depict good trackable candidates.
     [ tracking_candidates ] = findTrackingCandidates( img, step_size );
+    
+    tracking_candidates = save_from_oversampling_mask.*tracking_candidates;
     
     % start new tracks only for disoccluded regions.
     % initially, all regions are supposed to be disoccluded.
@@ -39,7 +45,6 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
 
     
     pixel_trackings = pixel_trackings_from_disocclusion + pixel_trackings_from_known;
-
     % OLD % pixel_trackings = pixel_trackings_from_disocclusion;
     
     disoccluded_regions = (1-pixel_trackings(:,:,1));
