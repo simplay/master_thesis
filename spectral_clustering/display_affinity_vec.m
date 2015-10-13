@@ -1,5 +1,5 @@
 function display_affinity_vec( pixeltensor, vector, row_inds, col_inds, img_index, col_sel, label_mappings)
-%DISPLAY_AFFINITIES Summary of this function goes here
+%DISPLAY_AFFINITIES annahme: col_sel ist ein label
 %   Detailed explanation goes here
     filename = strcat('../data/ldof/cars1/0',num2str(img_index),'.ppm');
     img = imread(filename);
@@ -21,8 +21,8 @@ function display_affinity_vec( pixeltensor, vector, row_inds, col_inds, img_inde
         hold on
 
     end
-    transformed_marker_label = label_as_local(label_mappings, col_sel);
-    [mark_row_idx,mark_col_idx,~] = find(pixeltensor(:,:,2) == transformed_marker_label);
+    % keyboard;
+    [mark_row_idx,mark_col_idx,~] = find(pixeltensor(:,:,2) == col_sel);
     ax = pixeltensor(mark_row_idx, mark_col_idx, 3);
     ay = pixeltensor(mark_row_idx, mark_col_idx, 4);
     plot(ay,ax,'Color',[1,0,0],'Marker','O');
