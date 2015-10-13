@@ -19,7 +19,7 @@ function write_flow_data(data, idx, output_dir)
     %          4     5     6
     %         10    11    12
     D = reshape(data, [m*n,k]);
-    
+
     fName = strcat('../output/trackings/',output_dir,'tracking_t_',num2str(idx),'.txt');
     fid = fopen(fName,'w');
     if fid ~= -1

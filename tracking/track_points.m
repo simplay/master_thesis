@@ -120,63 +120,6 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
             bx = pp_x + pew_x;
             by = pp_y + pew_y;
             
-            %keyboard;
-            % rather a hack!
-            % perform latest approach
-%             pax = prev_tacked_pixels(idx(k), idy(k), BX);
-%             pay = prev_tacked_pixels(idx(k), idy(k), BY);
-%             keyboard;
-%             bx = pax + fw_u_flow(ax,ay);
-%             by = pay + fw_v_flow(ax,ay);
-            
-%                                     % previous (bx, by) is current (ax,ay)
-%             pax = prev_tacked_pixels(idx(k), idy(k), BX);
-%             pay = prev_tacked_pixels(idx(k), idy(k), BY);
-%             
-%                     % real tracked to positions (floats)
-%                 bx = pax + fw_u_flow(ax,ay);
-%                 by = pay + fw_v_flow(ax,ay);
-%             
-%             
-%             
-% 
-%             
-%             
-%             
-%             
-%             % get prev. and next index from subpixel accurate index value.
-%             x1 = floor(bx);
-%             y1 = floor(by);
-%             x2 = x1+1;
-%             y2 = y1+1;
-%             
-%             
-%             alpha_x = bx-x1;
-%             alpha_y = by-y1;
-%             
-%             
-%             if (x1 <= 0 || x2 <= 0 || x1 > m || x2 > n)
-%                 continue;
-%             end
-%             
-%             if (y1 <= 0 || y2 <= 0 || y1 > m || y2 > n)
-%                 continue;
-%             end
-%             
-%             % bilinar interpolation of flow making use of the backward flow
-%             a = (1.0-alpha_x)*bw_u_flow(x1,y1) + alpha_x*bw_u_flow(x2,y1);
-%             b = (1.0-alpha_x)*bw_u_flow(x1,y2) + alpha_x*bw_u_flow(x2,y2);
-%             u = (1.0-alpha_y)*a + alpha_y*b;
-%             
-%             a = (1.0-alpha_x)*bw_v_flow(x1,y1) + alpha_x*bw_v_flow(x2,y1);
-%             b = (1.0-alpha_x)*bw_v_flow(x1,y2) + alpha_x*bw_v_flow(x2,y2);
-%             v = (1.0-alpha_y)*a + alpha_y*b;
-%             
-%             % interpolated flow positions
-%             bx = bx + u;
-%             by = by + v;
-%             
-
             
             
             
@@ -199,6 +142,7 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
         else
             % case: working with tracking candidates
             
+            
             % remember tracked from position
             pixel_trackings(ibx, iby, AX) = ax;
             pixel_trackings(ibx, iby, AY) = ay;
@@ -212,6 +156,11 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
                 % use prev label that was assigned
                 prev_label_value = prev_tacked_pixels(ax, ay, LABEL);
                 pixel_trackings(ibx, iby, LABEL) = prev_label_value;
+                
+                
+%                 if prev_label_value == 2403
+%                     keyboard;
+%                 end
                 
                 % mark track as continuing
                 pixel_trackings(ibx, iby, CONT) = 1;

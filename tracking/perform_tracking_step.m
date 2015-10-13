@@ -40,8 +40,8 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     pixel_trackings_from_disocclusion(:,:,3) = pixel_trackings_from_disocclusion(:,:,3).*same_tracked_to_pixels;
     pixel_trackings_from_disocclusion(:,:,4) = pixel_trackings_from_disocclusion(:,:,4).*same_tracked_to_pixels;
     pixel_trackings_from_disocclusion(:,:,5) = pixel_trackings_from_disocclusion(:,:,5).*same_tracked_to_pixels;
-    
-    
+    pixel_trackings_from_disocclusion(:,:,6) = pixel_trackings_from_disocclusion(:,:,6).*same_tracked_to_pixels;
+    pixel_trackings_from_disocclusion(:,:,7) = pixel_trackings_from_disocclusion(:,:,7).*same_tracked_to_pixels;
 
     
     pixel_trackings = pixel_trackings_from_disocclusion + pixel_trackings_from_known;

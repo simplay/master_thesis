@@ -20,6 +20,7 @@ if RUN_EIGS
     B = D12*(D-WW)*D12;
     [U_small,S_small,FLAG] = eigs(B,50, 'SM');
     d = diag(S_small);
+    keyboard;
     [aa,~,~] = find(d > 0 & d < 0.2);
     U_small = aggregate_mat_cols(U_small, aa);
     S_small = d(aa);
@@ -85,8 +86,8 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
-USE_W_VEC = false;
-USE_CLUSTERING_CUE = true;
+USE_W_VEC = true;
+USE_CLUSTERING_CUE = false;
 
 figure
 
@@ -106,7 +107,7 @@ figure
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 2;
+col_sel = 1698;
 
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
@@ -114,7 +115,7 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 2:2
+for img_index = 1:1
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
