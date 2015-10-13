@@ -82,15 +82,52 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
             prev_bw_u_flow = prev_backward_flow(:,:,2);
             prev_bw_v_flow = prev_backward_flow(:,:,1);
             
+            prev_ax = ax + prev_bw_u_flow(ax,ay);
+            prev_ay = ay + prev_bw_v_flow(ax,ay);
+            
+            i_prev_ax = floor(prev_ax);
+            i_prev_ay = floor(prev_ay);
+            
+            i2_prev_ax = i_prev_ax+1;
+            i2_prev_ay = i_prev_ay+1;
+            
+            alpha_x = 1-(prev_ax-i_prev_ax);
+            alpha_y = 1-(prev_ay-i_prev_ay);
+            
+            pew_x = alpha_x*prev_fw_u_flow(i_prev_ax,i_prev_ay) + (1-alpha_x)*prev_fw_u_flow(i2_prev_ax,i2_prev_ay);
+            pew_y = alpha_y*prev_fw_v_flow(i_prev_ax,i_prev_ay) + (1-alpha_y)*prev_fw_v_flow(i2_prev_ax,i2_prev_ay);
+            
+            pp_x = prev_ax+pew_x; % t tilde p_k u
+            pp_y = prev_ay+pew_y; % t tilde p_k v
+            
+            i_ax = floor(pp_x);
+            i_ay = floor(pp_y);
+            
+            i2_ax = i_ax+1;
+            i2_ay = i_ay+1;
+            
+            alpha_x = 1-(pp_x-i_ax);
+            alpha_y = 1-(pp_y-i_ay);
             
             
+            if (i_ax <= 0 || i_ay <= 0 || i_ax > m || i_ay > n)
+                continue;
+            end
+            
+            pew_x = alpha_x*fw_u_flow(i_ax,i_ay) + (1-alpha_x)*fw_u_flow(i2_ax,i2_ay);
+            pew_y = alpha_y*fw_v_flow(i_ax,i_ay) + (1-alpha_y)*fw_v_flow(i2_ax,i2_ay);
+            
+            bx = pp_x + pew_x;
+            by = pp_y + pew_y;
+            
+            %keyboard;
             % rather a hack!
             % perform latest approach
-            pax = prev_tacked_pixels(idx(k), idy(k), BX);
-            pay = prev_tacked_pixels(idx(k), idy(k), BY);
-            
-            bx = pax + fw_u_flow(ax,ay);
-            by = pay + fw_v_flow(ax,ay);
+%             pax = prev_tacked_pixels(idx(k), idy(k), BX);
+%             pay = prev_tacked_pixels(idx(k), idy(k), BY);
+%             keyboard;
+%             bx = pax + fw_u_flow(ax,ay);
+%             by = pay + fw_v_flow(ax,ay);
             
 %                                     % previous (bx, by) is current (ax,ay)
 %             pax = prev_tacked_pixels(idx(k), idy(k), BX);
