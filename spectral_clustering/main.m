@@ -5,8 +5,8 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 3;
-THRESH = 0.001;
+CLUSTER_CENTER_COUNT = 2;
+THRESH = 0.002;
 RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 
@@ -86,7 +86,7 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 figure
 
@@ -114,7 +114,7 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 1:1
+for img_index = 2:2
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);

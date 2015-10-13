@@ -1,4 +1,4 @@
-function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regions ] = perform_tracking_step( img, foreward_flow, backward_flow, step_size, start_mask, tracked_to_positions, prev_tacked_pixels)
+function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regions ] = perform_tracking_step( img, foreward_flow, backward_flow, step_size, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow)
 
     fw_u_flow = foreward_flow(:,:,2);
     fw_v_flow = foreward_flow(:,:,1);
@@ -27,9 +27,9 @@ function [ pixel_trackings, trackable_pixels, invalid_regions, disoccluded_regio
     trackable_pixels = tracking_candidates .* (1-invalid_regions);
     %keyboard;
     % tracking step
-    pixel_trackings_from_disocclusion = track_points(trackable_pixels, fw_u_flow, fw_v_flow, false, prev_tacked_pixels, bw_u_flow, bw_v_flow);
+    pixel_trackings_from_disocclusion = track_points(trackable_pixels, fw_u_flow, fw_v_flow, false, prev_tacked_pixels, bw_u_flow, bw_v_flow, prev_foreward_flow, prev_backward_flow);
     % similar as tracking step but for prev.trackings.
-    pixel_trackings_from_known = track_points(tracked_to_positions, fw_u_flow, fw_v_flow, true, prev_tacked_pixels, bw_u_flow, bw_v_flow);
+    pixel_trackings_from_known = track_points(tracked_to_positions, fw_u_flow, fw_v_flow, true, prev_tacked_pixels, bw_u_flow, bw_v_flow, prev_foreward_flow, prev_backward_flow);
     
     %% no overlapping pixels
     % TODO: simplify this

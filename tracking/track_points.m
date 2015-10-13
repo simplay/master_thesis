@@ -1,4 +1,4 @@
-function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_flow, is_continuing_tracking, prev_tacked_pixels, bw_u_flow, bw_v_flow)
+function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_flow, is_continuing_tracking, prev_tacked_pixels, bw_u_flow, bw_v_flow, prev_foreward_flow, prev_backward_flow)
 % Given trackable points, find their tracked to positions (the so called
 % pixel trackings).
 
@@ -75,10 +75,22 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
         
         % when cont. trackings we know their exact location
         if is_continuing_tracking
-                        pax = prev_tacked_pixels(idx(k), idy(k), BX);
+            
+            % new clean idea
+            prev_fw_u_flow = prev_foreward_flow(:,:,2);
+            prev_fw_v_flow = prev_foreward_flow(:,:,1);
+            prev_bw_u_flow = prev_backward_flow(:,:,2);
+            prev_bw_v_flow = prev_backward_flow(:,:,1);
+            
+            
+            
+            % rather a hack!
+            % perform latest approach
+            pax = prev_tacked_pixels(idx(k), idy(k), BX);
             pay = prev_tacked_pixels(idx(k), idy(k), BY);
-                    bx = pax + fw_u_flow(ax,ay);
-        by = pay + fw_v_flow(ax,ay);
+            
+            bx = pax + fw_u_flow(ax,ay);
+            by = pay + fw_v_flow(ax,ay);
             
 %                                     % previous (bx, by) is current (ax,ay)
 %             pax = prev_tacked_pixels(idx(k), idy(k), BX);
@@ -134,10 +146,6 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
         end
         
 
-        
-        if is_continuing_tracking
-        
-        end
 
         % tracked to positions (rounded)
         ibx = round(bx);

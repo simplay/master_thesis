@@ -31,6 +31,8 @@ WRITE_TRACKINGS_INTO_FILES = true;
 [m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
 start_mask = ones(m,n);
 prev_tacked_pixels = zeros(m,n,7);
+prev_foreward_flow = 0;
+prev_backward_flow = 0;
 % initially, there are no tracked to positions
 tracked_to_positions = zeros(m,n);
 for t=START_FRAME_IDX:END_FRAME_IDX,
@@ -38,8 +40,8 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     im_tp1 = strcat(BASE_FILE_PATH,'0',num2str(t+1), IM_EXT);
     fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
     bw_flow_t = strcat(BASE_FILE_PATH, 'BackwardFlow','00',num2str(t-1),'.flo');
-    [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask ] = ...
-        process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels);
+    [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask, prev_foreward_flow, prev_backward_flow ] = ...
+        process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow);
 
     save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'.mat'),'tracked_pixels');
     % write data into file
