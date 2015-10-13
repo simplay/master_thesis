@@ -12,14 +12,14 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         img_title2 = strcat(num2str(t_idx-1), ' to ', num2str(t_idx));
 
         if mode == 5 && t_idx > 1
-            frame_t = strcat(BASE_FILE_PATH,'0',num2str(t_idx-1), IM_EXT);
+            frame_t = strcat(BASE_FILE_PATH,'0',num2str(t_idx), IM_EXT);
             tm1_img = imread(frame_t);
             tm1_img =im2double(tm1_img); % from image next is img1
             tm1_img = mat2img(tm1_img(:,:,1));
             
             % find all cont. tracks
             %keyboard;
-            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,7) == 1 & tracked_pixels(:,:,2) == 1311);%& tracked_pixels(:,:,2) == 50);
+            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,7) == 1) %& tracked_pixels(:,:,2) == 1311);%& tracked_pixels(:,:,2) == 50);
            
             [ccnidx, ccnidy, ~] = find(tracked_pixels(:,:,7) == 0 & tracked_pixels(:,:,1) == 1);
             figure('name', strcat('showing from img: ', img_title2));
@@ -41,8 +41,8 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
                 y1 = tracked_pixels(ccidx(k),ccidy(k),6);
                 idx = ccidx(k);
                 idy = ccidy(k);
-                x = [x0, x1];
-                y = [y0, y1];
+                x = [x1, x0];
+                y = [y1, y0];
   
                 if tracked_pixels(idx, idy, 1) == 1 ...
                     && prev_tacked_pixels(x0, y0, 1) == 1

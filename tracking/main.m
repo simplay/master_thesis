@@ -1,5 +1,5 @@
 clc;
-clear all;
+%clear all;
 close all;
 addpath('../libs/flow-code-matlab');
 

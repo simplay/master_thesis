@@ -1,7 +1,7 @@
 function [ label_mapping ] = labelfile2mat
 %LABELFILE2MAT return label mapping
 %   Detailed explanation goes here
-fid = fopen('../output/similarities/cars1_labels_9k_p.txt');
+fid = fopen('../output/similarities/cars1_labels.txt');
 tline = fgets(fid);
 labels_as_cells = strsplit(tline, ' ');
 fclose(fid);

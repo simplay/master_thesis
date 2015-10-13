@@ -22,7 +22,7 @@ class Fileparser
 
     if run_in_debugging_stage
       puts "computing sims for traj"
-      a = @sim_mat.trajectory_similarities_for(2034)
+      a = @sim_mat.trajectory_similarities_for(15)
       top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
       binding.pry
     else

@@ -106,10 +106,13 @@ class SimilarityMatrix
   end
 
   def temporal_distances_between(a, b, lower_idx, upper_idx, timestep=2)
-    return [] if upper_idx-lower_idx == -1
-    d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
     common_frame_count = upper_idx-lower_idx+1
-    (lower_idx..upper_idx).map do |idx|
+    return [] if common_frame_count < 2
+    u = (upper_idx-(timestep-1))
+    l = lower_idx
+    return [] if u < l # when forward diff cannot be computed
+    d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
+    (l..u).map do |idx|
 
       # compute foreward diff over T for A,B
       timestep = common_frame_count unless $is_debugging
@@ -146,8 +149,8 @@ class SimilarityMatrix
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def avg_spatial_distance_between(a, b, lower_idx, upper_idx)
-    return 0 if upper_idx-lower_idx == -1
-    len = 0
+    binding.pry if upper_idx-lower_idx + 1 < 1# should no happen!
+    len = 0.0
     (lower_idx..upper_idx).each do |idx|
       pa = a.point_at(idx)
       pb = b.point_at(idx)

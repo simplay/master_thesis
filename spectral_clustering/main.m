@@ -5,23 +5,22 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 2;
+CLUSTER_CENTER_COUNT = 4;
 THRESH = 0.002;
 RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 
 %% load appropriate data
 if RUN_EIGS
-    W = load('../output/similarities/cars1_sim_9k_p.dat');
+    W = load('../output/similarities/cars1_sim.dat');
     WW = W + ones(size(W))*THRESH;
     d_a = sum(WW,2);
     D = diag(d_a);
     D12 = diag(sqrt(1./d_a));
     B = D12*(D-WW)*D12;
-    [U_small,S_small,FLAG] = eigs(B,50, 'SM');
+    [U_small,S_small,FLAG] = eigs(B,50,1e-6);
     d = diag(S_small);
-    keyboard;
-    [aa,~,~] = find(d > 0 & d < 0.2);
+    [aa,~,~] = find(d < 0.2);
     U_small = aggregate_mat_cols(U_small, aa);
     S_small = d(aa);
 elseif RUN_EIGS == false && PERFORM_RECOMP      
@@ -107,7 +106,7 @@ figure
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 1698;
+col_sel = 5;
 
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
@@ -115,7 +114,8 @@ if ~exist('W','var') && USE_W_VEC
 end
 
 % display data
-for img_index = 1:1
+for img_index = 1:4
+    figure
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
@@ -125,6 +125,7 @@ for img_index = 1:1
         display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings);
     else
         displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
+       displayed_vector = W(:,2808);
         if USE_W_VEC
             display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings);
         else
