@@ -85,7 +85,14 @@ end
 
 % write local flow variances into mat files.
 for k=1:END_FRAME_IDX
-    lv = local_flow_variances(k);
-    fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.mat');
-    save(fname, 'lv');
+    lv = local_flow_variances(:,:,k);
+    fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
+    fid = fopen(fname,'w');
+    if fid ~= -1
+        for t=1:size(lv,1)
+            a_row = mat2str(lv(t,:));
+            fprintf(fid,'%s\r\n', a_row);
+        end
+    end
+    fclose(fid);
 end

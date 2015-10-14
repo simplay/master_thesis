@@ -18,7 +18,7 @@ class Fileparser
     parse
     dataset = filepath.split("out_").last.split("_").first
     $global_ds_name = dataset
-    FlowVariance.build(OUT_PATH+dataset+"/"+"global_variances.txt")
+    FlowVariance.build(OUT_PATH+dataset)
 
     if run_in_debugging_stage
       puts "computing sims for traj"
