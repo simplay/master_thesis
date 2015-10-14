@@ -60,11 +60,13 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     prev_tacked_pixels = tracked_pixels;
 end
 
-%% compute global variance
+%% compute local and global variance
 global_variances = [];
-for t=START_FRAME_IDX:END_FRAME_IDX+1
+local_flow_variances = zeros(m,n,END_FRAME_IDX);
+for t=START_FRAME_IDX:END_FRAME_IDX
     fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
     fw_flow = readFlowFile(fw_flow_t);
+    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow);
     global_variances = [global_variances, var(fw_flow(:))];
 end
 fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
@@ -79,4 +81,11 @@ if fid ~= -1
      end
     end    
     fclose(fid);
+end
+
+% write local flow variances into mat files.
+for k=1:END_FRAME_IDX
+    lv = local_flow_variances(k);
+    fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.mat');
+    save(fname, 'lv');
 end

@@ -19,7 +19,7 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
             
             % find all cont. tracks
             %keyboard;
-            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,7) == 1) %& tracked_pixels(:,:,2) == 1311);%& tracked_pixels(:,:,2) == 50);
+            [ccidx, ccidy, ~] = find(tracked_pixels(:,:,7) == 1); %& tracked_pixels(:,:,2) == 1311);%& tracked_pixels(:,:,2) == 50);
            
             [ccnidx, ccnidy, ~] = find(tracked_pixels(:,:,7) == 0 & tracked_pixels(:,:,1) == 1);
             figure('name', strcat('showing from img: ', img_title2));

@@ -18,8 +18,8 @@ class Fileparser
   def parse
     @file_count = 0
     Dir.foreach(@filepath) do |filename|
-      # skip hidden files
-      next if filename =~ /^\..*/ or filename.include? "global_variances"
+      # skip hidden files or those included in the BLACKLIST
+      next if filename =~ /^\..*/ or in_blacklist?(filename)
       puts "parsing file #{filename.to_s}..." if $run_debug_mode
       File.open(@filepath+filename, "r") do |file|
         file_id = filename.split("_").last.split(".txt").first.to_i
@@ -27,6 +27,16 @@ class Fileparser
         @file_count = @file_count + 1
       end
       puts "finished parsing file #{filename}" if $run_debug_mode
+    end
+  end
+
+  BLACKLIST = ['global_variances',
+               'local_variances'
+  ]
+  # Is a given filename in the global BLACKLIST.
+  def in_blacklist?(filename)
+    BLACKLIST.any? do |not_allowed_word|
+      filename.include? not_allowed_word
     end
   end
 
