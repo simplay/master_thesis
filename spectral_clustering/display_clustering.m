@@ -12,7 +12,7 @@ function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, i
         ax = pixeltensor(row_inds(k), col_inds(k), 3);
         ay = pixeltensor(row_inds(k), col_inds(k), 4);
         % since the first label is 2 but the first lookup index is 1
-        transformed_pixel_label = label_as_local(label_mappings, pixel_label); % pixel_label - 1;
+        transformed_pixel_label = label_to_vector_index(label_mappings, pixel_label); % pixel_label - 1;
         assignment = label_assignents(transformed_pixel_label);
         plot(ay, ax, 'Color', get_cluster_color_of(assignment), 'Marker', '*');
         hold on 

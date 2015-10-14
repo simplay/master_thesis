@@ -4,7 +4,7 @@ function [ ev ] = extract_vector( U, W, col_idx, USE_W_VEC, label_mappings)
 
     if USE_W_VEC
         % ev = extract_row_from_w(col_idx);
-        idx = label_as_local(label_mappings, col_idx);
+        idx = label_to_vector_index(label_mappings, col_idx);
         ev = W(:,idx);
     else
         ev = U(:,col_idx);

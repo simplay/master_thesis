@@ -7,8 +7,9 @@ RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
 CLUSTER_CENTER_COUNT = 4;
 THRESH = 0.002;
-RUN_EIGS = true;
+RUN_EIGS = false;
 addpath('../libs/flow-code-matlab');
+DATASET = 'cars1_9k';
 
 %% load appropriate data
 if RUN_EIGS
@@ -78,17 +79,18 @@ end
 
 %% display segmentation and its data.
 
+% load label vector indices mappings
 label_mappings = labelfile2mat;
-
 
 % the following flag define what data should be displayed.
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = true;
+USE_CLUSTERING_CUE = false;
 
-figure
+% to help the user what values/index pairs can be displayed.
+show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 
 % NOTICE: col_sel stands for the target column of the dataset that should
 %   be plotted. Since eigenvectors, affinitires and label_assignments
@@ -106,8 +108,7 @@ figure
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 2363;
-label_as_local(label_mappings, 2363)
+col_sel = 1;
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
@@ -116,6 +117,7 @@ end
 % display data
 for img_index = 1:1
     figure
+    
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
@@ -123,10 +125,9 @@ for img_index = 1:1
     if USE_CLUSTERING_CUE    
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
         display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings);
-        write_label_clustering_file(label_assignments, label_mappings, img_index);
+        write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
     else
         displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
-       %displayed_vector = W(:,2808);
         if USE_W_VEC
             display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings);
         else
