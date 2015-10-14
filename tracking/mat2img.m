@@ -1,4 +1,4 @@
-function [img] = mat2Img(A, B, C)
+function [img] = mat2img(A, B, C)
 %MAT2IMG takes 3 (m x n) Matrices and reshapes them to an (m x n x 3) Image.
 %   @param A, B, and C are (m x n) matrices. 
 %   Possible application: Conversion from R, G and B color channels to an image.
