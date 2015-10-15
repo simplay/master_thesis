@@ -18,9 +18,7 @@ class Trajectory
   end
 
   def contains_weird_points?
-    @points.any? do |p|
-      p.x > 480 || p.y > 640
-    end
+    @points.any?(&:out_of_range?)
   end
 
   # Retrieve all trajectory points.
