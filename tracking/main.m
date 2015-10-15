@@ -14,10 +14,14 @@ DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/ldof/',DATASET); % dataset that should be used
 IM_EXT = '.ppm'; % input img file extension
 DISPLAY = true; % show tracking points
-MODE = 1;%5; % display mode
-START_FRAME_IDX = 1; % inital index 1
-END_FRAME_IDX = 4; % for car example max 4
+MODE = 5; % display mode
+
 WRITE_TRACKINGS_INTO_FILES = true;
+
+
+[boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
+START_FRAME_IDX = boundaries(1); % inital index 1
+END_FRAME_IDX = boundaries(2); % for car example max 4
 
 %% working example
 % fix naming of files: since image naming indices start counting by 1 and
@@ -28,7 +32,7 @@ WRITE_TRACKINGS_INTO_FILES = true;
 % foreward_flow = readFlowFile('../data/ldof/cars1/ForwardFlow000.flo');
 % backward_flow = readFlowFile('../data/ldof/cars1/BackwardFlow000.flo');
 
-[m,n,~] = size(imread(strcat(BASE_FILE_PATH,'01', IM_EXT)));
+[m,n,~] = size(imread(imgs{1}));
 start_mask = ones(m,n);
 prev_tacked_pixels = zeros(m,n,7);
 prev_foreward_flow = 0;
@@ -36,10 +40,10 @@ prev_backward_flow = 0;
 % initially, there are no tracked to positions
 tracked_to_positions = zeros(m,n);
 for t=START_FRAME_IDX:END_FRAME_IDX,
-    frame_t = strcat(BASE_FILE_PATH,'0',num2str(t), IM_EXT);
-    im_tp1 = strcat(BASE_FILE_PATH,'0',num2str(t+1), IM_EXT);
-    fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
-    bw_flow_t = strcat(BASE_FILE_PATH, 'BackwardFlow','00',num2str(t-1),'.flo');
+    frame_t = imgs{t};
+    im_tp1 = imgs{t+1};
+    fw_flow_t = fwf{t};
+    bw_flow_t = bwf{t};
     [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask, prev_foreward_flow, prev_backward_flow ] = ...
         process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow);
 
@@ -64,7 +68,7 @@ end
 global_variances = [];
 local_flow_variances = zeros(m,n,END_FRAME_IDX);
 for t=START_FRAME_IDX:END_FRAME_IDX
-    fw_flow_t = strcat(BASE_FILE_PATH, 'ForwardFlow','00',num2str(t-1),'.flo');
+    fw_flow_t = fwf{t};
     fw_flow = readFlowFile(fw_flow_t);
     local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow);
     global_variances = [global_variances, var(fw_flow(:))];

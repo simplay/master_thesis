@@ -1,8 +1,6 @@
 function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, mode, prev_tacked_pixels)
 %DISPLAY_TRACKING_FIGURES Summary of this function goes here
 %   Detailed explanation goes here
-        BASE_FILE_PATH = '../data/ldof/cars1/'; % dataset that should be used
-        IM_EXT = '.ppm'; % input img file extension
         drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1),y(2)-y(1),0 ); 
         img1 = imread(im_t);
         img2 = imread(im_tp1);
@@ -12,10 +10,7 @@ function display_tracking_figures( im_t, im_tp1, trackable_pixels, tracked_pixel
         img_title2 = strcat(num2str(t_idx-1), ' to ', num2str(t_idx));
 
         if mode == 5 && t_idx > 1
-            frame_t = strcat(BASE_FILE_PATH,'0',num2str(t_idx), IM_EXT);
-            tm1_img = imread(frame_t);
-            tm1_img =im2double(tm1_img); % from image next is img1
-            tm1_img = mat2img(tm1_img(:,:,1));
+            tm1_img = mat2img(img1(:,:,1));
             
             % find all cont. tracks
             %keyboard;

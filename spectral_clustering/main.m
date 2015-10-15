@@ -87,8 +87,8 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
-USE_W_VEC = false;
-USE_CLUSTERING_CUE = true;
+USE_W_VEC = true;
+USE_CLUSTERING_CUE = false;
 
 % to help the user what values/index pairs can be displayed.
 show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
@@ -110,14 +110,14 @@ show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 %   975 - front car car front (issue case: no neighboring assignments)
 
 
-col_sel = 6;
+col_sel = 2809;
 % load W in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
 end
 
 % display data
-for img_index = 1:4
+for img_index = 2:2
     figure
     
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
