@@ -1,7 +1,8 @@
-function [ label_mapping ] = labelfile2mat
+function [ label_mapping ] = labelfile2mat(PATH)
 %LABELFILE2MAT return label mapping
 %   Detailed explanation goes here
-fid = fopen('../output/similarities/cars1_labels.txt');
+fname = strcat(PATH, '_labels.txt');
+fid = fopen(fname);
 tline = fgets(fid);
 labels_as_cells = strsplit(tline, ' ');
 fclose(fid);

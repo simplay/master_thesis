@@ -9,10 +9,10 @@ addpath('../libs/flow-code-matlab');
 set_global_label_idx(1);
 
 STEP_SIZE = 8; % tracking density
-DATASETNAME = 'cars1';
+DATASETNAME = 'teddy';
+METHODNAME = 'other';
 DATASET = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../data/ldof/',DATASET); % dataset that should be used
-IM_EXT = '.ppm'; % input img file extension
+BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
 DISPLAY = true; % show tracking points
 MODE = 5; % display mode
 

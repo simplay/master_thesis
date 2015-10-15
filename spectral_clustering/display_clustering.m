@@ -1,8 +1,8 @@
-function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, img_index, label_mappings)
+function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, img_index, label_mappings, imgs)
 %DISPLAY_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
-    filename = strcat('../data/ldof/cars1/0',num2str(img_index),'.ppm');
+    filename = imgs{img_index};
     img = imread(filename);
     I = mat2img(img(:,:,1));
     imshow(I);

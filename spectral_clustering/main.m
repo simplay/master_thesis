@@ -5,16 +5,26 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 2;
 THRESH = 0.002;
 THRESH = 0.0;
 RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
-DATASET = 'cars1_9k';
+BASE = '../output/similarities/';
+DATASET = 'teddy';
+
+% 'cars1_step_8_frame_';
+PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_8_frame_'];
+
+DATASETNAME = DATASET;
+METHODNAME = 'other'; %other,ldof
+DATASETP = strcat(DATASETNAME,'/');
+BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
 
 %% load appropriate data
 if RUN_EIGS
-    W = load('../output/similarities/cars1_sim.dat');
+    fname = strcat(BASE,DATASET,'_sim.dat');
+    W = load(fname);
     WW = W + ones(size(W))*THRESH;
     d_a = sum(WW,2);
     D = diag(d_a);
@@ -81,13 +91,13 @@ end
 %% display segmentation and its data.
 
 % load label vector indices mappings
-label_mappings = labelfile2mat;
-
+label_mappings = labelfile2mat(strcat(BASE,DATASET));
+[~, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
 % the following flag define what data should be displayed.
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
-USE_W_VEC = true;
+USE_W_VEC = false;
 USE_CLUSTERING_CUE = false;
 
 % to help the user what values/index pairs can be displayed.
@@ -110,31 +120,31 @@ show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 %   975 - front car car front (issue case: no neighboring assignments)
 
 
-col_sel = 2809;
+col_sel = 1;
 % load W in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
 end
 
 % display data
-for img_index = 2:2
+for img_index = 1:1
     figure
     
-    pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
+    pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
 
     if USE_CLUSTERING_CUE    
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
-        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings);
+        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
         write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
     else
         displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
         if USE_W_VEC
-            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings);
+            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
         else
             eigenvalue = S_small(col_sel);
-            display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings);
+            display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings, imgs);
         end
     end
 end
