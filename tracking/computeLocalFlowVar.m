@@ -4,7 +4,7 @@ function [variances] = computeLocalFlowVar(flowfield)
     x = flowfield(:,:,1);
     y = flowfield(:,:,2);
     
-    t = 3;
+    t = 20;
     kernel = ones(t,t);
     
     % var(x+y) = var(x) + var(y) + cov(x,y)

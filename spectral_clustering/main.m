@@ -5,9 +5,10 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 4;
+CLUSTER_CENTER_COUNT = 2;
 THRESH = 0.002;
-RUN_EIGS = false;
+THRESH = 0.0;
+RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 DATASET = 'cars1_9k';
 
@@ -108,7 +109,7 @@ show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 1;
+col_sel = 2;
 % load W matrix in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');

@@ -113,14 +113,14 @@ class SimilarityMatrix
     return [] if u < l # when forward diff cannot be computed
     d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
     (l..u).map do |idx|
-
       # compute foreward diff over T for A,B
       timestep = common_frame_count unless $is_debugging
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
 
-      sigma_t = sigma_t_at(idx)
+      #sigma_t = sigma_t_at(idx)
+      sigma_t = local_sigma_t_at(idx, a, b)
 
       # formula 4
       d_sp_a_b*(dt_AB/sigma_t)
@@ -128,9 +128,18 @@ class SimilarityMatrix
     end
   end
 
-  # perform lookup in appropriate sigma value frame.
+  # perform lookup in appropriate variance value frame.
   def sigma_t_at(frame_idx)
     FlowVariance.at_frame(frame_idx)
+  end
+
+  # perform lookup in appropriate variance value frame.
+  def local_sigma_t_at(idx, a, b)
+    pa = a.point_at(idx)
+    pb = b.point_at(idx)
+    s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
+    s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
+    (s_a+s_b)/2.0
   end
 
   # implementation of formula 3
