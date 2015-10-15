@@ -34,6 +34,12 @@ function [ out ] = bfiltmat2( img, sigma_s, sigma_r )
             EV1 = exp(DeltaNValues1+deltaNIdx);
             EV2 = exp(DeltaNValues2+deltaNIdx);
             
+            % set ourself to zero: fix
+            idx = find(rowIndices == i);
+            idj = find(columnIndices == j);
+            EV1(idx,idj) = 0;
+            EV2(idx,idj) = 0;
+            
             
             out1(i,j) = (EV1(:)'*neighboordhoodValues1(:))/sum(EV1(:));
             out2(i,j) = (EV2(:)'*neighboordhoodValues2(:))/sum(EV2(:));

@@ -5,7 +5,7 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 2;
+CLUSTER_CENTER_COUNT = 3;
 THRESH = 0.002;
 THRESH = 0.0;
 RUN_EIGS = true;
@@ -22,7 +22,7 @@ if RUN_EIGS
     B = D12*(D-WW)*D12;
     [U_small,S_small,FLAG] = eigs(B,50,1e-6);
     d = diag(S_small);
-    [aa,~,~] = find(d < 0.2);
+    [aa,~,~] = find(d < 0.6);
     U_small = aggregate_mat_cols(U_small, aa);
     S_small = d(aa);
 elseif RUN_EIGS == false && PERFORM_RECOMP      
@@ -68,7 +68,7 @@ elseif RUN_EIGS == false && PERFORM_RECOMP
     U_small = aggregate_mat_cols(U_small, idx);
     V_small = aggregate_mat_cols(V_small, idx);
     S_small = S_small(idx,idx);%aggregate_mat_cols(S_small, idx);
-
+    
     else
         load('cars1_9k_small_usv.mat');
     end
@@ -88,7 +88,7 @@ label_mappings = labelfile2mat;
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 % to help the user what values/index pairs can be displayed.
 show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
@@ -109,14 +109,15 @@ show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 %       cmp with 2000
 %   975 - front car car front (issue case: no neighboring assignments)
 
-col_sel = 2;
-% load W matrix in case it is needed.
+
+col_sel = 6;
+% load W in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
 end
 
 % display data
-for img_index = 1:1
+for img_index = 1:4
     figure
     
     pixeltensor = load(strcat('../output/trackingdata/cars1_step_8_frame_',num2str(img_index),'.mat'));
