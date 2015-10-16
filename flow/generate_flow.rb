@@ -74,3 +74,38 @@ flow_files.each do |fname|
   new_name = "bwf_"+filename
   File.rename(fname, folder_path + new_name + File.extname(fname))
 end
+
+# generate complete used_input.txt file
+# is used for tracking
+File.open("#{folder_path}used_input.txt", 'w') do |file|
+  file.puts "#use"
+  file.puts "1\n#{len-1}"
+  file.puts "#imgs"
+  imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
+    fname.include?("LDOF")
+  end
+
+  imgs.each do |img|
+    file.puts img.split("/").last
+  end
+  file.puts "#fwf"
+  imgs = Dir["#{folder_path}*.flo"].select do |fname|
+    fname.include?("fwf")
+  end
+
+  imgs.each do |img|
+    file.puts img.split("/").last
+  end
+  file.puts "#bwf"
+  imgs = Dir["#{folder_path}*.flo"].select do |fname|
+    fname.include?("bwf")
+  end
+
+  imgs.each do |img|
+    file.puts img.split("/").last
+  end
+end
+
+puts "Generated forward-and backward flows and full 'used_input.txt' file"
+
+
