@@ -5,13 +5,13 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 2;
 THRESH = 0.002;
 THRESH = 0.0;
 RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 BASE = '../output/similarities/';
-DATASET = 'cars1';
+DATASET = 'chair';
 
 % 'cars1_step_8_frame_';
 PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_8_frame_'];

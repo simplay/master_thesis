@@ -9,8 +9,8 @@ addpath('../libs/flow-code-matlab');
 set_global_label_idx(1);
 
 STEP_SIZE = 8; % tracking density
-DATASETNAME = 'teddy';
-METHODNAME = 'other';
+DATASETNAME = 'chair';
+METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
 DISPLAY = true; % show tracking points

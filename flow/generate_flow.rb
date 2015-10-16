@@ -1,8 +1,23 @@
+require 'pry'
 dataset = ARGV[0] # name of subfolder in folder 'data'
 from_idx = ARGV[1] # first image index, first image has index 1
 to_idx = ARGV[2] # ast image index, has index total image count
-
 folder_path = "data/#{dataset}/"
+
+# convert input images to png
+blacklist = [".ppm", ".flo", ".txt"]
+input_imgs_fnames = Dir["#{folder_path}*.*"].reject do |fname|
+  blacklist.any? do |forbidden_name|
+    fname.include?(forbidden_name)
+  end
+end
+# find out file extension and convert to ppm images.
+# requires Imagemagick
+unless input_imgs_fnames.empty?
+  fextension = input_imgs_fnames.first.split(".").last
+  system("mogrify -format ppm #{folder_path}/*.#{fextension}")
+end
+
 dataset_fnames = Dir["#{folder_path}*.ppm"]
 dataset_fnames = dataset_fnames.reject {|fname| fname.include? 'LDOF.ppm'}
 len = dataset_fnames.length
@@ -21,23 +36,8 @@ if lower < 0 or upper >= len
 end
 
 # update dataset that actually should be used
+dataset_fnames = dataset_fnames.sort_by do |a| a.split("/").last.to_i end
 dataset_fnames = dataset_fnames[lower..(upper+1)]
-
-# convert input images to png
-blacklist = [".ppm", ".flo", ".txt"]
-input_imgs_fnames = Dir["#{folder_path}*.*"].reject do |fname|
-  blacklist.any? do |forbidden_name|
-    fname.include?(forbidden_name)
-  end
-end
-
-# find out file extension and convert to ppm images.
-# requires Imagemagick
-unless input_imgs_fnames.empty?
-  fextension = input_imgs_fnames.first.split(".").last
-  system("mogrify -format ppm #{folder_path}/*.#{fextension}")
-end
-
 # compute forward flow
 puts "computing forward flow for dataset #{dataset}..."
 (lower..upper).each do |idx|
