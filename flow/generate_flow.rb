@@ -1,14 +1,44 @@
+require 'pry'
 dataset = ARGV[0]
 from_idx = ARGV[1]
 to_idx = ARGV[2]
+
 folder_path = "data/#{dataset}/"
 dataset_fnames = Dir["#{folder_path}*.ppm"]
 dataset_fnames = dataset_fnames.reject {|fname| fname.include? 'LDOF.ppm'}
 len = dataset_fnames.length
 
+# minus 2 since the first item in a ruby
+#array has index 0 and we also want to access to end element (i.e. idx+1).
+lower = 0
+upper = len-2
+
+# set lower and upper index
+lower = from_idx.to_i unless from_idx.nil?
+upper = to_idx.to_i unless to_idx.nil?
+
+if lower < 0 or upper >= len
+  raise "Error: invalid indices passed!"
+end
+
+# convert input images to png
+blacklist = [".ppm", ".flo", ".txt"]
+input_imgs_fnames = Dir["#{folder_path}*.*"].reject do |fname|
+  blacklist.any? do |forbidden_name|
+    fname.include?(forbidden_name)
+  end
+end
+
+# find out file extension and convert to ppm images.
+# requires Imagemagick
+unless input_imgs_fnames.empty?
+  fextension = input_imgs_fnames.first.split(".").last
+  system("mogrify -format ppm #{folder_path}/*.#{fextension}")
+end
+
 # compute forward flow
 puts "computing forward flow for dataset #{dataset}..."
-(0..len-2).each do |idx|
+(lower..upper).each do |idx|
   i1 = dataset_fnames[idx]
   i2 = dataset_fnames[idx+1]
   puts "computing forward flow from #{i1} to #{i2}"
