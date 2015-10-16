@@ -5,19 +5,19 @@ close all;
 PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 2;
+CLUSTER_CENTER_COUNT = 3;
 THRESH = 0.002;
 THRESH = 0.0;
 RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 BASE = '../output/similarities/';
-DATASET = 'teddy';
+DATASET = 'cars1';
 
 % 'cars1_step_8_frame_';
 PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_8_frame_'];
 
 DATASETNAME = DATASET;
-METHODNAME = 'other'; %other,ldof
+METHODNAME = 'ldof'; %other,ldof
 DATASETP = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
 
@@ -98,7 +98,7 @@ label_mappings = labelfile2mat(strcat(BASE,DATASET));
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 % to help the user what values/index pairs can be displayed.
 show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
