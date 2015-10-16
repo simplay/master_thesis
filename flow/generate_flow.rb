@@ -1,7 +1,6 @@
-require 'pry'
-dataset = ARGV[0]
-from_idx = ARGV[1]
-to_idx = ARGV[2]
+dataset = ARGV[0] # name of subfolder in folder 'data'
+from_idx = ARGV[1] # first image index, first image has index 1
+to_idx = ARGV[2] # ast image index, has index total image count
 
 folder_path = "data/#{dataset}/"
 dataset_fnames = Dir["#{folder_path}*.ppm"]
@@ -14,12 +13,15 @@ lower = 0
 upper = len-2
 
 # set lower and upper index
-lower = from_idx.to_i unless from_idx.nil?
-upper = to_idx.to_i unless to_idx.nil?
+lower = from_idx.to_i-1 unless from_idx.nil?
+upper = to_idx.to_i-2 unless to_idx.nil?
 
 if lower < 0 or upper >= len
   raise "Error: invalid indices passed!"
 end
+
+# update dataset that actually should be used
+dataset_fnames = dataset_fnames[lower..(upper+1)]
 
 # convert input images to png
 blacklist = [".ppm", ".flo", ".txt"]
@@ -59,7 +61,7 @@ dataset_fnames.reverse!
 
 # compute backward flow
 puts "Start computing backward flow for dataset #{dataset}..."
-(0..len-2).each do |idx|
+(lower..upper).each do |idx|
   i1 = dataset_fnames[idx]
   i2 = dataset_fnames[idx+1]
   puts "computing backward flow from #{i1} to #{i2}"
@@ -79,13 +81,14 @@ end
 # is used for tracking
 File.open("#{folder_path}used_input.txt", 'w') do |file|
   file.puts "#use"
-  file.puts "1\n#{len-1}"
+  file.puts "#{lower+1}\n#{upper+1}"
   file.puts "#imgs"
   imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
     fname.include?("LDOF")
   end
-
-  imgs.each do |img|
+  nupper = upper
+  nupper = upper + 1 if upper < len-1
+  imgs.sort[lower..nupper].each do |img|
     file.puts img.split("/").last
   end
   file.puts "#fwf"
