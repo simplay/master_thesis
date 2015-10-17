@@ -6,3 +6,4 @@ output/similarities/*.txt
 output/similarities/*.dat
 **/*.mat
 flow/data/**/*.*
+data/ldof/chair/*.*
