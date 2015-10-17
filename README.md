@@ -57,6 +57,22 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 7. Install required ruby plugins and setup their dependencies: `bundle`
 
 ## Usages
+### Run complete pipeline
+
++ Generate forward and backward flows
+ + cd to `flow/`
+ + copy your image series to `data/my_image_series_folder_name`
+ + run `ruby normalize my_image_series_folder_name/` (**optional**)
+ + run `ruby generate_flow.rb my_image_series_folder_name START END` 
+ 
+Note that **START** is first and **END** is the last image index that should be processed.
+
++ Generate Tracking points and Variances
++ Extract trajectories
++ Compute Affinity matrix
++ Compute Segmentation
+
+### Details
 
 + Run the **extract trajectories script**: 
  + Enter `cd ./extract_trackings/`
