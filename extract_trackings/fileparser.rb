@@ -17,16 +17,18 @@ class Fileparser
 
   def parse
     @file_count = 0
-    Dir.foreach(@filepath) do |filename|
+    dirs = (Dir["#{@filepath}*.txt"].select do |fname| fname.include?("tracking_") end).sort_by do |fname| fname.split("_").last.split(".").first.to_i end
+    dirs.each do |filename|
       # skip hidden files or those included in the BLACKLIST
-      next if filename =~ /^\..*/ or in_blacklist?(filename)
+      #next if filename =~ /^\..*/ or in_blacklist?(filename)
       puts "parsing file #{filename.to_s}..." if $run_debug_mode
-      File.open(@filepath+filename, "r") do |file|
-        file_id = filename.split("_").last.split(".txt").first.to_i
+      fname = filename.split("/").last
+      File.open(@filepath+fname, "r") do |file|
+        file_id = fname.split("_").last.split(".txt").first.to_i
         parse_file_lines(file, file_id)
         @file_count = @file_count + 1
       end
-      puts "finished parsing file #{filename}" if $run_debug_mode
+      puts "finished parsing file #{fname}" if $run_debug_mode
     end
   end
 
