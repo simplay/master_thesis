@@ -94,6 +94,14 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
             alpha_x = 1-(prev_ax-i_prev_ax);
             alpha_y = 1-(prev_ay-i_prev_ay);
             
+            if (i_prev_ax <= 0 || i_prev_ay <= 0 || i_prev_ax > m || i_prev_ay > n)
+                continue;
+            end
+            
+            if (i2_prev_ax <= 0 || i2_prev_ay <= 0 || i2_prev_ax > m || i2_prev_ay > n)
+                continue;
+            end
+            
             pew_x = alpha_x*prev_fw_u_flow(i_prev_ax,i_prev_ay) + (1-alpha_x)*prev_fw_u_flow(i2_prev_ax,i2_prev_ay);
             pew_y = alpha_y*prev_fw_v_flow(i_prev_ax,i_prev_ay) + (1-alpha_y)*prev_fw_v_flow(i2_prev_ax,i2_prev_ay);
             
@@ -111,6 +119,10 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
             
             
             if (i_ax <= 0 || i_ay <= 0 || i_ax > m || i_ay > n)
+                continue;
+            end
+            
+            if (i2_ax <= 0 || i2_ay <= 0 || i2_ax > m || i2_ay > n)
                 continue;
             end
             
