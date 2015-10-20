@@ -4,7 +4,7 @@ require_relative 'flow_variance'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  $is_debugging = true
+  $is_debugging = false
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
@@ -105,7 +105,7 @@ class SimilarityMatrix
     w_a_b = Math.exp(-LAMBDA*d2_a_b)
   end
 
-  def temporal_distances_between(a, b, lower_idx, upper_idx, timestep=2)
+  def temporal_distances_between(a, b, lower_idx, upper_idx, timestep=6)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
     u = (upper_idx-(timestep-1))
@@ -144,7 +144,7 @@ class SimilarityMatrix
 
   # implementation of formula 3
   def foreward_differece_on(trajectory, common_frame_count, idx)
-    t = [common_frame_count, 5].min-1
+    t = [common_frame_count, 6].min-1
     p_i = trajectory.point_at(idx)
     p_i_pl_t = trajectory.point_at(idx+t)
     p = p_i_pl_t.copy.sub(p_i)
