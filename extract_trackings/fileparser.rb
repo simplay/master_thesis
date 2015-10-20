@@ -8,19 +8,25 @@ class Fileparser
   RUN_DEBUG_MODE = false
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, mode)
+  def initialize(filepath, mode, from_idx=nil, to_idx=nil)
     @tm = TrajectoryManager.new
     $run_debug_mode = mode
     @filepath = filepath
+    @from_idx = from_idx
+    @from_idx = @from_idx.to_i-1 unless @from_idx.nil?
+    @to_idx = to_idx
+    @to_idx = @to_idx.to_i-1 unless @to_idx.nil?
     parse
   end
 
   def parse
     @file_count = 0
-    dirs = (Dir["#{@filepath}*.txt"].select do |fname| fname.include?("tracking_") end).sort_by do |fname| fname.split("_").last.split(".").first.to_i end
+    dirs = (Dir["#{@filepath}*.txt"].select do |fname|
+      fname.include?("tracking_") end).sort_by do |fname|
+        fname.split("_").last.split(".").first.to_i
+      end
+    dirs = dirs[@from_idx..@to_idx] unless @to_idx.nil?
     dirs.each do |filename|
-      # skip hidden files or those included in the BLACKLIST
-      #next if filename =~ /^\..*/ or in_blacklist?(filename)
       puts "parsing file #{filename.to_s}..." if $run_debug_mode
       fname = filename.split("/").last
       File.open(@filepath+fname, "r") do |file|
