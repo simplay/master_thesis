@@ -23,6 +23,9 @@ WRITE_TRACKINGS_INTO_FILES = true;
 START_FRAME_IDX = boundaries(1); % inital index 1
 END_FRAME_IDX = boundaries(2); % for car example max 4
 
+animate_seq(imgs, 1, length(imgs));
+
+
 %% working example
 % fix naming of files: since image naming indices start counting by 1 and
 % flow field by zero, there is a potential confusion.
@@ -62,6 +65,7 @@ for t=START_FRAME_IDX:END_FRAME_IDX,
     start_mask = old_start_mask;
     tracked_to_positions = tracked_pixels(:,:,1);
     prev_tacked_pixels = tracked_pixels;
+    disp(['Processed flow field ', num2str(t)]);
 end
 
 %% compute local and global variance
