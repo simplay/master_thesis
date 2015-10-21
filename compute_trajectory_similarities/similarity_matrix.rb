@@ -4,10 +4,11 @@ require_relative 'flow_variance'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  $is_debugging = false
+  $is_debugging = true
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
+  DT_THREH = 5
 
   def initialize(tracking_manager)
     @tm = tracking_manager
@@ -86,7 +87,7 @@ class SimilarityMatrix
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def similarity(a, b)
-
+    return 1.0 if a == b
     # Find overlapping part of two given trajectories:
     #
     # find latest start frame of trajectory pair
@@ -95,26 +96,32 @@ class SimilarityMatrix
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
-    if d2_t_a_b.empty?
-      # mark as deletable
-      # @tm.filter_zero_length_trajectories
-      return 0.0
-    end
+    return 0.0 if d2_t_a_b.empty?
     d_t_a_b = d2_t_a_b
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-LAMBDA*d2_a_b)
   end
 
-  def temporal_distances_between(a, b, lower_idx, upper_idx, timestep=6)
+  # Compute temoral distance between temporal overlapping segments
+  # of two given trajectories.
+  #
+  # @param a [Trajectory] frist trajectory
+  # @param b [Trajectory] other trajectory
+  # @param lower_idx [Integer] index first overlapping trajectory frame
+  # @param upper_idx [Integer] index last overlapping trajectory frame
+  # @param dt [Integer] timestep size
+  # @return [Array] of Float values denoting the temporal distance
+  #   between two trajectory segment pairs.
+  def temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
-    u = (upper_idx-(timestep-1))
+    timestep = $is_debugging ? dt : common_frame_count
+    u = [upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
     return [] if u < l # when forward diff cannot be computed
     d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
     (l..u).map do |idx|
       # compute foreward diff over T for A,B
-      timestep = common_frame_count unless $is_debugging
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
@@ -144,11 +151,11 @@ class SimilarityMatrix
 
   # implementation of formula 3
   def foreward_differece_on(trajectory, common_frame_count, idx)
-    t = [common_frame_count, 6].min-1
+    t = [common_frame_count, DT_THREH].min
     p_i = trajectory.point_at(idx)
     p_i_pl_t = trajectory.point_at(idx+t)
     p = p_i_pl_t.copy.sub(p_i)
-    c = common_frame_count.to_f-1
+    c = common_frame_count.to_f
     Point.new([p.x/c,p.y/c])
   end
 
