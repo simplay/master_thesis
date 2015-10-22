@@ -4,17 +4,19 @@ require_relative 'flow_variance'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  $is_debugging = true
+  $is_debugging = false
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
   DT_THREH = 5
+  ZERO_THRESH = 1.0e-12
 
   def initialize(tracking_manager)
     @tm = tracking_manager
   end
 
   def to_mat
+    @tm.filter_trajectories_shorter_than(DT_THREH)
     traverse_all_pairs
     generate_dat_file
   end
@@ -64,7 +66,7 @@ class SimilarityMatrix
   end
 
   def trajectories
-    @tm.trajectories#.first(200)
+    @tm.trajectories#.first(100)
   end
 
   # @todo: REMOVE the first(200) from @tm.trajectories.first(200)
@@ -100,6 +102,7 @@ class SimilarityMatrix
     d_t_a_b = d2_t_a_b
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-LAMBDA*d2_a_b)
+    (w_a_b < ZERO_THRESH) ? 0.0 : w_a_b
   end
 
   # Compute temoral distance between temporal overlapping segments
@@ -116,10 +119,15 @@ class SimilarityMatrix
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
     timestep = $is_debugging ? dt : common_frame_count
+
+    # ensure that we only iterate over trajectories that are longer that 4 segments
     u = [upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
     return [] if u < l # when forward diff cannot be computed
-    d_sp_a_b = avg_spatial_distance_between(a, b, lower_idx, upper_idx)
+
+    # compute average spatial distance between 2 trajectories
+    # over all overalapping segments.
+    d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
     (l..u).map do |idx|
       # compute foreward diff over T for A,B
       dt_A = foreward_differece_on(a, timestep, idx)
@@ -149,13 +157,20 @@ class SimilarityMatrix
     (s_a+s_b)/2.0
   end
 
-  # implementation of formula 3
-  def foreward_differece_on(trajectory, common_frame_count, idx)
-    t = [common_frame_count, DT_THREH].min
-    p_i = trajectory.point_at(idx)
-    p_i_pl_t = trajectory.point_at(idx+t)
+  # Compute the value of the tangent of a given trajectory at a given location.
+  #
+  # @info: implementation of formula 3
+  # @param Trajectory [Trajectory] trajectory we want to compute its tangent
+  # @param dt [Integer] timestep size used for computing finite difference scheme.
+  # @param frame_idx [Integer] lookup index of target frame.
+  #   starts counting at 1.
+  # @return [Point] of Float values encoding the partial derivative of that point.
+  def foreward_differece_on(trajectory, dt, frame_idx)
+    t = [dt, DT_THREH].min
+    p_i = trajectory.point_at(frame_idx)
+    p_i_pl_t = trajectory.point_at(frame_idx+t)
     p = p_i_pl_t.copy.sub(p_i)
-    c = common_frame_count.to_f
+    c = dt.to_f
     Point.new([p.x/c,p.y/c])
   end
 

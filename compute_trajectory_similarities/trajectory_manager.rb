@@ -32,6 +32,15 @@ class TrajectoryManager
     find_issue_trajectories.values.map &:label
   end
 
+  # Remove all trajectories from this manager that are shorter than given length.
+  #
+  # @hint: shorter than a given length means that a trajectory should exhibit at least
+  #   as many tracking points as indicated by the given minimal length.
+  # @param tra_min_length [Integer] minimal length of a valid trajectory
+  def filter_trajectories_shorter_than(tra_min_length)
+    @trajectories = @trajectories.delete_if {|_, tra| tra.length < tra_min_length}
+  end
+
   # Find the most n similar neighbors of a given trajectory that start all
   # at a given frame.
   #
