@@ -74,7 +74,7 @@ local_flow_variances = zeros(m,n,END_FRAME_IDX);
 for t=START_FRAME_IDX:END_FRAME_IDX
     fw_flow_t = fwf{t};
     fw_flow = readFlowFile(fw_flow_t);
-    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow,2);
+    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow,0,1);
     global_variances = [global_variances, var(fw_flow(:))];
 end
 fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
