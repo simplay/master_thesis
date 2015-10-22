@@ -9,7 +9,7 @@ addpath('../libs/flow-code-matlab');
 set_global_label_idx(1);
 
 STEP_SIZE = 8; % tracking density
-DATASETNAME = 'chair';
+DATASETNAME = 'cars1';
 METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
@@ -74,7 +74,7 @@ local_flow_variances = zeros(m,n,END_FRAME_IDX);
 for t=START_FRAME_IDX:END_FRAME_IDX
     fw_flow_t = fwf{t};
     fw_flow = readFlowFile(fw_flow_t);
-    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow);
+    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow,2);
     global_variances = [global_variances, var(fw_flow(:))];
 end
 fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
