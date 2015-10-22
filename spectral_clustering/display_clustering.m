@@ -14,8 +14,13 @@ function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, i
         % since the first label is 2 but the first lookup index is 1
         transformed_pixel_label = label_to_vector_index(label_mappings, pixel_label); % pixel_label - 1;
         assignment = label_assignents(transformed_pixel_label);
-        plot(ay, ax, 'Color', get_cluster_color_of(assignment), 'Marker', '*');
-        hold on 
+        % if assignment is not empty, it is empty iff point trajectory was
+        % filtered due to a too small length (in compute_similarity
+        % script).
+        if isempty(assignment) == 0
+            plot(ay, ax, 'Color', get_cluster_color_of(assignment), 'Marker', '*');
+            hold on
+        end
     end
 
 end
