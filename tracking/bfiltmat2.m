@@ -1,4 +1,4 @@
-function [ out, weights_u, weights_v ] = bfiltmat2( img, sigma_s, sigma_r, remove_center)
+function [ out, weights_u, weights_v, wl] = bfiltmat2( img, sigma_s, sigma_r, remove_center)
 %BFILTIMG2 apply a bilateral filter o a m x n x 2 tensor.
 %   @param img flow field, m x n x 2 tensor
 %   @param sigma_s special std [FLOAT], unit in pixel (pixel neighborhood)
@@ -9,6 +9,7 @@ function [ out, weights_u, weights_v ] = bfiltmat2( img, sigma_s, sigma_r, remov
 %   @return out bilateral filtered flow field
 %   @return weights_u bilateral filter weights for u-direction
 %   @return weights_v bilateral filter weights for v-direction
+%   @return wl used window length for storing filter weights.
 
     h = waitbar(0, 'Applying Bilateral Filter...');
     set(h, 'Name', 'Bilateral Filter Progress Bar');
