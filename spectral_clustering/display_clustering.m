@@ -28,7 +28,17 @@ function color_value = get_cluster_color_of(assignment)
     elseif assignment == 3
         color_value = [0,0,1];
     elseif assignment == 4
-        color_value = [1,0,1];    
+        color_value = [1,0,1];
+    elseif assignment == 5
+        color_value = [1,1,0];
+    elseif assignment == 6
+        color_value = [0,1,1];
+    elseif assignment == 7
+        color_value = [0.5,0,0.5];
+    elseif assignment == 8
+        color_value = [0,0.5,0.5];
+    elseif assignment == 9
+        color_value = [0.5,0.5,0];            
     else
         color_value = [1,1,1];
     end
