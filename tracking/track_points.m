@@ -59,8 +59,6 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
     %       is tracked continued
     pixel_trackings = zeros(m,n,7);
     
-    
-    
     % only iterate over trackable pixels
     [idx, idy, ~] = find(trackable_pixels == 1);
     for k = 1:length(idx),
@@ -130,21 +128,13 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
             pew_y = alpha_y*fw_v_flow(i_ax,i_ay) + (1-alpha_y)*fw_v_flow(i2_ax,i2_ay);
             
             bx = pp_x + pew_x;
-            by = pp_y + pew_y;
-            
-            
-            
+            by = pp_y + pew_y;    
             
         end
         
-
-
         % tracked to positions (rounded)
         ibx = round(bx);
         iby = round(by);
-        
-
-        % keyboard;
         
         % case: tracked to out of image viewport
         if (ibx <= 0 || iby <= 0 || ibx > m || iby > n)
@@ -167,12 +157,7 @@ function [ pixel_trackings ] = track_points( trackable_pixels, fw_u_flow, fw_v_f
 
                 % use prev label that was assigned
                 prev_label_value = prev_tacked_pixels(ax, ay, LABEL);
-                pixel_trackings(ibx, iby, LABEL) = prev_label_value;
-                
-                
-%                 if prev_label_value == 2403
-%                     keyboard;
-%                 end
+                pixel_trackings(ibx, iby, LABEL) = prev_label_value;             
                 
                 % mark track as continuing
                 pixel_trackings(ibx, iby, CONT) = 1;
