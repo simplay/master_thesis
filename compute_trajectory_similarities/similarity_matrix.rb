@@ -4,7 +4,7 @@ require_relative 'flow_variance'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  $is_debugging = false
+  $is_debugging = true # perform timesteps of size 1
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
@@ -16,7 +16,7 @@ class SimilarityMatrix
   end
 
   def to_mat
-    @tm.filter_trajectories_shorter_than(DT_THREH)
+    @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
     traverse_all_pairs
     generate_dat_file
   end
@@ -49,7 +49,6 @@ class SimilarityMatrix
 
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
-
     @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|
