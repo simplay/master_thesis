@@ -20,6 +20,10 @@ opt_parser = OptionParser.new do |opt|
     user_args[:file] = file
   end
 
+  opt.on("-v", "--variance v", Integer, "Should we use the local variance. By default true") do |variance|
+    user_args[:variance] = variance
+  end
+
   opt.on_tail("-h", "--help", "Show this message") do
     puts opt
     exit
@@ -47,5 +51,7 @@ rescue OptionParser::MissingArgument
   exit
 end
 
+use_local_variance = (user_args[:variance] == 0) ? false : true
+
 filepath = OUT_BASEPATH + user_args[:file]
-fp = Fileparser.new(filepath, user_args[:debug])
+fp = Fileparser.new(filepath, user_args[:debug], use_local_variance)

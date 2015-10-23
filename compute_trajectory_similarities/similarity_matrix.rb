@@ -10,14 +10,20 @@ class SimilarityMatrix
   DT_THREH = 5
   ZERO_THRESH = 1.0e-12
 
-  def initialize(tracking_manager)
+  def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager
+    puts "Using local variance for computing similarities: #{is_using_local_variance}"
+    @is_using_local_variance = is_using_local_variance
   end
 
   def to_mat
     @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
     traverse_all_pairs
     generate_dat_file
+  end
+
+  def use_local_variance?
+    @is_using_local_variance
   end
 
   # Compute the similarities between a trajectory with a given label
@@ -131,9 +137,7 @@ class SimilarityMatrix
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-
-      #sigma_t = sigma_t_at(idx)
-      sigma_t = local_sigma_t_at(idx, a, b)
+      sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
 
       # formula 4
       d_sp_a_b*(dt_AB/sigma_t)

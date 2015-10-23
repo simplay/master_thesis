@@ -11,20 +11,20 @@ class Fileparser
   IS_TRA_DEBUG = true
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, debug_mode)
+  def initialize(filepath, debug_mode, is_using_local_variance)
     @debug_mode = debug_mode
     $is_debugging = in_simple_mode? ? true : false
-    binding.pry
+    puts "Script runs in debug mode: #{$is_debugging}"
     @tm = TrajectoryManager.new
-    @sim_mat = SimilarityMatrix.new(@tm)
+    puts "Computing affinity matrix..."
+    @sim_mat = SimilarityMatrix.new(@tm, is_using_local_variance)
     @filepath = filepath
     parse
     dataset = filepath.split("out_").last.split("_").first
     $global_ds_name = dataset
     FlowVariance.build(OUT_PATH+dataset)
 
-    if run_in_debugging_stage
-      puts "computing sims for traj"
+    if in_demo_mode?
       a = @sim_mat.trajectory_similarities_for(15)
       top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
       binding.pry
