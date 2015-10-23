@@ -74,10 +74,16 @@ Note that **START** is first and **END** is the last image index that should be 
 
 ### Details
 
-+ Run the **extract trajectories script**: 
- + Enter `cd ./extract_trackings/`
- + Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
-+ Run the **compute similarity script**: 
- + Enter `cd ./compute_trajectory_similarities/`
- + Enter `ruby compute_similarities.rb traj_out_cars1_fc_4.txt` to compute the similarities bewtween the trajectories stored the in file `traj_out_cars1_fc_4.txt`. Note that the script assumes, that the file is stored in `./output/trajectories/`.
- + Enter to use 8gb memory while running the script: `ruby -J-Xmx8000m compute_similarities.rb traj_out_cars1_fc_4.txt`
+#### extract trajectories script:
++ Enter `cd ./extract_trackings/`
++ Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
+ + 
+#### compute similarity script: 
++ Enter `cd ./compute_trajectory_similarities/`
++ Enter `ruby compute_similarities.rb -f DATASET -d DBUGMODE -v VARIANCETYPE` to compute the similarities between the trajectories in txt file **DATASET** located at `../output/trajectories/`. The script is using the a given variances associated with the given **VARIANCETYPE** for the computation and is running in debug mode **DEBUGMODE**.
++ E.g. `ruby compute_similarities.rb -f traj_out_cars1_fc_4.txt` computed the similarity matrix for the dataset `traj_out_cars1_fc_4.txt`.
++ When using jruby, pass the following jruby runtime argument to use 8gb memory while running the script: `ruby -J-Xmx8000m compute_similarities.rb -f traj_out_cars1_fc_4.txt`.
++ List of script arguments:
+ +  **DATASET** a text file located at `../output/trajectories/`. Is required to run the computation.
+ +  **DEBUGMODE** a integer, optional. default value is 0. 1 runt the script using forward differences with stepsize 1, 2 runs the script in test mode to explore trajectories. 
+ +  **VARIANCETYPE** a integer, optional. Defines whether the local or global variance should be used. By default the local variance will be used. Passing a 0 will force the script to use the global variance. Passing anything else has no effect and the script will use the local variances during computation.
