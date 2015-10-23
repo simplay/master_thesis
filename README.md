@@ -77,8 +77,9 @@ Note that **START** is first and **END** is the last image index that should be 
 #### extract trajectories script:
 + Enter `cd ./extract_trackings/`
 + Enter `ruby extract.rb cars1/` to extract all trajectories from the computed trackings files located at `./output/trajectories/cars1/`.
- + 
+
 #### compute similarity script: 
+
 + Enter `cd ./compute_trajectory_similarities/`
 + Enter `ruby compute_similarities.rb -f DATASET -d DBUGMODE -v VARIANCETYPE` to compute the similarities between the trajectories in txt file **DATASET** located at `../output/trajectories/`. The script is using the a given variances associated with the given **VARIANCETYPE** for the computation and is running in debug mode **DEBUGMODE**.
 + E.g. `ruby compute_similarities.rb -f traj_out_cars1_fc_4.txt` computed the similarity matrix for the dataset `traj_out_cars1_fc_4.txt`.
