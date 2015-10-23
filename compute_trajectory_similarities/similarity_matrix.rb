@@ -17,9 +17,18 @@ class SimilarityMatrix
   end
 
   def to_mat
+    start = Time.now
+    puts "Computing similarities..."
     @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
     traverse_all_pairs
+    finish_sim = Time.now
+    diff = finish_sim - start
+    puts "Computed affinities in #{diff} seconds"
+    puts "Generating .dat files..."
     generate_dat_file
+    finish_total = Time.now
+    diff = finish_total - start
+    puts "Total time elapsed: #{diff} seconds"
   end
 
   def use_local_variance?
@@ -67,6 +76,9 @@ class SimilarityMatrix
       a_row = sorted_keys.map(&:to_s).join(" ")
       file.puts a_row
     end
+    puts "Wrote the following files:"
+    puts "#{sim_filepath}"
+    puts "#{labels_filepath}"
   end
 
   def trajectories
@@ -138,7 +150,7 @@ class SimilarityMatrix
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
       sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
-
+      sigma_t = sigma_t + 1.0
       # formula 4
       d_sp_a_b*(dt_AB/sigma_t)
       # do something here
