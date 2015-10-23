@@ -5,17 +5,18 @@ require_relative 'fileparser'
 OUT_BASEPATH = "../output/trajectories/"
 VERSION = '0.0.1'
 
-usage_example_text = "ruby -J-Xmx8000m compute_similarities.rb -p traj_out_car2_fc_18.txt -d 1"
+flagged = []
+usage_example_text = "E.g. Enter 'ruby -J-Xmx8000m compute_similarities.rb -f traj_out_car2_fc_18.txt'"
 user_args = {}
 opt_parser = OptionParser.new do |opt|
   opt.banner = usage_example_text
   opt.separator ""
 
-  opt.on("-d", "--debug d", Integer, "Debug mode that should be used when running the script.") do |debug|
+  opt.on("-d", "--debug d", Integer, "Debug mode d that should be used when running the script.") do |debug|
     user_args[:debug] = debug
   end
 
-  opt.on("-f", "--file f", String, "Dataset that should be used located at '../output/trajectories/'") do |file|
+  opt.on("-f", "--file f", String, "Dataset f that should be used located at '../output/trajectories/'.") do |file|
     user_args[:file] = file
   end
 
@@ -30,9 +31,18 @@ opt_parser = OptionParser.new do |opt|
 end
 begin
   opt_parser.parse!
-  raise OptionParser::MissingArgument if user_args[:file].nil?
+  required_args = [:file]
+  required_args.each do |arg|
+    if user_args[arg].nil?
+      flagged << arg
+    end
+  end
+  raise OptionParser::MissingArgument unless flagged.empty?
 rescue OptionParser::MissingArgument
   puts "Incorrect input argument(s) passed\n"
+  flagged.each do |flagged_arg|
+    puts "=> Required argument --#{flagged_arg.to_s} not passed to script."
+  end
   puts opt_parser.help
   exit
 end
