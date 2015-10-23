@@ -24,6 +24,10 @@ opt_parser = OptionParser.new do |opt|
     user_args[:variance] = variance
   end
 
+  opt.on("-l", "--list l", Integer, "list") do |list|
+    user_args[:list] = list
+  end
+
   opt.on_tail("-h", "--help", "Show this message") do
     puts opt
     exit
@@ -35,6 +39,16 @@ opt_parser = OptionParser.new do |opt|
 end
 begin
   opt_parser.parse!
+  if user_args[:list] == 1
+    puts "List of all available trajectory files:"
+    Dir["../output/trajectories/*.txt"].each_with_index do |fname, idx|
+      puts "[#{idx}] #{fname.split("/").last}"
+    end
+    print ">> Please select a file: "
+    filenum = gets.chomp.to_i
+    sel_fname = Dir["../output/trajectories/*.txt"][filenum].split("/").last
+    user_args[:file] = sel_fname
+  end
   required_args = [:file]
   required_args.each do |arg|
     if user_args[arg].nil?
@@ -52,6 +66,5 @@ rescue OptionParser::MissingArgument
 end
 
 use_local_variance = (user_args[:variance] == 0) ? false : true
-
 filepath = OUT_BASEPATH + user_args[:file]
 fp = Fileparser.new(filepath, user_args[:debug], use_local_variance)

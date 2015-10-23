@@ -12,6 +12,7 @@ class Fileparser
 
   # @param filepath [String] path to target tracking files.
   def initialize(filepath, debug_mode, is_using_local_variance)
+    puts "Selected dataset: "+ filepath.split("/").last
     @debug_mode = debug_mode
     $is_debugging = in_simple_mode? ? true : false
     puts "Script runs in debug mode: #{$is_debugging}"
