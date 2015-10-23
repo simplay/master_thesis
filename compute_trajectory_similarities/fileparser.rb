@@ -11,7 +11,10 @@ class Fileparser
   IS_TRA_DEBUG = true
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, run_in_debugging_stage=false)
+  def initialize(filepath, debug_mode)
+    @debug_mode = debug_mode
+    $is_debugging = in_simple_mode? ? true : false
+    binding.pry
     @tm = TrajectoryManager.new
     @sim_mat = SimilarityMatrix.new(@tm)
     @filepath = filepath
@@ -31,6 +34,14 @@ class Fileparser
   end
 
   private
+
+  def in_demo_mode?
+    @debug_mode == 2
+  end
+
+  def in_simple_mode?
+    @debug_mode == 1
+  end
 
   def parse
     File.open(@filepath, "r") do |file|

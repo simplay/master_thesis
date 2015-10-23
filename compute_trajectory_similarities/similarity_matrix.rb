@@ -4,7 +4,6 @@ require_relative 'flow_variance'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  $is_debugging = true # perform timesteps of size 1
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
