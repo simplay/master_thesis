@@ -8,7 +8,7 @@ BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET);
 fw_flow_t = fwf{1};
 fw_flow = readFlowFile(fw_flow_t);
 %%
-vars = computeLocalFlowVar(fw_flow, 0, 0, 6, 20);
+vars = computeLocalFlowVar(fw_flow, 0, 1, 6, 20);
 figure('name', 'var raw')
 imshow(vars)
 colorbar
