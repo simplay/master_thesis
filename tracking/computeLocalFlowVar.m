@@ -1,10 +1,10 @@
-function [variances] = computeLocalFlowVar(flowfield, method, combination_method)
+function [variances] = computeLocalFlowVar(flowfield, method, combination_method, sig_s, sig_r)
 %COMPUTELOCALFLOWVAR Summary of this function goes here
 %   Detailed explanation goes here
     x = flowfield(:,:,1);
     y = flowfield(:,:,2);
     if method > 0
-        [ff, w_u, w_v, wl] = bfiltmat2(flowfield, 3, 5, false);
+        [ff, w_u, w_v, wl] = bfiltmat2(flowfield, sig_s, sig_r, false);
 
         % bilarteral filtered flow field directions
         % act as 
@@ -16,12 +16,13 @@ function [variances] = computeLocalFlowVar(flowfield, method, combination_method
     end
     
     if method == 0
-        [sigma, mu, cov_xy, wl] = localVariance( flowfield, 3, 5, true);
+        [sigma, mu, cov_xy, wl] = localVariance( flowfield, sig_s, sig_r, true);
         var_x = sigma(:,:,1).^2;
         var_y = sigma(:,:,2).^2;
         if combination_method == 1
             variances = (var_x + var_y)/2;
         else
+            cov_xy = cov_xy.*(cov_xy > 0);
             variances = var_x + var_y + 2*cov_xy;
         end
            

@@ -13,7 +13,7 @@ DATASETNAME = 'cars1';
 METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
-DISPLAY = true; % show tracking points
+DISPLAY = false; % show tracking points
 MODE = 5; % display mode
 
 WRITE_TRACKINGS_INTO_FILES = true;
@@ -74,7 +74,7 @@ local_flow_variances = zeros(m,n,END_FRAME_IDX);
 for t=START_FRAME_IDX:END_FRAME_IDX
     fw_flow_t = fwf{t};
     fw_flow = readFlowFile(fw_flow_t);
-    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow,0,1);
+    local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, 6, 20);
     global_variances = [global_variances, var(fw_flow(:))];
 end
 fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
