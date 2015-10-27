@@ -2,6 +2,7 @@ require_relative 'trajectory_manager'
 require_relative 'point'
 require_relative 'similarity_matrix'
 require_relative 'flow_variance'
+require_relative 'point3f'
 require 'pry'
 
 class Fileparser
@@ -9,11 +10,13 @@ class Fileparser
   OUT_PATH = "../output/trackings/"
   RUN_DEBUG_MODE = false
   IS_TRA_DEBUG = true
+  HAS_DEPTH_DATA = false
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, debug_mode, is_using_local_variance)
+  def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data)
     puts "Selected dataset: "+ filepath.split("/").last
     @debug_mode = debug_mode
+    $uses_depth_data = uses_depth_data
     $is_debugging = in_simple_mode? ? true : false
     puts "Script runs in debug mode: #{$is_debugging}"
     @tm = TrajectoryManager.new
@@ -44,6 +47,10 @@ class Fileparser
     @debug_mode == 1
   end
 
+  def has_depth_data?
+    $uses_depth_data
+  end
+
   def parse
     File.open(@filepath, "r") do |file|
       frame_count = @filepath.split("fc_").last.split(".").first
@@ -58,10 +65,15 @@ class Fileparser
         header = line.split(" ")[1..-1]
         @label = header[0].partition("L:").last.to_i
         @start_frame = header[1].partition("S:").last.to_i
+        @frame_idx = @start_frame
       else
         point_data = line.split(" ").map &:to_f
         point = Point.new(point_data)
+        if has_depth_data?
+          Point3f.build_from(point, @frame_idx)
+        end
         @tm.append_trajectory_point(@label, @start_frame, point)
+        @frame_idx = @frame_idx + 1
       end
     end
   end
