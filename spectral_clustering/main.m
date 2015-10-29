@@ -2,107 +2,24 @@ clc;
 %clear all;
 close all;
 
-PERFORM_RECOMP = false;
-RECOMP_EIGS = false;
-PRELOAD_EIGS = false;
-CLUSTER_CENTER_COUNT = 3;
-USE_EIGS = false;
-THRESH = 0.002;
-THRESH = 0.00;
-SEL_EV = 6;
-RUN_EIGS = true;
-addpath('../libs/flow-code-matlab');
-BASE = '../output/similarities/';
 DATASET = 'cars1';
+COMPUTE_EIGS = true;
+USE_EIGS = false;
+STEPSIZE_DATA = 8;
+USE_T = false;
 
-% 'cars1_step_8_frame_';
-PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_8_frame_'];
+THRESH = 0.0;
+CLUSTER_CENTER_COUNT = 3;
 
-DATASETNAME = DATASET;
-METHODNAME = 'ldof'; %other,ldof
-DATASETP = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
-
-%% load appropriate data
-if RUN_EIGS
-    fname = strcat(BASE,DATASET,'_sim.dat');
-    W = load(fname);
-    WW = W + ones(size(W))*THRESH;
-    d_a = sum(WW,2);
-    D = diag(d_a);
-    D12 = diag(sqrt(1./d_a));
-    B = D12*(D-WW)*D12;
-    if USE_EIGS
-        [U_small,S_small,FLAG] = eigs(B,50,1e-6);
-    else
-        [U_small,S_small] = eig(B);
-    end
-    d = diag(S_small);
-    [d, s_idx] = sort(d);
-    U_small = aggregate_mat_cols(U_small, s_idx);
-    [aa,~,~] = find(d < 0.1);
-    UU = U_small;
-    U_small = aggregate_mat_cols(U_small, aa);
-    S_small = d(aa);
-end
-
-%% display segmentation and its data.
-
-% load label vector indices mappings
-label_mappings = labelfile2mat(strcat(BASE,DATASET));
-[~, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
-% the following flag define what data should be displayed.
-% USE_CLUSTERING_CUE true => display segmentation
-% USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
-% USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
 USE_W_VEC = false;
 USE_CLUSTERING_CUE = true;
 
-% to help the user what values/index pairs can be displayed.
-show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
-
-% NOTICE: col_sel stands for the target column of the dataset that should
-%   be plotted. Since eigenvectors, affinitires and label_assignments
-%   have different vector dimensionalities, this affects the possible 
-%   indexing (querry) range. Therefore, when
-%       plotting eigenvectors, then do not pass a bigger index than
-%           size(U_small,2)
-%       plotting affinities, then do not pass a bigger index than length(W)
-%   when plotting cluster assignments, the chosen index value has no
-%   effect.
-%
-% HINT: nice indices when working with affinities:
-%   300 - car in background
-%   2033 - right wheel front car (issue case: no neighboring assignments)
-%       cmp with 2000
-%   975 - front car car front (issue case: no neighboring assignments)
-
-
-col_sel = 1;
-% load W in case it is needed.
-if ~exist('W','var') && USE_W_VEC
-    W = load('../output/similarities/cars1_sim.dat');
+SELECTED_ENTITY_IDX = 1;
+%%
+if exist('W','var') == 0
+    disp('setting initial values...')
+    W = 1; U = 1; S=1;
 end
+[W, U, S] = run_clustering(DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U, S, SELECTED_ENTITY_IDX, USE_T);
 
-% display data
-for img_index = 1:1
-    figure
-    
-    pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
-    pixeltensor = pixeltensor.tracked_pixels;
-    [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
 
-    if USE_CLUSTERING_CUE    
-        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
-        display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
-        write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
-    else
-        displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
-        if USE_W_VEC
-            display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
-        else
-            eigenvalue = S_small(col_sel);
-            display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings, imgs);
-        end
-    end
-end
