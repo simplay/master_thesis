@@ -1,4 +1,4 @@
-function run_tracking( DATASETNAME, STEP_SIZE, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES )
+function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO)
     % DATASETNAME = 'cars1';
     % STEP_SIZE = 8
     % MODE = 5 % display mode
@@ -19,7 +19,9 @@ function run_tracking( DATASETNAME, STEP_SIZE, MODE, DISPLAY, WRITE_TRACKINGS_IN
     START_FRAME_IDX = boundaries(1); % inital index 1
     END_FRAME_IDX = boundaries(2); % for car example max 4
 
-    animate_seq(imgs, 1, length(imgs));
+    if SHOW_VIDEO
+        animate_seq(imgs, 1, length(imgs));
+    end
 
     %% working example
     % fix naming of files: since image naming indices start counting by 1 and
@@ -31,36 +33,40 @@ function run_tracking( DATASETNAME, STEP_SIZE, MODE, DISPLAY, WRITE_TRACKINGS_IN
     % backward_flow = readFlowFile('../data/ldof/cars1/BackwardFlow000.flo');
 
     [m,n,~] = size(imread(imgs{1}));
-    start_mask = ones(m,n);
-    prev_tacked_pixels = zeros(m,n,7);
-    prev_foreward_flow = 0;
-    prev_backward_flow = 0;
-    % initially, there are no tracked to positions
-    tracked_to_positions = zeros(m,n);
-    for t=START_FRAME_IDX:END_FRAME_IDX,
-        frame_t = imgs{t};
-        im_tp1 = imgs{t+1};
-        fw_flow_t = fwf{t};
-        bw_flow_t = bwf{t};
-        [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask, prev_foreward_flow, prev_backward_flow ] = ...
-            process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow);
+    
+    if COMPUTE_TRACKINGS
+        start_mask = ones(m,n);
+        prev_tacked_pixels = zeros(m,n,7);
+        prev_foreward_flow = 0;
+        prev_backward_flow = 0;
+        % initially, there are no tracked to positions
+        tracked_to_positions = zeros(m,n);
+        for t=START_FRAME_IDX:END_FRAME_IDX,
+            frame_t = imgs{t};
+            im_tp1 = imgs{t+1};
+            fw_flow_t = fwf{t};
+            bw_flow_t = bwf{t};
+            [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask, prev_foreward_flow, prev_backward_flow ] = ...
+                process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow);
 
-        save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'.mat'),'tracked_pixels');
-        % write data into file
-        if WRITE_TRACKINGS_INTO_FILES
-            write_flow_data(tracked_pixels,t,DATASET);
+            save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'.mat'),'tracked_pixels');
+            % write data into file
+            if WRITE_TRACKINGS_INTO_FILES
+                write_flow_data(tracked_pixels,t,DATASET);
+            end
+
+            t_idx = t; tp1_idx = t+1;
+            if DISPLAY
+                display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE, prev_tacked_pixels);
+            end
+
+            % overwrite data after having plotted them
+            start_mask = old_start_mask;
+            tracked_to_positions = tracked_pixels(:,:,1);
+            prev_tacked_pixels = tracked_pixels;
+            disp(['Processed flow field ', num2str(t)]);
         end
-
-        t_idx = t; tp1_idx = t+1;
-        if DISPLAY
-            display_tracking_figures(frame_t, im_tp1, trackable_pixels, tracked_pixels, t_idx, tp1_idx, MODE, prev_tacked_pixels);
-        end
-
-        % overwrite data after having plotted them
-        start_mask = old_start_mask;
-        tracked_to_positions = tracked_pixels(:,:,1);
-        prev_tacked_pixels = tracked_pixels;
-        disp(['Processed flow field ', num2str(t)]);
+    
     end
 
     %% compute local and global variance
@@ -69,7 +75,7 @@ function run_tracking( DATASETNAME, STEP_SIZE, MODE, DISPLAY, WRITE_TRACKINGS_IN
     for t=START_FRAME_IDX:END_FRAME_IDX
         fw_flow_t = fwf{t};
         fw_flow = readFlowFile(fw_flow_t);
-        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, 6, 20);
+        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R);
         global_variances = [global_variances, var(fw_flow(:))];
     end
     fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
