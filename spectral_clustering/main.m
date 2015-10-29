@@ -6,12 +6,14 @@ PERFORM_RECOMP = false;
 RECOMP_EIGS = false;
 PRELOAD_EIGS = false;
 CLUSTER_CENTER_COUNT = 3;
+USE_EIGS = false;
 THRESH = 0.002;
 THRESH = 0.00;
-RUN_EIGS = false;
+SEL_EV = 6;
+RUN_EIGS = true;
 addpath('../libs/flow-code-matlab');
 BASE = '../output/similarities/';
-DATASET = 'car2';
+DATASET = 'cars1';
 
 % 'cars1_step_8_frame_';
 PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_8_frame_'];
@@ -30,10 +32,16 @@ if RUN_EIGS
     D = diag(d_a);
     D12 = diag(sqrt(1./d_a));
     B = D12*(D-WW)*D12;
-    [U_small,S_small,FLAG] = eigs(B,50,1e-6);
+    if USE_EIGS
+        [U_small,S_small,FLAG] = eigs(B,50,1e-6);
+    else
+        [U_small,S_small] = eig(B);
+    end
     d = diag(S_small);
-    %[aa,~,~] = find(d < 0.6);
-    [aa,~,~] = find(abs(d) < 0.2 & abs(d) > 0);
+    [d, s_idx] = sort(d);
+    U_small = aggregate_mat_cols(U_small, s_idx);
+    [aa,~,~] = find(d < 0.1);
+    UU = U_small;
     U_small = aggregate_mat_cols(U_small, aa);
     S_small = d(aa);
 end
@@ -47,8 +55,8 @@ label_mappings = labelfile2mat(strcat(BASE,DATASET));
 % USE_CLUSTERING_CUE true => display segmentation
 % USE_CLUSTERING_CUE false && USE_W_VEC true => display affinities
 % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
-USE_W_VEC = true;
-USE_CLUSTERING_CUE = false;
+USE_W_VEC = false;
+USE_CLUSTERING_CUE = true;
 
 % to help the user what values/index pairs can be displayed.
 show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
@@ -70,7 +78,7 @@ show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 %   975 - front car car front (issue case: no neighboring assignments)
 
 
-col_sel = 300;
+col_sel = 1;
 % load W in case it is needed.
 if ~exist('W','var') && USE_W_VEC
     W = load('../output/similarities/cars1_sim.dat');
