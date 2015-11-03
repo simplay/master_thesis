@@ -4,6 +4,7 @@ require_relative 'similarity_matrix'
 require_relative 'flow_variance'
 require_relative 'depth_field'
 require_relative 'point3f'
+require_relative 'meta_info'
 require 'pry'
 
 class Fileparser
@@ -16,6 +17,8 @@ class Fileparser
 
   # @param filepath [String] path to target tracking files.
   def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data)
+    dataset = filepath.split("out_").last.split("_").first
+    MetaInfo.build("../data/ldof/", dataset)
     puts "Selected dataset: "+ filepath.split("/").last
     @debug_mode = debug_mode
     $uses_depth_data = uses_depth_data
@@ -26,8 +29,8 @@ class Fileparser
     @sim_mat = SimilarityMatrix.new(@tm, is_using_local_variance)
     @filepath = filepath
     parse
-    dataset = filepath.split("out_").last.split("_").first
     $global_ds_name = dataset
+    binding.pry
     FlowVariance.build(OUT_PATH+dataset)
     DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
 

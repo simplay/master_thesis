@@ -1,3 +1,5 @@
+require_relative 'meta_info'
+
 # A Point refers to a particular tracked location in some frame.
 # In other words every Point depicts a set of lookup indices
 # in a given frame where
@@ -12,9 +14,8 @@ class Point
     @y = args[1]
   end
 
-  # @todo: do not hardcode 480 and 640
   def out_of_range?
-    x > 480 or y > 640 or x < 0 or y < 0
+    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 0 or y < 0
   end
 
   def copy

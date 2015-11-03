@@ -1,3 +1,5 @@
+require_relative 'meta_info'
+
 class Point3f
 
   attr_reader :x, :y, :z
@@ -18,12 +20,12 @@ class Point3f
     # a bilinear interpolation will be required
     # depth_map = $dmm.map_of(frame_idx)
     # z = depth_map.interpolated_value(p)
-    Point3f.new([p.x, p.y, z])
+    p_3 = Point3f.new([p.x, p.y, z])
   end
 
   # @todo: do not hardcode 480 and 640
   def out_of_range?
-    x > 480 or y > 640 or x < 0 or y < 0
+    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 0 or y < 0
   end
 
   def copy
