@@ -1,7 +1,6 @@
 require 'pry'
 # generate optical flow field
 
-
 # Select target dataset for generating trackings
 datasets = Dir["data/ldof/**"]
 datasets.each_with_index do |fname, idx|
@@ -14,9 +13,8 @@ selected_dataset = datasets[selected].split("/").last
 
 puts "Starting computing trackings for '#{selected_dataset}'"
 
-
-
-dataset = 'cars1';
+# tracking script parameters
+dataset = "'#{selected_dataset}'";
 step_size = 8;
 mode = 5;
 display = false;
@@ -28,6 +26,6 @@ compute_trackings = false;
 
 function_call = "run_tracking(#{dataset}, #{step_size}, #{compute_trackings}, #{mode}, #{display}, #{write_tracking_files}, #{sig_s}, #{sig_r}, #{show_video})"
 matlab_call = "tracking/#{function_call}"
-#run_matlab = "matlab -nodisplay -nosplash -nodesktop -r \"run('${PWD}/#{matlab_call}'); quit\""
+run_matlab = "matlab -nodisplay -nosplash -nodesktop -r \"run('${PWD}/#{matlab_call}'); quit\""
 run_matlab = "matlab -nodisplay -nosplash -nodesktop -r \"run('#{matlab_call}'); quit\""
 binding.pry
