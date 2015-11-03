@@ -2,7 +2,7 @@ require_relative 'meta_info'
 require_relative 'point'
 
 class Point3f
-
+  SCALE = 0.001 # conversion from mm to meters
   attr_reader :x, :y, :z
 
   def initialize(args)
@@ -25,12 +25,14 @@ class Point3f
     return z if z == false #binding.pry 
 
     if MetaInfo.build.calibration_file?
-      _x = ((p.x-MetaInfo.build.p_d.x) / MetaInfo.build.f_d.x)*z
-      _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*z
-      p3 = Point3f.new([_x, _y, z])
+      depth = z*depth_scale(true)
+      _x = ((p.x-MetaInfo.build.p_d.x) / MetaInfo.build.f_d.x)*depth
+      _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*depth
+      p3 = Point3f.new([_x, _y, depth])
       pp3 = MetaInfo.build.extrinsic_camera_mat.mult(p3)
-      x = (pp3.x*MetaInfo.build.f_c.x)/pp3.z + MetaInfo.build.p_c.x
-      y = (pp3.y*MetaInfo.build.f_c.y)/pp3.z + MetaInfo.build.p_c.y
+      depth = pp3.z
+      x = (pp3.x*MetaInfo.build.f_c.x)/depth + MetaInfo.build.p_c.x
+      y = (pp3.y*MetaInfo.build.f_c.y)/depth + MetaInfo.build.p_c.y
       Point.new([x, y])
     else
       Point3f.new([p.x, p.y, z])
@@ -44,6 +46,10 @@ class Point3f
   # @todo: do not hardcode 480 and 640
   def out_of_range?
     x > MetaInfo.build.width or y > MetaInfo.build.height or x < 1 or y < 1
+  end
+
+  def self.depth_scale(use_meters)
+    use_meters ? SCALE : 1.0
   end
 
   def copy
