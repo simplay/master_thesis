@@ -1,4 +1,4 @@
-function [W, U_small, S_small] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T)
+function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -21,9 +21,13 @@ function [W, U_small, S_small] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER
 
     %% load appropriate data
     if COMPUTE_EIGS
-        fname = strcat(BASE,DATASET,'_sim.dat');
-        W = load(fname);
+        if true %1 == 0
+            fname = strcat(BASE,DATASET,'_sim.dat');
+            W = load(fname);
+            
+        end
         WW = W + ones(size(W))*THRESH;
+        %sW = sort(W,2, 'descend'); ten = sW(:,1000); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
         d_a = sum(WW,2);
         D = diag(d_a);
         D12 = diag(sqrt(1./d_a));
@@ -97,7 +101,7 @@ function [W, U_small, S_small] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER
     end
 
     % display data
-    for img_index = 1:1
+    for img_index = frame_idx:frame_idx
         figure
 
         pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
