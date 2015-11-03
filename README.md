@@ -37,6 +37,8 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 + JRuby
 + Bundler
 + Git
++ export matlab path to have be able to run it in your terminal of choice
+ + e.g. add this line to your bash profile: `export PATH="/Applications/MATLAB_R2014b.app/bin:$PATH"` 
 
 ## Installation
 
