@@ -2,12 +2,14 @@ require_relative 'trajectory_manager'
 require_relative 'point'
 require_relative 'similarity_matrix'
 require_relative 'flow_variance'
+require_relative 'depth_field'
 require_relative 'point3f'
 require 'pry'
 
 class Fileparser
 
   OUT_PATH = "../output/trackings/"
+  DEPTH_FPATH = "../output/depths/"
   RUN_DEBUG_MODE = false
   IS_TRA_DEBUG = true
   HAS_DEPTH_DATA = false
@@ -27,6 +29,9 @@ class Fileparser
     dataset = filepath.split("out_").last.split("_").first
     $global_ds_name = dataset
     FlowVariance.build(OUT_PATH+dataset)
+    DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
+
+    puts "Using depth information: #{has_depth_data?}"
 
     if in_demo_mode?
       a = @sim_mat.trajectory_similarities_for(15)
@@ -52,7 +57,7 @@ class Fileparser
   end
 
   def parse
-    File.open(@filepath, "r") do |file|
+    File.open(@filepath, "r") do |file|has_depth_data?
       frame_count = @filepath.split("fc_").last.split(".").first
       parse_file_lines(file, frame_count)
     end

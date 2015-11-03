@@ -105,7 +105,7 @@ class SimilarityMatrix
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def similarity(a, b)
-    return 1.0 if a == b
+    return 0.0 if a == b # lässt cluster bestehend aus einem pixel verschwinden.
     # Find overlapping part of two given trajectories:
     #
     # find latest start frame of trajectory pair

@@ -36,6 +36,8 @@ function [boundaries, imgs, fwf, bwf] = read_metadata(filepath)
         tline = fgets(fid);
     end
     fclose(fid);
+    boundaries(2) = boundaries(2) - boundaries(1) + 1;
+    boundaries(1) = 1;
 end
 
 function path = appended_path(basepath, fname)

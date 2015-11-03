@@ -5,7 +5,7 @@ class Point3f
   def initialize(args)
     @x = args[0]
     @y = args[1]
-    @z = args[z]
+    @z = args[2]
   end
 
   # Build a 3d point from a trajectory point.

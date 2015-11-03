@@ -1,7 +1,7 @@
 require 'pry'
 dataset = ARGV[0] # name of subfolder in folder 'data'
 from_idx = ARGV[1] # first image index, first image has index 1
-to_idx = ARGV[2] # ast image index, has index total image count
+to_idx = ARGV[2] # last image index, has index total image count
 skip_comp = ARGV[3].nil? ? false : (ARGV[3].to_i == 1)
 
 folder_path = "data/#{dataset}/"
@@ -41,14 +41,15 @@ if lower < 0 or upper >= len
   raise "Error: invalid indices passed!"
 end
 
-
+index_range = (lower..upper).map do |idx| (idx-lower) end
 unless skip_comp
   # update dataset that actually should be used
   dataset_fnames = dataset_fnames.sort_by do |a| a.split("/").last.to_i end
   dataset_fnames = dataset_fnames[lower..(upper+1)]
   # compute forward flow
   puts "computing forward flow for dataset #{dataset}..."
-  (lower..upper).each do |idx|
+  index_range.each do |idx|
+
     i1 = dataset_fnames[idx]
     i2 = dataset_fnames[idx+1]
     puts "computing forward flow from #{i1} to #{i2}"
@@ -69,7 +70,7 @@ unless skip_comp
 
   # compute backward flow
   puts "Start computing backward flow for dataset #{dataset}..."
-  (lower..upper).each do |idx|
+  index_range.each do |idx|
     i1 = dataset_fnames[idx]
     i2 = dataset_fnames[idx+1]
     puts "computing backward flow from #{i1} to #{i2}"

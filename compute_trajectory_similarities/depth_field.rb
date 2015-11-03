@@ -1,11 +1,25 @@
 class DepthField
-  def self.build(basefilepath=nil)
-    @singleton ||= DepthField.new(basefilepath)
+  def self.build(basefilepath=nil, dataset=nil)
+    @singleton ||= DepthField.new(basefilepath, dataset)
   end
 
-  def initialize(filepath)
+  def initialize(filepath, dataset)
     @depth_map_files = []
-    # load depth maps and store them in @depth_map_files
+    dfnames = Dir["#{filepath}#{dataset}_depth_*"]
+    dfnames = dfnames.sort_by do |fname|
+      fname.split("_").last.split(".").first.to_i
+    end
+
+    dfnames.each do |fname|
+      depth_map = []
+      File.open(fname, 'r') do |f|
+        while line = f.gets
+          a_row = line.split("[").last.split("]").first.split(" ").map(&:to_f)
+          depth_map << a_row
+        end
+      end
+      @depth_map_files << depth_map
+    end
   end
 
   # Compute depth of a given frame at a given location.
@@ -43,6 +57,9 @@ class DepthField
   protected
 
   def depth_at(x,y,frame_idx)
+    raise "wrong frame idx" if frame_idx < 1
+    raise "wrong x" if x < 1
+    raie "wrong y" if y < 1
     depth_map = depth_at_frame(frame_idx-1)
     depth = depth_map[x-1][y-1]
     (depth == 0.0) ? false : depth

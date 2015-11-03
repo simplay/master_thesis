@@ -1,4 +1,4 @@
-function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO)
+function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR)
     % DATASETNAME = 'cars1';
     % STEP_SIZE = 8
     % MODE = 5 % display mode
@@ -33,7 +33,6 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     % backward_flow = readFlowFile('../data/ldof/cars1/BackwardFlow000.flo');
 
     [m,n,~] = size(imread(imgs{1}));
-    
     if COMPUTE_TRACKINGS
         start_mask = ones(m,n);
         prev_tacked_pixels = zeros(m,n,7);
@@ -75,7 +74,9 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     for t=START_FRAME_IDX:END_FRAME_IDX
         fw_flow_t = fwf{t};
         fw_flow = readFlowFile(fw_flow_t);
-        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R);
+        if COMPUTE_LOCAL_VAR
+            local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R);
+        end
         global_variances = [global_variances, var(fw_flow(:))];
     end
     fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
@@ -91,19 +92,21 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
         end    
         fclose(fid);
     end
-
-    % write local flow variances into mat files.
-    for k=1:END_FRAME_IDX
-        lv = local_flow_variances(:,:,k);
-        fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
-        fid = fopen(fname,'w');
-        if fid ~= -1
-            for t=1:size(lv,1)
-                a_row = mat2str(lv(t,:));
-                fprintf(fid,'%s\r\n', a_row);
+    
+    if COMPUTE_LOCAL_VAR
+        % write local flow variances into mat files.
+        for k=1:END_FRAME_IDX
+            lv = local_flow_variances(:,:,k);
+            fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
+            fid = fopen(fname,'w');
+            if fid ~= -1
+                for t=1:size(lv,1)
+                    a_row = mat2str(lv(t,:));
+                    fprintf(fid,'%s\r\n', a_row);
+                end
             end
+            fclose(fid);
         end
-        fclose(fid);
     end
 
 
