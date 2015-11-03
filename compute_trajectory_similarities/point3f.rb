@@ -1,4 +1,5 @@
 require_relative 'meta_info'
+require_relative 'point'
 
 class Point3f
 
@@ -12,14 +13,25 @@ class Point3f
 
   # Build a 3d point from a trajectory point.
   #
+  # P = [(u-p_x^d)/f_x^d *z, (v-p_y^d)/f_y^d *z), z]
+  # E*P = [xx, yy, zz]
+  # (x/z * f_x^c + p_x^c, y/z * f_y^c + p_y^c)
+  #
   # @param p [Point] 2d point from extracted trajectory
   # @param frame_idx [Integer] depth map associated to given frame index.
   # @return [Point3f] 2d trajectory point with depth.
   def self.build_from(p, frame_idx)
     z = DepthField.build.interpolate_depth_at(frame_idx, p)
-    binding.pry 
+    return z if z == false #binding.pry 
+
     if MetaInfo.build.calibration_file?
-      Point3f.new([p.x, p.y, z])
+      _x = ((p.x-MetaInfo.build.p_d.x) / MetaInfo.build.f_d.x)*z
+      _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*z
+      p3 = Point3f.new([_x, _y, z])
+      pp3 = MetaInfo.build.extrinsic_camera_mat.mult(p3)
+      x = (pp3.x*MetaInfo.build.f_c.x)/pp3.z + MetaInfo.build.p_c.x
+      y = (pp3.y*MetaInfo.build.f_c.y)/pp3.z + MetaInfo.build.p_c.y
+      Point.new([x, y])
     else
       Point3f.new([p.x, p.y, z])
     end

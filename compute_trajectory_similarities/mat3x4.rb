@@ -4,7 +4,7 @@ class Mat3x4
   # @param items [Array] of Float values.
   #   items of a 3x4 matrix in row first order.
   def initialize(items)
-    @data = items.each_slice(4).to_a
+    @data = items.each_slice(4).first
   end
 
   def row_at(row_idx)

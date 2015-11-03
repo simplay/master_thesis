@@ -3,18 +3,18 @@ clc;
 close all;
 
 DATASET = 'teacan';
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 USE_T = false;
 
 THRESH = 0.0;
-CLUSTER_CENTER_COUNT = 5;
+CLUSTER_CENTER_COUNT = 2;
 
 USE_W_VEC = false;
 USE_CLUSTERING_CUE = true;
 
-SELECTED_ENTITY_IDX = 1;
+SELECTED_ENTITY_IDX = 2;
 frame_idx = 8;
 %%
 if exist('W','var') == 0

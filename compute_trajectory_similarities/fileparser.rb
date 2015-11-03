@@ -78,7 +78,8 @@ class Fileparser
         point = Point.new(point_data)
         next if point.out_of_range?
         if has_depth_data?
-          Point3f.build_from(point, @frame_idx)
+          point = Point3f.build_from(point, @frame_idx)
+          next if point == false
         end
         @tm.append_trajectory_point(@label, @start_frame, point)
         @frame_idx = @frame_idx + 1

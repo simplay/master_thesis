@@ -27,7 +27,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
             
         end
         WW = W + ones(size(W))*THRESH;
-        %sW = sort(W,2, 'descend'); ten = sW(:,1000); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
+        sW = sort(W,2, 'descend'); ten = sW(:,100); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
         d_a = sum(WW,2);
         D = diag(d_a);
         D12 = diag(sqrt(1./d_a));
