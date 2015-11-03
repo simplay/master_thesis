@@ -24,15 +24,14 @@ class Fileparser
     $uses_depth_data = uses_depth_data
     $is_debugging = in_simple_mode? ? true : false
     puts "Script runs in debug mode: #{$is_debugging}"
+    FlowVariance.build(OUT_PATH+dataset)
+    DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
     @tm = TrajectoryManager.new
     puts "Computing affinity matrix..."
     @sim_mat = SimilarityMatrix.new(@tm, is_using_local_variance)
     @filepath = filepath
     parse
     $global_ds_name = dataset
-    binding.pry
-    FlowVariance.build(OUT_PATH+dataset)
-    DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
 
     puts "Using depth information: #{has_depth_data?}"
 
@@ -77,6 +76,7 @@ class Fileparser
       else
         point_data = line.split(" ").map &:to_f
         point = Point.new(point_data)
+        next if point.out_of_range?
         if has_depth_data?
           Point3f.build_from(point, @frame_idx)
         end

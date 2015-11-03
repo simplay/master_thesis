@@ -43,13 +43,11 @@ class DepthField
     f_01 = depth_at(px_i, py_i2, frame_idx)
     f_10 = depth_at(px_i2, py_i, frame_idx)
     f_11 = depth_at(px_i2, py_i2, frame_idx)
-
     sum = 0.0
-    sum = sum + f_00*(1.0-dx)*(1.0-dy) unless f_00.nil?
-    sum = sum + f_01*(1.0-dx)*dy unless f_00.nil?
-    sum = sum + f_10*dx*(1.0-dy) unless f_00.nil?
-    sum = sum + f_11*dx*dy unless f_00.nil?
-
+    sum = sum + f_00*(1.0-dx)*(1.0-dy) if f_00
+    sum = sum + f_01*(1.0-dx)*dy if f_01
+    sum = sum + f_10*dx*(1.0-dy) if f_10
+    sum = sum + f_11*dx*dy if f_11
     (sum == 0.0) ? false : sum
 
   end
@@ -58,8 +56,8 @@ class DepthField
 
   def depth_at(x,y,frame_idx)
     raise "wrong frame idx" if frame_idx < 1
-    raise "wrong x" if x < 1
-    raie "wrong y" if y < 1
+    raise "wrong x: #{x}" if x < 1
+    raise "wrong y: #{y}" if y < 1
     depth_map = depth_at_frame(frame_idx-1)
     depth = depth_map[x-1][y-1]
     (depth == 0.0) ? false : depth

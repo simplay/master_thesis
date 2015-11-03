@@ -39,6 +39,10 @@ class MetaInfo
     @extrinsic_cam_mat
   end
 
+  def calibration_file?
+    @has_calibration_file
+  end
+
   def initialize(filepath, dataset)
     lookup_path = "#{filepath}#{dataset}/meta/"
 
@@ -54,6 +58,7 @@ class MetaInfo
       @y = res[1]
     end
     calibration_file = Dir["#{filepath}#{dataset}/meta/calib.txt"].first
+    @has_calibration_file = !calibration_file.nil?
     puts "Using calibration matrix: #{calibration_file.nil?}"
     unless calibration_file.nil?
       lines = []

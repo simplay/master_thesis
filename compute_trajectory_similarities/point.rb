@@ -15,7 +15,7 @@ class Point
   end
 
   def out_of_range?
-    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 0 or y < 0
+    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 1 or y < 1
   end
 
   def copy

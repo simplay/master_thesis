@@ -16,16 +16,22 @@ class Point3f
   # @param frame_idx [Integer] depth map associated to given frame index.
   # @return [Point3f] 2d trajectory point with depth.
   def self.build_from(p, frame_idx)
-    z = 1.0 ## lookup from depth map using the frame index
+    z = DepthField.build.interpolate_depth_at(frame_idx, p)
+    
+    if MetaInfo.build.calibration_file?
+      Point3f.new([p.x, p.y, z])
+    else
+      Point3f.new([p.x, p.y, z])
+    end
+    ## lookup from depth map using the frame index
     # a bilinear interpolation will be required
     # depth_map = $dmm.map_of(frame_idx)
     # z = depth_map.interpolated_value(p)
-    p_3 = Point3f.new([p.x, p.y, z])
   end
 
   # @todo: do not hardcode 480 and 640
   def out_of_range?
-    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 0 or y < 0
+    x > MetaInfo.build.width or y > MetaInfo.build.height or x < 1 or y < 1
   end
 
   def copy
