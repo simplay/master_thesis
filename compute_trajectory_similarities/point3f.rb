@@ -17,7 +17,7 @@ class Point3f
   # @return [Point3f] 2d trajectory point with depth.
   def self.build_from(p, frame_idx)
     z = DepthField.build.interpolate_depth_at(frame_idx, p)
-    
+    binding.pry 
     if MetaInfo.build.calibration_file?
       Point3f.new([p.x, p.y, z])
     else
