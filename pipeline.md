@@ -73,3 +73,4 @@
 + Try out different optical flow methods for generating forward-and backward optical flow fields.
 + Implement a method to generate dense segmentations
 + Compare results to benchmark datasets (see Brox' datasets).
++ Currently, we do not know how we actually should compute the variance value of the optical flow as described in Brox's Paper. TODO: Find an appropriate way.
