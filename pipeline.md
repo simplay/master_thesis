@@ -67,3 +67,9 @@
  + We compute the eigenvalues and eigenvectors of the matrix L. We only use the eigenvectors corresponding tho eigenvalues that are below a certain threshold to ensure to use only descriptive eigenvalues.
  + Apply the k-means algorithm to the resulting eigenvectors (currently for a fixed k value). This gives us a clustering.
  + Last, map the clustered values (from the k-means we received the cluster value for every trajectory label) that belong to the labels back to pixel locations using the labels as foreign key.
+
+## Next steps
+
++ Try out different optical flow methods for generating forward-and backward optical flow fields.
++ Implement a method to generate dense segmentations
++ Compare results to benchmark datasets (see Brox' datasets).
