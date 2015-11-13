@@ -9,6 +9,7 @@
 + Make use of the conecept of **optical flow**. 
  + Objects that move similarly (similar speed and direction) should belong to the same segmentation class. 
 + Motion is not independent for each frame but as history of poins to make grouping decission.
++ Exploit depth information to enhance the quality of the final segmentation. E.g. compute the optical flow using methods that make use of depth information. Another idea is to adapt the compuation of trajectory similarities in a way that the also use depth cues.
 
 ## Computational steps and details:
 
