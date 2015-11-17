@@ -1,4 +1,4 @@
-function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR)
+function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB)
     % DATASETNAME = 'cars1';
     % STEP_SIZE = 8
     % MODE = 5 % display mode
@@ -22,7 +22,30 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     if SHOW_VIDEO
         animate_seq(imgs, 1, length(imgs));
     end
-
+    
+    % generate cie lab imgs
+    if COMPUTE_CIE_LAB
+        for t=START_FRAME_IDX:END_FRAME_IDX+1
+            img = imread(imgs{t});
+            colorTransform = makecform('srgb2lab');
+            lab = applycform(img, colorTransform);
+            [rows, columns, ~] = size(lab);
+            fname = strcat(DATASETNAME,'_lab_',num2str(t),'.txt');
+            fpname = strcat('../output/cie_lab_color_imgs/', fname);
+            fid = fopen(fpname, 'wt');
+            for col = 1 : columns
+                for row = 1 : rows
+                    fprintf(fid, '%d, %d = (%d, %d, %d)\n', ...
+                        row, col, ...
+                        lab(row, col, 1),...
+                        lab(row, col, 2),...
+                        lab(row, col, 3));
+                end
+            end
+            fclose(fid);
+        end
+    end
+    
     %% working example
     % fix naming of files: since image naming indices start counting by 1 and
     % flow field by zero, there is a potential confusion.
@@ -108,6 +131,8 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
             fclose(fid);
         end
     end
+    
+
 
 
 
