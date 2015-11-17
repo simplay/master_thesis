@@ -18,6 +18,7 @@ class SimilarityMatrix
   end
 
   def to_mat
+    puts "Using LAMBDA = #{lambda_val}"
     start = Time.now
     puts "Computing similarities..."
     @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
@@ -123,8 +124,7 @@ class SimilarityMatrix
   end
 
   def lambda_val
-    is_using_depth = MetaInfo.build.calibration_file?
-    is_using_depth ? LAMBDA_D : LAMBDA
+    $uses_depth_data ? LAMBDA_D : LAMBDA
   end
 
   # Compute temoral distance between temporal overlapping segments
