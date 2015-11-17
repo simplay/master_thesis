@@ -7,6 +7,7 @@ class SimilarityMatrix
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
+  LAMBDA_D = 70000.0
   DT_THREH = 5
   ZERO_THRESH = 1.0e-12
 
@@ -117,8 +118,13 @@ class SimilarityMatrix
     return 0.0 if d2_t_a_b.empty?
     d_t_a_b = d2_t_a_b
     d2_a_b = d_t_a_b.max
-    w_a_b = Math.exp(-LAMBDA*d2_a_b)
+    w_a_b = Math.exp(-lambda_val*d2_a_b)
     (w_a_b < ZERO_THRESH) ? 0.0 : w_a_b
+  end
+
+  def lambda_val
+    is_using_depth = MetaInfo.build.calibration_file?
+    is_using_depth ? LAMBDA_D : LAMBDA
   end
 
   # Compute temoral distance between temporal overlapping segments
@@ -151,10 +157,14 @@ class SimilarityMatrix
       dt_AB = dt_A.sub(dt_B).length_squared
       sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
       sigma_t = sigma_t + 1.0
-      # formula 4
-      d_sp_a_b*(dt_AB/sigma_t)
-      # do something here
+
+      combine_distances(d_sp_a_b, dt_AB, sigma_t)
     end
+  end
+
+  # formula 4
+  def combine_distances(d_sp_a_b, dt_AB, sigma_t)
+    d_sp_a_b*(dt_AB/sigma_t)
   end
 
   # perform lookup in appropriate variance value frame.

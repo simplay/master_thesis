@@ -20,7 +20,7 @@ class Point3f
   # @param p [Point] 2d point from extracted trajectory
   # @param frame_idx [Integer] depth map associated to given frame index.
   # @return [Point3f] 2d trajectory point with depth.
-  def self.build_from(p, frame_idx)
+  def self.build_from(p, frame_idx, cameras_overlapping=true)
     z = DepthField.build.interpolate_depth_at(frame_idx, p)
     return z if z == false #binding.pry 
 
@@ -30,6 +30,7 @@ class Point3f
       _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*depth
       p3 = Point3f.new([_x, _y, depth])
       pp3 = MetaInfo.build.extrinsic_camera_mat.mult(p3)
+      return pp3 if cameras_overlapping
       depth = pp3.z
       x = (pp3.x*MetaInfo.build.f_c.x)/depth + MetaInfo.build.p_c.x
       y = (pp3.y*MetaInfo.build.f_c.y)/depth + MetaInfo.build.p_c.y
@@ -43,7 +44,6 @@ class Point3f
     # z = depth_map.interpolated_value(p)
   end
 
-  # @todo: do not hardcode 480 and 640
   def out_of_range?
     x > MetaInfo.build.width or y > MetaInfo.build.height or x < 1 or y < 1
   end
