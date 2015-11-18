@@ -19,6 +19,9 @@ class FlowVariance
     l_var_fnames = Dir[filepath+"/*"].select do |fnames|
       fnames.match(/local_variances/)
     end
+    l_var_fnames = l_var_fnames.sort_by do |a_fname|
+      a_fname.split("local_variances_").last.split(".").first.to_i
+    end
     @local_variance_files = []
     l_var_fnames.each do |fname|
       local_variances = []
