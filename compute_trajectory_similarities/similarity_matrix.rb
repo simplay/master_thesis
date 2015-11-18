@@ -67,8 +67,12 @@ class SimilarityMatrix
                                       60, # keep alive time
                                       TimeUnit::SECONDS,
                                       LinkedBlockingQueue.new)
+    k = trajectories.count
     tasks = trajectories.map do |trajectory|
-      FutureTask.new SimilarityTask.new(trajectory, trajectories)
+      # only traverse upper triangle
+      t = FutureTask.new SimilarityTask.new(trajectory, trajectories.last(k))
+      k = k - 1
+      t
     end
 
     tasks.each do |task|
@@ -114,7 +118,7 @@ class SimilarityMatrix
   #  0.12699,0.09754,0.95751
   def generate_dat_file
     base_filepathname = "#{BASE_PATH}#{$global_ds_name}"
-
+    binding.pry
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
     @tm.sort_trajectories
