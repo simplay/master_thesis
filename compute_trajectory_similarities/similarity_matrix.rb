@@ -36,7 +36,7 @@ class SimilarityMatrix
     puts "Using LAMBDA = #{lambda_val}"
     start = Time.now
     puts "Computing similarities..."
-    puts "Using #{$core_pool_threads}"
+    puts "Using #{$core_pool_threads} thread."
     @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
 
     if USE_THREADING
@@ -118,7 +118,6 @@ class SimilarityMatrix
   #  0.12699,0.09754,0.95751
   def generate_dat_file
     base_filepathname = "#{BASE_PATH}#{$global_ds_name}"
-    binding.pry
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
     @tm.sort_trajectories
