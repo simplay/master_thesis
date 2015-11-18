@@ -7,10 +7,18 @@ class MetaInfo
     @singleton ||= MetaInfo.new(basefilepath, dataset)
   end
 
+  # Get the width of a farme.
+  #
+  # @info: corresponds to the number of columns.
+  # @return [Integer] frame width.
   def width
     @x ||= 1
   end
 
+  # Get the height of a frame.
+  #
+  # @info: corresponds to the number of rows.
+  # @return [Integer] frame height.
   def height
     @y ||= 1
   end
