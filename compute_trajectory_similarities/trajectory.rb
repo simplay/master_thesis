@@ -7,6 +7,7 @@ class Trajectory
     @start_frame = start_frame
     @label = label
     @similarities = {}
+    @mutex = Mutex.new
   end
 
   # Retrieve the most similar neighbor trajectories
@@ -63,7 +64,9 @@ class Trajectory
   #   we used to compute the similarity value between us.
   # @param value [Float] computed simularity value
   def append_similarity(other_label, value)
-    @similarities[other_label] = value
+    @mutex.synchronize do
+      @similarities[other_label] = value
+    end
   end
 
   def start_frame

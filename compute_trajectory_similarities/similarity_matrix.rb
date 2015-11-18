@@ -67,7 +67,7 @@ class SimilarityMatrix
                                       60, # keep alive time
                                       TimeUnit::SECONDS,
                                       LinkedBlockingQueue.new)
-    k = trajectories.count
+    k = trajectories.count+1
     tasks = trajectories.map do |trajectory|
       # only traverse upper triangle
       t = FutureTask.new SimilarityTask.new(trajectory, trajectories.last(k))
