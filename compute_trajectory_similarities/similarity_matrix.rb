@@ -85,6 +85,8 @@ class SimilarityMatrix
       report_progress
       task.get
     end
+
+    executor.shutdown
   end
 
   def report_progress
