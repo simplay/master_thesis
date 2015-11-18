@@ -7,6 +7,14 @@ class MetaInfo
     @singleton ||= MetaInfo.new(basefilepath, dataset)
   end
 
+  def self.width
+    build.width
+  end
+
+  def self.height
+    build.height
+  end
+
   # Get the width of a farme.
   #
   # @info: corresponds to the number of columns.

@@ -5,6 +5,8 @@ require_relative 'flow_variance'
 require_relative 'depth_field'
 require_relative 'point3f'
 require_relative 'meta_info'
+require_relative 'cie_lab'
+
 require 'pry'
 
 class Fileparser
@@ -26,6 +28,7 @@ class Fileparser
     puts "Script runs in debug mode: #{$is_debugging}"
     FlowVariance.build(OUT_PATH+dataset)
     DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
+    CieLab.build(dataset)
     @tm = TrajectoryManager.new
     puts "Computing affinity matrix..."
     @sim_mat = SimilarityMatrix.new(@tm, is_using_local_variance)
