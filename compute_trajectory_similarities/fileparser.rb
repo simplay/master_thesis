@@ -18,14 +18,16 @@ class Fileparser
   HAS_DEPTH_DATA = false
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data)
+  def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data, use_sum_affinity)
     dataset = filepath.split("out_").last.split("_").first
     MetaInfo.build("../data/ldof/", dataset)
     puts "Selected dataset: "+ filepath.split("/").last
     @debug_mode = debug_mode
+    $use_sum_affinity = use_sum_affinity
     $uses_depth_data = uses_depth_data
     $is_debugging = in_simple_mode? ? true : false
     puts "Script runs in debug mode: #{$is_debugging}"
+    puts "Summing constraints for computing affinities: #{$use_sum_affinity}"
     FlowVariance.build(OUT_PATH+dataset)
     DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
     CieLab.build(dataset)
