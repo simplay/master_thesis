@@ -221,7 +221,11 @@ class SimilarityMatrix
 
   # formula 4
   def combine_distances(d_sp_a_b, dt_AB, sigma_t)
-    d_sp_a_b*(dt_AB/sigma_t)
+    if $use_sum_affinity
+      0.0
+    else
+      d_sp_a_b*(dt_AB/sigma_t)
+    end
   end
 
   # perform lookup in appropriate variance value frame.
