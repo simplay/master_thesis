@@ -1,20 +1,16 @@
-require 'pry'
 require 'java'
 require 'thread'
-
 require_relative 'point'
 require_relative 'flow_variance'
-require_relative 'similarity_task'
 
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
 java_import 'java.util.concurrent.LinkedBlockingQueue'
 java_import 'java.util.concurrent.ThreadPoolExecutor'
 java_import 'java.util.concurrent.TimeUnit'
-java_import 'java.lang.Runtime'
 
-class SimilarityMatrix
-  BASE_PATH = "../output/similarities/"
+class SimilarityTask
+  include Callable
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
@@ -22,137 +18,21 @@ class SimilarityMatrix
   DT_THREH = 5
   ZERO_THRESH = 1.0e-12
 
-  USE_THREADING = true
-  MAX_POOL_THREADS = 16
-  $core_pool_threads = Runtime.getRuntime.availableProcessors
-
-  def initialize(tracking_manager, is_using_local_variance=true)
-    @tm = tracking_manager
-    puts "Using local variance for computing similarities: #{is_using_local_variance}"
-    @is_using_local_variance = is_using_local_variance
+  def initialize(a, trajectories)
+    @a = a
+    @trajectories = trajectories
   end
 
-  def to_mat
-    puts "Using LAMBDA = #{lambda_val}"
-    start = Time.now
-    puts "Computing similarities..."
-    puts "Using #{$core_pool_threads}"
-    @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
-
-    if USE_THREADING
-      @task_count = 0
-      run_executor
-    else
-
-      traverse_all_pairs
+  def call
+    @trajectories.each do |b|
+      value = similarity(@a,b)
+      @a.append_similarity(b.label, value)
+      b.append_similarity(@a.label, value)
     end
-
-    finish_sim = Time.now
-    diff = finish_sim - start
-    puts "Computed affinities in #{diff} seconds"
-    puts "Generating .dat files..."
-    generate_dat_file
-    finish_total = Time.now
-    diff = finish_total - start
-    puts "Total time elapsed: #{diff} seconds"
   end
 
   def use_local_variance?
     @is_using_local_variance
-  end
-
-  def run_executor
-    executor = ThreadPoolExecutor.new($core_pool_threads,
-                                      MAX_POOL_THREADS,
-                                      60, # keep alive time
-                                      TimeUnit::SECONDS,
-                                      LinkedBlockingQueue.new)
-    tasks = trajectories.map do |trajectory|
-      FutureTask.new SimilarityTask.new(trajectory, trajectories)
-    end
-
-    tasks.each do |task|
-      executor.execute(task)
-    end
-
-    # wait for all threads to complete
-    @counter = java.util.concurrent.atomic.AtomicInteger.new
-    tasks.each do |task|
-      report_progress
-      task.get
-    end
-  end
-
-  def report_progress
-    p = @counter.incrementAndGet
-    puts "Progress: #{100.0*(p.to_f/trajectories.count)}%" if (p.to_s.to_i % 20 == 0)
-    @task_count = @task_count + 1
-  end
-
-  # Compute the similarities between a trajectory with a given label
-  # and all other trajectories.
-  #
-  # @param label [Integer] label of target trajectory
-  # @return [Trajectory] we computed its similarities.
-  def trajectory_similarities_for(label)
-    a = @tm.find_trajectory_by(label)
-    trajectories.each do |b|
-        value = similarity(a,b)
-        a.append_similarity(b.label, value)
-        b.append_similarity(a.label, value)
-    end
-    a
-  end
-
-  private
-
-  # Generate a .dat file from the computed similaries stored in @tm
-  #
-  # @example: a regular matlab data file containing a 3x3 matrix
-  #  0.81472,0.91338,0.2785
-  #  0.90579,0.63236,0.54688
-  #  0.12699,0.09754,0.95751
-  def generate_dat_file
-    base_filepathname = "#{BASE_PATH}#{$global_ds_name}"
-
-    sim_filepath = "#{base_filepathname}_sim.dat"
-    labels_filepath = "#{base_filepathname}_labels.txt"
-    @tm.sort_trajectories
-    File.open(sim_filepath, 'w') do |file|
-      trajectories.each do |trajectory|
-        sorted_sim = trajectory.similarities.sort.to_h
-        a_row = sorted_sim.values.map(&:to_s).join(",")
-        file.puts a_row
-      end
-    end
-    File.open(labels_filepath, 'w') do |file|
-      sorted_keys = trajectories.first.similarities.keys.sort
-      a_row = sorted_keys.map(&:to_s).join(" ")
-      file.puts a_row
-    end
-    puts "Wrote the following files:"
-    puts "#{sim_filepath}"
-    puts "#{labels_filepath}"
-  end
-
-  def trajectories
-    @tm.trajectories#.first(100)
-  end
-
-  # @todo: REMOVE the first(200) from @tm.trajectories.first(200)
-  #   is used for debugging purposes.
-  def traverse_all_pairs
-    count = 0
-    trs = trajectories
-    trs.each do |a|
-      trs.each do |b|
-        value = similarity(a,b)
-        a.append_similarity(b.label, value)
-        b.append_similarity(a.label, value)
-      end
-      count = count + 1
-      puts "progress: #{(count*@tm.count/(@tm.count**2).to_f)*100}%" if count % 20 == 0
-    end
   end
 
   # Compute similarity between two given trajectories a and b
@@ -265,4 +145,6 @@ class SimilarityMatrix
     end
     len = len / (upper_idx-lower_idx+1)
   end
+
+
 end
