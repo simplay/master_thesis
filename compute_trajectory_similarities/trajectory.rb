@@ -85,6 +85,7 @@ class Trajectory
   def point_at(frame_idx)
     idx = frame_idx - start_frame
     if idx >= count
+      puts "in point_at at frame #{point_at}"
       binding.pry
       boundary_value
     else

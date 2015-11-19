@@ -3,6 +3,8 @@ require_relative 'meta_info'
 
 class CieLab
 
+  PERFORM_NORMALIZATION = false
+
   def self.build(dataset=nil)
     @singleton ||= CieLab.new(dataset)
   end
@@ -22,6 +24,9 @@ class CieLab
         while(line = file.gets)
           a_row = line.split("(").last.split(")").first
           components = a_row.split.map(&:to_f)
+          if components.any? {|comp| comp > 1.0} && PERFORM_NORMALIZATION
+            components = components.map { |c| c / 255.0 }
+          end
           lab_file[idx] = Point3f.new(components)
           idx = idx + 1
         end

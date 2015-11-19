@@ -33,7 +33,7 @@ class SimilarityMatrix
   end
 
   def to_mat
-    puts "Using LAMBDA = #{lambda_val}"
+    puts "Using LAMBDA = #{lambda_val}" unless $use_sum_affinity
     start = Time.now
     puts "Computing similarities..."
     if USE_THREADING
@@ -48,7 +48,6 @@ class SimilarityMatrix
       run_executor
     else
       SimilarityTask.new(nil, trajectories).traverse_all_pairs(@tm)
-      #traverse_all_pairs
     end
 
     finish_sim = Time.now

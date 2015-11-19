@@ -92,13 +92,17 @@ class SimilarityTask
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
     d_motions = motion_dist(a, b, max_min_frame, min_max_frame)
-    d_motion = d_motions.empty? ? 0.0 : d_motions.max
+    d_motion = d_motions.empty? ? 0.0 : 255.0*d_motions.max
     d_spatial = avg_spatial_distance_between(a, b, max_min_frame, min_max_frame)
     d_color = color_dist(a, b, max_min_frame, min_max_frame)
-    z_AB = [
+
+    return 0.0 if min_max_frame-max_min_frame + 1 < 1
+
+    z_ABs = [
       BETA_0_TILDE + BETA_1*d_motion + BETA_2*d_spatial + BETA_3*d_color,
       BETA_0 + BETA_1*d_motion
-    ].max
+    ]
+    z_AB = z_ABs.max
     1.0 / (1.0 + Math.exp(-z_AB))
   end
 
@@ -130,8 +134,8 @@ class SimilarityTask
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
       sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
-      sigma_t = sigma_t + 1.0
-      dt_AB/sigma_t
+      sigma_t = sigma_t #+ 1.0
+      Math.sqrt(dt_AB/sigma_t)
     end
 
   end
@@ -231,7 +235,8 @@ class SimilarityTask
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def avg_spatial_distance_between(a, b, lower_idx, upper_idx)
-    binding.pry if upper_idx-lower_idx + 1 < 1# should no happen!
+    #binding.pry if upper_idx-lower_idx + 1 < 1# should no happen!
+    return 0.0 if upper_idx-lower_idx + 1 < 1# should no happen!
     len = 0.0
     (lower_idx..upper_idx).each do |idx|
       pa = a.point_at(idx)
