@@ -67,4 +67,21 @@ class CieLab
 
   end
 
+  def bilinear_interpolated_variance_for(p, frame_idx)
+    px_i = p.x.floor
+    py_i = p.y.floor
+    px_i2 = px_i+1
+    py_i2 = py_i+1
+    dx = p.x - px_i
+    dy = p.y - py_i
+
+    f_00 = color_at(px_i, py_i, frame_idx)
+    f_01 = color_at(px_i, py_i2, frame_idx)
+    f_10 = color_at(px_i2, py_i, frame_idx)
+    f_11 = color_at(px_i2, py_i2, frame_idx)
+
+    f_00.scale_by((1.0-dx)*(1.0-dy)) + f_01.scale_by((1.0-dx)*dy) + f_10.scale_by(dx*(1.0-dy)) + f_11.scale_by(dx*dy)
+
+  end
+
 end

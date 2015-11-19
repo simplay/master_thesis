@@ -56,6 +56,12 @@ class Point3f
     Point3f.new([x,y,z])
   end
 
+  def scale_by(f)
+    @x = f*@x
+    @y = f*@y
+    @z = f*@z
+  end
+
   def sub(other)
     @x = @x - other.x
     @y = @y - other.y

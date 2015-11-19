@@ -18,6 +18,14 @@ class SimilarityTask
   DT_THREH = 5
   ZERO_THRESH = 1.0e-12
 
+  # Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts.
+  # Used in formula (7)
+  BETA_0 = 2.0
+  BETA_0_TILDE = 6.0
+  BETA_1 = -0.02
+  BETA_2 = -4.0
+  BETA_3 = -0.02
+
   def initialize(a, trajectories)
     @a = a
     @trajectories = trajectories
@@ -25,14 +33,77 @@ class SimilarityTask
 
   def call
     @trajectories.each do |b|
-      value = similarity(@a,b)
+      value = compute_affinity(@a,b)
       @a.append_similarity(b.label, value)
       b.append_similarity(@a.label, value)
     end
   end
 
+  def compute_affinity(a,b)
+    if $use_sum_affinity
+      similarity_alternative(a,b)
+    else
+      similarity(a,b)
+    end
+  end
+
   def use_local_variance?
     @is_using_local_variance
+  end
+
+  # alternative approach described in formula (7)
+  def similarity_alternative(a, b)
+    return 0.0 if a == b # lässt cluster bestehend aus einem pixel verschwinden.
+    # Find overlapping part of two given trajectories:
+    #
+    # find latest start frame of trajectory pair
+    max_min_frame = [a,b].map(&:start_frame).max
+    # find earliest end frame of trajectory pair
+    min_max_frame = [a,b].map(&:end_frame).min
+    # Compute affinities w(A,B)
+    d_motions = motion_dist(a, b, max_min_frame, min_max_frame)
+    d_motion =  d_motions.empty? ? 0.0 : d_motions.max
+    d_spatial = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    d_color = color_dist(a, b, max_min_frame, min_max_frame)
+    z_AB = [
+      BETA_0_TILDE + BETA_1*d_motion + BETA_2*d_spatial + BETA_3*d_color,
+      BETA_0 + BETA_1*d_motion
+    ].max
+    1.0 / (1.0 + Math.exp(-z_AB))
+  end
+
+  def color_dist(a, b, max_min_frame, min_max_frame)
+    len = 0.0
+    (lower_idx..upper_idx).each do |idx|
+      pa = a.point_at(idx)
+      pb = b.point_at(idx)
+      lab_a = bilinear_interpolated_variance_for(pa, idx)
+      lab_b = bilinear_interpolated_variance_for(pb, idx)
+      len = len + lab_a.copy.sub(lab_b).length
+    end
+    len = len / (upper_idx-lower_idx+1)
+  end
+
+  def motion_dist(a,b,lwer_idx, upper_idx, dt=1)
+    common_frame_count = upper_idx-lower_idx+1
+    return [] if common_frame_count < 2
+    timestep = $is_debugging ? dt : common_frame_count
+
+    # ensure that we only iterate over trajectories that are longer that 4 segments
+    u = [upper_idx-timestep, upper_idx - DT_THREH].max
+    l = lower_idx
+    return [] if u < l # when forward diff cannot be computed
+
+    (l..u).map do |idx|
+      # compute foreward diff over T for A,B
+      dt_A = foreward_differece_on(a, timestep, idx)
+      dt_B = foreward_differece_on(b, timestep, idx)
+      dt_AB = dt_A.sub(dt_B).length_squared
+      sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
+      sigma_t = sigma_t + 1.0
+      dt_AB/sigma_t
+    end
+
   end
 
   # Compute similarity between two given trajectories a and b
@@ -89,16 +160,6 @@ class SimilarityTask
       dt_AB = dt_A.sub(dt_B).length_squared
       sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
       sigma_t = sigma_t + 1.0
-
-      combine_distances(d_sp_a_b, dt_AB, sigma_t)
-    end
-  end
-
-  # formula 4
-  def combine_distances(d_sp_a_b, dt_AB, sigma_t)
-    if $use_sum_affinity
-      0.0
-    else
       d_sp_a_b*(dt_AB/sigma_t)
     end
   end
