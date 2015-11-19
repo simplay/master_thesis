@@ -25,13 +25,15 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     
     % generate cie lab imgs
     if COMPUTE_CIE_LAB
+        disp('Generating CIE L*a*b* files...')
         for t=START_FRAME_IDX:END_FRAME_IDX+1
             img = imread(imgs{t});
             colorTransform = makecform('srgb2lab');
             lab = applycform(img, colorTransform);
             [rows, columns, ~] = size(lab);
             fname = strcat(DATASETNAME,'_lab_',num2str(t),'.txt');
-            fpname = strcat('../output/cie_lab_color_imgs/', fname);
+            disp(['Computing ', fname]);
+            fpname = strcat('../output/cie_lab_color_imgs/',DATASETNAME,'/', fname);
             fid = fopen(fpname, 'wt');
             for col = 1 : columns
                 for row = 1 : rows
@@ -44,6 +46,7 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
             end
             fclose(fid);
         end
+        disp('CIE L*a*b* files generated.')
     end
     
     %% working example
