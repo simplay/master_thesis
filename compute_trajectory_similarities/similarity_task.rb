@@ -31,6 +31,21 @@ class SimilarityTask
     @trajectories = trajectories
   end
 
+  # Compute the similarities between a trajectory with a given label
+  # and all other trajectories.
+  #
+  # @param label [Integer] label of target trajectory
+  # @return [Trajectory] we computed its similarities.
+  def trajectory_similarities_for(tm, label)
+    a = tm.find_trajectory_by(label)
+    trajectories.each do |b|
+        value = similarity(a,b)
+        a.append_similarity(b.label, value)
+        b.append_similarity(a.label, value)
+    end
+    a
+  end
+
   def traverse_all_pairs(tm)
     count = 0
     trs = @trajectories
