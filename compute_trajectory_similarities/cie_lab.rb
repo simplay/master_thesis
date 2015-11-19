@@ -34,6 +34,10 @@ class CieLab
     build.color_at(x, y, fidx)
   end
 
+  def self.bilinear_interpolated_color_for(p, frame_idx)
+    build.bilinear_interpolated_color_for(p, frame_idx)
+  end
+
   # Fetch the CIE l*a*b* color value at a given frame for a given location.
   #
   # @info: first index of any frame, row and column is equal to 1.
@@ -59,15 +63,13 @@ class CieLab
     raise "Index should be > 0 but (x=#{x},y=#{y},fidx=#{fidx})" if x<1 or y<1 or fidx<1
     lab = @lab_files[fidx-1]
     lookup_idx = (y-1)*MetaInfo.height + x
-    lab[lookup_idx.to_i]
+    color_value = lab[lookup_idx.to_i]
+    binding.pry if color_value.nil?
+    return nil if color_value.nil?
+    color_value.copy
   end
 
-  # @return [Point3f] bilinearly interpolated cie lab color value.
-  def bilinear_interpolated_color
-
-  end
-
-  def bilinear_interpolated_variance_for(p, frame_idx)
+  def bilinear_interpolated_color_for(p, frame_idx)
     px_i = p.x.floor
     py_i = p.y.floor
     px_i2 = px_i+1
@@ -80,8 +82,14 @@ class CieLab
     f_10 = color_at(px_i2, py_i, frame_idx)
     f_11 = color_at(px_i2, py_i2, frame_idx)
 
-    f_00.scale_by((1.0-dx)*(1.0-dy)) + f_01.scale_by((1.0-dx)*dy) + f_10.scale_by(dx*(1.0-dy)) + f_11.scale_by(dx*dy)
+    return 0.0 if [f_00,f_01,f_10,f_11].map(&:nil?).any?
 
+    c_00 = f_00.scale_by((1.0-dx)*(1.0-dy))
+    c_01 = f_01.scale_by((1.0-dx)*dy)
+    c_10 = f_10.scale_by(dx*(1.0-dy))
+    c_11 = f_11.scale_by(dx*dy)
+
+    c_00.add(c_01).add(c_10).add(c_11)
   end
 
 end

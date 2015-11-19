@@ -43,8 +43,8 @@ class SimilarityMatrix
       @task_count = 0
       run_executor
     else
-
-      traverse_all_pairs
+      SimilarityTask.new(nil, trajectories).traverse_all_pairs(@tm)
+      #traverse_all_pairs
     end
 
     finish_sim = Time.now

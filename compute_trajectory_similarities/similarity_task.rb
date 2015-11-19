@@ -31,6 +31,21 @@ class SimilarityTask
     @trajectories = trajectories
   end
 
+  def traverse_all_pairs(tm)
+    count = 0
+    trs = @trajectories
+    trs.each do |a|
+      trs.each do |b|
+        value = compute_affinity(a,b)
+        a.append_similarity(b.label, value)
+        b.append_similarity(a.label, value)
+      end
+      count = count + 1
+      puts "progress: #{(count*tm.count/(tm.count**2).to_f)*100}%" if count % 20 == 0
+    end
+
+  end
+
   def call
     @trajectories.each do |b|
       value = compute_affinity(@a,b)
@@ -62,8 +77,8 @@ class SimilarityTask
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
     d_motions = motion_dist(a, b, max_min_frame, min_max_frame)
-    d_motion =  d_motions.empty? ? 0.0 : d_motions.max
-    d_spatial = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    d_motion = d_motions.empty? ? 0.0 : d_motions.max
+    d_spatial = avg_spatial_distance_between(a, b, max_min_frame, min_max_frame)
     d_color = color_dist(a, b, max_min_frame, min_max_frame)
     z_AB = [
       BETA_0_TILDE + BETA_1*d_motion + BETA_2*d_spatial + BETA_3*d_color,
@@ -72,19 +87,19 @@ class SimilarityTask
     1.0 / (1.0 + Math.exp(-z_AB))
   end
 
-  def color_dist(a, b, max_min_frame, min_max_frame)
+  def color_dist(a, b, lower_idx, upper_idx)
     len = 0.0
     (lower_idx..upper_idx).each do |idx|
       pa = a.point_at(idx)
       pb = b.point_at(idx)
-      lab_a = bilinear_interpolated_variance_for(pa, idx)
-      lab_b = bilinear_interpolated_variance_for(pb, idx)
+      lab_a = CieLab.bilinear_interpolated_color_for(pa, idx)
+      lab_b = CieLab.bilinear_interpolated_color_for(pb, idx)
       len = len + lab_a.copy.sub(lab_b).length
     end
     len = len / (upper_idx-lower_idx+1)
   end
 
-  def motion_dist(a,b,lwer_idx, upper_idx, dt=1)
+  def motion_dist(a,b,lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
     timestep = $is_debugging ? dt : common_frame_count

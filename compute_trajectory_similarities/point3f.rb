@@ -22,7 +22,7 @@ class Point3f
   # @return [Point3f] 2d trajectory point with depth.
   def self.build_from(p, frame_idx, cameras_overlapping=true)
     z = DepthField.build.interpolate_depth_at(frame_idx, p)
-    return z if z == false #binding.pry 
+    return z if z == false #binding.pry
 
     if MetaInfo.build.calibration_file?
       depth = z*depth_scale(true)
@@ -60,12 +60,20 @@ class Point3f
     @x = f*@x
     @y = f*@y
     @z = f*@z
+    self
   end
 
   def sub(other)
     @x = @x - other.x
     @y = @y - other.y
     @z = @z - other.z
+    self
+  end
+
+  def add(other)
+    @x = @x + other.x
+    @y = @y + other.y
+    @z = @z + other.z
     self
   end
 
