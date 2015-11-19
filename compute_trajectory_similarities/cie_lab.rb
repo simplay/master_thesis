@@ -41,6 +41,7 @@ class CieLab
   # Fetch the CIE l*a*b* color value at a given frame for a given location.
   #
   # @info: first index of any frame, row and column is equal to 1.
+  #   Retrun nil in case no color cold be fetched
   # @example:
   #   color_at(1,1,1) gives you the the cie lab color value
   #   in frame 1 at its pixel location (1,1)
@@ -64,11 +65,11 @@ class CieLab
     lab = @lab_files[fidx-1]
     lookup_idx = (y-1)*MetaInfo.height + x
     color_value = lab[lookup_idx.to_i]
-    binding.pry if color_value.nil?
     return nil if color_value.nil?
     color_value.copy
   end
 
+  # @info: Returns the zero vector in case the color could not be interpolated
   def bilinear_interpolated_color_for(p, frame_idx)
     px_i = p.x.floor
     py_i = p.y.floor
@@ -82,7 +83,7 @@ class CieLab
     f_10 = color_at(px_i2, py_i, frame_idx)
     f_11 = color_at(px_i2, py_i2, frame_idx)
 
-    return 0.0 if [f_00,f_01,f_10,f_11].map(&:nil?).any?
+    return Point3f.new([0.0, 0.0, 0.0]) if [f_00,f_01,f_10,f_11].map(&:nil?).any?
 
     c_00 = f_00.scale_by((1.0-dx)*(1.0-dy))
     c_01 = f_01.scale_by((1.0-dx)*dy)

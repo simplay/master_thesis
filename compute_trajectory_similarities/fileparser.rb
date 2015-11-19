@@ -30,7 +30,7 @@ class Fileparser
     puts "Summing constraints for computing affinities: #{$use_sum_affinity}"
     FlowVariance.build(OUT_PATH+dataset)
     DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
-    CieLab.build(dataset)
+    CieLab.build(dataset) if use_sum_affinity
     @tm = TrajectoryManager.new
     puts "Computing affinity matrix..."
     @sim_mat = SimilarityMatrix.new(@tm, is_using_local_variance)

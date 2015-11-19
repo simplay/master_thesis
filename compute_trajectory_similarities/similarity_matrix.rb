@@ -36,7 +36,11 @@ class SimilarityMatrix
     puts "Using LAMBDA = #{lambda_val}"
     start = Time.now
     puts "Computing similarities..."
-    puts "Using #{$core_pool_threads} thread."
+    if USE_THREADING
+      puts "Running Multithreading using #{$core_pool_threads} threads."
+    else
+      puts "Running on a single core..."
+    end
     @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
 
     if USE_THREADING
