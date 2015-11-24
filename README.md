@@ -44,6 +44,14 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 
 ## Installation
 
+### Windows 7 or higher:
+
+1. Perform the steps described [here](https://github.com/simplay/wincygwinify/blob/master/README.md)
+
+2. Clone this repository.
+
+3. Run `bundle`
+
 ### Mac OS X / Linux
 
 First, install a recent Matlab version. Next, open your terminal of choice and enter the following commands in the given order:
