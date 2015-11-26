@@ -18,6 +18,9 @@ class SimilarityTask
   DT_THREH = 5
   ZERO_THRESH = 1.0e-12
 
+  # Setting this to 0 makes cluster consisting of 1 pixel vanish.
+  EIGENSIM_VALUE = 0.0
+
   # Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts.
   # Used in formula (7)
   BETA_0 = 2.0
@@ -83,7 +86,7 @@ class SimilarityTask
 
   # alternative approach described in formula (7)
   def similarity_alternative(a, b)
-    return 0.0 if a == b # lässt cluster bestehend aus einem pixel verschwinden.
+    return EIGENSIM_VALUE if a == b
     # Find overlapping part of two given trajectories:
     #
     # find latest start frame of trajectory pair
@@ -144,7 +147,7 @@ class SimilarityTask
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def similarity(a, b)
-    return 0.0 if a == b # lässt cluster bestehend aus einem pixel verschwinden.
+    return EIGENSIM_VALUE if a == b
     # Find overlapping part of two given trajectories:
     #
     # find latest start frame of trajectory pair
