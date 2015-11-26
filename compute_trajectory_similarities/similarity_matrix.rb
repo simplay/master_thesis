@@ -1,9 +1,6 @@
 require 'pry'
 require 'java'
 require 'thread'
-
-require_relative 'point'
-require_relative 'flow_variance'
 require_relative 'similarity_task'
 
 java_import 'java.util.concurrent.Callable'
@@ -15,13 +12,6 @@ java_import 'java.lang.Runtime'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-
-  # see: segmentation of moving objects, section 4.
-  LAMBDA = 0.1
-  LAMBDA_D = 70000.0
-  DT_THREH = 5
-  ZERO_THRESH = 1.0e-12
-
   USE_THREADING = true
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
@@ -41,7 +31,7 @@ class SimilarityMatrix
     else
       puts "Running on a single core..."
     end
-    @tm.filter_trajectories_shorter_than(DT_THREH) unless $is_debugging
+    @tm.filter_trajectories_shorter_than(SimilarityTask::DT_THREH) unless $is_debugging
 
     if USE_THREADING
       @task_count = 0
@@ -111,7 +101,7 @@ class SimilarityMatrix
   end
 
   def lambda_val
-    $uses_depth_data ? LAMBDA_D : LAMBDA
+    $uses_depth_data ? SimilarityTask::LAMBDA_D : SimilarityTask::LAMBDA
   end
 
   # Generate a .dat file from the computed similaries stored in @tm
