@@ -41,6 +41,10 @@ class TrajectoryManager
     @trajectories = @trajectories.delete_if {|_, tra| tra.length < tra_min_length}
   end
 
+  def filter_invalid_trajectories
+    @trajectories.delete_if {|_, tra| tra.invalid?}
+  end
+
   # Find the most n similar neighbors of a given trajectory that start all
   # at a given frame.
   #
@@ -101,6 +105,21 @@ class TrajectoryManager
     trajectory = Trajectory.new(frame_id, label) if trajectory.nil?
     trajectory.append_point(point)
     @trajectories[label] = trajectory
+  end
+
+  # Mark a target trajectory as invalid.
+  #
+  # @param label [Integer] identifier of trajectory
+  def mark_trajectory_invalid(label)
+    trajectory = @trajectories[label]
+    trajectory.mark_as_invalid unless trajectory.nil?
+  end
+
+  # Fetch all invalid trajectories.
+  #
+  # @return [Array<Trajectory>] list of invalid trajectories.
+  def find_all_invalid_trajectories
+    trajectories.select(&:invalid?)
   end
 
 end

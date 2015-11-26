@@ -8,6 +8,23 @@ class Trajectory
     @label = label
     @similarities = {}
     @mutex = Mutex.new
+    @is_invalid = false
+  end
+
+  def valid?
+    !invalid?
+  end
+
+  # Checks whether this trajectory is valid
+  #
+  # @info: A trajectory can be invalid due to many cases.
+  #   case invalid depth data: if one of its trajectory points
+  #   has not meaningful depth data associated, then the whole
+  #   trajectory is invalid.
+  #
+  # @return [Boolean] true if invalid otherwise false.
+  def invalid?
+    @is_invalid
   end
 
   # Retrieve the most similar neighbor trajectories
@@ -107,6 +124,10 @@ class Trajectory
 
   def append_point(point)
     @points << point
+  end
+
+  def mark_as_invalid
+    @is_invalid = true
   end
 
   def to_s

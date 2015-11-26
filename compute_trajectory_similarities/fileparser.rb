@@ -84,12 +84,18 @@ class Fileparser
         next if point.out_of_range?
         if has_depth_data?
           point = Point3f.build_from(point, @frame_idx)
-          next if point == false
+          # next if point == false
+          if point == false
+            @tm.mark_trajectory_invalid(@label)
+            next
+          end
         end
         @tm.append_trajectory_point(@label, @start_frame, point)
         @frame_idx = @frame_idx + 1
       end
     end
+    puts "Filtering #{@tm.find_all_invalid_trajectories.count} trajectories."
+    @tm.filter_invalid_trajectories
   end
 
 end
