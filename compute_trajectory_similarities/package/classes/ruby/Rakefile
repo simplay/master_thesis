@@ -1,0 +1,9 @@
+require 'rawr'
+task :console do
+    require_relative 'file_loader'
+    require 'pry'; binding.pry
+end
+
+task :benchmark do
+  system("ruby my_mench.rb")
+end

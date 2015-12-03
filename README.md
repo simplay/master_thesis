@@ -42,6 +42,17 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 + export matlab path to have be able to run it in your terminal of choice
  + e.g. add this line to your bash profile: `export PATH="/Applications/MATLAB_R2014b.app/bin:$PATH"` 
 
+## Compile the source to a executable jar
+
+```bash
+cd compute_trajectory_similarities
+gem install rawr
+rawr install 
+rake rawr:clean
+```
+
+during performing `rawr install` you will be asked whether you want to keep your original Rakefile or update it. Allow to update it and let rawr put its stuff on top of the file.
+
 ## Installation
 
 ### Windows 7 or higher:
