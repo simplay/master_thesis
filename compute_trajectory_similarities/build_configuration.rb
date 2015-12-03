@@ -43,7 +43,7 @@ configuration do |c|
 	# Whether Ruby source files should be compiled into .class files. Setting this to true currently breaks packaging
 	# default value: false
 	#
-	#c.compile_ruby_files = false
+	c.compile_ruby_files = true
 
 	# A list of individual Java library files to include.
 	# default value: []
