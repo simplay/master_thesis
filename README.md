@@ -48,7 +48,7 @@ Implementation of [this paper](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&ar
 cd compute_trajectory_similarities
 gem install rawr
 rawr install 
-rake rawr:clean
+rake rawr:jar
 ```
 
 during performing `rawr install` you will be asked whether you want to keep your original Rakefile or update it. Allow to update it and let rawr put its stuff on top of the file.
