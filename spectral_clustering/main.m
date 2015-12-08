@@ -2,20 +2,29 @@ clc;
 %clear all;
 close all;
 
-DATASET = 'car2';
-COMPUTE_EIGS = true;
+DATASET = 'chair3';
+COMPUTE_EIGS = false;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 USE_T = false;
-SHOULD_LOAD_W = true;
-THRESH = 0.00;01;
+SHOULD_LOAD_W = false;
+
+THRESH = 0.001;
 CLUSTER_CENTER_COUNT = 3;
+RESACLE_W = false;
 
 USE_W_VEC = false;
 USE_CLUSTERING_CUE = true;
 
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 1;
+frame_idx = 5;
+
+
+if (RESACLE_W)
+    w = -(log(W)/7000);
+    WWW = W;
+    W = (exp(-w*18000));
+end
 %%
 if exist('W','var') == 0
     disp('setting initial values...')
