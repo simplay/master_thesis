@@ -1,5 +1,17 @@
 # Trajectory Similarities
 
+## Running
+
++ Run ruby code: `./run.sh` (runs as a jruby application)
++ Run compiled code: `./run2.sh` (faster)
+
+## Compilation
+
+Makes use of [rawr](https://github.com/rawr/rawr)
+
+Execute `rawr install` followed by `rake rawr:jar` in your terminal.
+The compiled jar is located at `./packages/jar/`. Note that is a shell-script called `run2.sh` that assigns all relevant runtime parameters to start the program. 
+
 ## Usage
 
 Enter `./run.sh` in your terminal
@@ -22,3 +34,5 @@ Enter `./run.sh` in your terminal
 ### Examples
 
 ### Advanced mode
+
+
