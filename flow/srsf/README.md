@@ -28,7 +28,10 @@ This program is distributed WITHOUT ANY WARRANTY.
 Install
 ------------------------------
 
-For compiling, go to the source folder and type make
++ Run `brew tap homebrew/science`
++ Run `brew install opencv`
++ For compiling, go to the source folder and type make
+
 
 ------------------------------
 Data
