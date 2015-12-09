@@ -1,6 +1,6 @@
 # Trajectory Similarities
 
-Executing `java -jar Xmx 20000m package/jar/compute_trajectory_similarities.jar -l 1 t 1 -v 0` on a Windows 8 machine, using 16 Threads takes 825 seconds to compute the affinity matrix over a set of trajectories with 100 frames (chair dataset).
+Executing `java -jar -Xmx20000m package/jar/compute_trajectory_similarities.jar -l 1 t 1 -v 0` on a Windows 8 machine, using 16 Threads takes 825 seconds to compute the affinity matrix over a set of trajectories with 100 frames (chair dataset).
 
 ## Running
 
