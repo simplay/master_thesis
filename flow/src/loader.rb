@@ -113,8 +113,8 @@ class Loader
         # wait for all threads to complete
         @counter = java.util.concurrent.atomic.AtomicInteger.new
         tasks.each do |task|
-          report_progress
           task.get
+          report_progress
         end
 
         executor.shutdown
