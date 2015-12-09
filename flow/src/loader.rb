@@ -7,7 +7,7 @@ class Loader
     genarate_normalized_images(folder_path, skip_comp)
     fnames = sorted_dataset_fnames(folder_path)
     lower, upper = lookup_indices(from_idx, to_idx, fnames)
-    generate_flows(fnames, lower, upper, skip_comp, run_singlethreaded)
+    generate_flows(fnames, dataset, lower, upper, skip_comp, run_singlethreaded)
     generate_association_file(folder_path, lower, upper)
   end
 
@@ -24,7 +24,7 @@ class Loader
       imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
         fname.include?("LDOF")
       end
-      len = imgs.lengt
+      len = imgs.count
       imgs = imgs.sort_by do |a| a.split("/").last.to_i end
       nupper = upper
       nupper = upper + 1 if upper < len-1
@@ -68,12 +68,13 @@ class Loader
     end
   end
 
-  def compute_flow(filenames, dataset, range, text)
+  def compute_flow(dataset_fnames, dataset, range, text)
     puts "Computing #{text} for dataset #{dataset}..."
-    index_range.each do |idx|
+    range.each do |idx|
       i1 = dataset_fnames[idx]
       i2 = dataset_fnames[idx+1]
       puts "Computing #{text} from #{i1} to #{i2}."
+      system("./ldof/ldof #{i1} #{i2}")
     end
   end
 
