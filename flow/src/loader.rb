@@ -1,8 +1,23 @@
+require 'java'
+require 'thread'
 require 'pry'
+require_relative 'flow_task'
+
+java_import 'java.util.concurrent.Callable'
+java_import 'java.util.concurrent.FutureTask'
+java_import 'java.util.concurrent.LinkedBlockingQueue'
+java_import 'java.util.concurrent.ThreadPoolExecutor'
+java_import 'java.util.concurrent.TimeUnit'
+java_import 'java.lang.Runtime'
+
 class Loader
 
+  USE_THREADING = true
+  MAX_POOL_THREADS = 16
+  $core_pool_threads = Runtime.getRuntime.availableProcessors
+
   def initialize(dataset, from_idx, to_idx, skip_comp)
-    run_singlethreaded = true
+    run_singlethreaded = false
     folder_path = "data/#{dataset}/"
     genarate_normalized_images(folder_path, skip_comp)
     fnames = sorted_dataset_fnames(folder_path)
@@ -63,7 +78,48 @@ class Loader
         compute_flow(dataset_fnames, dataset, index_range, "Backward Flow")
         rename_generated_flows(dataset_fnames, "bwf")
       else
-        puts "Not implemented yed"
+
+        @task_count = 0
+        dataset_files = filepath_names[lower..(upper+1)]
+        executor = ThreadPoolExecutor.new($core_pool_threads,
+                                          MAX_POOL_THREADS,
+                                          60, # keep alive time
+                                          TimeUnit::SECONDS,
+                                          LinkedBlockingQueue.new)
+
+        sliced_range = dataset_files.each_slice(2).to_a
+        merged_last_two = sliced_range.last(2).flatten
+        if merged_last_two.first.size != 2
+          range_without_last_two = sliced_range[0..-3]
+          range_without_last_two << merged_last_two
+          sliced_range = range_without_last_two
+        end
+
+        cross_combinations = dataset_files[1..-1].each_slice(2).to_a
+        if cross_combinations.last.size == 0
+          cross_combinations.pop
+        end
+        sliced_range = sliced_range + cross_combinations
+
+        @total_tasks = sliced_range.length
+        tasks = sliced_range.map do |fnames|
+          FutureTask.new(FlowTask.new(dataset, fnames) )
+        end
+
+        tasks.each do |task|
+          executor.execute(task)
+        end
+
+        # wait for all threads to complete
+        @counter = java.util.concurrent.atomic.AtomicInteger.new
+        tasks.each do |task|
+          report_progress
+          task.get
+        end
+
+        executor.shutdown
+        rename_generated_flows(dataset_files, "fwf")
+        rename_generated_flows(dataset_files.reverse, "bwf")
       end
     end
   end
@@ -148,5 +204,10 @@ class Loader
     return lower, upper
   end
 
+  def report_progress
+    p = @counter.incrementAndGet
+    puts "Progress: #{100.0*((p.to_f-1)/@total_tasks)}%"
+    @task_count = @task_count + 1
+  end
 
 end
