@@ -101,7 +101,7 @@ class Loader
         end
         sliced_range = sliced_range + cross_combinations
 
-        @total_tasks = sliced_range.length
+        @total_tasks = sliced_range.length-1
         tasks = sliced_range.map do |fnames|
           FutureTask.new(FlowTask.new(dataset, fnames) )
         end
@@ -113,8 +113,8 @@ class Loader
         # wait for all threads to complete
         @counter = java.util.concurrent.atomic.AtomicInteger.new
         tasks.each do |task|
-          task.get
           report_progress
+          task.get
         end
 
         executor.shutdown
