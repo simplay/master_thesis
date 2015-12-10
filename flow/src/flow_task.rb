@@ -23,19 +23,40 @@ class FlowTask
     compute_flow(dataset_fnames, @dataset, "Backward Flow")
   end
 
-  private
+  protected
 
   def compute_flow(dataset_fnames, dataset, text)
     total = dataset_fnames.count
     #puts "Computing #{text} for dataset #{dataset}..."
     dataset_fnames.each_with_index do |_, idx|
       if idx+1 < total
-        i1 = dataset_fnames[idx]
-        i2 = dataset_fnames[idx+1]
-        #puts "Computing #{text} from #{i1} to #{i2}."
-        system("./ldof/ldof #{i1} #{i2}")
+        @i1 = dataset_fnames[idx]
+        @i2 = dataset_fnames[idx+1]
+        system("./#{flow_method}")
       end
     end
   end
 
+  def flow_method
+    raise MethodError.new "Not implemented yet."
+  end
+
+end
+
+class LdofFlowTask < FlowTask
+
+  def flow_method
+    "ldof/ldof #{@i1} #{@i2}"
+  end
+
+end
+
+class SrsfFlowTask < FlowTask
+  def flow_method
+    idx1 = @i1.split("/").last.split(".").first
+    idx2 = @i2.split("/").last.split(".").first
+    cmd = "srsf/semirigSF #{idx1} #{idx2} 1 #{@dataset}"
+    puts cmd
+    cmd
+  end
 end

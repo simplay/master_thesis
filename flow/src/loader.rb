@@ -12,18 +12,28 @@ java_import 'java.lang.Runtime'
 
 class Loader
 
-  USE_THREADING = true
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
-  def initialize(dataset, from_idx, to_idx, skip_comp)
-    run_singlethreaded = false
-    folder_path = "data/#{dataset}/"
-    genarate_normalized_images(folder_path, skip_comp)
-    fnames = sorted_dataset_fnames(folder_path)
-    lower, upper = lookup_indices(from_idx, to_idx, fnames)
-    generate_flows(fnames, dataset, lower, upper, skip_comp, run_singlethreaded)
-    generate_association_file(folder_path, lower, upper)
+  def initialize(dataset, variant, from_idx, to_idx, skip_comp)
+    case variant.to_i
+    when 1
+      @task_type = LdofFlowTask
+      folder_path = "data/#{dataset}/"
+      genarate_normalized_images(folder_path, skip_comp)
+      fnames = sorted_dataset_fnames(folder_path)
+      lower, upper = lookup_indices(from_idx, to_idx, fnames)
+      generate_flows(fnames, dataset, lower, upper, skip_comp)
+      rename_generated_flows(dataset_files, "fwf")
+      rename_generated_flows(dataset_files.reverse, "bwf")
+      generate_association_file(folder_path, lower, upper)
+    when 2
+      @task_type = SrsfFlowTask
+      folder_path = "srsf/Images/#{dataset}/color/"
+      fnames = sorted_dataset_fnames(folder_path, '.png')
+      lower, upper = lookup_indices(from_idx, to_idx, fnames)
+      generate_flows(fnames, dataset, lower, upper, skip_comp)
+    end
   end
 
   private
@@ -67,60 +77,41 @@ class Loader
   end
 
 
-  def generate_flows(filepath_names, dataset, lower, upper, skip_comp, run_singlethreaded)
+  def generate_flows(filepath_names, dataset, lower, upper, skip_comp)
     unless skip_comp
-      if run_singlethreaded
-        index_range = (lower..upper).map { |idx| (idx-lower) }
-        dataset_fnames = filepath_names[lower..(upper+1)]
-        compute_flow(dataset_fnames, dataset, index_range, "Forward Flow")
-        rename_generated_flows(dataset_fnames, "fwf")
-        dataset_fnames.reverse!
-        compute_flow(dataset_fnames, dataset, index_range, "Backward Flow")
-        rename_generated_flows(dataset_fnames, "bwf")
-      else
+      @task_count = 0
+      dataset_files = filepath_names[lower..(upper+1)]
+      executor = ThreadPoolExecutor.new($core_pool_threads,
+                                        MAX_POOL_THREADS,
+                                        60, # keep alive time
+                                        TimeUnit::SECONDS,
+                                        LinkedBlockingQueue.new)
 
-        @task_count = 0
-        dataset_files = filepath_names[lower..(upper+1)]
-        executor = ThreadPoolExecutor.new($core_pool_threads,
-                                          MAX_POOL_THREADS,
-                                          60, # keep alive time
-                                          TimeUnit::SECONDS,
-                                          LinkedBlockingQueue.new)
-
-        sliced_range = dataset_files.each_slice(2).to_a
-        merged_last_two = sliced_range.last(2).flatten
-        if merged_last_two.first.size != 2
-          range_without_last_two = sliced_range[0..-3]
-          range_without_last_two << merged_last_two
-          sliced_range = range_without_last_two
+      sliced_range = []
+      file_count = dataset_files.count
+      dataset_files.each_with_index do |item, idx|
+        if idx+1 < file_count
+          sliced_range << [item, dataset_files[idx+1]]
         end
-
-        cross_combinations = dataset_files[1..-1].each_slice(2).to_a
-        if cross_combinations.last.size == 0
-          cross_combinations.pop
-        end
-        sliced_range = sliced_range + cross_combinations
-
-        @total_tasks = sliced_range.length-1
-        tasks = sliced_range.map do |fnames|
-          FutureTask.new(FlowTask.new(dataset, fnames) )
-        end
-
-        tasks.each do |task|
-          executor.execute(task)
-        end
-
-        # wait for all threads to complete
-        @counter = java.util.concurrent.atomic.AtomicInteger.new
-        tasks.each do |task|
-          report_progress
-          task.get
-        end
-
-        executor.shutdown
-        rename_generated_flows(dataset_files, "fwf")
-        rename_generated_flows(dataset_files.reverse, "bwf")
       end
+
+      @total_tasks = sliced_range.length-1
+      tasks = sliced_range.map do |fnames|
+        FutureTask.new(@task_type.new(dataset, fnames) )
+      end
+
+      tasks.each do |task|
+        executor.execute(task)
+      end
+
+      # wait for all threads to complete
+      @counter = java.util.concurrent.atomic.AtomicInteger.new
+      tasks.each do |task|
+        report_progress
+        task.get
+      end
+
+      executor.shutdown
     end
   end
 
@@ -177,8 +168,8 @@ class Loader
   #
   # @param filepath [String] relative path to image dataset.
   # @return [Array<String>] set of sorted image filenames.
-  def sorted_dataset_fnames(filepath)
-    dataset_fnames = Dir["#{filepath}*.ppm"]
+  def sorted_dataset_fnames(filepath, f_ext=".ppm")
+    dataset_fnames = Dir["#{filepath}*#{f_ext}"]
     dataset_fnames = dataset_fnames.reject { |fname| fname.include? 'LDOF.ppm' }
     dataset_fnames.sort_by { |a| a.split("/").last.to_i }
   end
