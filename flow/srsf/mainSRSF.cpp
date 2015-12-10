@@ -163,7 +163,8 @@ int main(int argc, char **argv)
 	int cont, pyr, warps;
 	char name[100];
 	FileStorage SFlow;
-	SFlow.open("./output/SFlow.xml", FileStorage::WRITE);
+	String flow_file_name = "flow_"+std::to_string(im_i)+"_"+std::to_string(im_f);
+	SFlow.open("./output/"+flow_file_name+".xml", FileStorage::WRITE);
 
 	Mat Mrgb = Mat(3,3,CV_32FC1);
 	Mat Rq = Mat(4,1,CV_32FC1);
@@ -299,18 +300,16 @@ int main(int argc, char **argv)
 	Mat DEPTH;
 
 	while (Bframe < 2) {
+		String rgb_name = "./Images/color/"+std::to_string(im)+".png";
+		String depth_name = "./Images/depth/"+std::to_string(im)+".png";
 
-		sprintf(name, "./Images/color_%04d.png",im);
-		RGB = imread(name);
-
-		sprintf(name, "./Images/depth_%04d.png",im);
-		DEPTH = imread(name, CV_LOAD_IMAGE_UNCHANGED);
+		RGB = imread(rgb_name);
+		DEPTH = imread(depth_name, CV_LOAD_IMAGE_UNCHANGED);
 
 		if (RGB.empty() || DEPTH.empty()) {
 
 			printf ("Invalid RGB or depth image \n");
 			return(0);
-
 		} else {
 
 			if (im == im_i) {
@@ -547,23 +546,23 @@ int main(int argc, char **argv)
 
 					consistencySF(Vx,Vy,Vz, point, gray0, gray1, DEPTH0, DEPTH1, diffI, diffD, Iwarped, Dwarped, bandSF0, bandSF2, fcx, fcy, cx, cy, constZ);
 
-					sprintf(name, "./output/Iwarped.png");
-					imwrite(name, Iwarped);
-					sprintf(name, "./output/Dwarped.png");
-					imwrite(name, Dwarped);
-					sprintf(name, "./output/Idiff.png");
-					imwrite(name, diffI);
-					sprintf(name, "./output/Ddiff.png");
-					imwrite(name, diffD);
+					//sprintf(name, "./output/Iwarped.png");
+					//imwrite(name, Iwarped);
+					//sprintf(name, "./output/Dwarped.png");
+					//imwrite(name, Dwarped);
+					//sprintf(name, "./output/Idiff.png");
+					//imwrite(name, diffI);
+					//sprintf(name, "./output/Ddiff.png");
+					//imwrite(name, diffD);
 
-					sprintf(name, "./output/Mask.png");
-					imwrite(name, Mask);
+					//sprintf(name, "./output/Mask.png");
+					//imwrite(name, Mask);
 
 					if (bSEL != 1) {
 
 						coloreaOF(OFimg, point, NEWpoint, Npoints, ViewOF, bandOF);
-						sprintf(name, "./output/OF.png");
-						imwrite(name, OFimg);
+						//sprintf(name, "./output/OF.png");
+						//imwrite(name, OFimg);
 
 						float maxX = maximo(SF[0],bandSF0);
 						float maxY = maximo(SF[1],bandSF0);
@@ -574,20 +573,20 @@ int main(int argc, char **argv)
 						coloreaSF(RGBy, SF[1], point, Npoints, bandSF0, max3D);
 						coloreaSF(RGBz, SF[2], point, Npoints, bandSF0, max3D);
 
-						sprintf(name, "./output/SFx-max%i.png", int (10 * maxX));
-						imwrite(name, RGBx);
-						sprintf(name, "./output/SFy-max%i.png", int (10 * maxY));
-						imwrite(name, RGBy);
-						sprintf(name, "./output/SFz-max%i.png", int (10 * maxZ));
-						imwrite(name, RGBz);
+						//sprintf(name, "./output/SFx-max%i.png", int (10 * maxX));
+						//imwrite(name, RGBx);
+						//sprintf(name, "./output/SFy-max%i.png", int (10 * maxY));
+						//imwrite(name, RGBy);
+						//sprintf(name, "./output/SFz-max%i.png", int (10 * maxZ));
+						//imwrite(name, RGBz);
 
 					}
 
 					if (bSEL != 0) {
 
 						coloreaOF(OFimg, point, NEWpointRig, Npoints, ViewOF, bandOF);
-						sprintf(name, "./output/OF_Rig.png");
-						imwrite(name, OFimg);
+						//sprintf(name, "./output/OF_Rig.png");
+						//imwrite(name, OFimg);
 
 						float maxX = maximo(SFrig[0],bandSF0);
 						float maxY = maximo(SFrig[1],bandSF0);
@@ -598,12 +597,12 @@ int main(int argc, char **argv)
 						coloreaSF(RGBy, SFrig[1], point, Npoints, bandSF0,max3D);
 						coloreaSF(RGBz, SFrig[2], point, Npoints, bandSF0,max3D);
 
-						sprintf(name, "./output/SFx_Rig-max%i.png", int (10 * maxX));
-						imwrite(name, RGBx);
-						sprintf(name, "./output/SFy_Rig-max%i.png", int (10 * maxY));
-						imwrite(name, RGBy);
-						sprintf(name, "./output/SFz_Rig-max%i.png", int (10 * maxZ));
-						imwrite(name, RGBz);
+						//sprintf(name, "./output/SFx_Rig-max%i.png", int (10 * maxX));
+						//imwrite(name, RGBx);
+						//sprintf(name, "./output/SFy_Rig-max%i.png", int (10 * maxY));
+						//imwrite(name, RGBy);
+						//sprintf(name, "./output/SFz_Rig-max%i.png", int (10 * maxZ));
+						//imwrite(name, RGBz);
 
 					}
 
@@ -627,6 +626,14 @@ int main(int argc, char **argv)
 	}
 
 	SFlow.release();
+	cv::FileStorage fs2;
+	fs2.open(flow_file_name+".xml", FileStorage::READ);
+	Mat SFx, SFy;
+
+	fs2["SFx"] >> SFx;
+	fs2["SFy"] >> SFy;
+
+
 	// cvNamedWindow("Iw");
 	// imshow("Iw", Iwarped);
 	// cvNamedWindow( "Idiff" );
