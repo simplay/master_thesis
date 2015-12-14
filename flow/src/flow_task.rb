@@ -18,21 +18,21 @@ class FlowTask
 
   def call
     dataset_fnames = @fnames
-    compute_flow(dataset_fnames, @dataset, "Forward Flow")
+    compute_flow(dataset_fnames, @dataset, "Forward Flow", true)
     dataset_fnames.reverse!
-    compute_flow(dataset_fnames, @dataset, "Backward Flow")
+    compute_flow(dataset_fnames, @dataset, "Backward Flow", false)
   end
 
   protected
 
-  def compute_flow(dataset_fnames, dataset, text)
+  def compute_flow(dataset_fnames, dataset, text, is_fwf)
     total = dataset_fnames.count
     #puts "Computing #{text} for dataset #{dataset}..."
     dataset_fnames.each_with_index do |_, idx|
       if idx+1 < total
         @i1 = dataset_fnames[idx]
         @i2 = dataset_fnames[idx+1]
-        system("./#{flow_method}")
+        system("#{flow_method(is_fwf)}")
       end
     end
   end
@@ -45,17 +45,23 @@ end
 
 class LdofFlowTask < FlowTask
 
-  def flow_method
-    "ldof/ldof #{@i1} #{@i2}"
+  def flow_method(is_fwf)
+    f_name = @i1.split(".ppm").first + "LDOF.flo"
+    prefix = (is_fwf) ? "fwf_" : "bwf_"
+    elements = f_name.split("/")
+    path = elements[0..-2].join("/") + "/"
+    ren_cmd = "mv #{f_name} #{path + prefix + elements.last}"
+    puts "#{ren_cmd}"
+    "./ldof/ldof #{@i1} #{@i2} && #{ren_cmd}"
   end
 
 end
 
 class SrsfFlowTask < FlowTask
-  def flow_method
+  def flow_method(is_fwf)
     idx1 = @i1.split("/").last.split(".").first
     idx2 = @i2.split("/").last.split(".").first
-    cmd = "srsf/semirigSF #{idx1} #{idx2} 1 #{@dataset}"
+    cmd = "cd srsf/ && ./semirigSF #{idx1} #{idx2} 1 #{@dataset}"
     puts cmd
     cmd
   end

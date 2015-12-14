@@ -24,8 +24,8 @@ class Loader
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper, skip_comp)
-      rename_generated_flows(dataset_files, "fwf")
-      rename_generated_flows(dataset_files.reverse, "bwf")
+      #rename_generated_flows(folder_path, "fwf")
+      #rename_generated_flows(folder_path, "bwf")
       generate_association_file(folder_path, lower, upper)
     when 2
       @task_type = SrsfFlowTask
@@ -128,6 +128,7 @@ class Loader
   def rename_generated_flows(folder_path, flow_prefix)
     flow_files = Dir["#{folder_path}*.flo"]
     flow_files = flow_files.reject {|fnames| fnames.include? "fwf" or fnames.include? "bwf"}
+    binding.pry
     flow_files.each do |fname|
       filename = File.basename(fname, File.extname(fname))
       new_name = "#{flow_prefix}_"+filename
