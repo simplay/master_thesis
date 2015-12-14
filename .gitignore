@@ -9,3 +9,4 @@ flow/data/**/*.*
 data/ldof/chair/*.*
 compute_trajectory_similarities/lib/
 compute_trajectory_similarities/src/
+.idea
