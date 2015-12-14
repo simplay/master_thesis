@@ -83,6 +83,7 @@ CvPoint2D32f *NEWpoint = new CvPoint2D32f[Npoints];
 float fcx,fcy,cx,cy;
 int im,im_i,im_f;
 String in_dataset;
+
 int main(int argc, char **argv)
 {
 	if (argc == 5) {
@@ -300,10 +301,8 @@ int main(int argc, char **argv)
 	Mat DEPTH;
 
 	while (Bframe < 2) {
-		std::cout << in_dataset;
-		in_dataset = "foobar";
-		String rgb_name = "srsf/Images/"+in_dataset+"/color/"+std::to_string(im)+".png";
-		String depth_name = "srsf/Images/"+in_dataset+"/depth/"+std::to_string(im)+".png";
+		String rgb_name = "Images/"+in_dataset+"/color/"+std::to_string(im)+".png";
+		String depth_name = "Images/"+in_dataset+"/depth/"+std::to_string(im)+".png";
 		
 		std::cout << rgb_name;
 
