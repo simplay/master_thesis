@@ -12,7 +12,7 @@ java_import 'java.lang.Runtime'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  USE_THREADING = true
+  USE_THREADING = false
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
@@ -20,6 +20,7 @@ class SimilarityMatrix
     @tm = tracking_manager
     puts "Using local variance for computing similarities: #{is_using_local_variance}"
     @is_using_local_variance = is_using_local_variance
+    $is_using_local_variance = @is_using_local_variance
   end
 
   def to_mat
@@ -40,8 +41,8 @@ class SimilarityMatrix
       SimilarityTask.new(nil, trajectories).traverse_all_pairs(@tm)
     end
     # remove zero trajectories
-    c = @tm.filter_zero_sim_trajectories
-    puts "Filtered #{@tm.count - c.count} zero sim trajectories."
+    #c = @tm.filter_zero_sim_trajectories
+    #puts "Filtered #{@tm.count - c.count} zero sim trajectories."
     finish_sim = Time.now
     diff = finish_sim - start
     puts "Computed affinities in #{diff} seconds"

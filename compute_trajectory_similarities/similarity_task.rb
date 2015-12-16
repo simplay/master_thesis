@@ -81,7 +81,7 @@ class SimilarityTask
   end
 
   def use_local_variance?
-    @is_using_local_variance
+    $is_using_local_variance
   end
 
   # alternative approach described in formula (7)
@@ -155,7 +155,11 @@ class SimilarityTask
     # find earliest end frame of trajectory pair
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
-    d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    if use_local_variance?
+      d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    else
+      d2_t_a_b = global_var_temporal_distances_between(a, b, max_min_frame, min_max_frame)
+    end
     return 0.0 if d2_t_a_b.empty?
     d_t_a_b = d2_t_a_b.map do |item| Math.sqrt(item) end
     d2_a_b = d_t_a_b.max
@@ -197,13 +201,9 @@ class SimilarityTask
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
       d_AB_values << Math.sqrt(dt_AB)
-      #sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
-      #sigma_t = sigma_t + 1.0
-      #d_sp_a_b*(dt_AB/sigma_t)
-      # binding.pry
       d_sp_a_b*dt_AB
     end
-    # binding.pry
+
     n = d_AB_values.count
     return [d_spacial_temp_values.first/d_AB_values.first] if n == 1
     mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/(n-1)
@@ -212,6 +212,40 @@ class SimilarityTask
     var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
     sigma_t = var_d_AB
     d_spacial_temp_values.map { |item| item * sigma_t}
+  end
+
+  # Compute temoral distance between temporal overlapping segments
+  # of two given trajectories.
+  #
+  # @param a [Trajectory] frist trajectory
+  # @param b [Trajectory] other trajectory
+  # @param lower_idx [Integer] index first overlapping trajectory frame
+  # @param upper_idx [Integer] index last overlapping trajectory frame
+  # @param dt [Integer] timestep size
+  # @return [Array] of Float values denoting the temporal distance
+  #   between two trajectory segment pairs.
+  def global_var_temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
+    common_frame_count = upper_idx-lower_idx+1
+    return [] if common_frame_count < 2
+    timestep = $is_debugging ? dt : common_frame_count
+
+    # ensure that we only iterate over trajectories that are longer that 4 segments
+    u = [upper_idx-timestep, upper_idx - DT_THREH].max
+    l = lower_idx
+    return [] if u < l # when forward diff cannot be computed
+
+    # compute average spatial distance between 2 trajectories
+    # over all overalapping segments.
+    d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
+
+    d_spacial_temp_values = (l..u).map do |idx|
+      # compute foreward diff over T for A,B
+      dt_A = foreward_differece_on(a, timestep, idx)
+      dt_B = foreward_differece_on(b, timestep, idx)
+      dt_AB = dt_A.sub(dt_B).length_squared
+      sigma_t = sigma_t_at(idx) + 1.0
+      d_sp_a_b*(dt_AB/sigma_t)
+    end
   end
 
   # perform lookup in appropriate variance value frame.
