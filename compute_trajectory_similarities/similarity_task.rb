@@ -190,15 +190,26 @@ class SimilarityTask
     # compute average spatial distance between 2 trajectories
     # over all overalapping segments.
     d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
-    (l..u).map do |idx|
+    d_AB_values = []
+    d_spacial_temp_values = (l..u).map do |idx|
       # compute foreward diff over T for A,B
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
-      sigma_t = sigma_t + 1.0
-      d_sp_a_b*(dt_AB/sigma_t)
+      d_AB_values << dt_AB
+      #sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
+      #sigma_t = sigma_t + 1.0
+      #d_sp_a_b*(dt_AB/sigma_t)
+      d_sp_a_b*dt_AB
     end
+    n = d_AB_values.count
+    return [] if n == 1
+    mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/(n-1)
+    # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
+    # Variance is equal to s^2
+    var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
+    sigma_t = var_d_AB #+ 1.0
+    d_spacial_temp_values.map { |item| item / sigma_t}
   end
 
   # perform lookup in appropriate variance value frame.
