@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W)
+function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -24,9 +24,21 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         if SHOULD_LOAD_W %1 == 0
             fname = strcat(BASE,DATASET,'_sim.dat');
             W = load(fname);
-            
         end
-        WW = W + ones(size(W))*THRESH;
+        
+        if PERFORM_AUTO_RESCALE
+            len = size(W,1);
+            scale = sum(W(:))/(len*len);
+            f = (scale/0.4);
+            w = -(log(W)/LAMBDA);
+            WWW = W;
+            W = (exp(-w*f));
+        end
+        
+        %WW = W + ones(size(W))*THRESH;
+
+        WW = W + diag(THRESH*ones(size(W,1),1));
+        
         %sW = sort(W,2, 'descend'); ten = sW(:,100); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
         d_a = sum(WW,2);
         D = diag(d_a);
@@ -50,7 +62,14 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         d = diag(S_small);
         [d, s_idx] = sort(d);
         U_small = aggregate_mat_cols(U_small, s_idx);
+        
+        
+        if USE_CLUSER_EW_COUNT
+            aa = 1:CLUSTER_CENTER_COUNT;
+        else
+        
         [aa,~,~] = find(d < 0.1);
+        end
         UU = U_small;
 
     %     if USE_SPECTRAL_GAP
