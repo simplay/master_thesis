@@ -157,7 +157,7 @@ class SimilarityTask
     # Compute affinities w(A,B)
     d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
     return 0.0 if d2_t_a_b.empty?
-    d_t_a_b = d2_t_a_b
+    d_t_a_b = d2_t_a_b.map do |item| Math.sqrt(item) end
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-lambda_val*d2_a_b)
     (w_a_b < ZERO_THRESH) ? 0.0 : w_a_b
@@ -196,20 +196,22 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      d_AB_values << dt_AB
+      d_AB_values << Math.sqrt(dt_AB)
       #sigma_t = use_local_variance? ? local_sigma_t_at(idx, a, b) : sigma_t_at(idx)
       #sigma_t = sigma_t + 1.0
       #d_sp_a_b*(dt_AB/sigma_t)
+      # binding.pry
       d_sp_a_b*dt_AB
     end
+    # binding.pry
     n = d_AB_values.count
-    return [] if n == 1
+    return [d_spacial_temp_values.first/d_AB_values.first] if n == 1
     mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/(n-1)
     # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
     # Variance is equal to s^2
     var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
-    sigma_t = var_d_AB #+ 1.0
-    d_spacial_temp_values.map { |item| item / sigma_t}
+    sigma_t = var_d_AB
+    d_spacial_temp_values.map { |item| item * sigma_t}
   end
 
   # perform lookup in appropriate variance value frame.

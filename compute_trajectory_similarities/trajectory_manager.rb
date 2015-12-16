@@ -28,6 +28,10 @@ class TrajectoryManager
     end
   end
 
+  def filter_zero_sim_trajectories
+    @trajectories = @trajectories.delete_if { |_, tra| !tra.sim_greater_zero? }
+  end
+
   def issue_trajectory_labels
     find_issue_trajectories.values.map &:label
   end

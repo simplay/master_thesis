@@ -9,6 +9,7 @@ class Trajectory
     @similarities = {}
     @mutex = Mutex.new
     @is_invalid = false
+    @has_sim_greater_zero = false
   end
 
   def valid?
@@ -33,6 +34,10 @@ class Trajectory
     most_similar_neighs = @similarities.select do |_, similarity|
       similarity >= smallest_top_n
     end
+  end
+
+  def sim_greater_zero?
+    @has_sim_greater_zero
   end
 
   def contains_weird_points?
@@ -82,6 +87,7 @@ class Trajectory
   # @param value [Float] computed simularity value
   def append_similarity(other_label, value)
     @mutex.synchronize do
+      @has_sim_greater_zero = true if value > 0.0
       @similarities[other_label] = value
     end
   end
