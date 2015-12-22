@@ -184,7 +184,8 @@ class SimilarityTask
   def temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
-    timestep = $is_debugging ? dt : common_frame_count
+    #timestep = $is_debugging ? dt : common_frame_count
+    timestep = $is_debugging ? dt : [common_frame_count, DT_THREH-1].min
 
     # ensure that we only iterate over trajectories that are longer that 4 segments
     u = [upper_idx-timestep, upper_idx - DT_THREH].max
@@ -203,13 +204,13 @@ class SimilarityTask
       d_AB_values << Math.sqrt(dt_AB)
       d_sp_a_b*dt_AB
     end
-
     n = d_AB_values.count
-    return [d_spacial_temp_values.first/d_AB_values.first] if n == 1
-    mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/(n-1)
+    # return [d_spacial_temp_values.first*(d_AB_values.first**2)] if n == 1
+    return [d_spacial_temp_values.first/(sigma_t_at(l) + 1.0)] if n == 1
+    mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/n
     # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
     # Variance is equal to s^2
-    var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
+    var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n)
     sigma_t = var_d_AB
     d_spacial_temp_values.map { |item| item * sigma_t}
   end
@@ -227,7 +228,7 @@ class SimilarityTask
   def global_var_temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
-    timestep = $is_debugging ? dt : common_frame_count
+    timestep = $is_debugging ? dt : [common_frame_count, DT_THREH-1].min
 
     # ensure that we only iterate over trajectories that are longer that 4 segments
     u = [upper_idx-timestep, upper_idx - DT_THREH].max
@@ -246,6 +247,7 @@ class SimilarityTask
       sigma_t = sigma_t_at(idx) + 1.0
       d_sp_a_b*(dt_AB/sigma_t)
     end
+
   end
 
   # perform lookup in appropriate variance value frame.
@@ -271,11 +273,11 @@ class SimilarityTask
   #   starts counting at 1.
   # @return [Point] of Float values encoding the partial derivative of that point.
   def foreward_differece_on(trajectory, dt, frame_idx)
-    t = [dt, DT_THREH].min
+    t = [dt, DT_THREH-1].min
     p_i = trajectory.point_at(frame_idx)
     p_i_pl_t = trajectory.point_at(frame_idx+t)
     p = p_i_pl_t.copy.sub(p_i)
-    c = dt.to_f
+    c = t.to_f
     Point.new([p.x/c,p.y/c])
   end
 
