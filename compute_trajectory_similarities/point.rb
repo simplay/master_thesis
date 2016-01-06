@@ -28,6 +28,18 @@ class Point
     self
   end
 
+  # computes (f * p.x, f * p.y)
+  def scale_by(f)
+    @x = f*@x
+    @y = f*@y
+    self
+  end
+
+  # computes (p.x/f, p.y/f)
+  def div_by(f)
+    scale_by(1.0/f)
+  end
+
   # length according to the l2 norm.
   def length
     Math.sqrt(length_squared)

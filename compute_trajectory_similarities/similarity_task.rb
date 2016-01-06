@@ -161,7 +161,7 @@ class SimilarityTask
       d2_t_a_b = global_var_temporal_distances_between(a, b, max_min_frame, min_max_frame)
     end
     return 0.0 if d2_t_a_b.empty?
-    d_t_a_b = d2_t_a_b.map do |item| Math.sqrt(item) end
+    d_t_a_b = d2_t_a_b#.map do |item| Math.sqrt(item) end
     d2_a_b = d_t_a_b.max
     w_a_b = Math.exp(-lambda_val*d2_a_b)
     (w_a_b < ZERO_THRESH) ? 0.0 : w_a_b
@@ -184,11 +184,12 @@ class SimilarityTask
   def temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
-    #timestep = $is_debugging ? dt : common_frame_count
-    timestep = $is_debugging ? dt : [common_frame_count, DT_THREH-1].min
+
+    # if common frame count is 2, then use a stepsize equal to dt=1
+    timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
 
     # ensure that we only iterate over trajectories that are longer that 4 segments
-    u = [upper_idx-timestep, upper_idx - DT_THREH].max
+    u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
     return [] if u < l # when forward diff cannot be computed
 
@@ -228,10 +229,12 @@ class SimilarityTask
   def global_var_temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
     common_frame_count = upper_idx-lower_idx+1
     return [] if common_frame_count < 2
-    timestep = $is_debugging ? dt : [common_frame_count, DT_THREH-1].min
+
+    # if common frame count is 2, then use a stepsize equal to dt=1
+    timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
 
     # ensure that we only iterate over trajectories that are longer that 4 segments
-    u = [upper_idx-timestep, upper_idx - DT_THREH].max
+    u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
     return [] if u < l # when forward diff cannot be computed
 
@@ -273,12 +276,10 @@ class SimilarityTask
   #   starts counting at 1.
   # @return [Point] of Float values encoding the partial derivative of that point.
   def foreward_differece_on(trajectory, dt, frame_idx)
-    t = [dt, DT_THREH-1].min
     p_i = trajectory.point_at(frame_idx)
-    p_i_pl_t = trajectory.point_at(frame_idx+t)
+    p_i_pl_t = trajectory.point_at(frame_idx+dt)
     p = p_i_pl_t.copy.sub(p_i)
-    c = t.to_f
-    Point.new([p.x/c,p.y/c])
+    p.div_by(dt)
   end
 
   # compute the average spatial distance between all overlapping points of two given
