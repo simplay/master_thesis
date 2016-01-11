@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT)
+function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -29,20 +29,22 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         if PERFORM_AUTO_RESCALE
             len = size(W,1);
             scale = sum(W(:))/(len*len);
-            f = (scale/0.4);
+            f = (scale/0.3);
             w = -(log(W)/LAMBDA);
+            w(isinf(w)) = 1000000;
             WWW = W;
             W = (exp(-w*f));
         end
         
-        %WW = W + ones(size(W))*THRESH;
+        WW = W + ones(size(W))*THRESH;
 
-        WW = W + diag(THRESH*ones(size(W,1),1));
+        %WW = W + diag(THRESH*ones(size(W,1),1));
         
         %sW = sort(W,2, 'descend'); ten = sW(:,100); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
         d_a = sum(WW,2);
         D = diag(d_a);
         D12 = diag(sqrt(1./d_a));
+        % keyboard;
         B = D12*(D-WW)*D12;
         if USE_EIGS
             [U_small,S_small,FLAG] = eigs(B,50,1e-6);
@@ -111,8 +113,17 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     %   2033 - right wheel front car (issue case: no neighboring assignments)
     %       cmp with 2000
     %   975 - front car car front (issue case: no neighboring assignments)
-
-
+    
+    if SELECT_AFFINITY_IDX
+        t = figure
+        filename = imgs{frame_idx};
+        img = imread(filename);
+        I = mat2img(img(:,:,1));
+        imshow(I);
+        [x, y] = ginput(1);
+        close(t);
+    end
+    
     col_sel = SELECTED_ENTITY_IDX;
     % load W in case it is needed.
     if ~exist('W','var') && USE_W_VEC
@@ -126,7 +137,12 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
         pixeltensor = pixeltensor.tracked_pixels;
         [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
-
+        
+        if SELECT_AFFINITY_IDX
+            [~,idx_pos] = min(sum([row_ids-y,col_ids-x].^2,2));
+            col_sel = pixeltensor(row_ids(idx_pos), col_ids(idx_pos), 2);
+        end
+        
         if USE_CLUSTERING_CUE    
             [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
             display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
