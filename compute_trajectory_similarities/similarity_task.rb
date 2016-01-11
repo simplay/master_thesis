@@ -13,13 +13,14 @@ class SimilarityTask
   include Callable
 
   # see: segmentation of moving objects, section 4.
-  LAMBDA = 0.1
+  LAMBDA = 0.02
   LAMBDA_D = 70000.0
   DT_THREH = 3
   ZERO_THRESH = 1.0e-12
 
   # Setting this to 0 makes cluster consisting of 1 pixel vanish.
   EIGENSIM_VALUE = 0.0
+  EPS_FLOW = 0.001
 
   # Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts.
   # Used in formula (7)
@@ -156,7 +157,7 @@ class SimilarityTask
     min_max_frame = [a,b].map(&:end_frame).min
     # Compute affinities w(A,B)
     if use_local_variance?
-      d2_t_a_b = temporal_distances_between(a, b, max_min_frame, min_max_frame)
+      d2_t_a_b = temporal_distances_between_2(a, b, max_min_frame, min_max_frame)
     else
       d2_t_a_b = global_var_temporal_distances_between(a, b, max_min_frame, min_max_frame)
     end
@@ -207,7 +208,7 @@ class SimilarityTask
     end
     n = d_AB_values.count
     # return [d_spacial_temp_values.first*(d_AB_values.first**2)] if n == 1
-    return [d_spacial_temp_values.first/(sigma_t_at(l) + 1.0)] if n == 1
+    return [d_spacial_temp_values.first/(sigma_t_at(l) + EPS_FLOW)] if n == 1
     mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/n
     # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
     # Variance is equal to s^2
@@ -246,7 +247,8 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      (d_sp_a_b*dt_AB)/(1.0+local_sigma_t_at(idx, a, b))
+      sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, timestep)
+      (d_sp_a_b*dt_AB)/sigma_t
     end
   end
 
@@ -281,7 +283,7 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      sigma_t = sigma_t_at(idx) + 1.0
+      sigma_t = sigma_t_at(idx) + EPS_FLOW
       d_sp_a_b*(dt_AB/sigma_t)
     end
 
@@ -308,7 +310,7 @@ class SimilarityTask
     end
     #s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
     #s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
-    [sum_a, sum_b].min # described in paper
+    [sum_a, sum_b].min / dt # described in paper
   end
 
   # Compute the value of the tangent of a given trajectory at a given location.
