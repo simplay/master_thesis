@@ -15,7 +15,7 @@ class SimilarityTask
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1
   LAMBDA_D = 70000.0
-  DT_THREH = 5
+  DT_THREH = 3
   ZERO_THRESH = 1.0e-12
 
   # Setting this to 0 makes cluster consisting of 1 pixel vanish.
@@ -211,9 +211,43 @@ class SimilarityTask
     mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/n
     # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
     # Variance is equal to s^2
-    var_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n)
-    sigma_t = var_d_AB
+    sigma_t = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
+    sigma_t = sigma_t
     d_spacial_temp_values.map { |item| item * sigma_t}
+  end
+
+  # Compute temoral distance between temporal overlapping segments
+  # of two given trajectories.
+  #
+  # @param a [Trajectory] frist trajectory
+  # @param b [Trajectory] other trajectory
+  # @param lower_idx [Integer] index first overlapping trajectory frame
+  # @param upper_idx [Integer] index last overlapping trajectory frame
+  # @param dt [Integer] timestep size
+  # @return [Array] of Float values denoting the temporal distance
+  #   between two trajectory segment pairs.
+  def temporal_distances_between_2(a, b, lower_idx, upper_idx, dt=1)
+    common_frame_count = upper_idx-lower_idx+1
+    return [] if common_frame_count < 2
+
+    # if common frame count is 2, then use a stepsize equal to dt=1
+    timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
+
+    # ensure that we only iterate over trajectories that are longer that 4 segments
+    u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
+    l = lower_idx
+    return [] if u < l # when forward diff cannot be computed
+
+    # compute average spatial distance between 2 trajectories
+    # over all overalapping segments.
+    d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
+    d_spacial_temp_values = (l..u).map do |idx|
+      # compute foreward diff over T for A,B
+      dt_A = foreward_differece_on(a, timestep, idx)
+      dt_B = foreward_differece_on(b, timestep, idx)
+      dt_AB = dt_A.sub(dt_B).length_squared
+      (d_sp_a_b*dt_AB)/(1.0+local_sigma_t_at(idx, a, b))
+    end
   end
 
   # Compute temoral distance between temporal overlapping segments
@@ -259,12 +293,22 @@ class SimilarityTask
   end
 
   # perform lookup in appropriate variance value frame.
-  def local_sigma_t_at(idx, a, b)
-    pa = a.point_at(idx)
-    pb = b.point_at(idx)
-    s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
-    s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
-    (s_a+s_b)/2.0
+  def local_sigma_t_at(idx, a, b, dt=1)
+    sum_a = 0.0
+    sum_b = 0.0
+    (idx..(idx+dt-1)).each do |index|
+      pa = a.point_at(index)
+      pb = b.point_at(index)
+      s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, index)
+      s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, index)
+
+      sum_a = sum_a + s_a
+      sum_b = sum_b + s_b
+
+    end
+    #s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
+    #s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
+    [sum_a, sum_b].min # described in paper
   end
 
   # Compute the value of the tangent of a given trajectory at a given location.
@@ -279,7 +323,7 @@ class SimilarityTask
     p_i = trajectory.point_at(frame_idx)
     p_i_pl_t = trajectory.point_at(frame_idx+dt)
     p = p_i_pl_t.copy.sub(p_i)
-    p.div_by(dt)
+    p.div_by(dt+1.0)
   end
 
   # compute the average spatial distance between all overlapping points of two given

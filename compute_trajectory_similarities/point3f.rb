@@ -11,6 +11,19 @@ class Point3f
     @z = args[2]
   end
 
+  # computes (f * p.x, f * p.y)
+  def scale_by(f)
+    @x = f*@x
+    @y = f*@y
+    @z = f*@z
+    self
+  end
+
+  # computes (p.x/f, p.y/f)
+  def div_by(f)
+    scale_by(1.0/f)
+  end
+
   # Build a 3d point from a trajectory point.
   #
   # P = [(u-p_x^d)/f_x^d *z, (v-p_y^d)/f_y^d *z), z]
