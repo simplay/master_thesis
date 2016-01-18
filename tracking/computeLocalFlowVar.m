@@ -97,7 +97,10 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
 %   @return weights_u bilateral filter weights for u-direction
 %   @return weights_v bilateral filter weights for v-direction
 %   @return wl used window length for storing filter weights.
-
+    
+    disp(['using sigma_s=', num2str(sigma_s)]);
+    disp(['using sigma_r=', num2str(sigma_r)]);
+    
     h = waitbar(0, 'Computing local Variance...');
     set(h, 'Name', 'local variance Progress Bar');
     w = ceil(1.5*sigma_s);
@@ -109,7 +112,7 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
     mu_y = zeros(m,n);
     cov_xy = zeros(m,n);
     tic;
-    for i = 1:m,
+    parfor i = 1:m,
         for j = 1:n,
 
             
