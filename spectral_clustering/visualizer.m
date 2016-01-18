@@ -24,6 +24,10 @@ col_sel = 302;
     TIL = length(imgs)-1;
     TIL = 10;
     
+    
+    
+   
+    
 if MODE == 1
     
     
@@ -147,6 +151,7 @@ elseif MODE == 3
                          [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
                     [~,idx_pos] = min(sum([row_ids-y,col_ids-x].^2,2));
             col_sel = pixeltensor(row_ids(idx_pos), col_ids(idx_pos), 2);
+            col_sel = label_to_vector_index(label_mappings, col_sel);    
             disp(['Selected label with index ',num2str(col_sel)])
             
         end
@@ -240,6 +245,12 @@ elseif MODE == 3
                              [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
                         [~,idx_pos] = min(sum([row_ids-y,col_ids-x].^2,2));
                 col_sel = pixeltensor(row_ids(idx_pos), col_ids(idx_pos), 2);
+                
+                
+            col_sel = label_to_vector_index(label_mappings, col_sel);          
+                
+                
+                
                 disp(['Selected label with index ',num2str(col_sel)])
                 close(t)
         end
