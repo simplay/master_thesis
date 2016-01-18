@@ -13,14 +13,14 @@ class SimilarityTask
   include Callable
 
   # see: segmentation of moving objects, section 4.
-  LAMBDA = 0.02
+  LAMBDA = 0.1 #0.02 => = 0.0001 works best for cars1, when eps_flow is equal to 0.001
   LAMBDA_D = 70000.0
-  DT_THREH = 3
+  DT_THREH = 4 # Num of trajectories - 1,  a pair has to have at least have in commoan
   ZERO_THRESH = 1.0e-12
 
   # Setting this to 0 makes cluster consisting of 1 pixel vanish.
   EIGENSIM_VALUE = 0.0
-  EPS_FLOW = 0.001
+  EPS_FLOW = 1.0 #0.001
 
   # Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts.
   # Used in formula (7)
@@ -29,6 +29,8 @@ class SimilarityTask
   BETA_1 = -0.02
   BETA_2 = -4.0
   BETA_3 = -0.02
+
+  USE_WINDOWING_VAR = false # sample over a 5x5 window for computing the local variance
 
   def initialize(a, trajectories)
     @a = a
@@ -247,7 +249,9 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, timestep)
+      #sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, timestep)
+      s_dt = (USE_WINDOWING_VAR) ? timestep : 1
+      sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, s_dt)
       (d_sp_a_b*dt_AB)/sigma_t
     end
   end
@@ -298,6 +302,7 @@ class SimilarityTask
   def local_sigma_t_at(idx, a, b, dt=1)
     sum_a = 0.0
     sum_b = 0.0
+    counter = 0
     (idx..(idx+dt-1)).each do |index|
       pa = a.point_at(index)
       pb = b.point_at(index)
@@ -306,11 +311,11 @@ class SimilarityTask
 
       sum_a = sum_a + s_a
       sum_b = sum_b + s_b
-
+      counter = counter + 1
     end
     #s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
     #s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
-    [sum_a, sum_b].min / dt # described in paper
+    [sum_a, sum_b].min / counter # described in paper
   end
 
   # Compute the value of the tangent of a given trajectory at a given location.
