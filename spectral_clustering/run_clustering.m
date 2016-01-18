@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX)
+function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -27,9 +27,14 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         end
         
         if PERFORM_AUTO_RESCALE
+            
+            % a well performing example has for f:
+            % when f = sum(W(:))/(length(W)^2)
+            % then f == 0.0557
+            well_scale = 0.0557
             len = size(W,1);
             scale = sum(W(:))/(len*len);
-            f = (scale/0.3);
+            f = (scale/well_scale);
             w = -(log(W)/LAMBDA);
             w(isinf(w)) = 1000000;
             WWW = W;
@@ -141,6 +146,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         if SELECT_AFFINITY_IDX
             [~,idx_pos] = min(sum([row_ids-y,col_ids-x].^2,2));
             col_sel = pixeltensor(row_ids(idx_pos), col_ids(idx_pos), 2);
+            disp(['Selected label with index ',num2str(col_sel)])
         end
         
         if USE_CLUSTERING_CUE    
@@ -150,6 +156,12 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         else
             displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
             if USE_W_VEC
+                if SHOW_LOCAL_VAR
+                    var_im_name = strcat('../output/trackings/',DATASET,'/local_variances_',num2str(VAR_IMG),'.png');
+                    imv = imread(var_im_name);
+                    imshow(imv);
+                    figure;
+                end
                 display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
             else
                 eigenvalue = S_small(col_sel);
