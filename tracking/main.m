@@ -1,16 +1,20 @@
-clc;
+%clc;
 %clear all;
 close all;
 
-DATASETNAME = 'chair2';
+DATASETNAME = 'cars1';
 STEP_SIZE = 8;
 MODE = 5; % display mode
-DISPLAY = false; % show tracking point
+DISPLAY = true; % show tracking point
 WRITE_TRACKINGS_INTO_FILES = true;
-VAR_SIGMA_S = 8;
+
+
+% 
+VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 5;
 SHOW_VIDEO = false;
 COMPUTE_TRACKINGS = false;
 COMPUTE_LOCAL_VAR = false; % global variance is still computed
-COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
+%%
 run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB);

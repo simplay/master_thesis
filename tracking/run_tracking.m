@@ -5,7 +5,7 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     % DISPLAY = false; % show tracking point
     % WRITE_TRACKINGS_INTO_FILES = true;
     addpath('../libs/flow-code-matlab');
-
+    addpath('fast_bfilt/');
     %% 
 
     % global variable used for assigning unique label indices
@@ -18,11 +18,11 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     [boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
     START_FRAME_IDX = boundaries(1); % inital index 1
     END_FRAME_IDX = boundaries(2); % for car example max 4
-
+    
     if SHOW_VIDEO
         animate_seq(imgs, 1, length(imgs));
     end
-    
+
     % generate cie lab imgs
     if COMPUTE_CIE_LAB
         disp('Generating CIE L*a*b* files...')
@@ -107,6 +107,7 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     end
     fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
     fid = fopen(fName,'w');
+
     if fid ~= -1
         for k=1:length(global_variances)
          row_k = global_variances(k);
@@ -123,7 +124,10 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
         % write local flow variances into mat files.
         for k=1:END_FRAME_IDX
             lv = local_flow_variances(:,:,k);
+            
             fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
+            imgfile = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.png');
+            imwrite(lv, imgfile);
             fid = fopen(fname,'w');
             if fid ~= -1
                 for t=1:size(lv,1)
