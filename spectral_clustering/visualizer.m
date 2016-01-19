@@ -1,4 +1,4 @@
-DATASET = 'car2';
+DATASET = 'cars1';
 MODE = 4;
 img_index = 1;
  SELECT_INPUT = true
@@ -22,7 +22,7 @@ col_sel = 302;
 
         
     TIL = length(imgs)-1;
-    TIL = 10;
+    %TIL = 10;
     
     
     
@@ -337,6 +337,10 @@ end
     % display fw flow img
     figure('name', 'v flow')
     fw_flow = readFlowFile(fwf{img_index});
+    [xx,yy] = meshgrid(1:640, 1:480);
+    quiver(xx, yy, fw_flow(:,:,2), fw_flow(:,:,1));
+    axis equal; axis tight;
+    figure
     imshow(fw_flow(:,:,1))
     hold on
     plot(ty,tx,'Color',[1,0,0],'Marker','O');
@@ -349,3 +353,15 @@ end
    
     % display normalized fw flow imgs
     displayFlow(fw_flow, tx, ty)
+    
+    
+    figure('name', 'flow mag');
+    imshow((fw_flow(:,:,1).^2 + flow(:,:,2).^2).^(0.5))
+
+    figure('name', 'mag');
+    uu = fw_flow(:,:,2).^2;
+  uu = fw_flow(:,:,1).^2;
+     mag = (uu + vv).^(0.5);
+    imshow(ind2rgb(uint8(mag), jet(45)))
+    
+   
