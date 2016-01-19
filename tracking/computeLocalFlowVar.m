@@ -1,4 +1,4 @@
-function [variances] = computeLocalFlowVar(flowfield, method, combination_method, sig_s, sig_r)
+function [variances] = computeLocalFlowVar(flowfield, method, combination_method, sig_s, sig_r, valid_regions)
 %COMPUTELOCALFLOWVAR Summary of this function goes here
 %   Detailed explanation goes here
     x = flowfield(:,:,1);
@@ -16,9 +16,9 @@ function [variances] = computeLocalFlowVar(flowfield, method, combination_method
     end
     
     if method == 0
-        [sigma, mu, cov_xy, wl] = localVariance( flowfield, sig_s, sig_r, true);
-        var_x = sigma(:,:,1).^2;
-        var_y = sigma(:,:,2).^2;
+        [sigmaSq, mu, cov_xy, wl] = localVariance( flowfield, sig_s, sig_r, true, valid_regions);
+        var_x = sigmaSq(:,:,1);
+        var_y = sigmaSq(:,:,2);
         if combination_method == 1
             variances = (var_x + var_y)/2;
         else
@@ -85,7 +85,7 @@ function [variances] = computeLocalFlowVar(flowfield, method, combination_method
     end
 end
 
-function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_r, remove_center)
+function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_r, remove_center, valid_regions)
 %BFILTIMG2 apply a bilateral filter o a m x n x 2 tensor.
 %   @param img flow field, m x n x 2 tensor
 %   @param sigma_s special std [FLOAT], unit in pixel (pixel neighborhood)
@@ -119,6 +119,10 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
             [rowIndices, columnIndices] = getRanges(i, j, m, n, windowLength);
             
             neighboordhoodValues1 = img(rowIndices, columnIndices, 1);
+            
+            valid_region_ij = valid_regions(rowIndices,columnIndices);
+            
+            
             DeltaNValues1 = (neighboordhoodValues1-img(i,j, 1));
             DeltaNValues1 = (DeltaNValues1.^2) /(-2*sigma_r*sigma_r);
             
@@ -131,8 +135,16 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
             deltaNIdx = getScaledIdxDistanceMat2(rowIndices, columnIndices, ...
                                                 [i,j], -2*sigma_s^2);
             
-            EV1 = exp(DeltaNValues1+deltaNIdx);
-            EV2 = exp(DeltaNValues2+deltaNIdx);
+                    
+                                            % unterscheide filter weights
+                                            % nach dimension
+                       %  EV1 = exp(DeltaNValues1+deltaNIdx);
+            %EV2 = exp(DeltaNValues2+deltaNIdx);
+                                           
+ 
+            
+            EV1 = valid_region_ij.*exp(DeltaNValues1+deltaNIdx+DeltaNValues2);
+            EV2 = valid_region_ij.*exp(DeltaNValues2+deltaNIdx+DeltaNValues1);
             
             % set ourself to zero: fix
             if remove_center

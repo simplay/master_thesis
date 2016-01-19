@@ -73,7 +73,15 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
             bw_flow_t = bwf{t};
             [ tracked_pixels, trackable_pixels, invalid_regions, old_start_mask, prev_foreward_flow, prev_backward_flow ] = ...
                 process_frame_pair( frame_t, fw_flow_t, bw_flow_t, STEP_SIZE, start_mask, tracked_to_positions, prev_tacked_pixels, prev_foreward_flow, prev_backward_flow);
-
+            
+            figure('name', 'invalid regions')
+            imshow(invalid_regions);
+            
+            % save inv regions later used for computing variances
+            save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'_inv_regions','.mat'),'invalid_regions');
+            
+            
+            
             save(strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'.mat'),'tracked_pixels');
             % write data into file
             if WRITE_TRACKINGS_INTO_FILES
@@ -101,7 +109,13 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
         fw_flow_t = fwf{t};
         fw_flow = readFlowFile(fw_flow_t);
         if COMPUTE_LOCAL_VAR
-            local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R);
+
+            fname = strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'_inv_regions','.mat');
+            load(fname);
+            %flow_img = zeros(size(fw_flow), 2);
+            %flow_img(:,:,1) = (1.0-invalid_regions).*fw_flow(:,:,1);
+            %flow_img(:,:,2) = (1.0-invalid_regions).*fw_flow(:,:,2);
+            local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
         end
         global_variances = [global_variances, var(fw_flow(:))];
     end
