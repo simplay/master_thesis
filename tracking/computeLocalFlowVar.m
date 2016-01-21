@@ -1,6 +1,9 @@
 function [variances] = computeLocalFlowVar(flowfield, method, combination_method, sig_s, sig_r, valid_regions)
 %COMPUTELOCALFLOWVAR Summary of this function goes here
 %   Detailed explanation goes here
+SHOW_VARS = false;
+
+
     x = flowfield(:,:,1);
     y = flowfield(:,:,2);
     if method > 0
@@ -24,6 +27,17 @@ function [variances] = computeLocalFlowVar(flowfield, method, combination_method
         else
             cov_xy = cov_xy.*(cov_xy > 0);
             variances = var_x + var_y + 2*cov_xy;
+        end
+        
+        if SHOW_VARS
+            tmp = variances.*valid_regions;
+            tmp = sqrt(tmp);
+            figure('name', 'log scaled');
+            imshow(log(tmp+1)/log(max(tmp(:)+1)));
+            figure('name', '01 scaled');
+            tmp = tmp - min(tmp(:));
+            tmp = tmp ./ max(tmp(:));
+            imshow(tmp);
         end
            
     elseif method == 1
@@ -155,7 +169,7 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
             end
             
 
-            
+            % if sum == 0, then assign -1 (define an assert for that case)
             mu_x_ij = (EV1(:)'*neighboordhoodValues1(:))/sum(EV1(:));
             mu_y_ij = (EV2(:)'*neighboordhoodValues2(:))/sum(EV2(:));
             

@@ -1,4 +1,4 @@
-function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB)
+function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB, RUN_BILAT_FILT)
     % DATASETNAME = 'cars1';
     % STEP_SIZE = 8
     % MODE = 5 % display mode
@@ -22,6 +22,32 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
     if SHOW_VIDEO
         animate_seq(imgs, 1, length(imgs));
     end
+    
+    %% 
+    if RUN_BILAT_FILT == false
+        n = (END_FRAME_IDX - START_FRAME_IDX + 1);
+        k = 1;
+        varMinima = zeros(1,n);
+        varMaxima = zeros(1,n);
+        lfv_fName = strcat(BASE_FILE_PATH,'sub/extrema.txt');
+        fid = fopen(lfv_fName);     
+        tline = fgets(fid);
+        
+        while ischar(tline)
+            if k > n
+                break;
+            end
+            tline = fgets(fid);
+            idx = regexp(tline,',');
+            k
+            varMinima(k) = str2num(tline(1:idx-1));
+            varMaxima(k) = str2num(tline(idx+1:end));
+            k = k + 1;
+        end
+        fclose(fid);
+    end
+    %%
+    
 
     % generate cie lab imgs
     if COMPUTE_CIE_LAB
@@ -109,13 +135,27 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
         fw_flow_t = fwf{t};
         fw_flow = readFlowFile(fw_flow_t);
         if COMPUTE_LOCAL_VAR
-
-            fname = strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'_inv_regions','.mat');
-            load(fname);
-            %flow_img = zeros(size(fw_flow), 2);
-            %flow_img(:,:,1) = (1.0-invalid_regions).*fw_flow(:,:,1);
-            %flow_img(:,:,2) = (1.0-invalid_regions).*fw_flow(:,:,2);
-            local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
+            if RUN_BILAT_FILT
+                fname = strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'_inv_regions','.mat');
+                load(fname);
+                %flow_img = zeros(size(fw_flow), 2);
+                %flow_img(:,:,1) = (1.0-invalid_regions).*fw_flow(:,:,1);
+                %flow_img(:,:,2) = (1.0-invalid_regions).*fw_flow(:,:,2);
+                local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
+            else
+                lfv_fName = strcat(BASE_FILE_PATH,'sub/');
+                base = 'localFlowVariation';
+                ext = '.pgm';
+                idx = END_FRAME_IDX-START_FRAME_IDX+t;
+                fName = strcat(lfv_fName,base,num2str(t-1),ext);
+                lfvImg = imread(fName);
+                lfvImg = im2double(lfvImg);
+                
+                % rescale variances of current frame by its extreme values
+                % since brox' implementation actually returns the std, we
+                % have to square the values element-wise.
+                local_flow_variances(:,:,t) = (lfvImg*varMaxima(t)+varMinima(t)).^2;
+            end
         end
         global_variances = [global_variances, var(fw_flow(:))];
     end
