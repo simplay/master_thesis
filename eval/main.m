@@ -1,8 +1,8 @@
 addpath('../libs/flow-code-matlab');
 
 %% load ground truth img
-DS = 'cars1';
-imgName = '01.pgm';
+DS = 'car2';
+imgName = '10.pgm';
 DS_BASE_PATH = strcat('../data/ldof/',DS,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
 figure('name', 'ground truth')
@@ -20,7 +20,7 @@ label_cluster_assignments = dlmread(cf_fname);
 
 BASE = '../output/similarities/';
 label_mappings = labelfile2mat(strcat(BASE,DS));
-img_index = 1;
+img_index = 10;
 STEPSIZE_DATA = 8;
 DATASET = DS;
 PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
@@ -72,3 +72,11 @@ dsImgShow = dsImg - min(dsImg(:));
 dsImgShow = dsImgShow ./ max(dsImgShow(:));
 figure('name', 'sparse clusters');
 imshow(im2double(dsImgShow));
+
+
+matchMask = (dsImg > 0) & (gtImg > 0);
+totalHits = sum(sum(dsImg > 0));
+matchedHits = sum(sum(matchMask > 0));
+
+disp(['ratio machtes of total hits:', num2str(matchedHits/totalHits)])
+
