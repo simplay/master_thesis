@@ -28,6 +28,10 @@ opt_parser = OptionParser.new do |opt|
     user_args[:list] = list
   end
 
+  opt.on("-n", "--name n", String, "Set filename") do |name|
+    user_args[:name] = name
+  end
+
   # -t 1 #=> use peth data otherwise false
   opt.on("-t", "--depth t", Integer, "should depth info be used") do |depth|
     user_args[:depth] = depth
@@ -77,4 +81,4 @@ use_local_variance = (user_args[:variance] == 0) ? false : true
 use_depth_info = (user_args[:depth] == 1) ? true : false
 use_sum_affinity = (user_args[:variant] == 1) ? true : false
 filepath = OUT_BASEPATH + user_args[:file]
-fp = Fileparser.new(filepath, user_args[:debug], use_local_variance, use_depth_info, use_sum_affinity)
+fp = Fileparser.new(filepath, user_args[:debug], use_local_variance, use_depth_info, use_sum_affinity,user_args[:name])

@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG)
+function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,8 +13,15 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
     PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
-
-    DATASETNAME = DATASET;
+    
+    if USE_SPECIAL_NAMING
+        
+        idx = regexp(DATASET,'v');
+        DATASETNAME = DATASET(1:idx-1);
+        PREFIX_FRAME_TENSOR_FILE = [DATASETNAME,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
+    else    
+        DATASETNAME = DATASET;
+    end
     METHODNAME = 'ldof'; %other,ldof
     DATASETP = strcat(DATASETNAME,'/');
     BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
@@ -35,10 +42,12 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
             len = size(W,1);
             scale = sum(W(:))/(len*len);
             f = (scale/well_scale);
+            
             w = -(log(W)/LAMBDA);
             w(isinf(w)) = 1000000;
             WWW = W;
-            W = (exp(-w*f));
+            %W = (exp(-w*(LAMBDA/f)));
+            W = (exp(-w*(LAMBDA/f)*0.3));
         end
         
         WW = W + ones(size(W))*THRESH;
@@ -72,7 +81,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         
         
         if USE_CLUSER_EW_COUNT
-            aa = 1:CLUSTER_CENTER_COUNT;
+            aa = 1:FORCE_EW_COUNT;
         else
         
         [aa,~,~] = find(d < 0.1);
@@ -88,7 +97,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     %     end
 
         U_small = aggregate_mat_cols(U_small, aa);
-        S_small = d(aa);
+        S_small = d(aa)
         
 
 

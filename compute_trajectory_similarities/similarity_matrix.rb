@@ -114,9 +114,11 @@ class SimilarityMatrix
   #  0.90579,0.63236,0.54688
   #  0.12699,0.09754,0.95751
   def generate_dat_file
-    base_filepathname = "#{BASE_PATH}#{$global_ds_name}"
+    base_filepathname = $has_filename ? "#{BASE_PATH}#{$fname}"
+                                      : "#{BASE_PATH}#{$global_ds_name}"
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
+
     @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|

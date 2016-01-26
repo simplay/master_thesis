@@ -30,7 +30,7 @@ class SimilarityTask
   BETA_2 = -4.0
   BETA_3 = -0.02
 
-  USE_WINDOWING_VAR = false # sample over a 5x5 window for computing the local variance
+  USE_WINDOWING_VAR = true # sample over a 5x5 window for computing the local variance
 
   def initialize(a, trajectories)
     @a = a
@@ -303,7 +303,14 @@ class SimilarityTask
     sum_a = 0.0
     sum_b = 0.0
     counter = 0
-    (idx..(idx+dt-1)).each do |index|
+    till = idx+dt-1 # till offset stepsize -1
+
+    del = (dt == 1)? 1 : 0
+    till = till - del
+
+    # do not perform the last variance lookup since it might have landed at
+    # an invalid region.
+    (idx..till).each do |index|
       pa = a.point_at(index)
       pb = b.point_at(index)
       s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, index)
@@ -315,6 +322,7 @@ class SimilarityTask
     end
     #s_a = FlowVariance.build.bilinear_interpolated_variance_for(pa, idx)
     #s_b = FlowVariance.build.bilinear_interpolated_variance_for(pb, idx)
+    return 0.0 if counter == 0
     [sum_a, sum_b].min / counter # described in paper
   end
 

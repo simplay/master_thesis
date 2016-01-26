@@ -18,10 +18,13 @@ class Fileparser
   HAS_DEPTH_DATA = false
 
   # @param filepath [String] path to target tracking files.
-  def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data, use_sum_affinity)
+  def initialize(filepath, debug_mode, is_using_local_variance, uses_depth_data, use_sum_affinity, fname)
     dataset = filepath.split("out_").last.split("_").first
     MetaInfo.build("../data/ldof/", dataset)
     puts "Selected dataset: "+ filepath.split("/").last
+    $has_filename = !fname.nil?
+    $fname = fname
+
     @debug_mode = debug_mode
     $use_sum_affinity = use_sum_affinity
     $uses_depth_data = uses_depth_data

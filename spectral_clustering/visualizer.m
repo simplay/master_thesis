@@ -1,6 +1,6 @@
-DATASET = 'cars1';
+DATASET = 'c36';
 MODE = 4;
-img_index = 1;
+img_index = 3;
  SELECT_INPUT = true
 col_sel = 302;
 
@@ -17,7 +17,7 @@ col_sel = 302;
     BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
 
     label_mappings = labelfile2mat(strcat(BASE,DATASET));
-    [~, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
+    [~, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
     
 
         
@@ -336,7 +336,7 @@ end
 
     % display fw flow img
     figure('name', 'v flow')
-    fw_flow = readFlowFile(fwf{img_index});
+    fw_flow = readFlowFile(bwf{img_index});
     [xx,yy] = meshgrid(1:640, 1:480);
     quiver(xx, yy, fw_flow(:,:,2), fw_flow(:,:,1));
     axis equal; axis tight;
@@ -356,7 +356,7 @@ end
     
     
     figure('name', 'flow mag');
-    imshow((fw_flow(:,:,1).^2 + flow(:,:,2).^2).^(0.5))
+    imshow((fw_flow(:,:,1).^2 + fw_flow(:,:,2).^2).^(0.5))
 
     figure('name', 'mag');
     uu = fw_flow(:,:,2).^2;
