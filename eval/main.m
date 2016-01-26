@@ -1,8 +1,8 @@
 addpath('../libs/flow-code-matlab');
 
 %% load ground truth img
-DS = 'car2';
-imgName = '10.pgm';
+DS = 'cars1';
+imgName = '01.pgm';
 DS_BASE_PATH = strcat('../data/ldof/',DS,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
 figure('name', 'ground truth')
@@ -20,7 +20,7 @@ label_cluster_assignments = dlmread(cf_fname);
 
 BASE = '../output/similarities/';
 label_mappings = labelfile2mat(strcat(BASE,DS));
-img_index = 10;
+img_index = 1;
 STEPSIZE_DATA = 8;
 DATASET = DS;
 PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
