@@ -1,6 +1,6 @@
 addpath('../libs/flow-code-matlab');
 addpath('fast_bfilt/');   
-DATASETNAME1 = 'cars1';
+DATASETNAME1 = 'square';
 DATASETNAME2 = 'car2';
 METHODNAME = 'ldof';
 index = 1;

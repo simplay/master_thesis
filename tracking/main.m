@@ -2,7 +2,7 @@
 %clear all;
 close all;
 
-DATASETNAME = 'car2';
+DATASETNAME = 'c17';
 STEP_SIZE = 8;
 MODE = 5; % display mode
 DISPLAY = false; % show tracking point
@@ -14,7 +14,7 @@ VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
 SHOW_VIDEO = false;
 RUN_BILAT_FILT = true;
-COMPUTE_TRACKINGS = false;
+COMPUTE_TRACKINGS = true;
 COMPUTE_LOCAL_VAR = true; % global variance is still computed
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 %%
