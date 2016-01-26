@@ -1,12 +1,14 @@
 #use
 1
-4
+6
 #imgs
 01.ppm
 02.ppm
 03.ppm
 04.ppm
 05.ppm
+06.ppm
+07.ppm
 #fwf
 ForwardFlow000.flo
 ForwardFlow001.flo
