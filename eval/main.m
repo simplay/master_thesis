@@ -1,7 +1,7 @@
 addpath('../libs/flow-code-matlab');
 
 %% load ground truth img
-DS = 'car2';
+DS = 'cars1';
 imgName = '01.pgm';
 DS_BASE_PATH = strcat('../data/ldof/',DS,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
@@ -81,6 +81,11 @@ backgroundSamples = (allSamples > 0)-(forgroundSamples > 0);
 figure('name', 'sparse background (cluster) samples');
 imshow(im2double(backgroundSamples));
 
+totalPixelCount = size(gtImg,1)*size(gtImg,2);
+samplesUsedCount = sum(sum(allSamples > 0));
+
+% fraction between the used samples and the total number of pixels
+density = samplesUsedCount/totalPixelCount;
 
 % samples classified as forground that actually also belong to the
 % forground.
@@ -107,7 +112,8 @@ precission = TP_Count / (TP_Count + FP_Count);
 recall = TP_Count / (TP_Count + FN_Count);
 F1_score = 2*((precission*recall) / (precission+recall));
 
-disp(['precission:', num2str(precission)])
-disp(['recall:', num2str(recall)])
-disp(['F1 score:', num2str(F1_score)])
+disp(['density: ', num2str(100*density), '%'])
+disp(['precission: ', num2str(100*precission), '%'])
+disp(['recall: ', num2str(100*recall), '%'])
+disp(['F1 score: ', num2str(100*F1_score), '%'])
 
