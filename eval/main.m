@@ -193,3 +193,15 @@ else
     disp(['Ground truth Mask cluster Hits: '])
     disp([clusterPerMaskCount'])
 end
+
+%%
+X = meshgrid(0:0.01:1);
+Y = X';
+Z = (X.*Y)./(X+Y);
+
+figure('name', 'F-score isobars')
+contourf(X,Y,Z)
+hold on
+plot(recall, precission, 'rx')
+xlabel('recall')
+ylabel('precission')
