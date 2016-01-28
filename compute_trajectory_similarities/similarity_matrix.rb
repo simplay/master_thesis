@@ -119,6 +119,13 @@ class SimilarityMatrix
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
 
+    # obtain spacial nn for each trajectory
+    sp_dist_nn_count = 12
+    @tm.trajectories.each do |tra|
+      tra_dist = tra.spacial_distances.sort_by { |_, dist| dist }
+      sp_nn = tra_dist[0..sp_dist_nn_count]
+    end
+
     @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|

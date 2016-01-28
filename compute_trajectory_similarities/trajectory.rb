@@ -18,6 +18,10 @@ class Trajectory
     !invalid?
   end
 
+  def spacial_distances
+    @spacial_distances
+  end
+
   # Checks whether this trajectory is valid
   #
   # @info: A trajectory can be invalid due to many cases.
