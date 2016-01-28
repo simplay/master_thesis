@@ -16,6 +16,10 @@ class SimilarityMatrix
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
+  # Number of spatially nearest neighbors that should be returned
+  # per trajectory
+  NN_COUNT = 12
+
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager
     puts "Using local variance for computing similarities: #{is_using_local_variance}"
@@ -119,12 +123,7 @@ class SimilarityMatrix
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
 
-    # obtain spacial nn for each trajectory
-    sp_dist_nn_count = 12
-    @tm.trajectories.each do |tra|
-      tra_dist = tra.spatial_distances.sort_by { |_, dist| dist }
-      sp_nn = tra_dist[0..sp_dist_nn_count]
-    end
+    save_sp_nn
 
     @tm.sort_trajectories
     File.open(sim_filepath, 'w') do |file|
@@ -144,6 +143,11 @@ class SimilarityMatrix
     puts "Wrote the following files:"
     puts "#{sim_filepath}"
     puts "#{labels_filepath}"
+  end
+
+  def save_sp_nn
+    puts "Saving the #{NN_COUNT} spatially nearest neighbors per trajectory..."
+    sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
   end
 
   def trajectories
