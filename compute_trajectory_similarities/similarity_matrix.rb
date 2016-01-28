@@ -127,11 +127,13 @@ class SimilarityMatrix
         file.puts a_row
       end
     end
+
     File.open(labels_filepath, 'w') do |file|
       sorted_keys = trajectories.first.similarities.keys.sort
       a_row = sorted_keys.map(&:to_s).join(" ")
       file.puts a_row
     end
+
     puts "Wrote the following files:"
     puts "#{sim_filepath}"
     puts "#{labels_filepath}"
