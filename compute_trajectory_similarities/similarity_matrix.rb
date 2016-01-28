@@ -122,7 +122,7 @@ class SimilarityMatrix
     # obtain spacial nn for each trajectory
     sp_dist_nn_count = 12
     @tm.trajectories.each do |tra|
-      tra_dist = tra.spacial_distances.sort_by { |_, dist| dist }
+      tra_dist = tra.spatial_distances.sort_by { |_, dist| dist }
       sp_nn = tra_dist[0..sp_dist_nn_count]
     end
 

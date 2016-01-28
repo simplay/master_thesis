@@ -7,7 +7,7 @@ class Trajectory
     @start_frame = start_frame
     @label = label
     @similarities = {}
-    @spacial_distances = {}
+    @spatial_distances = {}
     @mutex = Mutex.new
     @mutex_avg_sp = Mutex.new
     @is_invalid = false
@@ -18,8 +18,8 @@ class Trajectory
     !invalid?
   end
 
-  def spacial_distances
-    @spacial_distances
+  def spatial_distances
+    @spatial_distances
   end
 
   # Checks whether this trajectory is valid
@@ -98,16 +98,16 @@ class Trajectory
     end
   end
 
-  # Append the avg spacial distance to a given other trajectory.
+  # Append the avg spatial distance to a given other trajectory.
   #
   # @info: The other trajectory is implicitely encoded by its label.
-  #   the avg spacial distance is in pixel units.
+  #   the avg spatial distance is in pixel units.
   # @param other_label [Integer] identifying label of other trajectory.
   # @param sp_dist [Float] avg pixel distance between overlapping
   #   points of this and the other trajectory.
-  def append_avg_spacial_dist(other_label, sp_dist)
+  def append_avg_spatial_dist(other_label, sp_dist)
     @mutex_avg_sp.synchronize do
-      @spacial_distances[other_label] = sp_dist
+      @spatial_distances[other_label] = sp_dist
     end
   end
 

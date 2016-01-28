@@ -246,14 +246,13 @@ class SimilarityTask
     d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
 
     # append spacial dist to traj
-    append_avg_spacial_distances(a, b, d_sp_a_b)
+    append_avg_spatial_distances(a, b, d_sp_a_b)
 
-    d_spacial_temp_values = (l..u).map do |idx|
+    (l..u).map do |idx|
       # compute foreward diff over T for A,B
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      #sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, timestep)
       s_dt = (USE_WINDOWING_VAR) ? timestep : 1
       sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, s_dt)
       (d_sp_a_b*dt_AB)/sigma_t
@@ -264,9 +263,9 @@ class SimilarityTask
   # @param b [Trajectory] other trajectory
   # @param sp_dist [Float] avg spacial distance between overlapping
   #   points of two trajectories a and b.
-  def append_avg_spacial_distances(a, b, sp_dist)
-    a.append_avg_spacial_dist(b.label, sp_dist)
-    b.append_avg_spacial_dist(a.label, sp_dist)
+  def append_avg_spatial_distances(a, b, sp_dist)
+    a.append_avg_spatial_dist(b.label, sp_dist)
+    b.append_avg_spatial_dist(a.label, sp_dist)
   end
 
   # Compute temoral distance between temporal overlapping segments
