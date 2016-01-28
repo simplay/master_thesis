@@ -123,9 +123,17 @@ class SimilarityMatrix
     sim_filepath = "#{base_filepathname}_sim.dat"
     labels_filepath = "#{base_filepathname}_labels.txt"
 
-    save_sp_nn
-
+    # @info: to no attempt to save anything before sorting the trajectories!
+    #
+    # sort trajectory labels to have a well enumeration
+    # since some trajectories were deleted, we have to remember
+    # a mapping which index corresponds to index 1, index 2, etc..
+    # this requires a sorting of the trajectories according to their label.
     @tm.sort_trajectories
+
+    #save the spatially nearest neighbors
+    save_sp_nn(base_filepathname)
+
     File.open(sim_filepath, 'w') do |file|
       trajectories.each do |trajectory|
         sorted_sim = trajectory.similarities.sort.to_h
@@ -143,11 +151,28 @@ class SimilarityMatrix
     puts "Wrote the following files:"
     puts "#{sim_filepath}"
     puts "#{labels_filepath}"
+    puts "#{base_filepathname}_spnn.txt"
   end
 
-  def save_sp_nn
+  # Extract the NN_COUNT spatially nearest trajectory neighbors
+  # and store them in a file.
+  #
+  # @info: the file is called '#{dataset}_spnn.txt'
+  #   and is located at "#{base_fname}"
+  # @param base_fname [String] filepath where file will be located.
+  def save_sp_nn(base_fname)
     puts "Saving the #{NN_COUNT} spatially nearest neighbors per trajectory..."
     sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+    sp_nn_list = sp_nn_list.map do |tra|
+      tra.to_s.gsub(/(\[|\])/,'')
+    end
+
+    fname = "#{base_fname}_spnn.txt"
+    File.open(fname, 'w') do |file|
+      sp_nn_list.each do |line|
+        file.puts line
+      end
+    end
   end
 
   def trajectories
