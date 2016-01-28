@@ -32,6 +32,9 @@ class SimilarityTask
 
   USE_WINDOWING_VAR = true # sample over a 5x5 window for computing the local variance
 
+  # should we remember the spatially nn for each trajectory
+  DO_SAVE_NN = true
+
   def initialize(a, trajectories)
     @a = a
     @trajectories = trajectories
@@ -264,8 +267,10 @@ class SimilarityTask
   # @param sp_dist [Float] avg spacial distance between overlapping
   #   points of two trajectories a and b.
   def append_avg_spatial_distances(a, b, sp_dist)
-    a.append_avg_spatial_dist(b.label, sp_dist)
-    b.append_avg_spatial_dist(a.label, sp_dist)
+    if DO_SAVE_NN
+      a.append_avg_spatial_dist(b.label, sp_dist)
+      b.append_avg_spatial_dist(a.label, sp_dist)
+    end
   end
 
   # Compute temoral distance between temporal overlapping segments
