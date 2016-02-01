@@ -153,13 +153,33 @@ frame_idx = 1;
     pixeltensor = pixeltensor.tracked_pixels;
     [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
 
-    CLUSTER_CENTER_COUNT = 4;
-    [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 40);
+    CLUSTER_CENTER_COUNT = 5;
+    
+    m = size(UU,2);
+    
+    % initial assignments
+    label_assignments = zeros(length(W), 1);
+    
+    
+    
+    %for K=1:min(20,2*m)
+    
+    % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
+        
+    
+        [~, centroids, ~, ~] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 40, false);
+        
+        % 1. fetch the i-th row of matrix centroid to obtain mu_i
+        % 2. assemble all a-th components of all m eigenvectors v to a row
+        % vector
+        
+        
+        % compute new best label assignents via graph cut using gcmex
+    %end
+    
     display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
-
     % store findings
     %write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
-
 
 
 
