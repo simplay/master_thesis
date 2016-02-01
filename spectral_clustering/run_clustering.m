@@ -159,7 +159,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         end
         
         if USE_CLUSTERING_CUE    
-            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT);
+            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100);
             display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
             write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
         else

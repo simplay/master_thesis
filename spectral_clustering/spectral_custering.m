@@ -1,11 +1,19 @@
-function [idx,C,sumd,D] = spectral_custering( U, cluster_count )
-%SPECTRAL_CUSTERING Summary of this function goes here
-%   Detailed explanation goes here
-u = real(U);
-u = u / norm(u);
-disp('foo');
-opts = statset('Display','final');
-[idx,C,sumd,D] = kmeans(u, cluster_count, 'Replicates',100, 'Start', 'sample', 'Options', opts);
-disp(C);
+function [idx, C, sumd, D] = spectral_custering( U, cluster_count, iterationCount)
+%SPECTRAL_CUSTERING run k-means on a set of eigenvectors.
+%   @param U eigenvectors of dimension m x c, where m is the number of
+%       trajectories and c the number of relevant eigenvectors.
+%   @pararm cluster_count number of clusters
+%   @pararm iterationCount number of replications that should be performed.
+%       Run with the smallest error will be selected.
+    
+    if isreal(U)
+        opts = statset('Display','final');
+        [idx,C,sumd,D] = kmeans(U, cluster_count, 'Replicates', iterationCount, 'Start', 'sample', 'Options', opts);
+        disp(C);
+    else
+        disp('U is not real');
+            %u = real(U);
+            %u = u / norm(u);
+    end
 end
 
