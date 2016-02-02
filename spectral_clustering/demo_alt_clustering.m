@@ -161,18 +161,25 @@ frame_idx = 1;
     label_assignments = zeros(length(W), 1);
     
     
-    
-    for K=1:1%min(20,2*m)
+    N = length(W);
+    for K=1:4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
         % define initial cluster assignment
         % label_assignments
-    
+        ks = 1:K;
+        fK = (ks-1).*(N./K);
+        tK = ks.*(N./K);
+        for idx=1:length(fK)
+            [~,tp,~] = find(fK(idx) <= 1:N & 1:N <= tK(idx));
+            label_assignments(tp) = idx;
+        end
+        
         % repeat until convergence, i.e. error is small
         %for 1:4,
             [~, centroids, ~, error] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 40, false);
-            label_assignments = min_multi_graph_cut( U_small, label_assignments, centroids, K );
+            label_assignments2 = min_multi_graph_cut( U_small, label_assignments, centroids, K );
         %end
         
         % compute new best label assignents via graph cut using gcmex
