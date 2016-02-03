@@ -45,6 +45,7 @@ function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, 
     T = T-min(T(:));
     T = T ./max(T(:));
     pairwise = sparse(T);
+
     % See http://vision.ucla.edu/~brian/gcmex.html
     [label_assignments, energy, ~] = GCMex(pa, single(unary), pairwise, single(labelcost), expansion);
 end
@@ -53,7 +54,15 @@ function data_term = computeDataTerm(v, lambda, pa, mu, K)
 % COMPUTE_DATA_TERM a CxN matrix specifying the potentials (data term) for each of the C
 % possible classes at each of the N nodes.
 
-
+    data_term = zeros(K, length(pa));
+    for a = 1:length(pa)
+        for k=1:K
+            delta_pa_k = pa == k;
+            va = [v(a,1), v(a,2), v(a,3), v(a,4)];
+            norm_lam_2 = (sum(( (va-mu(k,:)).^2 ) ./lambda'))^2;
+            data_term(k,a) = delta_pa_k(a)*norm_lam_2;
+        end
+    end
 
         % 1. fetch the i-th row of matrix centroid to obtain mu_i
         % 2. assemble all a-th components of all m eigenvectors v to a row
@@ -64,8 +73,10 @@ function data_term = computeDataTerm(v, lambda, pa, mu, K)
 
 
 
-    data_term = zeros(K, length(pa));
+    
 end
+
+
 
 function smoothness_term = computeSmoothnessTerm(v, pa, nu)
 % COMPUTE_SMOOTHNESS_TERM A NxN sparse matrix sparse matrix specifiying the graph structure and
