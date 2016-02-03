@@ -5,6 +5,8 @@ clc;
 %clear all;
 %close all;
 
+addpath('../libs/GCMex/');
+
 DATASET = 'car2v1';
 USE_SPECIAL_NAMING = true;
 
@@ -34,7 +36,7 @@ SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 302
 SELECTED_ENTITY_IDX = 1
 frame_idx = 1;
-
+img_index = frame_idx;
 %function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
@@ -162,7 +164,7 @@ frame_idx = 1;
     
     
     N = length(W);
-    for K=1:4%min(20,2*m)
+    for K=2:2%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -178,10 +180,10 @@ frame_idx = 1;
         
         % repeat until convergence, i.e. error is small
         %for 1:4,
-            [~, centroids, ~, error] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 40, false);
-            label_assignments2 = min_multi_graph_cut( U_small, label_assignments, centroids, K );
+            [~, centroids, e2, error] = spectral_custering( U_small, K, 40, false);
+            [label_assignments2, energy] = min_multi_graph_cut( U_small, label_assignments, centroids, K, WW);
         %end
-        
+        e2
         % compute new best label assignents via graph cut using gcmex
     end
     
