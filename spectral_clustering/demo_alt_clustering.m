@@ -164,7 +164,7 @@ img_index = frame_idx;
     
     
     N = length(W);
-    for K=2:2%4%min(20,2*m)
+    for K=3:3%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         

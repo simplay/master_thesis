@@ -25,7 +25,8 @@ function [label_assignments,energy] = min_multi_graph_cut(v, pa, mu, K, W)
 
     % A CxC matrix specifiying the label cost for the labels of each adjacent
     % node in the graph.
-    labelcost = [0,1; 1,0];       
+    % for k=2 we get labelcost = [0,1; 1,0]
+    labelcost = flip(eye(K));
  
     % A 0-1 flag which that determines if the 'swap of expansion' method is used to
     % solve the minimization. 
