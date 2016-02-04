@@ -20,7 +20,7 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 4;
+FORCE_EW_COUNT = 5;
 
 THRESH = 0.00001;
 
@@ -131,8 +131,13 @@ img_index = frame_idx;
 
         U_small = aggregate_mat_cols(U_small, aa);
         S_small = d(aa);
+        
+        % filter the eigenvector that belongs to eigenvalue 0
+        S_small = S_small(S_small > 0);
+        U_small = U_small(:,S_small > 0);
     end
 
+    
     %% display segmentation and its data.
 
     % load label vector indices mappings
@@ -166,7 +171,7 @@ img_index = frame_idx;
     % initial assignments
     label_assignments = zeros(length(W), 1);
     
-    
+    %%
     N = length(W);
     for K=2:2%4%min(20,2*m)
     
@@ -181,17 +186,21 @@ img_index = frame_idx;
             [~,tp,~] = find(fK(idx) <= 1:N & 1:N <= tK(idx));
             label_assignments(tp) = idx;
         end
-        
+
         % repeat until convergence, i.e. error is small
-        %for t=1:4,
-            [~, centroids, e2, error] = spectral_custering( U_small, K, 40, false);
-            [label_assignments2, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
-        %end
-        e2
+        for t=1:1,  
+            [ centroids ] = find_cluster_centers( label_assignments, U_small );
+            centroids
+            [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
+            energy
+            figure('name', num2str(t))
+            display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
+        end
+
         % compute new best label assignents via graph cut using gcmex
     end
     
-    display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
+    %display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
     % store findings
     %write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
 
