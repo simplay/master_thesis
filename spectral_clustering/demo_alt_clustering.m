@@ -7,8 +7,8 @@ clc;
 
 addpath('../libs/GCMex/');
 
-DATASET = 'car2v1';
-USE_SPECIAL_NAMING = true;
+DATASET = 'c14';
+USE_SPECIAL_NAMING = false;
 
 COMPUTE_EIGS = true;
 USE_EIGS = true;
@@ -148,6 +148,10 @@ img_index = frame_idx;
     
     %%
     
+    
+    nn_fpath = strcat('../output/similarities/',DATASET,'_spnn.txt');
+    spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
+    
     % display data
     figure('name', 'Motion Segmentation')
 
@@ -164,7 +168,7 @@ img_index = frame_idx;
     
     
     N = length(W);
-    for K=3:3%4%min(20,2*m)
+    for K=2:2%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -181,7 +185,7 @@ img_index = frame_idx;
         % repeat until convergence, i.e. error is small
         %for 1:4,
             [~, centroids, e2, error] = spectral_custering( U_small, K, 40, false);
-            [label_assignments2, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, WW);
+            [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices, WW);
         %end
         e2
         % compute new best label assignents via graph cut using gcmex

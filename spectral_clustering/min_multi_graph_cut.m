@@ -1,4 +1,4 @@
-function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, W)
+function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices, W)
 %MIN_MULTI_GRAPH_CUT compute new cluster assignments of a given set of N
 %nodes solving a MRF minimization problem.
 %
@@ -10,6 +10,8 @@ function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, 
 %   @param pa (1 x N) node assignments
 %   @param mu (K x m) cluster centroids computed via k-means.
 %   @param K number of expected clusters
+%   @param spnn_indices (N x t) index set of the t spatially nearest trajectory 
+%       neighbors of every tracked trajectory.
 %   @return label_assignments (1 x N) node cluster assignments
 
 
@@ -29,7 +31,7 @@ function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, 
 
     % A NxN sparse matrix sparse matrix specifiying the graph structure and
     % cost for each link between nodes in the graph.
-    pairwise = computeSmoothnessTerm(v, pa, nu);
+    pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu);
 
     % A CxC matrix specifiying the label cost for the labels of each adjacent
     % node in the graph.
@@ -64,26 +66,18 @@ function data_term = computeDataTerm(v, lambda, pa, mu, K)
         end
     end
 
-        % 1. fetch the i-th row of matrix centroid to obtain mu_i
-        % 2. assemble all a-th components of all m eigenvectors v to a row
-        % vector
-    % foreach 1:K    
-
-
-
-
-
-    
 end
 
 
 
-function smoothness_term = computeSmoothnessTerm(v, pa, nu)
+function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
 % COMPUTE_SMOOTHNESS_TERM A NxN sparse matrix sparse matrix specifiying the graph structure and
 % cost for each link between nodes in the graph.
 %
 % @param v relevant m eigenvectors
 % @param pa trajectory cluster assignments
+% @param spnn_indices (N x t) index set of the t spatially nearest trajectory 
+%   neighbors of every tracked trajectory.
 % @param nu regularization constant
 % @return smoothness_term a N x N smoothness term
 
