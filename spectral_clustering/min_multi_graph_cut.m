@@ -31,8 +31,8 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
 
     % A NxN sparse matrix sparse matrix specifiying the graph structure and
     % cost for each link between nodes in the graph.
-    pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu);
-    pairwise = sparse(pairwise);
+    full_pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu);
+    pairwise = sparse(full_pairwise);
 
     % A CxC matrix specifiying the label cost for the labels of each adjacent
     % node in the graph.
@@ -43,7 +43,7 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
     % solve the minimization. 
     % 0 == swap, 1 == expansion.
     expansion = 0;
-
+    
     % See http://vision.ucla.edu/~brian/gcmex.html
     [label_assignments, energy, ~] = GCMex(pa, single(unary), pairwise, single(labelcost), expansion);
 end
@@ -89,8 +89,8 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
             vb = v(b,:);
             del_sq = sum((va-vb).^2);
             sel_ab = 1-(pa(a) == pa(b));
-            smoothness_term(a,b) = smoothness_term(a,b) + (sel_ab / del_sq);
-            smoothness_term(b,a) = smoothness_term(b,a) + (sel_ab / del_sq);
+            smoothness_term(a,b) = smoothness_term(a,b) + nu*(sel_ab / del_sq);
+            smoothness_term(b,a) = smoothness_term(b,a) + nu*(sel_ab / del_sq);
         end
     end
     
