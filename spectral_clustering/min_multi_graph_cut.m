@@ -1,4 +1,4 @@
-function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices, W)
+function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices)
 %MIN_MULTI_GRAPH_CUT compute new cluster assignments of a given set of N
 %nodes solving a MRF minimization problem.
 %
@@ -32,6 +32,7 @@ function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, 
     % A NxN sparse matrix sparse matrix specifiying the graph structure and
     % cost for each link between nodes in the graph.
     pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu);
+    pairwise = sparse(pairwise);
 
     % A CxC matrix specifiying the label cost for the labels of each adjacent
     % node in the graph.
@@ -42,11 +43,6 @@ function [label_assignments,energy] = min_multi_graph_cut(v, lambda, pa, mu, K, 
     % solve the minimization. 
     % 0 == swap, 1 == expansion.
     expansion = 0;
-    
-    T = W;
-    T = T-min(T(:));
-    T = T ./max(T(:));
-    pairwise = sparse(T);
 
     % See http://vision.ucla.edu/~brian/gcmex.html
     [label_assignments, energy, ~] = GCMex(pa, single(unary), pairwise, single(labelcost), expansion);
@@ -60,7 +56,9 @@ function data_term = computeDataTerm(v, lambda, pa, mu, K)
     for a = 1:length(pa)
         for k=1:K
             delta_pa_k = pa == k;
-            va = [v(a,1), v(a,2), v(a,3), v(a,4)];
+            
+            % TODO: parameterize
+            va = v(a,:); % [v(a,1), v(a,2), v(a,3), v(a,4)];
             norm_lam_2 = (sum(( (va-mu(k,:)).^2 ) ./lambda'))^2;
             data_term(k,a) = delta_pa_k(a)*norm_lam_2;
         end
@@ -83,35 +81,17 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
 
     N = length(pa);
     smoothness_term = zeros(N,N);
-end
-
-function delta_value = delta_ab(pa, a, b)
-% DELTA_AB kroneker delta funktion that checks whether two trajectories
-% have the same label assignment
-%
-% @param pa (1 x N) all existing node assignments
-% @param a integer an existing trajectory index contained in pa
-% @param b integer an existing trajectory index contained in pa
-% @return delta_value Integer 1 if trajectory label pa(a) matches the trajectory 
-%   label pa(b) and 0 otherwise.
-
-    delta_value = pa(a) == pa(b);
-end
-
-
-function delta_value = delta_ak(pa, a, k)
-% DELTA_AK kroneker delta funktion that checks whether a trajectory
-% has a given label value
-%
-% @param pa (1 x N) all existing node assignments
-% @param a integer an existing trajectory index contained in pa
-% @param k integer a target label value the trajectory is supposed to match
-% @return delta_value Integer 1 if trajectory pa(a) matches the label value k and 0
-%   otherwise.
-
-    delta_value = pa(a) == k;
-end
-
-% retrieves all extracted spatial relevant neighbors for a given trajectory
-function neighbor_indices = neighborhoodOf(pa, a)
+    
+    for a=1:length(pa)
+        for bi=1:length(spnn_indices(1,:))
+            b = spnn_indices(a,bi);
+            va = v(a,:);
+            vb = v(b,:);
+            del_sq = sum((va-vb).^2);
+            sel_ab = 1-(pa(a) == pa(b));
+            smoothness_term(a,b) = smoothness_term(a,b) + (sel_ab / del_sq);
+            smoothness_term(b,a) = smoothness_term(b,a) + (sel_ab / del_sq);
+        end
+    end
+    
 end

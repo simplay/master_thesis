@@ -183,9 +183,9 @@ img_index = frame_idx;
         end
         
         % repeat until convergence, i.e. error is small
-        %for 1:4,
+        %for t=1:4,
             [~, centroids, e2, error] = spectral_custering( U_small, K, 40, false);
-            [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices, WW);
+            [label_assignments2, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
         %end
         e2
         % compute new best label assignents via graph cut using gcmex
