@@ -5,10 +5,10 @@ clc;
 %clear all;
 %close all;
 
-DATASET = 'car2v1';
-USE_SPECIAL_NAMING = true;
+DATASET = 'c14';
+USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
@@ -18,21 +18,21 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 4;
+FORCE_EW_COUNT = 5;
 
 THRESH = 0.00001;
 CLUSTER_CENTER_COUNT =4;
 
 
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = true;
+USE_CLUSTERING_CUE = false;
 
-SHOW_LOCAL_VAR = true;
+SHOW_LOCAL_VAR = false;
 VAR_IMG = 1;
 
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 302
-SELECTED_ENTITY_IDX = 1
+SELECTED_ENTITY_IDX = 5
 frame_idx = 1;
 
 %%

@@ -22,7 +22,7 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
 % pairwise 480*640 x 480*640
     
     % regularization parameter
-    nu = 60;
+    nu = 0.000002;%1e-10;
 
 
     % A CxN matrix specifying the potentials (data term) for each of the C
@@ -39,15 +39,16 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
     % for k=2 we get labelcost = [0,1; 1,0]
     
     %labelcost = flip(eye(K));
-    labelcost = 0.1*(ones(K)-eye(K));
- 
+    labelcost = (ones(K)-eye(K));
+
     % A 0-1 flag which that determines if the 'swap of expansion' method is used to
     % solve the minimization. 
     % 0 == swap, 1 == expansion.
-    expansion = 0;
+    expansion = 1;
     
     % See http://vision.ucla.edu/~brian/gcmex.html
-    [label_assignments, energy, ~] = GCMex(pa, single(unary), pairwise, single(labelcost), expansion);
+    [label_assignments, energy, ~] = GCMex(pa-1, single(unary), pairwise, single(labelcost), expansion);
+    label_assignments = label_assignments + 1;
 end
 
 function data_term = computeDataTerm(v, lambda, pa, mu, K)
@@ -57,14 +58,16 @@ function data_term = computeDataTerm(v, lambda, pa, mu, K)
     data_term = zeros(K, length(pa));
     for a = 1:length(pa)
         for k=1:K
-            delta_pa_k = pa == k;
+            %delta_pa_k = pa == k;
             mu_k = mu(k, :);
             
             %mu_k = sum(mu_k)/length(mu_k);
             % TODO: parameterize
             va = v(a,:); % [v(a,1), v(a,2), v(a,3), v(a,4)];
-            norm_lam_2 = (sum(( (va-mu_k).^2 ) ./lambda'))^2;
-            data_term(k,a) = delta_pa_k(a)*norm_lam_2;
+            divisor = abs(lambda') + 1e-2;
+            norm_lam_2 = (sum(( (va-mu_k).^2 ) ./divisor));
+            %data_term(k,a) = delta_pa_k(a)*norm_lam_2;
+            data_term(k,a) = norm_lam_2;
         end
     end
 
@@ -92,7 +95,7 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
             va = v(a,:);
             vb = v(b,:);
             del_sq = sqrt(sum((va-vb).^2));
-            sel_ab = 1-(pa(a) == pa(b));
+            sel_ab = 1;%-(pa(a) == pa(b));
             smoothness_term(a,b) = smoothness_term(a,b) + nu*(sel_ab / del_sq);
             smoothness_term(b,a) = smoothness_term(b,a) + nu*(sel_ab / del_sq);
         end

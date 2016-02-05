@@ -20,7 +20,7 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 5;
+FORCE_EW_COUNT = 3;
 
 THRESH = 0.00001;
 
@@ -133,8 +133,8 @@ img_index = frame_idx;
         S_small = d(aa);
         
         % filter the eigenvector that belongs to eigenvalue 0
-        S_small = S_small(S_small > 0);
-        U_small = U_small(:,S_small > 0);
+         S_small = S_small(S_small > 0);
+         U_small = U_small(:,S_small > 0);
     end
 
     
@@ -173,7 +173,7 @@ img_index = frame_idx;
     
     %%
     N = length(W);
-    for K=2:2%4%min(20,2*m)
+    for K=4:4%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -186,11 +186,11 @@ img_index = frame_idx;
             [~,tp,~] = find(fK(idx) <= 1:N & 1:N <= tK(idx));
             label_assignments(tp) = idx;
         end
-
+        
         % repeat until convergence, i.e. error is small
-        for t=1:1,  
+        for t=1:6,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
-            centroids
+            centroids;
             [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
             energy
             figure('name', num2str(t))
