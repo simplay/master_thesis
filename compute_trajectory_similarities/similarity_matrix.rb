@@ -2,6 +2,7 @@ require 'pry'
 require 'java'
 require 'thread'
 require_relative 'similarity_task'
+require_relative 'mcm_task'
 
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
@@ -38,11 +39,18 @@ class SimilarityMatrix
     end
     @tm.filter_trajectories_shorter_than(SimilarityTask::DT_THREH) unless $is_debugging
 
+    # select correct similarity task
+    if $use_sum_affinity
+      @similarity_task = McmTask
+    else
+      @similarity_task = SimilarityTask
+    end
+
     if USE_THREADING
       @task_count = 0
       run_executor
     else
-      SimilarityTask.new(nil, trajectories).traverse_all_pairs(@tm)
+      @similarity_task.new(nil, trajectories).traverse_all_pairs(@tm)
     end
     # remove zero trajectories
     #c = @tm.filter_zero_sim_trajectories
@@ -70,7 +78,7 @@ class SimilarityMatrix
     k = trajectories.count+1
     tasks = trajectories.map do |trajectory|
       # only traverse upper triangle
-      t = FutureTask.new SimilarityTask.new(trajectory, trajectories.last(k))
+      t = FutureTask.new @similarity_task.new(trajectory, trajectories.last(k))
       k = k - 1
       t
     end
@@ -176,7 +184,7 @@ class SimilarityMatrix
   end
 
   def trajectories
-    @tm.trajectories#.first(100)
+    @tm.trajectories
   end
 
 end
