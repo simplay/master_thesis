@@ -45,8 +45,17 @@ class TrajectoryManager
     end
   end
 
+  # Filter all invalid trajectoires
   def filter_zero_sim_trajectories
+    zeros = @trajectories.select { |_, tra| !tra.sim_greater_zero? }
+    return if zeros.empty?
     @trajectories = @trajectories.delete_if { |_, tra| !tra.sim_greater_zero? }
+    zero_labels = zeros.map(&:last).map(&:label)
+    @trajectories.each do |tra|
+      zero_labels.each do |del_key|
+        tra.last.similarities.tap { |hs| hs.delete(del_key) }
+      end
+    end
   end
 
   def issue_trajectory_labels
