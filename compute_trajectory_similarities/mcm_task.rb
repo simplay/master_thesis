@@ -1,5 +1,7 @@
 class McmTask < SimilarityTask
 
+  LAMBDA_D = 70000.0
+
   # Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts.
   # Used in formula (7)
   BETA_0 = 2.0

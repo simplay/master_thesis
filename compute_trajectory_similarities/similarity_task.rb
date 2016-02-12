@@ -14,7 +14,6 @@ class SimilarityTask
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1 #0.02 => = 0.0001 works best for cars1, when eps_flow is equal to 0.001
-  LAMBDA_D = 70000.0
   DT_THREH = 4 # Num of trajectories - 1,  a pair has to have at least have in commoan
   ZERO_THRESH = 1.0e-12
 
@@ -22,14 +21,13 @@ class SimilarityTask
   EIGENSIM_VALUE = 0.0
   EPS_FLOW = 1.0 #0.001
 
-
   USE_WINDOWING_VAR = false # sample over a 5x5 window for computing the local variance
 
   # should we remember the spatially nn for each trajectory
   DO_SAVE_NN = true
 
   #MIN_NUM_OVERLAPPING_FRAMES = 6
-  MIN_EXPECTED_TRAJ_LEN = 4
+  MIN_EXPECTED_TRAJ_LEN = 1
 
   def initialize(a, trajectories)
     @a = a
@@ -204,6 +202,8 @@ class SimilarityTask
     # compute average spatial distance between 2 trajectories
     # over all overalapping segments.
     d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
+
+    append_avg_spatial_distances(a, b, d_sp_a_b)
 
     d_spacial_temp_values = (l..u).map do |idx|
       # compute foreward diff over T for A,B
