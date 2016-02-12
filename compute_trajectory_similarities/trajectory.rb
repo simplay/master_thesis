@@ -22,6 +22,15 @@ class Trajectory
     @spatial_distances
   end
 
+  # Remove every item that occurs in the spatial neighbor list.
+  #
+  # @param [Array<Intger>] a set of invalid indices
+  def remove_neighbors(invalid_index_set)
+    invalid_index_set.each do |invalid_index|
+      @spatial_distances.delete(invalid_index)
+    end
+  end
+
   # Checks whether this trajectory is valid
   #
   # @info: A trajectory can be invalid due to many cases.

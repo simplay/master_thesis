@@ -55,6 +55,7 @@ class TrajectoryManager
       zero_labels.each do |del_key|
         tra.last.similarities.tap { |hs| hs.delete(del_key) }
       end
+      tra.last.remove_neighbors(zero_labels)
     end
   end
 
