@@ -23,14 +23,21 @@ class SimilarityTask
   EPS_FLOW = 1.0 #0.001
 
 
-  USE_WINDOWING_VAR = true # sample over a 5x5 window for computing the local variance
+  USE_WINDOWING_VAR = false # sample over a 5x5 window for computing the local variance
 
   # should we remember the spatially nn for each trajectory
   DO_SAVE_NN = true
 
+  #MIN_NUM_OVERLAPPING_FRAMES = 6
+  MIN_EXPECTED_TRAJ_LEN = 3
+
   def initialize(a, trajectories)
     @a = a
     @trajectories = trajectories
+  end
+
+  def expected_min_trajectory_len
+    MIN_NUM_OVERLAPPING_FRAMES - 1
   end
 
   # Compute the similarities between a trajectory with a given label
@@ -108,50 +115,10 @@ class SimilarityTask
     $uses_depth_data ? LAMBDA_D : LAMBDA
   end
 
-  # Compute temoral distance between temporal overlapping segments
-  # of two given trajectories.
-  #
-  # @param a [Trajectory] frist trajectory
-  # @param b [Trajectory] other trajectory
-  # @param lower_idx [Integer] index first overlapping trajectory frame
-  # @param upper_idx [Integer] index last overlapping trajectory frame
-  # @param dt [Integer] timestep size
-  # @return [Array] of Float values denoting the temporal distance
-  #   between two trajectory segment pairs.
-  def temporal_distances_between(a, b, lower_idx, upper_idx, dt=1)
-    common_frame_count = upper_idx-lower_idx+1
-    return [] if common_frame_count < 2
-
-    # if common frame count is 2, then use a stepsize equal to dt=1
-    timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
-
-    # ensure that we only iterate over trajectories that are longer that 4 segments
-    u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
-    l = lower_idx
-    return [] if u < l # when forward diff cannot be computed
-
-    # compute average spatial distance between 2 trajectories
-    # over all overalapping segments.
-    d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
-    d_AB_values = []
-    d_spacial_temp_values = (l..u).map do |idx|
-      # compute foreward diff over T for A,B
-      dt_A = foreward_differece_on(a, timestep, idx)
-      dt_B = foreward_differece_on(b, timestep, idx)
-      dt_AB = dt_A.sub(dt_B).length_squared
-      d_AB_values << Math.sqrt(dt_AB)
-      d_sp_a_b*dt_AB
-    end
-    n = d_AB_values.count
-    # return [d_spacial_temp_values.first*(d_AB_values.first**2)] if n == 1
-    return [d_spacial_temp_values.first/(sigma_t_at(l) + EPS_FLOW)] if n == 1
-    mean_d_AB = (d_AB_values.inject(0.0) {|sum, el| sum + el})/n
-    # Estimator for std s = 1/(n-1) * sum_i^n (X_i - mean(X))^2
-    # Variance is equal to s^2
-    sigma_t = (d_AB_values.inject(0.0) {|sum, el| sum + ((el-mean_d_AB)**2.0)})/(n-1)
-    sigma_t = sigma_t
-    d_spacial_temp_values.map { |item| item * sigma_t}
+  def long_enough_trajectory?(common_frame_count)
+    !(common_frame_count-1 < MIN_EXPECTED_TRAJ_LEN)
   end
+
 
   # Compute temoral distance between temporal overlapping segments
   # of two given trajectories.
@@ -164,12 +131,12 @@ class SimilarityTask
   # @return [Array] of Float values denoting the temporal distance
   #   between two trajectory segment pairs.
   def temporal_distances_between_2(a, b, lower_idx, upper_idx, dt=1)
-    common_frame_count = upper_idx-lower_idx+1
-    return [] if common_frame_count < 2
+    common_frame_count = overlapping_frame_count(lower_idx, upper_idx)
+    return [] unless long_enough_trajectory?(common_frame_count)
 
     # if common frame count is 2, then use a stepsize equal to dt=1
-    timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
-
+    # timestep = $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
+    timestep = trajectory_timestep(dt, common_frame_count)
     # ensure that we only iterate over trajectories that are longer that 4 segments
     u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
@@ -191,6 +158,14 @@ class SimilarityTask
       sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, s_dt)
       (d_sp_a_b*dt_AB)/sigma_t
     end
+  end
+
+  def trajectory_timestep(dt, common_frame_count)
+    $is_debugging ? dt : ([common_frame_count, DT_THREH+1].min - 1)
+  end
+
+  def overlapping_frame_count(lower_idx, upper_idx)
+    upper_idx-lower_idx+1
   end
 
   # @param a [Trajectory] frist trajectory

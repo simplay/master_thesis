@@ -124,12 +124,39 @@ class Trajectory
   end
 
   # first frame is supposed to denote the index 0
+  #
+  # @info: a frame indices start counting at 1
+  #   whereas array indexing starts counting at 0.
+  #   keep in mind: trajectories can start at an arbitrary frame
+  #
+  # @example: Explanation how index correction works.
+  #   given 2 trajectories, A and B
+  #   A: starts at frame 1 and goes till frame 4
+  #   B: starts at frame 2 and goes till frame 5
+  #   their overlapping frame are [2,3,4]
+  #   therefore the lower index is 2
+  #   and the upper index is 4
+  #   assume we perform step sizes of 1, then
+  #   we will iterate over the index set [2,3]
+  #
+  #   For A the first overlapping frame is its 2nd frame
+  #   and for B it's its 1st frame. However,
+  #   the index lookup is shifted for B, since it start
+  #   in frame 2 whereas A starts at frame 1.
+  #   subtracting the starting frame from the lookup index
+  #   yields the correctt frame index.
+  #   A: iter=2, iter-start = 2-1 = 1
+  #     and index 1 correspnds to A's 2nd frame
+  #   B: iter=2, iter-start = 2-2 = 0
+  #     and index 0 corresponds to B's 1st frame
+  #
+  #   therfore the lookup index is given index-start_frame
+  #
   def point_at(frame_idx)
     idx = frame_idx - start_frame
-    if idx >= count
-      puts "in point_at at frame #{point_at}"
+    if idx >= count or idx < 0
+      puts "in point_at at frame #{frame_idx}"
       binding.pry
-      boundary_value
     else
       @points[idx]
     end
