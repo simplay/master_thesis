@@ -270,7 +270,6 @@ class SimilarityTask
   # @param a [Trajectory] first trajectory
   # @param b [Trajectory] second trajectory
   def avg_spatial_distance_between(a, b, lower_idx, upper_idx)
-    #binding.pry if upper_idx-lower_idx + 1 < 1# should no happen!
     return 0.0 if upper_idx-lower_idx + 1 < 1# should no happen!
     len = 0.0
     (lower_idx..upper_idx).each do |idx|

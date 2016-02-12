@@ -13,7 +13,7 @@ java_import 'java.lang.Runtime'
 
 class SimilarityMatrix
   BASE_PATH = "../output/similarities/"
-  USE_THREADING = false
+  USE_THREADING = true
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
