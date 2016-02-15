@@ -23,6 +23,8 @@ public class NeighborhoodReader extends GraphFileReader {
 
     @Override
     protected void processFileLine(String fline) {
+        String[] tokens = fline.split(", ");
+        graph.assignNearestNeighborsForVertex(lineCounter, tokens);
         lineCounter++;
     }
 }

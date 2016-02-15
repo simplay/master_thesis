@@ -25,6 +25,17 @@ public class Vertex {
         return id;
     }
 
+    /**
+     * Appends a vertex to this vertex' nearest neighborhood unless it is null.
+     *
+     * @param v neighboring vertex.
+     */
+    public void appendNearestNeighbord(Vertex v) {
+        if (v != null) {
+            neighbors.add(v);
+        }
+    }
+
     public int getTrajectoryId() {
         return trajectoryId;
     }
