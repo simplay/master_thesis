@@ -5,6 +5,8 @@ package com.ma;
  */
 public class NeighborhoodReader extends GraphFileReader {
 
+    private int lineCounter;
+
     public NeighborhoodReader(String fname, Graph graph) {
         super(fname, graph);
     }
@@ -16,11 +18,11 @@ public class NeighborhoodReader extends GraphFileReader {
 
     @Override
     protected void stepsAfterFileProcessing() {
-
+        System.out.println("Assigned neighborhood for " + lineCounter + " trajectories.");
     }
 
     @Override
     protected void processFileLine(String fline) {
-
+        lineCounter++;
     }
 }

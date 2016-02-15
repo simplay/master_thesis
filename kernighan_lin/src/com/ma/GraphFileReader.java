@@ -67,9 +67,9 @@ public abstract class GraphFileReader {
     private void checkFileExists(String fname) {
         File f = new File(fname);
         if (f.exists() && !f.isDirectory()) {
-            System.out.println("file " + fname+ "does exist");
+            System.out.println("File " + fname + " does exist");
         } else {
-            System.out.println("file does NOT exist");
+            System.out.println(" File does NOT exist");
         }
     }
 

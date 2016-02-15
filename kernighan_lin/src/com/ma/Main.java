@@ -11,6 +11,8 @@ public class Main {
 
         Graph g = new Graph();
 
+        System.out.println("Loading relevant input data...");
+        System.out.println();
         new VertexReader("c14_sim.dat", g);
         new TrajectoryLabelReader("c14_labels.txt", g);
         new NeighborhoodReader("c14_spnn.txt", g);

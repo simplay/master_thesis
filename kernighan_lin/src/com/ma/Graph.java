@@ -28,4 +28,19 @@ public class Graph {
             System.out.print(t + " ");
         }
     }
+
+    /**
+     * Find a vertex by its trajectory id
+     *
+     * @param trajectoryId trajectory id globally known.
+     * @return the vertex that is associated to the given trajectory id or null.
+     */
+    public Vertex findVertexByTrajectoryId(int trajectoryId) {
+        for (Vertex v : vertices) {
+            if (v.getTrajectoryId() == trajectoryId) {
+                return v;
+            }
+        }
+        return null;
+    }
 }
