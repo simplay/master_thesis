@@ -24,7 +24,7 @@ public class Graph {
     }
 
     public void inspectSimilaritiesForVertex(int id) {
-        for(Float t : vertices.get(0).similarities) {
+        for(Float t : vertices.get(id).similarities) {
             System.out.print(t + " ");
         }
     }
