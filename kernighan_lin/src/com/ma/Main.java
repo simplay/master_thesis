@@ -16,6 +16,8 @@ public class Main {
         new VertexReader("c14_sim.dat", g);
         new TrajectoryLabelReader("c14_labels.txt", g);
         new NeighborhoodReader("c14_spnn.txt", g);
-
+        System.out.println("Computing the graph partitioning...");
+        System.out.println();
+        new GraphPartitioner(g).runKernighanLin();
     }
 }
