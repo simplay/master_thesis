@@ -27,7 +27,7 @@ class SimilarityTask
   DO_SAVE_NN = true
 
   #MIN_NUM_OVERLAPPING_FRAMES = 6
-  MIN_EXPECTED_TRAJ_LEN = 1
+  MIN_EXPECTED_TRAJ_LEN = 2
 
   def initialize(a, trajectories)
     @a = a
