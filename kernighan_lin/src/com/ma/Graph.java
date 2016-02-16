@@ -10,8 +10,15 @@ public class Graph {
 
     public final List<Vertex> vertices = new ArrayList<Vertex>();
 
-    public Graph() {
+    public Graph() {}
 
+    /**
+     * Yields the number of contained graph vertices.
+     *
+     * @return the vertex count.
+     */
+    public int vertexCount() {
+        return vertices.size();
     }
 
     public void appendVertex(Vertex v) {
