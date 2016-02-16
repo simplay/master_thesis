@@ -1,5 +1,6 @@
 package com.ma;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Created by simplay on 15/02/16.
  */
-public class Vertex {
+public class Vertex implements Comparable<Vertex>{
 
     private int id;
 
@@ -72,6 +73,10 @@ public class Vertex {
         return id;
     }
 
+    public float getDValue() {
+        return dValue;
+    }
+
     /**
      * Appends a vertex to this vertex' nearest neighborhood unless it is null.
      *
@@ -96,6 +101,20 @@ public class Vertex {
         for (String sim : readSimilarities) {
             similarities[idx] = Float.parseFloat(sim);
             idx++;
+        }
+    }
+
+    @Override
+    //returns -1 if "this" object is less than "that" object
+    //returns 0 if they are equal
+    //returns 1 if "this" object is greater than "that" object
+    public int compareTo(Vertex o) {
+        if (dValue < o.dValue) {
+            return -1;
+        } else if(dValue == o.dValue) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 

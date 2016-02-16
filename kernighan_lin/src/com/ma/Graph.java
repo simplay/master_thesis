@@ -12,6 +12,10 @@ public class Graph {
 
     public Graph() {}
 
+    public float getWeight(int idxa, int idxb) {
+        return vertices.get(idxa).similarities[idxb];
+    }
+
     /**
      * Yields the number of contained graph vertices.
      *
