@@ -11,8 +11,7 @@ import java.util.List;
 public class Vertex implements Comparable<Vertex>{
 
     private int id;
-
-
+    private int partitionLabel;
     private int trajectoryId;
 
     public final List<Vertex> neighbors = new LinkedList<Vertex>();
@@ -24,6 +23,7 @@ public class Vertex implements Comparable<Vertex>{
     public Vertex(int id, int vertexCount) {
         this.id = id;
         similarities = new float[vertexCount];
+        this.partitionLabel = -1;
     }
 
     public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
@@ -78,6 +78,14 @@ public class Vertex implements Comparable<Vertex>{
         }
 
         this.dValue = E_a - I_a;
+    }
+
+    public void setPartition(int partitionLabel) {
+        this.partitionLabel = partitionLabel;
+    }
+
+    public int getPartitionLabel() {
+        return partitionLabel;
     }
 
     public int getId() {

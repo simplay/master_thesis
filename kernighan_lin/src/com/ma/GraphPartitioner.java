@@ -131,5 +131,13 @@ public class GraphPartitioner {
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
         } while( (max_gv > 0.0f) && (iter < MAXITER) );
+
+        for (Vertex v : av) {
+            v.setPartition(0);
+        }
+
+        for (Vertex v : bv) {
+            v.setPartition(1);
+        }
     }
 }

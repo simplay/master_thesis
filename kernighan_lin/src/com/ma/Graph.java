@@ -1,5 +1,7 @@
 package com.ma;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,5 +66,21 @@ public class Graph {
             }
         }
         return null;
+    }
+
+    /**
+     * @param fPathName file path name for this graph's partition file.
+     */
+    public void savePartitionToFile(String fPathName) {
+        try {
+            try( PrintWriter out = new PrintWriter(fPathName) ){
+                for (Vertex v : vertices) {
+                    String line = v.getTrajectoryId() + "," +v.getPartitionLabel();
+                    out.println(line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
