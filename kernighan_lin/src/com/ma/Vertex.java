@@ -26,6 +26,17 @@ public class Vertex implements Comparable<Vertex>{
         similarities = new float[vertexCount];
     }
 
+    public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
+
+        for (Vertex v_i : internalSet) {
+            v_i.computeD(internalSet, externalSet);
+        }
+
+        for (Vertex v_e : externalSet) {
+            v_e.computeD(externalSet, internalSet);
+        }
+    }
+
     /**
      * Computes the difference between the external and internal node cost.
      * Lets denote this vertex as a, A is the set of all internal nodes and B

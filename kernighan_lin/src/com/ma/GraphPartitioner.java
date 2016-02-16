@@ -56,15 +56,40 @@ public class GraphPartitioner {
                 List<Vertex> sortedByDvalueB = new ArrayList(setB);
                 Collections.sort(sortedByDvalueB);
 
+                int lastAIndex = setA.size() - 1;
+                int lastBIndex = setB.size() - 1;
+                if (lastAIndex < 0 || lastBIndex < 0) break;
 
-                if (setA.size() - 1 < 0) break;
-                Vertex topA = sortedByDvalueA.get(setA.size() - 1);
+                Vertex topA = sortedByDvalueA.get(lastAIndex);
+                Vertex topB = sortedByDvalueB.get(lastBIndex);
+                int bestIter = 0;
+                float g = 0.0f;
+                for (int idx = 1; idx < Math.min(lastAIndex, lastBIndex); idx++) {
 
-                if (setB.size() - 1 < 0) break;
-                Vertex topB = sortedByDvalueB.get(setB.size() - 1);
+                    int idxa = lastAIndex-idx;
+                    int idxb = lastBIndex-idx;
 
-                float e_ab = graph.getWeight(topA.getId(), topB.getId());
-                float g = topA.getDValue() + topB.getDValue() - 2.0f*e_ab;
+                    Vertex topANext = sortedByDvalueA.get(idxa);
+                    Vertex topBNext = sortedByDvalueB.get(idxb);
+
+                    float e_ab = graph.getWeight(topA.getId(), topB.getId());
+                    float e_ab_next = graph.getWeight(topA.getId(), topB.getId());
+                    g = topA.getDValue() + topB.getDValue() - 2.0f*e_ab;
+                    float g_next = topANext.getDValue() + topBNext.getDValue() - 2.0f*e_ab_next;
+
+                    if (g_next > g) {
+                        topA = topANext;
+                        topB = topBNext;
+                        bestIter++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (bestIter == 0) {
+                    float e_ab = graph.getWeight(topA.getId(), topB.getId());
+                    g = topA.getDValue() + topB.getDValue() - 2.0f * e_ab;
+                }
 
                 // remove a and b from further consideration in this pass
                 setA.remove(topA);
@@ -76,7 +101,8 @@ public class GraphPartitioner {
                 bv.add(n, topB);
 
                 // update D values for the elements of A = A \ a and B = B \ b
-                System.out.println(n);
+                topA.updateDValuesOfNeighbors(setA, setB);
+                topB.updateDValuesOfNeighbors(setB, setA);
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
@@ -103,7 +129,7 @@ public class GraphPartitioner {
               }
             }
             iter++;
-            System.out.println("Iteration " + iter + " gv=" + max_gv);
+            System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
         } while( (max_gv > 0.0f) && (iter < MAXITER) );
     }
 }
