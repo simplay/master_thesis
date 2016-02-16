@@ -3,9 +3,19 @@
 This program is a standalone executable application that performs a trajectory partitioning. 
 For further information, please have a look at [here](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm). 
 
-## Expected Structure
+## Download a dataset
 
-You can use this code without having to use the rest of the pipeline. To do so, you have to:
+Download the following files and store them in the location as described in the section **Expected structure**:
+
++ [c14_sim.dat](https://www.dropbox.com/s/ah7h5ff9307geud/c14_sim.dat?dl=0)
++ [c14_labels](https://www.dropbox.com/s/11mfizvxw39mf7o/c14_labels.txt?dl=0)
++ [c14_spnn](https://www.dropbox.com/s/hvf1rfqb49lc96m/c14_spnn.txt?dl=0)
+
+
+## Expected structure
+
+You can use this code without having to use the rest of the pipeline. 
+In oder to do so, you have to:
 
 1. Create a toplevel directory that has any name you like.
 2. Download the code in `./kernighan_lin` (from this repo) and store it (locally on your system) in a folder called **kernighan_lin** located in your toplevel directory.
