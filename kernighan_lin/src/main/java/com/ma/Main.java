@@ -17,13 +17,11 @@ public class Main {
         String s = currentRelativePath.toAbsolutePath().toString();
         System.out.println("Current relative path is: " + s);
 
-        Graph g = new Graph();
-
+        //Graph g = new Graph();
         System.out.println("Loading relevant input data...");
         System.out.println();
-        new VertexReader(dataset + "_sim.dat", g);
-        new TrajectoryLabelReader(dataset + "_labels.txt", g);
-        new NeighborhoodReader(dataset + "_spnn.txt", g);
+        Graph g = new Graph(dataset);
+      
         long tillLoadTime = System.currentTimeMillis();
         System.out.println("Loading data took " + (tillLoadTime - startTime) / 1000.0 + " seconds");
         System.out.println("Computing the graph partitioning...");

@@ -16,6 +16,32 @@ public class Graph {
     public Graph() {
     }
 
+    
+    //put all loading into constructor, to make sure
+    //the similarity matrix is always set to 0 for all non connected edges.
+    public Graph(String dataset) {
+        new VertexReader(dataset + "_sim.dat", this);
+        new TrajectoryLabelReader(dataset + "_labels.txt", this);
+        new NeighborhoodReader(dataset + "_spnn.txt", this);
+        
+        //fill in only the nonzero elements in  a new matrix.
+        float[][] tmp_similarity_matrix = new float[vertexCount()][vertexCount()];
+        for(Vertex v : vertices){
+        	for(Vertex w : v.neighbors){
+        		tmp_similarity_matrix[v.getId()][w.getId()] = v.similarities[w.getId()];
+        		tmp_similarity_matrix[w.getId()][v.getId()] = w.similarities[v.getId()];
+        	}
+        }
+        //and copy the new similarities back.
+        for(Vertex v : vertices){
+        	v.setSimilarities(tmp_similarity_matrix[v.getId()]);
+        }
+	}
+
+
+	public float gain(Vertex a, Vertex b){
+    	return a.getDValue() + b.getDValue() - 2.0f * getWeight(a.getId(), b.getId());
+    }
     public float getWeight(int idxa, int idxb) {
         return vertices.get(idxa).similarities[idxb];
     }

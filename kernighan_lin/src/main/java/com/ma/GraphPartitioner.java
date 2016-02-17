@@ -1,6 +1,10 @@
 package com.ma;
 
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,6 +42,27 @@ public class GraphPartitioner {
         }
 
     }
+    
+    void dumpDValueHistogram(Graph g){
+    	 try {
+    		 File f = new File("./temp_debug.m");
+    		 System.out.println("Dumpig debug .m file in: " + f.getAbsolutePath());
+    		 
+			BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
+			writer.write("Vals = [");
+			for(Vertex v: graph.vertices){
+				writer.write("" + v.getDValue() + "\n");
+			}
+			
+			writer.write("]; cdfplot(Vals);");
+			writer.flush();
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
     public void runKernighanLin() {
         float max_gv = 0.0f;
@@ -50,6 +75,8 @@ public class GraphPartitioner {
             for (Vertex v : graph.vertices) {
                 v.computeD(setA, setB);
             }
+            
+            dumpDValueHistogram(graph);//ok, i guess.
 
             for (int n = 0; n < (graph.vertexCount() / 2) + 1; n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
@@ -66,41 +93,31 @@ public class GraphPartitioner {
 
                 Vertex topA = sortedByDvalueA.get(lastAIndex);
                 Vertex topB = sortedByDvalueB.get(lastBIndex);
-                int bestIter = 0;
-                float g = 0.0f;
-                for (int idx = 1; idx < Math.min(lastAIndex, lastBIndex); idx++) {
-
-                    int idxa = lastAIndex - idx;
-                    int idxb = lastBIndex - idx;
-
-                    Vertex topANext = sortedByDvalueA.get(idxa);
-                    Vertex topBNext = sortedByDvalueB.get(idxb);
-
-                    float e_ab = graph.getWeight(topA.getId(), topB.getId());
-                    float e_ab_next = graph.getWeight(topA.getId(), topB.getId());
-                    g = topA.getDValue() + topB.getDValue() - 2.0f * e_ab;
-                    float g_next = topANext.getDValue() + topBNext.getDValue() - 2.0f * e_ab_next;
-
-                    if (g_next > g) {
-                        topA = topANext;
-                        topB = topBNext;
-                        bestIter++;
-                    } else {
-                        break;
-                    }
+                //could and should be sped up...
+                //for now just n^2 double loop.
+                float maxgain = graph.gain(topA, topB);
+                float candidate_gain;
+                for(int idxa = lastAIndex; idxa >= 0; idxa --){
+                	Vertex candidateA = sortedByDvalueA.get(idxa);
+                	 for(Vertex candidateB : candidateA.neighbors){
+                		 candidate_gain = graph.gain(candidateA, candidateB);
+                         
+                         //can be sped up with a break here if the candidates are sorted by potential gain
+                         if(candidate_gain > maxgain){
+                        	 maxgain = candidate_gain;
+                        	 topA = candidateA;
+                        	 topB = candidateB;
+                         }
+                         
+                     }
                 }
-
-                if (bestIter == 0) {
-                    float e_ab = graph.getWeight(topA.getId(), topB.getId());
-                    g = topA.getDValue() + topB.getDValue() - 2.0f * e_ab;
-                }
-
+    
                 // remove a and b from further consideration in this pass
                 setA.remove(topA);
                 setB.remove(topB);
 
                 // add g to gv, a to av, and b to bv
-                gv.add(n, g);
+                gv.add(n, maxgain);
                 av.add(n, topA);
                 bv.add(n, topB);
 
@@ -144,4 +161,5 @@ public class GraphPartitioner {
             v.setPartition(1);
         }
     }
+
 }

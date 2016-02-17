@@ -18,6 +18,8 @@ public abstract class GraphFileReader {
         this.graph = graph;
         String baseFileName = basePath + fname;
 
+        File f = new File(baseFileName);
+        System.out.println("Expecting data in Folder : " + f.getAbsolutePath());
         checkFileExists(baseFileName);
         assignNumberofLines(baseFileName);
 

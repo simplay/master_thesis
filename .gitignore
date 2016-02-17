@@ -25,3 +25,4 @@ xml_to_flo/input
 xml_to_flo/output
 tracking/fast_bfilt/*
 tags.*
+*.class
