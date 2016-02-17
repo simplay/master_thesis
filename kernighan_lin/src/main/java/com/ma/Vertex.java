@@ -28,6 +28,14 @@ public class Vertex implements Comparable<Vertex> {
         this.partitionSetLabel = -1;
     }
 
+    public void setPartitionSetLabel(int label) {
+        this.partitionSetLabel = label;
+    }
+
+    public int getPartitionSetLabel() {
+        return partitionSetLabel;
+    }
+
     public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
 
         for (Vertex v_i : internalSet) {

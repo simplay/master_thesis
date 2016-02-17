@@ -34,11 +34,16 @@ public class GraphPartitioner {
         int leftHalf = n / 2;
 
         for (int a_l = 0; a_l < leftHalf; a_l++) {
-            setA.add(graph.vertices.get(a_l));
+            Vertex v = graph.vertices.get(a_l);
+            v.setPartitionSetLabel(0);
+            setA.add(v);
+
         }
 
         for (int b_l = leftHalf; b_l < n; b_l++) {
-            setB.add(graph.vertices.get(b_l));
+            Vertex v = graph.vertices.get(b_l);
+            v.setPartitionSetLabel(1);
+            setB.add(v);
         }
 
     }
