@@ -105,8 +105,8 @@ public class GraphPartitioner {
                 bv.add(n, topB);
 
                 // update D values for the elements of A = A \ a and B = B \ b
-                topA.updateDValuesOfNeighbors(setA, setB);
-                topB.updateDValuesOfNeighbors(setB, setA);
+                //topA.updateDValuesOfNeighbors(setA, setB);
+                //topB.updateDValuesOfNeighbors(setB, setA);
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
@@ -134,7 +134,7 @@ public class GraphPartitioner {
             }
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
-        } while ((max_gv > 0.0f) && (iter < MAXITER));
+        } while ((max_gv > 0.0f) && (iter < 5));
 
         for (Vertex v : av) {
             v.setPartition(0);
