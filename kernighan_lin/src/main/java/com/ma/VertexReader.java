@@ -1,10 +1,12 @@
 package com.ma;
 
+
 /**
  * Created by simplay on 15/02/16.
  */
 public class VertexReader extends GraphFileReader {
     private int processedLineCount = 0;
+
     public VertexReader(String fname, Graph graph) {
         super(fname, graph);
     }

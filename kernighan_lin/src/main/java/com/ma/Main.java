@@ -1,4 +1,6 @@
 package com.ma;
+
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -23,18 +25,18 @@ public class Main {
         new TrajectoryLabelReader(dataset + "_labels.txt", g);
         new NeighborhoodReader(dataset + "_spnn.txt", g);
         long tillLoadTime = System.currentTimeMillis();
-        System.out.println("Loading data took " + (tillLoadTime-startTime)/1000.0 + " seconds");
+        System.out.println("Loading data took " + (tillLoadTime - startTime) / 1000.0 + " seconds");
         System.out.println("Computing the graph partitioning...");
         System.out.println();
 
         new GraphPartitioner(g).runKernighanLin();
         long tillPartitioningTime = System.currentTimeMillis();
-        System.out.println("Graph partitioning took " + (tillPartitioningTime-tillLoadTime)/1000.0 + " seconds");
+        System.out.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
 
         // TODO: output computed graph partitioning
         System.out.println("Storing computed partition...");
-        g.savePartitionToFile(baseOutputPath+dataset+"_part.txt");
+        g.savePartitionToFile(baseOutputPath + dataset + "_part.txt");
         long totalTime = System.currentTimeMillis();
-        System.out.println("Total elapsed time: " + (totalTime-startTime)/1000.0 + " seconds");
+        System.out.println("Total elapsed time: " + (totalTime - startTime) / 1000.0 + " seconds");
     }
 }

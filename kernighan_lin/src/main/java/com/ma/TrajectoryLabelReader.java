@@ -1,5 +1,6 @@
 package com.ma;
 
+
 /**
  * Created by simplay on 15/02/16.
  */
@@ -10,7 +11,8 @@ public class TrajectoryLabelReader extends GraphFileReader {
     }
 
     @Override
-    protected void stepsBeforeFileProcessing() {}
+    protected void stepsBeforeFileProcessing() {
+    }
 
     @Override
     protected void stepsAfterFileProcessing() {

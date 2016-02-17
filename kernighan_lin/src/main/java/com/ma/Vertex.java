@@ -1,6 +1,6 @@
 package com.ma;
 
-import java.util.Comparator;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by simplay on 15/02/16.
  */
-public class Vertex implements Comparable<Vertex>{
+public class Vertex implements Comparable<Vertex> {
 
     private int id;
     private int partitionLabel;
@@ -52,7 +52,7 @@ public class Vertex implements Comparable<Vertex>{
     public void computeD(HashSet<Vertex> setA, HashSet<Vertex> setB) {
 
         // select all adjacent internal vertices.
-        List<Vertex> internalNeighbors =  new LinkedList<>();
+        List<Vertex> internalNeighbors = new LinkedList<>();
         for (Vertex v_a : setA) {
             if (neighbors.contains(v_a)) {
                 internalNeighbors.add(v_a);
@@ -60,7 +60,7 @@ public class Vertex implements Comparable<Vertex>{
         }
 
         // select all adjacent external vertices.
-        List<Vertex> externalNeighbors =  new LinkedList<>();
+        List<Vertex> externalNeighbors = new LinkedList<>();
         for (Vertex v_a : setB) {
             if (neighbors.contains(v_a)) {
                 externalNeighbors.add(v_a);
@@ -123,14 +123,13 @@ public class Vertex implements Comparable<Vertex>{
         }
     }
 
-    @Override
     //returns -1 if "this" object is less than "that" object
     //returns 0 if they are equal
     //returns 1 if "this" object is greater than "that" object
     public int compareTo(Vertex o) {
         if (dValue < o.dValue) {
             return -1;
-        } else if(dValue == o.dValue) {
+        } else if (dValue == o.dValue) {
             return 0;
         } else {
             return 1;

@@ -1,7 +1,7 @@
 package com.ma;
 
+
 import java.io.*;
-import java.util.stream.Stream;
 
 /**
  * Created by simplay on 15/02/16.
@@ -14,9 +14,9 @@ public abstract class GraphFileReader {
     // File path where all computed trajectory similarity data is located at.
     private final String basePath = "../output/similarities/";
 
-    public GraphFileReader(String fname, Graph graph){
+    public GraphFileReader(String fname, Graph graph) {
         this.graph = graph;
-        String baseFileName = basePath+fname;
+        String baseFileName = basePath + fname;
 
         checkFileExists(baseFileName);
         assignNumberofLines(baseFileName);
@@ -32,7 +32,7 @@ public abstract class GraphFileReader {
 
         String strLine;
         try {
-            while ((strLine = br.readLine()) != null)   {
+            while ((strLine = br.readLine()) != null) {
                 processFileLine(strLine);
             }
         } catch (IOException e) {

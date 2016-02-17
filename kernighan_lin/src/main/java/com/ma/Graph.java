@@ -1,5 +1,6 @@
 package com.ma;
 
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -12,7 +13,8 @@ public class Graph {
 
     public final List<Vertex> vertices = new ArrayList<Vertex>();
 
-    public Graph() {}
+    public Graph() {
+    }
 
     public float getWeight(int idxa, int idxb) {
         return vertices.get(idxa).similarities[idxb];
@@ -48,7 +50,7 @@ public class Graph {
     }
 
     public void inspectSimilaritiesForVertex(int id) {
-        for(Float t : vertices.get(id).similarities) {
+        for (Float t : vertices.get(id).similarities) {
             System.out.print(t + " ");
         }
     }
@@ -73,9 +75,9 @@ public class Graph {
      */
     public void savePartitionToFile(String fPathName) {
         try {
-            try( PrintWriter out = new PrintWriter(fPathName) ){
+            try (PrintWriter out = new PrintWriter(fPathName)) {
                 for (Vertex v : vertices) {
-                    String line = v.getTrajectoryId() + "," +v.getPartitionLabel();
+                    String line = v.getTrajectoryId() + "," + v.getPartitionLabel();
                     out.println(line);
                 }
             }

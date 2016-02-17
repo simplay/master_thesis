@@ -1,5 +1,6 @@
 package com.ma;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,7 +8,7 @@ import java.util.List;
 
 /**
  * Solving the graph partitioning problem using the Kernighan–Lin algorithm is a heuristic algorithm.
- *
+ * <p>
  * Created by simplay on 16/02/16.
  */
 public class GraphPartitioner {
@@ -43,11 +44,11 @@ public class GraphPartitioner {
 
         do {
             // compute D values for all a in A and b in B
-            for(Vertex v : graph.vertices) {
+            for (Vertex v : graph.vertices) {
                 v.computeD(setA, setB);
             }
 
-            for (int n = 0; n < (graph.vertexCount()/2) + 1; n++) {
+            for (int n = 0; n < (graph.vertexCount() / 2) + 1; n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = new ArrayList(setA);
@@ -66,16 +67,16 @@ public class GraphPartitioner {
                 float g = 0.0f;
                 for (int idx = 1; idx < Math.min(lastAIndex, lastBIndex); idx++) {
 
-                    int idxa = lastAIndex-idx;
-                    int idxb = lastBIndex-idx;
+                    int idxa = lastAIndex - idx;
+                    int idxb = lastBIndex - idx;
 
                     Vertex topANext = sortedByDvalueA.get(idxa);
                     Vertex topBNext = sortedByDvalueB.get(idxb);
 
                     float e_ab = graph.getWeight(topA.getId(), topB.getId());
                     float e_ab_next = graph.getWeight(topA.getId(), topB.getId());
-                    g = topA.getDValue() + topB.getDValue() - 2.0f*e_ab;
-                    float g_next = topANext.getDValue() + topBNext.getDValue() - 2.0f*e_ab_next;
+                    g = topA.getDValue() + topB.getDValue() - 2.0f * e_ab;
+                    float g_next = topANext.getDValue() + topBNext.getDValue() - 2.0f * e_ab_next;
 
                     if (g_next > g) {
                         topA = topANext;
@@ -119,18 +120,18 @@ public class GraphPartitioner {
             }
 
             if (max_gv > 0.0f) {
-              // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
-              // TODO: is here an check necessary? k
-              for (int k = 0; k_idx <= k; k++) {
-                  // perform a vertex swap
-                  Vertex tmp = av.get(k);
-                  av.set(k, bv.get(k));
-                  bv.set(k, tmp);
-              }
+                // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
+                // TODO: is here an check necessary? k
+                for (int k = 0; k_idx <= k; k++) {
+                    // perform a vertex swap
+                    Vertex tmp = av.get(k);
+                    av.set(k, bv.get(k));
+                    bv.set(k, tmp);
+                }
             }
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
-        } while( (max_gv > 0.0f) && (iter < MAXITER) );
+        } while ((max_gv > 0.0f) && (iter < MAXITER));
 
         for (Vertex v : av) {
             v.setPartition(0);
