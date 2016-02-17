@@ -19,3 +19,9 @@ segmentantation/**/*.zip
 flow/srsf/Images/**
 *.zip
 testcase/data/
+flow_var/
+normalize_sensor_data/
+xml_to_flo/input
+xml_to_flo/output
+tracking/fast_bfilt/*
+tags.*
