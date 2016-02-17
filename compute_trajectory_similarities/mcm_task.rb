@@ -68,7 +68,6 @@ class McmTask < SimilarityTask
     u = upper_idx-timestep #[upper_idx-timestep, upper_idx - DT_THREH].max
     l = lower_idx
     return [] if u < l # when forward diff cannot be computed
-    binding.pry
     # compute average spatial distance between 2 trajectories
     # over all overalapping segments.
     d_sp_a_b = avg_spatial_distance_between(a, b, l, u)
