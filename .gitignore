@@ -13,3 +13,4 @@ compute_trajectory_similarities/src/
 testcase/*.png
 output/**/*.*
 data/**/*.*
+*.class
