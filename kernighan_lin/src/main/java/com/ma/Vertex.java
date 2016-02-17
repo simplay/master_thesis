@@ -103,7 +103,9 @@ public class Vertex implements Comparable<Vertex> {
      */
     public void appendNearestNeighbord(Vertex v) {
         if (v != null) {
-            neighbors.add(v);
+            if (!neighbors.contains(v)) {
+                neighbors.add(v);
+            }
         }
     }
 
@@ -134,6 +136,15 @@ public class Vertex implements Comparable<Vertex> {
         } else {
             return 1;
         }
+    }
+
+    public String toString() {
+        String neighborsNames = "[ ";
+        for (Vertex v : neighbors) {
+            neighborsNames += v.getId() + " ";
+        }
+        neighborsNames += " ]";
+        return id+ "=>" + neighborsNames;
     }
 
 }

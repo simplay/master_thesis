@@ -38,13 +38,19 @@ public class Graph {
         v.setSimilarities(similarities);
     }
 
-    public void assignNearestNeighborsForVertex(int trajectoryId, String[] neighborIndices) {
-        Vertex v = findVertexByTrajectoryId(trajectoryId);
+    /**
+     *
+     * @param idx vertex idx
+     * @param neighborIndices
+     */
+    public void assignNearestNeighborsForVertex(int idx, String[] neighborIndices) {
+        Vertex v = vertices.get(idx);
         if (v != null) {
             for (String nnIndexIdentifiers : neighborIndices) {
                 int nnIdx = Integer.parseInt(nnIndexIdentifiers);
                 Vertex neighborVertex = findVertexByTrajectoryId(nnIdx);
                 v.appendNearestNeighbord(neighborVertex);
+                neighborVertex.appendNearestNeighbord(v);
             }
         }
     }

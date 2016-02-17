@@ -22,6 +22,7 @@ public class GraphPartitioner {
     private final int MAXITER = 100;
 
     public GraphPartitioner(Graph graph) {
+
         this.graph = graph;
 
         // determine a balanced initial partition of the nodes into sets A and B
@@ -41,6 +42,8 @@ public class GraphPartitioner {
     public void runKernighanLin() {
         float max_gv = 0.0f;
         int iter = 0;
+
+
 
         do {
             // compute D values for all a in A and b in B

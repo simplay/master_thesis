@@ -6,7 +6,7 @@ package com.ma;
  */
 public class NeighborhoodReader extends GraphFileReader {
 
-    private int lineCounter;
+    private int lineCounter = 0;
 
     public NeighborhoodReader(String fname, Graph graph) {
         super(fname, graph);
