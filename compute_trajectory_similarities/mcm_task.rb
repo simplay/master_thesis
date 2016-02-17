@@ -14,6 +14,7 @@ class McmTask < SimilarityTask
   P = 0.5
 
   # alternative approach described in formula (7)
+  # returns distances
   def similarity(a, b)
     return EIGENSIM_VALUE if a == b
     # Find overlapping part of two given trajectories:
@@ -37,13 +38,13 @@ class McmTask < SimilarityTask
       BETA_0 + BETA_1*d_motion
     ]
     prior_probs = Math.log(P_BAR / (1.0-P_BAR)) - Math.log(P/(1.0-P))
-    z_AB = z_ABs.max + prior_probs
+    z_AB = z_ABs.max
 
     p_e = 1.0 / (1.0 + Math.exp(-z_AB))
 
     # edge weight is the minus logit funtion
-    # -Math.log(p_e / (1.0 - p_e))
-
+    #-Math.log(p_e / (1.0 - p_e))
+    -(z_AB + prior_probs)
   end
 
   def color_dist(a, b, lower_idx, upper_idx)
