@@ -144,7 +144,16 @@ public class Vertex implements Comparable<Vertex> {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";
-        return id+ "=>" + neighborsNames;
+        return id+ "=>" + neighborsNames + "\n";
     }
+
+	public void setSimilarities(float[] fs) {
+		assert(fs.length ==  similarities.length);
+		 int idx = 0;
+        for (float sim : fs) {
+            similarities[idx] = sim;
+            idx++;
+        }
+	}
 
 }
