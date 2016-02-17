@@ -13,3 +13,9 @@ compute_trajectory_similarities/src/
 testcase/*.png
 output/**/*.*
 data/**/*.*
+segmentantation/**/*.ppm
+tracking/*.flo
+segmentantation/**/*.zip
+flow/srsf/Images/**
+*.zip
+testcase/data/
