@@ -18,13 +18,13 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 5;
+FORCE_EW_COUNT = 4;
 
-THRESH = 0.00001;
-CLUSTER_CENTER_COUNT =4;
+THRESH = 0.0000;
+CLUSTER_CENTER_COUNT =3;
 
 
-USE_W_VEC = false;
+USE_W_VEC = true;
 USE_CLUSTERING_CUE = false;
 
 SHOW_LOCAL_VAR = false;
@@ -32,7 +32,7 @@ VAR_IMG = 1;
 
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 302
-SELECTED_ENTITY_IDX = 5
+%SELECTED_ENTITY_IDX = 3
 frame_idx = 1;
 
 %%

@@ -49,9 +49,10 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
             %W = (exp(-w*(LAMBDA/f)));
             W = (exp(-w*(LAMBDA/f)*0.3));
         end
-        
+        %keyboard;
         WW = W + ones(size(W))*THRESH;
-
+        %WW = W + eye(size(W,1));
+        
         %WW = W + diag(THRESH*ones(size(W,1),1));
         
         %sW = sort(W,2, 'descend'); ten = sW(:,100); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
@@ -97,9 +98,11 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     %     end
 
         U_small = aggregate_mat_cols(U_small, aa);
-        S_small = d(aa)
+        S_small = d(aa);
         
-
+        % filter the eigenvector that belongs to eigenvalue 0
+        S_small = S_small(S_small > 0);
+        U_small = U_small(:,S_small > 0);
 
     end
 

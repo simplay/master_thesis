@@ -1,5 +1,5 @@
-function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices)
-%MIN_MULTI_GRAPH_CUT compute new cluster assignments of a given set of N
+function [label_assignments, energy] = mcm_solver(v, lambda, pa, mu, K, spnn_indices, p_e)
+%MCM_SOLVER compute new cluster assignments of a given set of N
 %nodes solving a MRF minimization problem.
 %
 % Bult a graph and find its min-cut. The graph vertices deptic either
@@ -25,16 +25,14 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
     % regularization parameter
     nu = 0.000001;%1e-10;
 
- %nu = 0.000000000001;%1e-10;
- 
- nu = 0.000000001;
+ nu = 60;%1e-10;
     % A CxN matrix specifying the potentials (data term) for each of the C
     % possible classes at each of the N nodes.
     unary = computeDataTerm(v, lambda, pa, mu, K);
     
     % A NxN sparse matrix sparse matrix specifiying the graph structure and
     % cost for each link between nodes in the graph.
-    full_pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu);
+    full_pairwise = computeSmoothnessTerm(v, pa, spnn_indices, nu, p_e);
     pairwise = sparse(full_pairwise);
 
     % A CxC matrix specifiying the label cost for the labels of each adjacent
@@ -57,11 +55,10 @@ end
 function data_term = computeDataTerm(v, lambda, pa, mu, K)
 % COMPUTE_DATA_TERM a CxN matrix specifying the potentials (data term) for each of the C
 % possible classes at each of the N nodes.
-    label_names = unique(pa);
+
     data_term = zeros(K, length(pa));
     for a = 1:length(pa)
-        for t=1:size(mu,1)
-            k = t;%label_names(t);
+        for k=1:K
             %delta_pa_k = pa == k;
             mu_k = mu(k, :);
             
@@ -79,7 +76,7 @@ end
 
 
 
-function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
+function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu, p_e)
 % COMPUTE_SMOOTHNESS_TERM A NxN sparse matrix sparse matrix specifiying the graph structure and
 % cost for each link between nodes in the graph.
 %
@@ -96,12 +93,8 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
     for a=1:length(pa)
         for bi=1:length(spnn_indices(1,:))
             b = spnn_indices(a,bi);
-            va = v(a,:);
-            vb = v(b,:);
-            del_sq = sqrt(sum((va-vb).^2));
-            sel_ab = 1;%-(pa(a) == pa(b));
-            smoothness_term(a,b) = smoothness_term(a,b) + nu*(sel_ab / del_sq);
-            smoothness_term(b,a) = smoothness_term(b,a) + nu*(sel_ab / del_sq);
+            smoothness_term(a,b) = smoothness_term(a,b) + nu*p_e(a,b);
+            smoothness_term(b,a) = smoothness_term(b,a) + nu*p_e(a,b);
         end
     end
     

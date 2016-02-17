@@ -1,5 +1,10 @@
 % c25 W = (exp(-w*(LAMBDA/f)*0.3)); works best
 
+% works best for
+% K=4:
+% DATASET = 'c14'; using c14 -d 1 -v 1
+% USE_CLUSER_EW_COUNT = true;
+% FORCE_EW_COUNT = 3;
 
 clc;
 %clear all;
@@ -10,6 +15,9 @@ addpath('../libs/GCMex/');
 DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
+
+
+
 COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
@@ -19,10 +27,11 @@ SHOULD_LOAD_W = true;
 PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
+SHOULD_FILTER_NEGATIVE_EW = false;
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 3;
+FORCE_EW_COUNT = 5;
 
-THRESH = 0.00001;
+THRESH = 0.0000;
 
 
 
@@ -133,8 +142,10 @@ img_index = frame_idx;
         S_small = d(aa);
         
         % filter the eigenvector that belongs to eigenvalue 0
-         S_small = S_small(S_small > 0);
-         U_small = U_small(:,S_small > 0);
+        if SHOULD_FILTER_NEGATIVE_EW
+            S_small = S_small(S_small > 0);
+            U_small = U_small(:,S_small > 0);
+        end
     end
 
     
@@ -172,6 +183,7 @@ img_index = frame_idx;
     label_assignments = zeros(length(W), 1);
     
     %%
+    USE_MCM = true;
     N = length(W);
     for K=4:4%4%min(20,2*m)
     
@@ -188,10 +200,15 @@ img_index = frame_idx;
         end
         
         % repeat until convergence, i.e. error is small
-        for t=1:6,  
+        for t=1:1,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
             centroids;
-            [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
+            
+            if USE_MCM
+                [label_assignments, energy] = mcm_solver( U_small, S_small, label_assignments, centroids, K, spnn_indices, W);
+            else
+                [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
+            end
             energy
             figure('name', num2str(t))
             display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
