@@ -13,6 +13,7 @@ public class Vertex implements Comparable<Vertex> {
     private int id;
     private int partitionLabel;
     private int trajectoryId;
+    private int partitionSetLabel;
 
     public final List<Vertex> neighbors = new LinkedList<Vertex>();
     public final float[] similarities;
@@ -24,6 +25,7 @@ public class Vertex implements Comparable<Vertex> {
         this.id = id;
         similarities = new float[vertexCount];
         this.partitionLabel = -1;
+        this.partitionSetLabel = -1;
     }
 
     public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
