@@ -34,7 +34,7 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         int n = graph.vertexCount();
         int leftHalf = n / 2;
-
+        boolean [] checklist = new boolean[graph.vertexCount()];
         int idx = 0;
         for(Vertex v : graph.vertices) {
             if (idx < n/2) {
@@ -42,16 +42,15 @@ public class GraphPartitioner {
             } else {
                 setB.add(v);
             }
+            checklist[v.getId()] = true;
             idx++;
         }
 
-        for (int a_l = 0; a_l < leftHalf; a_l++) {
-            setA.add(graph.vertices.get(a_l));
+        boolean total = true;
+        for (Boolean flag : checklist) {
+            total = total && flag;
         }
-
-        for (int b_l = leftHalf; b_l < n; b_l++) {
-            setB.add(graph.vertices.get(b_l));
-        }
+        System.out.println("Init: every vertex is falgged: " + total);
 
     }
     
@@ -100,7 +99,10 @@ public class GraphPartitioner {
             
             dumpDValueHistogram(graph);//ok, i guess.
 
-            for (int n = 0; n < (graph.vertexCount() / 2) + 1; n++) {
+            // iterate only over n := |V|/2:
+            // if n even, then iterate till n/2 => center of the range 1..4 is the value 2
+            // if n odd, then iterate till floor(n/2) + 1 => center of the range 1..3 is the value 2
+            for (int n = 0; n < (int)Math.ceil(graph.vertexCount() / 2); n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
@@ -155,6 +157,8 @@ public class GraphPartitioner {
                     max_gv += gv_value;
                     k_idx++;
                 } else {
+                    // correct index, since until previous, max_gv was maximal
+                    // and the new index value (the current index) resulted in a worse energy.
                     k_idx--;
                     break;
                 }
@@ -173,14 +177,21 @@ public class GraphPartitioner {
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
-
+        boolean [] checklist = new boolean[graph.vertexCount()];
         for (Vertex v : av_copy) {
             v.setPartition(0);
+            checklist[v.getId()] = true;
         }
 
         for (Vertex v : bv_copy) {
             v.setPartition(1);
+            checklist[v.getId()] = true;
         }
+        boolean total = true;
+        for (Boolean flag : checklist) {
+            total = total && flag;
+        }
+        System.out.println("every vertex is falgged: " + total);
     }
 
 }

@@ -109,7 +109,10 @@ public class Graph {
         try {
             try (PrintWriter out = new PrintWriter(fPathName)) {
                 for (Vertex v : vertices) {
-                    String line = v.getTrajectoryId() + "," + v.getPartitionLabel();
+                    int labelValue = v.getPartitionLabel();
+                    // TODO: this is some kind of hotfix which is supposed not to be correct
+                    if (labelValue == -1) labelValue = v.getPartitionSetLabel();
+                    String line = v.getTrajectoryId() + "," + labelValue;
                     out.println(line);
                 }
             }
