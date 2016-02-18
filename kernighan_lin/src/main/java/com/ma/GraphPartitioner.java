@@ -37,7 +37,7 @@ public class GraphPartitioner {
         boolean [] checklist = new boolean[graph.vertexCount()];
         int idx = 0;
         for(Vertex v : graph.vertices) {
-            if (idx < n/2) {
+            if (idx % 2 == 0) {
                 setA.add(v);
             } else {
                 setB.add(v);
@@ -103,6 +103,7 @@ public class GraphPartitioner {
             // if n even, then iterate till n/2 => center of the range 1..4 is the value 2
             // if n odd, then iterate till floor(n/2) + 1 => center of the range 1..3 is the value 2
             for (int n = 0; n < (int)Math.ceil(graph.vertexCount() / 2); n++) {
+            //for (int n = 0; n < graph.vertexCount(); n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
@@ -122,17 +123,17 @@ public class GraphPartitioner {
                 	Vertex candidateA = sortedByDvalueA.get(idxa);
                 	 for(Vertex candidateB : candidateA.neighbors){
                 		 candidate_gain = graph.gain(candidateA, candidateB);
-                         
+
                          //can be sped up with a break here if the candidates are sorted by potential gain
                          if(candidate_gain > maxgain){
                         	 maxgain = candidate_gain;
                         	 topA = candidateA;
                         	 topB = candidateB;
                          }
-                         
+
                      }
                 }
-    
+
                 // remove a and b from further consideration in this pass
                 setA.remove(topA);
                 setB.remove(topB);

@@ -21,6 +21,8 @@ public class PartitionSet implements Iterable<Vertex> {
     public void add(Vertex v) {
         vertices.add(v);
         v.setPartitionSetLabel(label);
+        // TODO is this correct?
+        v.setPartition(label);
     }
 
     public boolean remove(Vertex v) {

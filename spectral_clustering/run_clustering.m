@@ -8,7 +8,12 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     % USE_CLUSTERING_CUE false && USE_W_VEC => display eigenvectors
     %     USE_W_VEC = false;
     %     USE_CLUSTERING_CUE = true;
-
+    
+    
+    KERNIGHAN_LIN = true;
+    
+    
+    
     addpath('../libs/flow-code-matlab');
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
@@ -161,8 +166,13 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
             disp(['Selected label with index ',num2str(col_sel)])
         end
         
-        if USE_CLUSTERING_CUE    
-            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);
+        if USE_CLUSTERING_CUE
+            if KERNIGHAN_LIN
+                [trajectory_identifiers, label_assignments] = textread('../output/graph_part/c14_part.txt','%f %f','delimiter', ',');
+                label_assignments = label_assignments + 1;
+            else
+                [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);
+            end
             display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
             write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
         else
