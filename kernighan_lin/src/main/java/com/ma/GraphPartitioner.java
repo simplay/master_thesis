@@ -23,6 +23,8 @@ public class GraphPartitioner {
     private final List<Float> gv = new ArrayList<>();
     private final List<Vertex> av = new ArrayList<>();
     private final List<Vertex> bv = new ArrayList<>();
+    private ArrayList<Vertex> av_copy;
+    private ArrayList<Vertex> bv_copy;
     private final int MAXITER = 100;
 
     public GraphPartitioner(Graph graph) {
@@ -32,6 +34,16 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         int n = graph.vertexCount();
         int leftHalf = n / 2;
+
+        int idx = 0;
+        for(Vertex v : graph.vertices) {
+            if (idx < n/2) {
+                setA.add(v);
+            } else {
+                setB.add(v);
+            }
+            idx++;
+        }
 
         for (int a_l = 0; a_l < leftHalf; a_l++) {
             setA.add(graph.vertices.get(a_l));
@@ -71,7 +83,16 @@ public class GraphPartitioner {
         float max_gv = 0.0f;
         int iter = 0;
 
+
+
         do {
+            av_copy = new ArrayList<>(av);
+            bv_copy = new ArrayList<>(bv);
+
+            av.clear();
+            bv.clear();
+            gv.clear();
+
             // compute D values for all a in A and b in B
             for (Vertex v : graph.vertices) {
                 v.computeD();
@@ -127,17 +148,19 @@ public class GraphPartitioner {
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
 
             // TODO: should k_idx be set to -1 instead, to avoid unnecessary swaps?
-            int k_idx = 0;
+            int k_idx = -1;
+            max_gv = 0.0f;
             for (Float gv_value : gv) {
-                if (max_gv <= gv_value + max_gv) {
+                if (max_gv < gv_value + max_gv) {
                     max_gv += gv_value;
                     k_idx++;
                 } else {
+                    k_idx--;
                     break;
                 }
             }
 
-            if (max_gv > 0.0f) {
+            if (max_gv > 0.0f && k_idx > -1) {
                 // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
                 // TODO: is here an check necessary? k
                 for (int k = 0; k_idx <= k; k++) {
@@ -151,11 +174,11 @@ public class GraphPartitioner {
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
-        for (Vertex v : av) {
+        for (Vertex v : av_copy) {
             v.setPartition(0);
         }
 
-        for (Vertex v : bv) {
+        for (Vertex v : bv_copy) {
             v.setPartition(1);
         }
     }

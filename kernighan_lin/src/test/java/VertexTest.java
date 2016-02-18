@@ -12,15 +12,15 @@ public class VertexTest {
     Vertex v2;
     Vertex v3;
 
-    HashSet<Vertex> setA;
-    HashSet<Vertex> setB;
+    PartitionSet setA;
+    PartitionSet setB;
 
     @Before
     public void setUp() {
         g = new Graph();
         int vCount = 3;
-        setA = new HashSet<>();
-        setB = new HashSet<>();
+        setA = new PartitionSet();
+        setB = new PartitionSet();
 
         v1 = new Vertex(0, vCount);
         float[] sim1 = {0.0f, 2.0f, 1.0f};
@@ -50,10 +50,6 @@ public class VertexTest {
         setA.add(v1);
         setB.add(v2);
         setB.add(v3);
-
-        v1.setPartitionSetLabel(0);
-        v2.setPartitionSetLabel(1);
-        v3.setPartitionSetLabel(1);
     }
 
     @Test
