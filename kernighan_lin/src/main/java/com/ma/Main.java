@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 
 public class Main {
 
+    public static boolean DUMP_DATA = false;
+
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
@@ -17,7 +19,6 @@ public class Main {
         String s = currentRelativePath.toAbsolutePath().toString();
         System.out.println("Current relative path is: " + s);
 
-        //Graph g = new Graph();
         System.out.println("Loading relevant input data...");
         System.out.println();
         Graph g = new Graph(dataset);

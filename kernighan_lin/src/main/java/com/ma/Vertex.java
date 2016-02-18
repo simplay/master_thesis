@@ -46,14 +46,9 @@ public class Vertex implements Comparable<Vertex> {
         return labelNeighbors;
     }
 
-    public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
-
-        for (Vertex v_i : internalSet) {
-            v_i.computeD();
-        }
-
-        for (Vertex v_e : externalSet) {
-            v_e.computeD();
+    public void updateDValuesOfNeighbors() {
+        for (Vertex v : neighbors) {
+            v.computeD();
         }
     }
 
@@ -74,17 +69,15 @@ public class Vertex implements Comparable<Vertex> {
         float E_a = 0.0f;
 
         for(Vertex v : neighbors) {
-            if (v.getPartitionSetLabel() != getPartitionSetLabel() ) {
-                E_a += v.similarities[getId()];
-            }
-        }
+            // skip vertices with no partition set label
+            if (v.getPartitionSetLabel() == -1) continue;
 
-        for(Vertex v : neighbors) {
-            if (v.getPartitionSetLabel() == getPartitionSetLabel() ) {
+            if (v.getPartitionSetLabel() != getPartitionSetLabel()) {
+                E_a += v.similarities[getId()];
+            } else {
                 I_a += v.similarities[getId()];
             }
         }
-
         this.dValue = E_a - I_a;
     }
 

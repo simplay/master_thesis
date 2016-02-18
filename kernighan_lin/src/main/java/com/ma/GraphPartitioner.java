@@ -49,32 +49,33 @@ public class GraphPartitioner {
     }
     
     void dumpDValueHistogram(Graph g){
-    	 try {
-    		 File f = new File("./temp_debug.m");
-    		 System.out.println("Dumpig debug .m file in: " + f.getAbsolutePath());
-    		 
-			BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
-			writer.write("Vals = [");
-			for(Vertex v: graph.vertices){
-				writer.write("" + v.getDValue() + "\n");
-			}
-			
-			writer.write("]; cdfplot(Vals);");
-			writer.flush();
-			writer.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        if (!Main.DUMP_DATA) return;
+
+        try {
+            File f = new File("./temp_debug.m");
+            System.out.println("Dumpig debug .m file in: " + f.getAbsolutePath());
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
+            writer.write("Vals = [");
+
+            for(Vertex v: graph.vertices){
+                writer.write("" + v.getDValue() + "\n");
+            }
+
+            writer.write("]; cdfplot(Vals);");
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void runKernighanLin() {
         float max_gv = 0.0f;
         int iter = 0;
-
-
-
+        
         do {
             // compute D values for all a in A and b in B
             for (Vertex v : graph.vertices) {
@@ -129,8 +130,8 @@ public class GraphPartitioner {
                 // update D values for the elements of A = A \ a and B = B \ b
                 topA.setPartitionSetLabel(-1);
                 topB.setPartitionSetLabel(-1);
-                topA.updateDValuesOfNeighbors(setA, setB);
-                topB.updateDValuesOfNeighbors(setB, setA);
+                topA.updateDValuesOfNeighbors();
+                topB.updateDValuesOfNeighbors();
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
