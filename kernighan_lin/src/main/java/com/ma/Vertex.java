@@ -36,6 +36,16 @@ public class Vertex implements Comparable<Vertex> {
         return partitionSetLabel;
     }
 
+    public LinkedList<Vertex> getNeighborsWithSetLabel(int setLabel) {
+        LinkedList<Vertex> labelNeighbors = new LinkedList<>();
+        for (Vertex v : neighbors) {
+            if (v.partitionSetLabel == setLabel) {
+                labelNeighbors.add(v);
+            }
+        }
+        return labelNeighbors;
+    }
+
     public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
 
         for (Vertex v_i : internalSet) {
@@ -62,29 +72,19 @@ public class Vertex implements Comparable<Vertex> {
     public void computeD(HashSet<Vertex> setA, HashSet<Vertex> setB) {
 
         // select all adjacent internal vertices.
-        List<Vertex> internalNeighbors = new LinkedList<>();
-        for (Vertex v_a : setA) {
-            if (neighbors.contains(v_a)) {
-                internalNeighbors.add(v_a);
-            }
-        }
-
-        // select all adjacent external vertices.
-        List<Vertex> externalNeighbors = new LinkedList<>();
-        for (Vertex v_a : setB) {
-            if (neighbors.contains(v_a)) {
-                externalNeighbors.add(v_a);
-            }
-        }
-
         float I_a = 0.0f;
-        for (Vertex i_v : internalNeighbors) {
-            I_a += similarities[i_v.id];
+        float E_a = 0.0f;
+
+        for(Vertex v : neighbors) {
+            if (v.getPartitionSetLabel() != getPartitionSetLabel() ) {
+                E_a += v.similarities[getId()];
+            }
         }
 
-        float E_a = 0.0f;
-        for (Vertex e_v : externalNeighbors) {
-            E_a += similarities[e_v.id];
+        for(Vertex v : neighbors) {
+            if (v.getPartitionSetLabel() == getPartitionSetLabel() ) {
+                I_a += v.similarities[getId()];
+            }
         }
 
         this.dValue = E_a - I_a;

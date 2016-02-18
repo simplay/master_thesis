@@ -1,10 +1,6 @@
 import com.ma.*;
 import org.junit.*;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.junit.Assert.*;
 
 public class GraphTests {
     private Graph g;
