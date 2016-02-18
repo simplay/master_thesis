@@ -1,6 +1,8 @@
 import com.ma.*;
 import org.junit.*;
 
+import static junit.framework.TestCase.assertEquals;
+
 
 public class GraphTests {
     private Graph g;
@@ -17,7 +19,7 @@ public class GraphTests {
     @Test
     public void testEachVetexHasAssignedSimilarityToOtherVertex() {
         for (Vertex v : g.vertices) {
-            assert(v.similarities.length == g.vertexCount());
+            assertEquals(v.similarities.length, g.vertexCount());
         }
     }
 
@@ -28,7 +30,7 @@ public class GraphTests {
             for (Float sim : v.similarities) {
                 Vertex other = g.vertices.get(idx);
                 float other_sim = other.similarities[v.getId()];
-                assert(other_sim == sim);
+                assertEquals(other_sim, sim);
                 idx++;
             }
         }
@@ -37,7 +39,7 @@ public class GraphTests {
     @Test
     public void testDiagIsZero() {
         for (Vertex v : g.vertices) {
-            assert (v.similarities[v.getId()] == 0.0f);
+            assertEquals(v.similarities[v.getId()], 0.0f);
         }
     }
 
@@ -51,7 +53,7 @@ public class GraphTests {
                 }
             }
         }
-        assert (min < 0);
+        assertEquals(true, min < 0);
     }
 
 }

@@ -58,7 +58,7 @@ public class VertexTest {
 
     @Test
     public void testDValue() {
-        v1.computeD(setA, setB);
+        v1.computeD();
 
         float I_a1 = 0.0f;
         float E_a1 = 0.0f;
@@ -76,7 +76,7 @@ public class VertexTest {
         }
         assertEquals(E_a1-I_a1, v1.getDValue());
 
-        v2.computeD(setA, setB);
+        v2.computeD();
 
         float I_a2 = 0.0f;
         float E_a2 = 0.0f;
@@ -94,7 +94,7 @@ public class VertexTest {
         }
         assertEquals(E_a2-I_a2, v2.getDValue());
 
-        v3.computeD(setA, setB);
+        v3.computeD();
 
         float I_a3 = 0.0f;
         float E_a3 = 0.0f;

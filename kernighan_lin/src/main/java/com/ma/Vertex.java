@@ -49,11 +49,11 @@ public class Vertex implements Comparable<Vertex> {
     public void updateDValuesOfNeighbors(HashSet<Vertex> internalSet, HashSet<Vertex> externalSet) {
 
         for (Vertex v_i : internalSet) {
-            v_i.computeD(internalSet, externalSet);
+            v_i.computeD();
         }
 
         for (Vertex v_e : externalSet) {
-            v_e.computeD(externalSet, internalSet);
+            v_e.computeD();
         }
     }
 
@@ -66,10 +66,8 @@ public class Vertex implements Comparable<Vertex> {
      * the internal cost of a is the sum of the costs of edges between a and other nodes in A
      * and the external cost of a is the sum of the costs of edges between a and nodes in B
      *
-     * @param setA the set this vertex belongs to, the internal set.
-     * @param setB the external vertex set. This vertex does not belong to that set.
      */
-    public void computeD(HashSet<Vertex> setA, HashSet<Vertex> setB) {
+    public void computeD() {
 
         // select all adjacent internal vertices.
         float I_a = 0.0f;

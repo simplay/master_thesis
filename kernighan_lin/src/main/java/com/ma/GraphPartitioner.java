@@ -78,7 +78,7 @@ public class GraphPartitioner {
         do {
             // compute D values for all a in A and b in B
             for (Vertex v : graph.vertices) {
-                v.computeD(setA, setB);
+                v.computeD();
             }
             
             dumpDValueHistogram(graph);//ok, i guess.
@@ -127,6 +127,8 @@ public class GraphPartitioner {
                 bv.add(n, topB);
 
                 // update D values for the elements of A = A \ a and B = B \ b
+                topA.setPartitionSetLabel(-1);
+                topB.setPartitionSetLabel(-1);
                 topA.updateDValuesOfNeighbors(setA, setB);
                 topB.updateDValuesOfNeighbors(setB, setA);
             }
