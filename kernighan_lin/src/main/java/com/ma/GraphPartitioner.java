@@ -18,8 +18,8 @@ import java.util.List;
 public class GraphPartitioner {
 
     private Graph graph;
-    private final HashSet<Vertex> setA = new HashSet<>();
-    private final HashSet<Vertex> setB = new HashSet<>();
+    private final PartitionSet setA = new PartitionSet();
+    private final PartitionSet setB = new PartitionSet();
     private final List<Float> gv = new ArrayList<>();
     private final List<Vertex> av = new ArrayList<>();
     private final List<Vertex> bv = new ArrayList<>();
@@ -34,16 +34,11 @@ public class GraphPartitioner {
         int leftHalf = n / 2;
 
         for (int a_l = 0; a_l < leftHalf; a_l++) {
-            Vertex v = graph.vertices.get(a_l);
-            v.setPartitionSetLabel(0);
-            setA.add(v);
-
+            setA.add(graph.vertices.get(a_l));
         }
 
         for (int b_l = leftHalf; b_l < n; b_l++) {
-            Vertex v = graph.vertices.get(b_l);
-            v.setPartitionSetLabel(1);
-            setB.add(v);
+            setB.add(graph.vertices.get(b_l));
         }
 
     }
@@ -75,7 +70,7 @@ public class GraphPartitioner {
     public void runKernighanLin() {
         float max_gv = 0.0f;
         int iter = 0;
-        
+
         do {
             // compute D values for all a in A and b in B
             for (Vertex v : graph.vertices) {
@@ -87,11 +82,8 @@ public class GraphPartitioner {
             for (int n = 0; n < (graph.vertexCount() / 2) + 1; n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
-                List<Vertex> sortedByDvalueA = new ArrayList(setA);
-                Collections.sort(sortedByDvalueA);
-
-                List<Vertex> sortedByDvalueB = new ArrayList(setB);
-                Collections.sort(sortedByDvalueB);
+                List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
+                List<Vertex> sortedByDvalueB = setB.sortedByVertexDvalues();
 
                 int lastAIndex = setA.size() - 1;
                 int lastBIndex = setB.size() - 1;
@@ -128,8 +120,6 @@ public class GraphPartitioner {
                 bv.add(n, topB);
 
                 // update D values for the elements of A = A \ a and B = B \ b
-                topA.setPartitionSetLabel(-1);
-                topB.setPartitionSetLabel(-1);
                 topA.updateDValuesOfNeighbors();
                 topB.updateDValuesOfNeighbors();
             }
@@ -159,7 +149,7 @@ public class GraphPartitioner {
             }
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
-        } while ((max_gv > 0.0f) && (iter < 5));
+        } while ((max_gv > 0.0f) && (iter < MAXITER));
 
         for (Vertex v : av) {
             v.setPartition(0);
