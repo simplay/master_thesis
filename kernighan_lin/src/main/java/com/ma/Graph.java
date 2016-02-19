@@ -43,6 +43,7 @@ public class Graph {
     	return a.getDValue() + b.getDValue() - 2.0f * getWeight(a.getId(), b.getId());
     }
     public float getWeight(int idxa, int idxb) {
+        if (idxa < 0 || idxb < 0) return 0.0f;
         return vertices.get(idxa).similarities[idxb];
     }
 

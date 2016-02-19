@@ -14,18 +14,29 @@ public class Vertex implements Comparable<Vertex> {
     private int partitionLabel;
     private int trajectoryId;
     private int partitionSetLabel;
+    private boolean is_dummy;
 
     public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    public final float[] similarities;
+    public float[] similarities;
+
 
     // D_a = E_a - I_a
     private float dValue;
 
     public Vertex(int id, int vertexCount) {
         this.id = id;
-        similarities = new float[vertexCount];
+        this.similarities = new float[vertexCount];
         this.partitionLabel = -1;
         this.partitionSetLabel = -1;
+        this.is_dummy = false;
+    }
+
+    public Vertex(int id, int vertexCount, boolean is_dummy) {
+        this.id = id;
+        this.similarities = new float[vertexCount];
+        this.partitionLabel = -1;
+        this.partitionSetLabel = -1;
+        this.is_dummy = is_dummy;
     }
 
     public void setPartitionSetLabel(int label) {
@@ -38,6 +49,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public LinkedList<Vertex> getNeighborsWithSetLabel(int setLabel) {
         LinkedList<Vertex> labelNeighbors = new LinkedList<>();
+        if (is_dummy) return labelNeighbors;
         for (Vertex v : neighbors) {
             if (v.partitionSetLabel == setLabel) {
                 labelNeighbors.add(v);
@@ -47,10 +59,15 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     public void updateDValuesOfNeighbors() {
+        if (is_dummy) return;
         for (Vertex v : neighbors) {
             if (v.getPartitionSetLabel() == -1) continue;
             v.computeD();
         }
+    }
+
+    public boolean isDummy() {
+        return is_dummy;
     }
 
     /**
@@ -64,7 +81,7 @@ public class Vertex implements Comparable<Vertex> {
      *
      */
     public void computeD() {
-
+        if (is_dummy) return;
         // select all adjacent internal vertices.
         float I_a = 0.0f;
         float E_a = 0.0f;

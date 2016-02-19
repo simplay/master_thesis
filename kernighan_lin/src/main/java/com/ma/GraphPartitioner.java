@@ -34,7 +34,12 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         int n = graph.vertexCount();
         int leftHalf = n / 2;
-        boolean [] checklist = new boolean[graph.vertexCount()];
+        //initSetsMod2();
+        initSetsEmptyFull();
+
+    }
+
+    private void initSetsMod2() {
         int idx = 0;
         for(Vertex v : graph.vertices) {
             if (idx % 2 == 0) {
@@ -42,16 +47,16 @@ public class GraphPartitioner {
             } else {
                 setB.add(v);
             }
-            checklist[v.getId()] = true;
             idx++;
         }
+    }
 
-        boolean total = true;
-        for (Boolean flag : checklist) {
-            total = total && flag;
+    private void initSetsEmptyFull() {
+        for(Vertex v : graph.vertices) {
+            setA.add(new Vertex(-1, graph.vertexCount(), true));
+            setB.add(v);
+
         }
-        System.out.println("Init: every vertex is falgged: " + total);
-
     }
     
     void dumpDValueHistogram(Graph g){
@@ -183,21 +188,6 @@ public class GraphPartitioner {
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
 
-        boolean [] checklist = new boolean[graph.vertexCount()];
-        for (Vertex v : av_copy) {
-            v.setPartition(0);
-            checklist[v.getId()] = true;
-        }
-
-        for (Vertex v : bv_copy) {
-            v.setPartition(1);
-            checklist[v.getId()] = true;
-        }
-        boolean total = true;
-        for (Boolean flag : checklist) {
-            total = total && flag;
-        }
-        System.out.println("every vertex is falgged: " + total);
     }
 
 }
