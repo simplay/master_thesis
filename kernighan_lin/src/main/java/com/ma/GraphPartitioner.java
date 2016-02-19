@@ -25,7 +25,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private ArrayList<Vertex> av_copy;
     private ArrayList<Vertex> bv_copy;
-    private final int MAXITER = 20;
+    private final int MAXITER = 10;
 
     public GraphPartitioner(Graph graph) {
 
@@ -33,14 +33,14 @@ public class GraphPartitioner {
 
         // determine a balanced initial partition of the nodes into sets A and B
 
-
-        initSetsMod2();
-        // initSetsEmptyFull();
-        //initSetsSplitLeftRight();
+        int dummyCount = 500;
+        initSetsMod2(dummyCount);
+        // initSetsEmptyFull(dummyCount);
+        // initSetsSplitLeftRight(dummyCount);
 
     }
 
-    private void initSetsMod2() {
+    private void initSetsMod2(int count) {
         int idx = 0;
         for(Vertex v : graph.vertices) {
             if (idx % 2 == 0) {
@@ -50,9 +50,17 @@ public class GraphPartitioner {
             }
             idx++;
         }
+        addDummies(count);
     }
 
-    private void initSetsSplitLeftRight() {
+    private void addDummies(int count) {
+        for (int k=0; k < count; k++) {
+            setA.add(new Vertex(-1, graph.vertexCount(), true));
+            setB.add(new Vertex(-1, graph.vertexCount(), true));
+        }
+    }
+
+    private void initSetsSplitLeftRight(int count) {
         int idx = 0;
         int n = graph.vertexCount();
         int leftHalf = n / 2;
@@ -64,14 +72,16 @@ public class GraphPartitioner {
             }
             idx++;
         }
+        addDummies(count);
     }
 
-    private void initSetsEmptyFull() {
+    private void initSetsEmptyFull(int count) {
         for(Vertex v : graph.vertices) {
             setA.add(new Vertex(-1, graph.vertexCount(), true));
             setB.add(v);
 
         }
+        addDummies(count);
     }
     
     void dumpDValueHistogram(Graph g){
