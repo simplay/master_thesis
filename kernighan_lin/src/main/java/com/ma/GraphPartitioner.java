@@ -25,7 +25,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private ArrayList<Vertex> av_copy;
     private ArrayList<Vertex> bv_copy;
-    private final int MAXITER = 100;
+    private final int MAXITER = 4;
 
     public GraphPartitioner(Graph graph) {
 
@@ -100,8 +100,7 @@ public class GraphPartitioner {
             // iterate only over n := |V|/2:
             // if n even, then iterate till n/2 => center of the range 1..4 is the value 2
             // if n odd, then iterate till floor(n/2) + 1 => center of the range 1..3 is the value 2
-            for (int n = 0; n < (int)Math.ceil(graph.vertexCount() / 2); n++) {
-            //for (int n = 0; n < graph.vertexCount(); n++) {
+            for (int n = 0; n < ((int)Math.ceil(graph.vertexCount() / 2)) + 1; n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
@@ -151,39 +150,26 @@ public class GraphPartitioner {
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
 
             // TODO: should k_idx be set to -1 instead, to avoid unnecessary swaps?
-            int k_idx = -1;
             max_gv = 0.0f;
 
-
-            // compute all partial sums of gv_value
-            float[] gv_partial_sums = new float[gv.size()];
-            int gv_idx = 0;
-            float tmp_gv_sum = 0.0f;
+            // find max partial sum of gv with its corresponding index
+            int max_gv_idx = 0;
+            int current_gv_idx = 0;
+            float current_max_gv = 0.0f;
             for (Float gv_value : gv) {
-                tmp_gv_sum += gv_value;
-                gv_partial_sums[gv_idx] = tmp_gv_sum;
-                gv_idx++;
-            }
 
-            float tmpMax = -1000.0f;
-            int max_gv_sum_idx = -1;
-            for (int k = 0; k < gv_partial_sums.length; k++) {
-                if (gv_partial_sums[k] > tmpMax) {
-                    tmpMax = gv_partial_sums[k];
-                    max_gv_sum_idx = k;
+                if (current_max_gv < gv_value + current_max_gv) {
+                    max_gv_idx = current_gv_idx;
+                    max_gv = current_max_gv + gv_value;
                 }
+                current_max_gv += gv_value;
+                current_gv_idx++;
             }
 
-            if (max_gv_sum_idx > -1) {
-                max_gv = gv_partial_sums[max_gv_sum_idx];
-            } else {
-                break;
-            }
-
-            if (gv_partial_sums[max_gv_sum_idx] > 0.0f) {
+            if (max_gv > 0.0f) {
                 // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
                 // TODO: is here an check necessary? k
-                for (int k = 0; max_gv_sum_idx <= k; k++) {
+                for (int k = 0; k <= max_gv_idx; k++) {
                     // perform a vertex swap
                     Vertex tmp = av.get(k);
                     av.set(k, bv.get(k));
@@ -192,11 +178,13 @@ public class GraphPartitioner {
 
                 setA.replaceFirstKElementsByCollection(av);
                 setB.replaceFirstKElementsByCollection(bv);
-
             }
+
             iter++;
-            System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);
+            System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
+
+
         boolean [] checklist = new boolean[graph.vertexCount()];
         for (Vertex v : av_copy) {
             v.setPartition(0);
