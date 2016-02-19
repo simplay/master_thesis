@@ -48,6 +48,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public void updateDValuesOfNeighbors() {
         for (Vertex v : neighbors) {
+            if (v.getPartitionSetLabel() == -1) continue;
             v.computeD();
         }
     }

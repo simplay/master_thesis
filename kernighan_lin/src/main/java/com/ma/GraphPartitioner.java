@@ -137,7 +137,6 @@ public class GraphPartitioner {
                 setA.remove(topA);
                 setB.remove(topB);
 
-                System.out.println("set A size: " + setA.size());
 
                 // add g to gv, a to av, and b to bv
                 gv.add(n, maxgain);
@@ -170,11 +169,12 @@ public class GraphPartitioner {
             int max_gv_sum_idx = -1;
             for (int k = 0; k < gv_partial_sums.length; k++) {
                 if (gv_partial_sums[k] > tmpMax) {
+                    tmpMax = gv_partial_sums[k];
                     max_gv_sum_idx = k;
                 }
             }
 
-            if (max_gv_sum_idx > 0) {
+            if (max_gv_sum_idx > -1) {
                 max_gv = gv_partial_sums[max_gv_sum_idx];
             } else {
                 break;
