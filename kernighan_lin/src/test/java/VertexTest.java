@@ -57,7 +57,7 @@ public class VertexTest {
         setB.add(v3);
     }
      **/
-
+/**
     @Test
     public void testFoo() {
         g = new Graph();
@@ -103,6 +103,129 @@ public class VertexTest {
         }
 
     }
+    **/
+
+
+@Test
+public void testFoo() {
+    g = new Graph();
+    int vCount = 4;
+    int negEdge = 2;
+    int M = 6;
+    int N = 6;
+    int idx = 0;
+    Vertex[][] vertices = new Vertex[M][N];
+    for (int i=0; i < M; i++) {
+        for (int j=0; j < N; j++) {
+            vertices[i][j] = new Vertex(idx, M*N);
+            idx++;
+        }
+    }
+
+    for (int i=0; i < M; i++) {
+
+        for (int j=0; j < N; j++) {
+            float[] sims = new float[M*N];
+
+            if (j+1 < N) {
+                vertices[i][j].appendNearestNeighbord(vertices[i][j+1]);
+                sims[vertices[i][j+1].getId()] = 1;
+
+            }
+
+            if (i+1 < M) {
+                vertices[i][j].appendNearestNeighbord(vertices[i+1][j]);
+                sims[vertices[i+1][j].getId()] = 1;
+
+                if (i+1 == negEdge) {
+                    sims[vertices[i+1][j].getId()] = -1;
+                }
+            }
+
+            if (i > 0) {
+                vertices[i][j].appendNearestNeighbord(vertices[i-1][j]);
+                sims[vertices[i-1][j].getId()] = 1;
+
+                if (i == negEdge) {
+                    sims[vertices[i-1][j].getId()] = -1;
+                }
+            }
+
+            if (j > 0) {
+                vertices[i][j].appendNearestNeighbord(vertices[i][j-1]);
+                sims[vertices[i][j-1].getId()] = 1;
+
+            }
+            vertices[i][j].setSimilarities(sims);
+
+        }
+
+    }
+
+    for (int i=0; i < M; i++) {
+        for (int j=0; j < N; j++) {
+            g.appendVertex(vertices[i][j]);
+        }
+    }
+
+    GraphPartitioner gp = new GraphPartitioner(g);
+
+
+    for (Vertex v : gp.getSetA()) {
+        for (Vertex other : gp.getSetB()) {
+            assertEquals(v == other, false);
+        }
+    }
+
+    for (Vertex v : gp.getSetB()) {
+        for (Vertex other : gp.getSetA()) {
+            assertEquals(v == other, false);
+        }
+    }
+
+
+    gp.runKernighanLin();
+
+    for (int i=0; i < M; i++) {
+        for (int j=0; j < N; j++) {
+            System.out.print(vertices[i][j].getPartitionLabel());
+
+
+            if (i+1 < M) {
+                Vertex v = vertices[i][j];
+                Vertex other = vertices[i + 1][j];
+                if (v.getSimValue(other.getId()) < 0 ) {
+                    System.out.print("|");
+                } else {
+                    System.out.print(" ");
+                }
+            } else {
+                System.out.print(" ");
+            }
+
+        }
+
+
+
+        System.out.println();
+    }
+
+    for (Vertex v : g.vertices) {
+        idx = 0;
+        for (Float sim : v.similarities) {
+            Vertex other = g.vertices.get(idx);
+            float other_sim = other.similarities[v.getId()];
+            assertEquals(other_sim, sim);
+            idx++;
+        }
+    }
+
+
+
+
+
+
+}
 
 
 }

@@ -19,12 +19,17 @@ public class PartitionSet implements Iterable<Vertex> {
         globalLabelCounter++;
     }
 
-    public void add(Vertex v) {
-        if (vertices.contains(v)) return;
+    public boolean add(Vertex v) {
+        if (vertices.contains(v)) return false;
         vertices.add(v);
         v.setPartitionSetLabel(label);
         // TODO is this correct?
         v.setPartition(label);
+        return true;
+    }
+
+    public boolean contains(Vertex v) {
+        return vertices.contains(v);
     }
 
     public void relabelValid() {

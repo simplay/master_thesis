@@ -26,15 +26,24 @@ public class GraphPartitioner {
     private ArrayList<Vertex> bv_copy;
     private final int MAXITER = 10;
 
+
+    public PartitionSet getSetA() {
+        return setA;
+    }
+
+    public PartitionSet getSetB() {
+        return setB;
+    }
+
     public GraphPartitioner(Graph graph) {
 
         this.graph = graph;
 
         // determine a balanced initial partition of the nodes into sets A and B
 
-        int dummyCount = 1150;
-        initSetsMod2(dummyCount);
-        // initSetsEmptyFull(dummyCount);
+        int dummyCount = 0;
+        // initSetsMod2(dummyCount);
+        initSetsEmptyFull(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
 
     }
@@ -129,7 +138,7 @@ public class GraphPartitioner {
             // iterate only over n := |V|/2:
             // if n even, then iterate till n/2 => center of the range 1..4 is the value 2
             // if n odd, then iterate till floor(n/2) + 1 => center of the range 1..3 is the value 2
-            for (int n = 0; n < ((int)Math.ceil(graph.vertexCount() / 2)) + 1; n++) {
+            for (int n = 0; n < Math.min(setA.size(), setB.size()); n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
@@ -149,9 +158,9 @@ public class GraphPartitioner {
                 for (int idxa = lastAIndex; idxa >= 0; idxa--) {
                     Vertex candidateA = sortedByDvalueA.get(idxa);
 
-                    // if (candidateA.getPartitionSetLabel() == -1) continue;
+                    if (candidateA.getPartitionSetLabel() == -1) continue;
 
-                    for (Vertex candidateB : candidateA.neighbors) {
+                    for (Vertex candidateB : sortedByDvalueB) {
 
                         // only consider valid neighbors
                         if (candidateB.getPartitionSetLabel() == -1) continue;
@@ -206,7 +215,8 @@ public class GraphPartitioner {
                     v.setdValue(tmp);
                 }
 
-
+                if (!setA.contains(topA)) System.out.println("A topA fail");
+                if (!setB.contains(topB)) System.out.println("B topB fail");
                 // markInvalid a and b from further consideration in this pass
                 setA.markInvalid(topA);
                 setB.markInvalid(topB);
@@ -243,11 +253,18 @@ public class GraphPartitioner {
                 for (int k = 0; k <= max_gv_idx; k++) {
                     // perform a vertex swap
 
-                    setA.remove(av.get(k));
-                    setB.add(av.get(k));
+                    boolean t = setA.remove(av.get(k)) ;
 
-                    setB.remove(bv.get(k));
-                    setA.add(bv.get(k));
+                    if (!t) System.out.print("fail");
+
+                    t = setB.add(av.get(k));
+                    if (!t) System.out.print("fail add b");
+
+                    t =  (setB.remove(bv.get(k)));
+                    if (!t) System.out.print("fail");
+
+                    t = setA.add(bv.get(k));
+                    if (!t) System.out.print("fail add a");
 
                   //  Vertex tmp = av.get(k);
                   //  av.set(k, bv.get(k));
@@ -265,11 +282,11 @@ public class GraphPartitioner {
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
-        for (Vertex v : av) {
+        for (Vertex v : setA) {
             v.setPartition(0);
         }
 
-        for (Vertex v : bv) {
+        for (Vertex v : setB) {
             v.setPartition(1);
         }
 
