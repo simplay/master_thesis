@@ -82,8 +82,6 @@ public class GraphPartitioner {
         float max_gv = 0.0f;
         int iter = 0;
 
-
-
         do {
             av_copy = new ArrayList<>(av);
             bv_copy = new ArrayList<>(bv);
@@ -115,6 +113,7 @@ public class GraphPartitioner {
 
                 Vertex topA = sortedByDvalueA.get(lastAIndex);
                 Vertex topB = sortedByDvalueB.get(lastBIndex);
+
                 //could and should be sped up...
                 //for now just n^2 double loop.
                 float maxgain = graph.gain(topA, topB);
@@ -138,6 +137,8 @@ public class GraphPartitioner {
                 setA.remove(topA);
                 setB.remove(topB);
 
+                System.out.println("set A size: " + setA.size());
+
                 // add g to gv, a to av, and b to bv
                 gv.add(n, maxgain);
                 av.add(n, topA);
@@ -153,27 +154,45 @@ public class GraphPartitioner {
             // TODO: should k_idx be set to -1 instead, to avoid unnecessary swaps?
             int k_idx = -1;
             max_gv = 0.0f;
+
+
+            // compute all partial sums of gv_value
+            float[] gv_partial_sums = new float[gv.size()];
+            int gv_idx = 0;
+            float tmp_gv_sum = 0.0f;
             for (Float gv_value : gv) {
-                if (max_gv < gv_value + max_gv) {
-                    max_gv += gv_value;
-                    k_idx++;
-                } else {
-                    // correct index, since until previous, max_gv was maximal
-                    // and the new index value (the current index) resulted in a worse energy.
-                    k_idx--;
-                    break;
+                tmp_gv_sum += gv_value;
+                gv_partial_sums[gv_idx] = tmp_gv_sum;
+                gv_idx++;
+            }
+
+            float tmpMax = -1000.0f;
+            int max_gv_sum_idx = -1;
+            for (int k = 0; k < gv_partial_sums.length; k++) {
+                if (gv_partial_sums[k] > tmpMax) {
+                    max_gv_sum_idx = k;
                 }
             }
 
-            if (max_gv > 0.0f && k_idx > -1) {
+            if (max_gv_sum_idx > 0) {
+                max_gv = gv_partial_sums[max_gv_sum_idx];
+            } else {
+                break;
+            }
+
+            if (gv_partial_sums[max_gv_sum_idx] > 0.0f) {
                 // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
                 // TODO: is here an check necessary? k
-                for (int k = 0; k_idx <= k; k++) {
+                for (int k = 0; max_gv_sum_idx <= k; k++) {
                     // perform a vertex swap
                     Vertex tmp = av.get(k);
                     av.set(k, bv.get(k));
                     bv.set(k, tmp);
                 }
+
+                setA.replaceFirstKElementsByCollection(av);
+                setB.replaceFirstKElementsByCollection(bv);
+
             }
             iter++;
             System.out.println("Iteration " + iter + " k=" + k_idx + " gv=" + max_gv);

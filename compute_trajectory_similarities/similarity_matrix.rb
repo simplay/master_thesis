@@ -19,7 +19,7 @@ class SimilarityMatrix
 
   # Number of spatially nearest neighbors that should be returned
   # per trajectory
-  NN_COUNT = 12
+  NN_COUNT = 200
 
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager

@@ -11,7 +11,7 @@ public class PartitionSet implements Iterable<Vertex> {
     private static int globalLabelCounter = 0;
     private int label;
 
-    private final HashSet<Vertex> vertices = new HashSet<>();
+    private final ArrayList<Vertex> vertices = new ArrayList<>();
 
     public PartitionSet() {
         this.label = globalLabelCounter;
@@ -19,6 +19,7 @@ public class PartitionSet implements Iterable<Vertex> {
     }
 
     public void add(Vertex v) {
+        if (vertices.contains(v)) return;
         vertices.add(v);
         v.setPartitionSetLabel(label);
         // TODO is this correct?
@@ -44,6 +45,14 @@ public class PartitionSet implements Iterable<Vertex> {
         ArrayList sorted_by_d_values = new ArrayList(vertices);
         Collections.sort(sorted_by_d_values);
         return sorted_by_d_values;
+    }
+
+    public void replaceFirstKElementsByCollection(List<Vertex> permutedVertices) {
+        for (int t = 0; t < permutedVertices.size(); t++) {
+            Vertex v = permutedVertices.get(t);
+            v.setPartitionSetLabel(label);
+            vertices.set(t, v);
+        }
     }
 
     @Override
