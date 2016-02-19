@@ -25,7 +25,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private ArrayList<Vertex> av_copy;
     private ArrayList<Vertex> bv_copy;
-    private final int MAXITER = 10;
+    private final int MAXITER = 20;
 
     public GraphPartitioner(Graph graph) {
 
@@ -186,6 +186,14 @@ public class GraphPartitioner {
             iter++;
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
+
+        for (Vertex v : av_copy) {
+            v.setPartition(0);
+        }
+
+        for (Vertex v : bv_copy) {
+            v.setPartition(1);
+        }
 
 
     }
