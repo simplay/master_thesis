@@ -25,7 +25,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private ArrayList<Vertex> av_copy;
     private ArrayList<Vertex> bv_copy;
-    private final int MAXITER = 4;
+    private final int MAXITER = 10;
 
     public GraphPartitioner(Graph graph) {
 
@@ -148,8 +148,6 @@ public class GraphPartitioner {
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
-
-            // TODO: should k_idx be set to -1 instead, to avoid unnecessary swaps?
             max_gv = 0.0f;
 
             // find max partial sum of gv with its corresponding index

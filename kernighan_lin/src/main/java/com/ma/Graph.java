@@ -111,7 +111,7 @@ public class Graph {
                 for (Vertex v : vertices) {
                     int labelValue = v.getPartitionLabel();
                     // TODO: this is some kind of hotfix which is supposed not to be correct
-                    if (labelValue == -1) labelValue = v.getPartitionSetLabel();
+                    //if (labelValue == -1) labelValue = v.getPartitionSetLabel();
                     String line = v.getTrajectoryId() + "," + labelValue;
                     out.println(line);
                 }
