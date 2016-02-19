@@ -32,10 +32,11 @@ public class GraphPartitioner {
         this.graph = graph;
 
         // determine a balanced initial partition of the nodes into sets A and B
-        int n = graph.vertexCount();
-        int leftHalf = n / 2;
-        //initSetsMod2();
-        initSetsEmptyFull();
+
+
+        initSetsMod2();
+        // initSetsEmptyFull();
+        //initSetsSplitLeftRight();
 
     }
 
@@ -43,6 +44,20 @@ public class GraphPartitioner {
         int idx = 0;
         for(Vertex v : graph.vertices) {
             if (idx % 2 == 0) {
+                setA.add(v);
+            } else {
+                setB.add(v);
+            }
+            idx++;
+        }
+    }
+
+    private void initSetsSplitLeftRight() {
+        int idx = 0;
+        int n = graph.vertexCount();
+        int leftHalf = n / 2;
+        for(Vertex v : graph.vertices) {
+            if (idx <= leftHalf) {
                 setA.add(v);
             } else {
                 setB.add(v);
@@ -88,8 +103,8 @@ public class GraphPartitioner {
         int iter = 0;
 
         do {
-            av_copy = new ArrayList<>(av);
-            bv_copy = new ArrayList<>(bv);
+            //av_copy = new ArrayList<>(av);
+            //bv_copy = new ArrayList<>(bv);
 
             av.clear();
             bv.clear();
@@ -122,19 +137,26 @@ public class GraphPartitioner {
                 //for now just n^2 double loop.
                 float maxgain = graph.gain(topA, topB);
                 float candidate_gain;
-                for(int idxa = lastAIndex; idxa >= 0; idxa--){
-                	Vertex candidateA = sortedByDvalueA.get(idxa);
-                	 for(Vertex candidateB : candidateA.neighbors){
-                		 candidate_gain = graph.gain(candidateA, candidateB);
+                for (int idxa = lastAIndex; idxa >= 0; idxa--) {
+                    Vertex candidateA = sortedByDvalueA.get(idxa);
 
-                         //can be sped up with a break here if the candidates are sorted by potential gain
-                         if(candidate_gain > maxgain){
-                        	 maxgain = candidate_gain;
-                        	 topA = candidateA;
-                        	 topB = candidateB;
-                         }
+                    // if (candidateA.getPartitionSetLabel() == -1) continue;
 
-                     }
+                    for (Vertex candidateB : candidateA.neighbors) {
+
+                        // only consider valid neighbors
+                        if (candidateB.getPartitionSetLabel() == -1) continue;
+
+                        candidate_gain = graph.gain(candidateA, candidateB);
+
+                        //can be sped up with a break here if the candidates are sorted by potential gain
+                        if (candidate_gain > maxgain) {
+                            maxgain = candidate_gain;
+                            topA = candidateA;
+                            topB = candidateB;
+                        }
+
+                    }
                 }
 
                 // remove a and b from further consideration in this pass
@@ -187,11 +209,11 @@ public class GraphPartitioner {
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
-        for (Vertex v : av_copy) {
+        for (Vertex v : av) {
             v.setPartition(0);
         }
 
-        for (Vertex v : bv_copy) {
+        for (Vertex v : bv) {
             v.setPartition(1);
         }
 
