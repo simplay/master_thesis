@@ -27,12 +27,24 @@ public class PartitionSet implements Iterable<Vertex> {
         v.setPartition(label);
     }
 
-    public boolean remove(Vertex v) {
-       // boolean was_successful = vertices.remove(v);
+    public void relabelValid() {
+        for (Vertex v : vertices) {
+            v.setPartitionSetLabel(label);
+        }
+    }
+
+    public boolean markInvalid(Vertex v) {
+       // boolean was_successful = vertices.markInvalid(v);
         removedCounter++;
         v.setPartitionSetLabel(INVALID_LABEL);
         return true;
     }
+
+    public boolean remove(Vertex v) {
+        return vertices.remove(v);
+    }
+
+
 
     public int size() {
         int validCounter = 0;
@@ -58,8 +70,8 @@ public class PartitionSet implements Iterable<Vertex> {
         return sorted_by_d_values;
     }
 
-    public void replaceFirstKElementsByCollection(List<Vertex> permutedVertices) {
-        for (int t = 0; t < permutedVertices.size(); t++) {
+    public void replaceFirstKElementsByCollection(List<Vertex> permutedVertices, int max_gv_idx) {
+        for (int t = 0; t <= max_gv_idx; t++) {
             Vertex v = permutedVertices.get(t);
             v.setPartitionSetLabel(label);
             vertices.set(t, v);

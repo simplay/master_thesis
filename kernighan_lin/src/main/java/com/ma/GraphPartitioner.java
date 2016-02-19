@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class GraphPartitioner {
 
         // determine a balanced initial partition of the nodes into sets A and B
 
-        int dummyCount = 500;
+        int dummyCount = 1150;
         initSetsMod2(dummyCount);
         // initSetsEmptyFull(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
@@ -168,10 +167,49 @@ public class GraphPartitioner {
 
                     }
                 }
+                // update D values for the elements of A = A \ a and B = B \ b
+                //topA.updateDValuesOfNeighbors(topB);
+                //topB.updateDValuesOfNeighbors(topA);
 
-                // remove a and b from further consideration in this pass
-                setA.remove(topA);
-                setB.remove(topB);
+
+
+                HashSet<Vertex> subsetA = new HashSet<>();
+                HashSet<Vertex> subsetB = new HashSet<>();
+
+                for (Vertex v : topA.neighbors) {
+                    if (v == topB ) continue;
+                    if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
+                        subsetA.add(v);
+                    } else if (v.getPartitionSetLabel() == topB.getPartitionSetLabel()) {
+                        subsetB.add(v);
+                    }
+                }
+
+                for (Vertex v : topB.neighbors) {
+                    if (v == topA) continue;
+                    if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
+                        subsetA.add(v);
+                    } else if (v.getPartitionSetLabel() == topB.getPartitionSetLabel()) {
+                        subsetB.add(v);
+                    }
+                }
+
+                for (Vertex v : subsetA ) {
+                    if (v.isDummy() ) continue;
+                    float tmp = v.getDValue() + 2.0f*topA.getSimValue(v.getId())-2.0f*v.getSimValue(topB.getId());
+                    v.setdValue(tmp);
+                }
+
+                for (Vertex v : subsetB ) {
+                    if (v.isDummy() ) continue;
+                    float tmp = v.getDValue() + 2.0f*topB.getSimValue(v.getId())-2.0f*v.getSimValue(topA.getId());
+                    v.setdValue(tmp);
+                }
+
+
+                // markInvalid a and b from further consideration in this pass
+                setA.markInvalid(topA);
+                setB.markInvalid(topB);
 
 
                 // add g to gv, a to av, and b to bv
@@ -179,9 +217,7 @@ public class GraphPartitioner {
                 av.add(n, topA);
                 bv.add(n, topB);
 
-                // update D values for the elements of A = A \ a and B = B \ b
-                topA.updateDValuesOfNeighbors();
-                topB.updateDValuesOfNeighbors();
+
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
@@ -206,14 +242,24 @@ public class GraphPartitioner {
                 // TODO: is here an check necessary? k
                 for (int k = 0; k <= max_gv_idx; k++) {
                     // perform a vertex swap
-                    Vertex tmp = av.get(k);
-                    av.set(k, bv.get(k));
-                    bv.set(k, tmp);
+
+                    setA.remove(av.get(k));
+                    setB.add(av.get(k));
+
+                    setB.remove(bv.get(k));
+                    setA.add(bv.get(k));
+
+                  //  Vertex tmp = av.get(k);
+                  //  av.set(k, bv.get(k));
+                  //  bv.set(k, tmp);
                 }
 
-                setA.replaceFirstKElementsByCollection(av);
-                setB.replaceFirstKElementsByCollection(bv);
+//                setA.replaceFirstKElementsByCollection(av, max_gv_idx);
+  //              setB.replaceFirstKElementsByCollection(bv, max_gv_idx);
             }
+
+            setA.relabelValid();
+            setB.relabelValid();
 
             iter++;
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);

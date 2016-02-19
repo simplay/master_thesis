@@ -58,13 +58,32 @@ public class Vertex implements Comparable<Vertex> {
         return labelNeighbors;
     }
 
-    public void updateDValuesOfNeighbors() {
+    public void updateDValuesOfNeighbors(Vertex other) {
         if (is_dummy) return;
+
+
+
         for (Vertex v : neighbors) {
             if (v.getPartitionSetLabel() == -1) continue;
-            v.computeD();
+            float dvalnew = 0.0f;
+            if (v.getPartitionSetLabel() == getPartitionSetLabel()) {
+                dvalnew = v.getDValue() + 2.0f*similarities[v.getId()]-2.0f*v.similarities[other.getId()];
+            } else {
+                dvalnew = v.getDValue() - 2.0f*similarities[v.getId()]+2.0f*v.similarities[other.getId()];
+            }
+            v.setdValue(dvalnew);
         }
+
     }
+
+    public float getSimValue(int idx) {
+        return (isDummy() || idx == -1) ? 0.0f : similarities[idx];
+    }
+
+    public void setdValue(float newDVal) {
+        this.dValue = newDVal;
+    }
+
 
     public boolean isDummy() {
         return is_dummy;

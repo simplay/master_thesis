@@ -1,5 +1,7 @@
 import com.ma.*;
+import junit.framework.*;
 import org.junit.*;
+import org.junit.Test;
 
 import java.util.HashSet;
 
@@ -11,10 +13,13 @@ public class VertexTest {
     Vertex v1;
     Vertex v2;
     Vertex v3;
+    Vertex v4;
+
 
     PartitionSet setA;
     PartitionSet setB;
 
+    /**
     @Before
     public void setUp() {
         g = new Graph();
@@ -51,61 +56,53 @@ public class VertexTest {
         setB.add(v2);
         setB.add(v3);
     }
+     **/
 
     @Test
-    public void testDValue() {
-        v1.computeD();
+    public void testFoo() {
+        g = new Graph();
+        int vCount = 4;
 
-        float I_a1 = 0.0f;
-        float E_a1 = 0.0f;
+        v1 = new Vertex(0, vCount);
+        float[] sim1 = {0.0f, -1.0f, 1.0f, 0.0f};
+        v1.setSimilarities(sim1);
 
-        for(Vertex v : v1.neighbors) {
-            if (v.getPartitionSetLabel() != v1.getPartitionSetLabel() ) {
-                E_a1 += v.similarities[v1.getId()];
-            }
+        v2 = new Vertex(1, vCount);
+        float[] sim2 = {-1.0f, 0.0f, 0.0f, 1.0f};
+        v2.setSimilarities(sim2);
+
+        v3 = new Vertex(2, vCount);
+        float[] sim3 = {1.0f, 0.0f, 0.0f, -1.0f};
+        v3.setSimilarities(sim3);
+
+        v4 = new Vertex(3, vCount);
+        float[] sim4 = {0.0f, 1.0f, -1.0f, 0.0f};
+        v4.setSimilarities(sim4);
+
+        v1.appendNearestNeighbord(v2);
+        v1.appendNearestNeighbord(v3);
+
+        v2.appendNearestNeighbord(v1);
+        v2.appendNearestNeighbord(v4);
+
+        v3.appendNearestNeighbord(v1);
+        v3.appendNearestNeighbord(v4);
+
+        v4.appendNearestNeighbord(v2);
+        v4.appendNearestNeighbord(v3);
+
+        g.appendVertex(v1);
+        g.appendVertex(v2);
+        g.appendVertex(v3);
+        g.appendVertex(v4);
+
+        new GraphPartitioner(g).runKernighanLin();
+
+        for (Vertex v : g.vertices) {
+            System.out.println(v.getId() +  " " + v.getPartitionLabel());
         }
 
-        for(Vertex v : v1.neighbors) {
-            if (v.getPartitionSetLabel() == v1.getPartitionSetLabel() ) {
-                I_a1 += v.similarities[v1.getId()];
-            }
-        }
-        assertEquals(E_a1-I_a1, v1.getDValue());
-
-        v2.computeD();
-
-        float I_a2 = 0.0f;
-        float E_a2 = 0.0f;
-
-        for(Vertex v : v2.neighbors) {
-            if (v.getPartitionSetLabel() != v2.getPartitionSetLabel() ) {
-                E_a2 += v.similarities[v2.getId()];
-            }
-        }
-
-        for(Vertex v : v2.neighbors) {
-            if (v.getPartitionSetLabel() == v2.getPartitionSetLabel() ) {
-                I_a2 += v.similarities[v2.getId()];
-            }
-        }
-        assertEquals(E_a2-I_a2, v2.getDValue());
-
-        v3.computeD();
-
-        float I_a3 = 0.0f;
-        float E_a3 = 0.0f;
-
-        for(Vertex v : v3.neighbors) {
-            if (v.getPartitionSetLabel() != v3.getPartitionSetLabel() ) {
-                E_a3 += v.similarities[v3.getId()];
-            }
-        }
-
-        for(Vertex v : v3.neighbors) {
-            if (v.getPartitionSetLabel() == v3.getPartitionSetLabel() ) {
-                I_a3 += v.similarities[v3.getId()];
-            }
-        }
-        assertEquals(E_a3-I_a3, v3.getDValue());
     }
+
+
 }
