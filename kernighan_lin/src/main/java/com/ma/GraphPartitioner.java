@@ -24,7 +24,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private ArrayList<Vertex> av_copy;
     private ArrayList<Vertex> bv_copy;
-    private final int MAXITER = 10;
+    
 
 
     public PartitionSet getSetA() {
@@ -116,7 +116,7 @@ public class GraphPartitioner {
         }
     }
 
-    public void runKernighanLin() {
+    public void runKernighanLin(int MAXITER) {
         float max_gv = 0.0f;
         int iter = 0;
 
@@ -144,24 +144,20 @@ public class GraphPartitioner {
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
                 List<Vertex> sortedByDvalueB = setB.sortedByVertexDvalues();
 
-                int lastAIndex = setA.size() - 1;
-                int lastBIndex = setB.size() - 1;
-                if (lastAIndex < 0 || lastBIndex < 0) break;
+               // int lastAIndex = setA.size() - 1;
+                //int lastBIndex = setB.size() - 1;
+                if (sortedByDvalueA.size() == 0 || sortedByDvalueB.size() == 0) break;
 
-                Vertex topA = sortedByDvalueA.get(lastAIndex);
-                Vertex topB = sortedByDvalueB.get(lastBIndex);
+                Vertex topA = sortedByDvalueA.get(0);
+                Vertex topB = sortedByDvalueB.get(0);
 
                 //could and should be sped up...
                 //for now just n^2 double loop.
                 float maxgain = graph.gain(topA, topB);
                 float candidate_gain;
-                for (int idxa = lastAIndex; idxa >= 0; idxa--) {
-                    Vertex candidateA = sortedByDvalueA.get(idxa);
-
+                for (Vertex candidateA : sortedByDvalueA) {
                     if (candidateA.getPartitionSetLabel() == -1) continue;
-
                     for (Vertex candidateB : sortedByDvalueB) {
-
                         // only consider valid neighbors
                         if (candidateB.getPartitionSetLabel() == -1) continue;
 
@@ -177,8 +173,9 @@ public class GraphPartitioner {
                     }
                 }
                 // update D values for the elements of A = A \ a and B = B \ b
-                //topA.updateDValuesOfNeighbors(topB);
-                //topB.updateDValuesOfNeighbors(topA);
+
+
+
 
 
 
@@ -236,21 +233,26 @@ public class GraphPartitioner {
             // find max partial sum of gv with its corresponding index
             int max_gv_idx = 0;
             int current_gv_idx = 0;
-            float current_max_gv = 0.0f;
+            float current_sum = 0.0f;
             for (Float gv_value : gv) {
-
-                if (current_max_gv < gv_value + current_max_gv) {
-                    max_gv_idx = current_gv_idx;
-                    max_gv = current_max_gv + gv_value;
+            	current_sum += gv_value;
+            	//REMOVED BUG: This constraint makes no sense; it will always
+            	//be true if gv_value is greater 0, so the found k was wrong.
+            	//if (current_sum < gv_value + current_sum) {
+            	if (max_gv < current_sum) {
+                    max_gv_idx = current_gv_idx + 1;
+                    max_gv = current_sum;
                 }
-                current_max_gv += gv_value;
-                current_gv_idx++;
+            	current_gv_idx++;
+                
             }
 
             if (max_gv > 0.0f) {
-                // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k]
-                // TODO: is here an check necessary? k
-                for (int k = 0; k <= max_gv_idx; k++) {
+                // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k                
+            	// TODO: is here an check necessary? k
+            	//removedved BUG: loop boundary needs to be < max_g_idx: max_g_idx = 0 must mean NO swaps 
+                //for (int k = 0; k <= max_gv_idx; k++) {
+            	for (int k = 0; k < max_gv_idx; k++) {
                     // perform a vertex swap
 
                     boolean t = setA.remove(av.get(k)) ;

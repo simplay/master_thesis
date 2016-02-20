@@ -52,11 +52,13 @@ public class PartitionSet implements Iterable<Vertex> {
 
 
     public int size() {
-        int validCounter = 0;
+        /*int validCounter = 0;
         for (Vertex v : vertices) {
-            if (v.getPartitionSetLabel() != INVALID_LABEL) validCounter++;
+           if (v.getPartitionSetLabel() != INVALID_LABEL) validCounter++;
         }
-        return validCounter;
+        return validCounter;*/
+    	//rREMOVED BUG: dummy vertices need definitely to be counted too!
+    	return vertices.size();
     }
 
     /**

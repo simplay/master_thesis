@@ -110,9 +110,10 @@ public class VertexTest {
 public void testFoo() {
     g = new Graph();
     int vCount = 4;
-    int negEdge = 2;
-    int M = 6;
-    int N = 6;
+    int negEdge = 4;
+    int negEdge_j = 4;
+    int M = 16;
+    int N = 16;
     int idx = 0;
     Vertex[][] vertices = new Vertex[M][N];
     for (int i=0; i < M; i++) {
@@ -130,7 +131,9 @@ public void testFoo() {
             if (j+1 < N) {
                 vertices[i][j].appendNearestNeighbord(vertices[i][j+1]);
                 sims[vertices[i][j+1].getId()] = 1;
-
+                if (j+1 == negEdge_j) {
+                    sims[vertices[i][j+1].getId()] = -1;
+                }
             }
 
             if (i+1 < M) {
@@ -154,6 +157,11 @@ public void testFoo() {
             if (j > 0) {
                 vertices[i][j].appendNearestNeighbord(vertices[i][j-1]);
                 sims[vertices[i][j-1].getId()] = 1;
+                
+
+                if (j == negEdge_j) {
+                    sims[vertices[i][j-1].getId()] = -1;
+                }
 
             }
             vertices[i][j].setSimilarities(sims);
@@ -184,31 +192,12 @@ public void testFoo() {
     }
 
 
-    gp.runKernighanLin();
-
-    for (int i=0; i < M; i++) {
-        for (int j=0; j < N; j++) {
-            System.out.print(vertices[i][j].getPartitionLabel());
-
-
-            if (i+1 < M) {
-                Vertex v = vertices[i][j];
-                Vertex other = vertices[i + 1][j];
-                if (v.getSimValue(other.getId()) < 0 ) {
-                    System.out.print("|");
-                } else {
-                    System.out.print(" ");
-                }
-            } else {
-                System.out.print(" ");
-            }
-
-        }
-
-
-
-        System.out.println();
-    }
+    gp.runKernighanLin(1);
+    printGraph(M, N, vertices);
+    gp.runKernighanLin(1);
+    printGraph(M, N, vertices);
+    gp.runKernighanLin(1);
+    printGraph(M, N, vertices);
 
     for (Vertex v : g.vertices) {
         idx = 0;
@@ -225,6 +214,51 @@ public void testFoo() {
 
 
 
+}
+
+private void printGraph(int M, int N, Vertex[][] vertices) {
+	for (int i=0; i < M; i++) {
+        for (int j=0; j < N; j++) {
+            System.out.print(vertices[i][j].getPartitionLabel());
+            if (j+1 < N && i+1 <M) {
+                Vertex v = vertices[i][j];
+                Vertex other = vertices[i][j+1];
+                Vertex other_ = vertices[i + 1][j];
+                
+                if (v.getSimValue(other.getId()) < 0 && v.getSimValue(other_.getId()) < 0 ) {
+                    System.out.print("+");
+                }
+                else if(v.getSimValue(other.getId()) < 0 ){
+                	 System.out.print("|");
+                }
+                else if(v.getSimValue(other_.getId()) < 0){
+                	System.out.print("_");
+                }
+                else {
+                    System.out.print(" ");
+                }
+            } 
+            else if (i+1 < M) {
+                Vertex v = vertices[i][j];
+                Vertex other = vertices[i + 1][j];
+                if (v.getSimValue(other.getId()) < 0 ) {
+                    System.out.print("_");
+                } else {
+                    System.out.print(" ");
+                }
+            } 
+            else if (j+ 1 < N) {
+            	Vertex v = vertices[i][j];
+                Vertex other = vertices[i][j+1];
+                if (v.getSimValue(other.getId()) < 0 ) {
+                    System.out.print("|");
+                } else {
+                    System.out.print(" ");
+                }
+            }
+        }
+        System.out.println();
+   }
 }
 
 

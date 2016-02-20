@@ -28,7 +28,7 @@ public class Main {
         System.out.println("Computing the graph partitioning...");
         System.out.println();
 
-        new GraphPartitioner(g).runKernighanLin();
+        new GraphPartitioner(g).runKernighanLin(10);
         long tillPartitioningTime = System.currentTimeMillis();
         System.out.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
 

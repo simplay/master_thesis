@@ -182,7 +182,7 @@ public class Vertex implements Comparable<Vertex> {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";
-        return id+ "=>" + neighborsNames + "\n";
+        return id+ "=>" + neighborsNames + "D" + dValue + "\n";
     }
 
 	public void setSimilarities(float[] fs) {
