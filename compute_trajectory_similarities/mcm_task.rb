@@ -10,7 +10,7 @@ class McmTask < SimilarityTask
   BETA_2 = -4.0
   BETA_3 = -0.02
 
-  P_BAR = 0.5
+  P_BAR = 0.8
   P = 0.5
 
   # alternative approach described in formula (7)
@@ -44,7 +44,7 @@ class McmTask < SimilarityTask
 
     # edge weight is the minus logit funtion
     #-Math.log(p_e / (1.0 - p_e))
-    -(z_AB + prior_probs)
+    (z_AB + prior_probs)
   end
 
   def color_dist(a, b, lower_idx, upper_idx)
