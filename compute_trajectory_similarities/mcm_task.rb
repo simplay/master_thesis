@@ -10,7 +10,7 @@ class McmTask < SimilarityTask
   BETA_2 = -4.0
   BETA_3 = -0.02
 
-  P_BAR = 0.8
+  P_BAR = 0.9
   P = 0.5
 
   # alternative approach described in formula (7)
