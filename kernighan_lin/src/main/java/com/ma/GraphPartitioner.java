@@ -169,7 +169,7 @@ public class GraphPartitioner {
                 List<Vertex> sortedByDvalueB = setB.sortedByVertexDvalues();
 
                 if (sortedByDvalueA.size() == 0 || sortedByDvalueB.size() == 0) break;
-
+                // sortedByVertexDvalues returns a (ascending) sorted set of valid vertices
                 Vertex topA = sortedByDvalueA.get(0);
                 Vertex topB = sortedByDvalueB.get(0);
 
@@ -198,7 +198,7 @@ public class GraphPartitioner {
                 HashSet<Vertex> subsetA = new HashSet<>();
                 HashSet<Vertex> subsetB = new HashSet<>();
 
-                for (Vertex v : topA.neighbors) {
+                for (Vertex v : topA.acitveNeighborsForLabels(activeLabels)) {
                     if (v == topB ) continue;
                     if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
                         subsetA.add(v);
@@ -207,7 +207,7 @@ public class GraphPartitioner {
                     }
                 }
 
-                for (Vertex v : topB.neighbors) {
+                for (Vertex v : topB.acitveNeighborsForLabels(activeLabels)) {
                     if (v == topA) continue;
                     if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
                         subsetA.add(v);
