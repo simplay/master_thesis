@@ -25,6 +25,7 @@ public class GraphPartitioner {
     private final List<Vertex> bv = new ArrayList<>();
     private final ArrayList<PartitionSet> setList = new ArrayList<>();
     private int clusterCount;
+    private int REPS;
 
 
     public PartitionSet getSetA() {
@@ -40,10 +41,10 @@ public class GraphPartitioner {
     }
 
     public GraphPartitioner(Graph graph, int clusterCount) {
-        this(graph, clusterCount, 500);
+        this(graph, clusterCount, 500, 1);
     }
 
-    public GraphPartitioner(Graph graph, int clusterCount, int dummyCount) {
+    public GraphPartitioner(Graph graph, int clusterCount, int dummyCount, int REPS) {
 
         this.graph = graph;
         this.clusterCount = clusterCount;
@@ -54,6 +55,7 @@ public class GraphPartitioner {
 
         // determine a balanced initial partition of the nodes into sets A and B
         initBalancedSets(dummyCount);
+        this.REPS = REPS;
     }
 
     private void initBalancedSets(int dummyCount) {
@@ -142,9 +144,11 @@ public class GraphPartitioner {
 
     public void runKernighanLin(int MAXITER) {
         // iterate over all pairs: #cluster low 2
-        for(int m=0; m < clusterCount; m++) {
-            for (int n=m+1; n < clusterCount; n++) {
-                _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
+        for (int repet=0; repet < REPS; repet++) {
+            for (int m = 0; m < clusterCount; m++) {
+                for (int n = m + 1; n < clusterCount; n++) {
+                    _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
+                }
             }
         }
     }
