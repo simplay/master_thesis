@@ -1,6 +1,7 @@
 package com.ma;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,18 @@ public class Vertex implements Comparable<Vertex> {
         this.is_dummy = is_dummy;
     }
 
+    public ArrayList<Vertex> acitveNeighborsForLabels(int[] activeLabelList) {
+        ArrayList<Vertex> activeNeighbors = new ArrayList<>();
+        for (Vertex v : neighbors) {
+            for (int activeLabel : activeLabelList) {
+                if (v.getPartitionSetLabel() == activeLabel) {
+                    activeNeighbors.add(v);
+                }
+            }
+        }
+        return activeNeighbors;
+    }
+
     public void setPartitionSetLabel(int label) {
         this.partitionSetLabel = label;
     }
@@ -47,34 +60,6 @@ public class Vertex implements Comparable<Vertex> {
         return partitionSetLabel;
     }
 
-    public LinkedList<Vertex> getNeighborsWithSetLabel(int setLabel) {
-        LinkedList<Vertex> labelNeighbors = new LinkedList<>();
-        if (is_dummy) return labelNeighbors;
-        for (Vertex v : neighbors) {
-            if (v.partitionSetLabel == setLabel) {
-                labelNeighbors.add(v);
-            }
-        }
-        return labelNeighbors;
-    }
-
-    public void updateDValuesOfNeighbors(Vertex other) {
-        if (is_dummy) return;
-
-
-
-        for (Vertex v : neighbors) {
-            if (v.getPartitionSetLabel() == -1) continue;
-            float dvalnew = 0.0f;
-            if (v.getPartitionSetLabel() == getPartitionSetLabel()) {
-                dvalnew = v.getDValue() + 2.0f*similarities[v.getId()]-2.0f*v.similarities[other.getId()];
-            } else {
-                dvalnew = v.getDValue() - 2.0f*similarities[v.getId()]+2.0f*v.similarities[other.getId()];
-            }
-            v.setdValue(dvalnew);
-        }
-
-    }
 
     public float getSimValue(int idx) {
         return (isDummy() || idx == -1) ? 0.0f : similarities[idx];
@@ -106,6 +91,25 @@ public class Vertex implements Comparable<Vertex> {
         float E_a = 0.0f;
 
         for(Vertex v : neighbors) {
+            // skip vertices with no partition set label
+            if (v.getPartitionSetLabel() == -1) continue;
+
+            if (v.getPartitionSetLabel() != getPartitionSetLabel()) {
+                E_a += v.similarities[getId()];
+            } else {
+                I_a += v.similarities[getId()];
+            }
+        }
+        this.dValue = E_a - I_a;
+    }
+
+    public void computeD(int[] activeLabels) {
+        if (is_dummy) return;
+        // select all adjacent internal vertices.
+        float I_a = 0.0f;
+        float E_a = 0.0f;
+
+        for(Vertex v : acitveNeighborsForLabels(activeLabels)) {
             // skip vertices with no partition set label
             if (v.getPartitionSetLabel() == -1) continue;
 

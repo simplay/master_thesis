@@ -1,12 +1,15 @@
 package com.ma;
 
 
+import sun.awt.image.ImageWatched;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,44 +20,66 @@ import java.util.List;
 public class GraphPartitioner {
 
     private Graph graph;
-    private final PartitionSet setA = new PartitionSet();
-    private final PartitionSet setB = new PartitionSet();
     private final List<Float> gv = new ArrayList<>();
     private final List<Vertex> av = new ArrayList<>();
     private final List<Vertex> bv = new ArrayList<>();
-    private ArrayList<Vertex> av_copy;
-    private ArrayList<Vertex> bv_copy;
-    
+    private final ArrayList<PartitionSet> setList = new ArrayList<>();
+    private int clusterCount;
+    private int REPS;
 
 
     public PartitionSet getSetA() {
-        return setA;
+        return getSet(0);
     }
 
     public PartitionSet getSetB() {
-        return setB;
+        return getSet(1);
     }
 
-    public GraphPartitioner(Graph graph) {
+    public PartitionSet getSet(int idx) {
+        return setList.get(idx);
+    }
+
+    public GraphPartitioner(Graph graph, int clusterCount) {
+        this(graph, clusterCount, 500, 1);
+    }
+
+    public GraphPartitioner(Graph graph, int clusterCount, int dummyCount, int REPS) {
 
         this.graph = graph;
+        this.clusterCount = clusterCount;
+
+        for (int k = 0; k < clusterCount; k++) {
+            setList.add(new PartitionSet());
+        }
 
         // determine a balanced initial partition of the nodes into sets A and B
+        initBalancedSets(dummyCount);
+        this.REPS = REPS;
+    }
 
-        int dummyCount = 0;
+    private void initBalancedSets(int dummyCount) {
+        // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
         initSetsEmptyFull(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
+    }
 
+    public void assignModN(int dummy_count) {
+        int idx = 0;
+        for(Vertex v : graph.vertices) {
+            setList.get(idx % clusterCount).add(v);
+            idx++;
+        }
     }
 
     private void initSetsMod2(int count) {
         int idx = 0;
         for(Vertex v : graph.vertices) {
             if (idx % 2 == 0) {
-                setA.add(v);
+                setList.get(0).add(v);
             } else {
-                setB.add(v);
+                setList.get(1).add(v);
             }
             idx++;
         }
@@ -62,32 +87,33 @@ public class GraphPartitioner {
     }
 
     private void addDummies(int count) {
-        for (int k=0; k < count; k++) {
-            setA.add(new Vertex(-1, graph.vertexCount(), true));
-            setB.add(new Vertex(-1, graph.vertexCount(), true));
-        }
-    }
-
-    private void initSetsSplitLeftRight(int count) {
-        int idx = 0;
-        int n = graph.vertexCount();
-        int leftHalf = n / 2;
-        for(Vertex v : graph.vertices) {
-            if (idx <= leftHalf) {
-                setA.add(v);
-            } else {
-                setB.add(v);
+        for (int k = 0; k < count; k++) {
+            for (PartitionSet ps : setList) {
+                ps.add(new Vertex(-1, graph.vertexCount(), true));
             }
-            idx++;
         }
-        addDummies(count);
     }
 
     private void initSetsEmptyFull(int count) {
-        for(Vertex v : graph.vertices) {
-            setA.add(new Vertex(-1, graph.vertexCount(), true));
-            setB.add(v);
+        int fullClusters = clusterCount-1;
+        int idx = 0;
+        for (Vertex v : graph.vertices) {
+            setList.get((idx % fullClusters)+1).add(v);
+            idx++;
+        }
+        int maxVertCount = -1;
 
+        for (PartitionSet ps : setList) {
+            if (ps.count() > maxVertCount) {
+                maxVertCount = ps.count();
+            }
+        }
+
+        for (PartitionSet ps : setList) {
+            int vertDiffCount = maxVertCount - ps.count();
+            for (int k = 0; k < vertDiffCount; k++) {
+                ps.add(new Vertex(-1, graph.vertexCount(), true));
+            }
         }
         addDummies(count);
     }
@@ -117,20 +143,31 @@ public class GraphPartitioner {
     }
 
     public void runKernighanLin(int MAXITER) {
+        // iterate over all pairs: #cluster low 2
+        for (int repet=0; repet < REPS; repet++) {
+            for (int m = 0; m < clusterCount; m++) {
+                for (int n = m + 1; n < clusterCount; n++) {
+                    _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
+                }
+            }
+        }
+    }
+
+    private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
         float max_gv = 0.0f;
         int iter = 0;
-
+        int[] activeLabels = { setA.getLabel(), setB.getLabel() };
+        float diff_gv = 0.0f;
+        float prev_max_gv = 0.0f;
         do {
-            //av_copy = new ArrayList<>(av);
-            //bv_copy = new ArrayList<>(bv);
 
             av.clear();
             bv.clear();
             gv.clear();
 
             // compute D values for all a in A and b in B
-            for (Vertex v : graph.vertices) {
-                v.computeD();
+            for (Vertex v : graph.activeVerticesForLabels(activeLabels)) {
+                v.computeD(activeLabels);
             }
             
             dumpDValueHistogram(graph);//ok, i guess.
@@ -144,10 +181,8 @@ public class GraphPartitioner {
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
                 List<Vertex> sortedByDvalueB = setB.sortedByVertexDvalues();
 
-               // int lastAIndex = setA.size() - 1;
-                //int lastBIndex = setB.size() - 1;
                 if (sortedByDvalueA.size() == 0 || sortedByDvalueB.size() == 0) break;
-
+                // sortedByVertexDvalues returns a (ascending) sorted set of valid vertices
                 Vertex topA = sortedByDvalueA.get(0);
                 Vertex topB = sortedByDvalueB.get(0);
 
@@ -173,16 +208,10 @@ public class GraphPartitioner {
                     }
                 }
                 // update D values for the elements of A = A \ a and B = B \ b
-
-
-
-
-
-
                 HashSet<Vertex> subsetA = new HashSet<>();
                 HashSet<Vertex> subsetB = new HashSet<>();
 
-                for (Vertex v : topA.neighbors) {
+                for (Vertex v : topA.acitveNeighborsForLabels(activeLabels)) {
                     if (v == topB ) continue;
                     if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
                         subsetA.add(v);
@@ -191,7 +220,7 @@ public class GraphPartitioner {
                     }
                 }
 
-                for (Vertex v : topB.neighbors) {
+                for (Vertex v : topB.acitveNeighborsForLabels(activeLabels)) {
                     if (v == topA) continue;
                     if (v.getPartitionSetLabel() == topA.getPartitionSetLabel()) {
                         subsetA.add(v);
@@ -212,8 +241,6 @@ public class GraphPartitioner {
                     v.setdValue(tmp);
                 }
 
-                if (!setA.contains(topA)) System.out.println("A topA fail");
-                if (!setB.contains(topB)) System.out.println("B topB fail");
                 // markInvalid a and b from further consideration in this pass
                 setA.markInvalid(topA);
                 setB.markInvalid(topB);
@@ -253,43 +280,29 @@ public class GraphPartitioner {
             	//removedved BUG: loop boundary needs to be < max_g_idx: max_g_idx = 0 must mean NO swaps 
                 //for (int k = 0; k <= max_gv_idx; k++) {
             	for (int k = 0; k < max_gv_idx; k++) {
-                    // perform a vertex swap
-
-                    boolean t = setA.remove(av.get(k)) ;
-
-                    if (!t) System.out.print("fail");
-
-                    t = setB.add(av.get(k));
-                    if (!t) System.out.print("fail add b");
-
-                    t =  (setB.remove(bv.get(k)));
-                    if (!t) System.out.print("fail");
-
-                    t = setA.add(bv.get(k));
-                    if (!t) System.out.print("fail add a");
-
-                  //  Vertex tmp = av.get(k);
-                  //  av.set(k, bv.get(k));
-                  //  bv.set(k, tmp);
+                    setA.remove(av.get(k)) ;
+                    setB.add(av.get(k));
+                    setB.remove(bv.get(k));
+                    setA.add(bv.get(k));
                 }
-
-//                setA.replaceFirstKElementsByCollection(av, max_gv_idx);
-  //              setB.replaceFirstKElementsByCollection(bv, max_gv_idx);
             }
 
             setA.relabelValid();
             setB.relabelValid();
 
             iter++;
+            diff_gv = prev_max_gv - max_gv;
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
+            prev_max_gv = max_gv;
+            if (diff_gv == 0.0f) break;
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
         for (Vertex v : setA) {
-            v.setPartition(0);
+            v.setPartition(setA.getLabel());
         }
 
         for (Vertex v : setB) {
-            v.setPartition(1);
+            v.setPartition(setB.getLabel());
         }
 
 

@@ -13,7 +13,10 @@ public class Main {
 
         String dataset = "c14";
         String baseOutputPath = "../output/graph_part/";
-
+        int clusterCount = 5;
+        int dummyCount = 500;
+        int max_iterations = 10;
+        int repetitionCount = 6;
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
@@ -28,7 +31,7 @@ public class Main {
         System.out.println("Computing the graph partitioning...");
         System.out.println();
 
-        new GraphPartitioner(g).runKernighanLin(10);
+        new GraphPartitioner(g, clusterCount, dummyCount, repetitionCount).runKernighanLin(max_iterations);
         long tillPartitioningTime = System.currentTimeMillis();
         System.out.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
 

@@ -4,6 +4,7 @@ package com.ma;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,6 +15,18 @@ public class Graph {
     public final List<Vertex> vertices = new ArrayList<Vertex>();
 
     public Graph() {
+    }
+
+    public List<Vertex> activeVerticesForLabels(int[] activeLabelList) {
+        ArrayList<Vertex> activeVertices = new ArrayList<>();
+        for (Vertex v : vertices) {
+            for (int activeLabel : activeLabelList) {
+                if (v.getPartitionSetLabel() == activeLabel) {
+                    activeVertices.add(v);
+                }
+            }
+        }
+        return activeVertices;
     }
 
     
