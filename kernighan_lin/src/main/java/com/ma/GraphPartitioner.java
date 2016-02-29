@@ -24,7 +24,7 @@ public class GraphPartitioner {
     private final List<Vertex> av = new ArrayList<>();
     private final List<Vertex> bv = new ArrayList<>();
     private final ArrayList<PartitionSet> setList = new ArrayList<>();
-    private int clusterCount = 2;
+    private int clusterCount;
 
 
     public PartitionSet getSetA() {
@@ -39,9 +39,10 @@ public class GraphPartitioner {
         return setList.get(idx);
     }
 
-    public GraphPartitioner(Graph graph) {
+    public GraphPartitioner(Graph graph, int clusterCount) {
 
         this.graph = graph;
+        this.clusterCount = clusterCount;
 
         for (int k = 0; k < clusterCount; k++) {
             setList.add(new PartitionSet());
@@ -49,8 +50,8 @@ public class GraphPartitioner {
 
         // determine a balanced initial partition of the nodes into sets A and B
 
-        int dummyCount = 0;
-        //assignModN(dummyCount);
+        int dummyCount = 500;
+        // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
         initSetsEmptyFull(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
@@ -146,6 +147,8 @@ public class GraphPartitioner {
         float max_gv = 0.0f;
         int iter = 0;
         int[] activeLabels = { setA.getLabel(), setB.getLabel() };
+        float diff_gv = 0.0f;
+        float prev_max_gv = 0.0f;
         do {
 
             av.clear();
@@ -154,7 +157,7 @@ public class GraphPartitioner {
 
             // compute D values for all a in A and b in B
             for (Vertex v : graph.activeVerticesForLabels(activeLabels)) {
-                v.computeD();
+                v.computeD(activeLabels);
             }
             
             dumpDValueHistogram(graph);//ok, i guess.
@@ -278,7 +281,10 @@ public class GraphPartitioner {
             setB.relabelValid();
 
             iter++;
+            diff_gv = prev_max_gv - max_gv;
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
+            prev_max_gv = max_gv;
+            if (diff_gv == 0.0f) break;
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
         for (Vertex v : setA) {

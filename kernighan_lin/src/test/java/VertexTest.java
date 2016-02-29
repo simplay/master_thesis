@@ -176,7 +176,7 @@ public void testFoo() {
         }
     }
 
-    GraphPartitioner gp = new GraphPartitioner(g);
+    GraphPartitioner gp = new GraphPartitioner(g,2);
 
 
     for (Vertex v : gp.getSetA()) {
