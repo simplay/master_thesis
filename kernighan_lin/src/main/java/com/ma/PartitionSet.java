@@ -19,6 +19,10 @@ public class PartitionSet implements Iterable<Vertex> {
         globalLabelCounter++;
     }
 
+    public int getLabel() {
+        return label;
+    }
+
     public boolean add(Vertex v) {
         if (vertices.contains(v)) return false;
         vertices.add(v);
