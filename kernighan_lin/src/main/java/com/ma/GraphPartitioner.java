@@ -145,7 +145,7 @@ public class GraphPartitioner {
     private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
         float max_gv = 0.0f;
         int iter = 0;
-
+        int[] activeLabels = { setA.getLabel(), setB.getLabel() };
         do {
 
             av.clear();
@@ -153,7 +153,7 @@ public class GraphPartitioner {
             gv.clear();
 
             // compute D values for all a in A and b in B
-            for (Vertex v : graph.vertices) {
+            for (Vertex v : graph.activeVerticesForLabels(activeLabels)) {
                 v.computeD();
             }
             
@@ -228,8 +228,6 @@ public class GraphPartitioner {
                     v.setdValue(tmp);
                 }
 
-                if (!setA.contains(topA)) System.out.println("A topA fail");
-                if (!setB.contains(topB)) System.out.println("B topB fail");
                 // markInvalid a and b from further consideration in this pass
                 setA.markInvalid(topA);
                 setB.markInvalid(topB);
