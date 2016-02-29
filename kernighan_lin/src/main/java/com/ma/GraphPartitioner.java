@@ -40,6 +40,10 @@ public class GraphPartitioner {
     }
 
     public GraphPartitioner(Graph graph, int clusterCount) {
+        this(graph, clusterCount, 500);
+    }
+
+    public GraphPartitioner(Graph graph, int clusterCount, int dummyCount) {
 
         this.graph = graph;
         this.clusterCount = clusterCount;
@@ -49,8 +53,10 @@ public class GraphPartitioner {
         }
 
         // determine a balanced initial partition of the nodes into sets A and B
+        initBalancedSets(dummyCount);
+    }
 
-        int dummyCount = 500;
+    private void initBalancedSets(int dummyCount) {
         // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
         initSetsEmptyFull(dummyCount);
