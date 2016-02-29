@@ -23,6 +23,10 @@ public class PartitionSet implements Iterable<Vertex> {
         return label;
     }
 
+    public int count() {
+        return vertices.size();
+    }
+
     public boolean add(Vertex v) {
         if (vertices.contains(v)) return false;
         vertices.add(v);

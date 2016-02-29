@@ -54,7 +54,6 @@ public class GraphPartitioner {
         // initSetsMod2(dummyCount);
         initSetsEmptyFull(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
-
     }
 
     public void assignModN(int dummy_count) {
@@ -87,10 +86,25 @@ public class GraphPartitioner {
     }
 
     private void initSetsEmptyFull(int count) {
-        for(Vertex v : graph.vertices) {
-            setList.get(0).add(new Vertex(-1, graph.vertexCount(), true));
-            setList.get(1).add(v);
+        int fullClusters = clusterCount-1;
+        int idx = 0;
+        for (Vertex v : graph.vertices) {
+            setList.get((idx % fullClusters)+1).add(v);
+            idx++;
+        }
+        int maxVertCount = -1;
 
+        for (PartitionSet ps : setList) {
+            if (ps.count() > maxVertCount) {
+                maxVertCount = ps.count();
+            }
+        }
+
+        for (PartitionSet ps : setList) {
+            int vertDiffCount = maxVertCount - ps.count();
+            for (int k = 0; k < vertDiffCount; k++) {
+                ps.add(new Vertex(-1, graph.vertexCount(), true));
+            }
         }
         addDummies(count);
     }
@@ -120,7 +134,12 @@ public class GraphPartitioner {
     }
 
     public void runKernighanLin(int MAXITER) {
-        _runKernighanLin(setList.get(0), setList.get(1), MAXITER);
+        // iterate over all pairs: #cluster low 2
+        for(int m=0; m < clusterCount; m++) {
+            for (int n=m+1; n < clusterCount; n++) {
+                _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
+            }
+        }
     }
 
     private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
