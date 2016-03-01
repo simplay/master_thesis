@@ -19,17 +19,17 @@ class SimilarityMatrix
 
   # Number of spatially nearest neighbors that should be returned
   # per trajectory
-  NN_COUNT = 200
+  NN_COUNT = 500
 
   # Maximal accepted Average pixel distance a neighbor may exhibit
   # in order to be selected.
-  AVG_PIX_DIST_THRESH = 100
+  AVG_PIX_DIST_THRESH = 50
 
   # Should the average pixel thressholding method used to select
   # the nearest neighbors for a trajectory. If false, a fixed number
   # of trajectory neighbors will be selected, according to the defined
   # constant NN_COUNT.
-  USE_AVG_PIX_DIST_THRESH = true
+  USE_AVG_PIX_DIST_THRESH = false
 
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager

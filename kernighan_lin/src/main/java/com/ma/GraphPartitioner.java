@@ -57,14 +57,14 @@ public class GraphPartitioner {
         initBalancedSets(dummyCount);
         this.REPS = REPS;
         System.out.print("Computing multi-label clustering via alpha-beta expansion");
-        System.out.print("Solving for " + clusterCount + " clusters by using " + dummyCount + "dummy vertices");
+        System.out.print("Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
     }
 
     private void initBalancedSets(int dummyCount) {
         // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
-        // initSetsEmptyFull(dummyCount);
-        initAllEmptyButOne(dummyCount);
+        initSetsEmptyFull(dummyCount);
+        // initAllEmptyButOne(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
     }
 
@@ -201,8 +201,9 @@ public class GraphPartitioner {
                 Vertex topA = sortedByDvalueA.get(0);
                 Vertex topB = sortedByDvalueB.get(0);
 
-                //could and should be sped up...
+                //TODO: could and should be sped up...
                 //for now just n^2 double loop.
+                // Visit all pairs (a,b) and find the (a,b) = max_arg gain(a,b).
                 float maxgain = graph.gain(topA, topB);
                 float candidate_gain;
                 for (Vertex candidateA : sortedByDvalueA) {

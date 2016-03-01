@@ -14,9 +14,9 @@ public class Main {
         String dataset = "c14";
         String baseOutputPath = "../output/graph_part/";
         int clusterCount = 3;
-        int dummyCount = 500;
+        int dummyCount = 1000;
         int max_iterations = 10;
-        int repetitionCount = 6;
+        int repetitionCount = 3;
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
