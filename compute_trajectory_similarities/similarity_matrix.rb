@@ -21,6 +21,16 @@ class SimilarityMatrix
   # per trajectory
   NN_COUNT = 200
 
+  # Maximal accepted Average pixel distance a neighbor may exhibit
+  # in order to be selected.
+  AVG_PIX_DIST_THRESH = 100
+
+  # Should the average pixel thressholding method used to select
+  # the nearest neighbors for a trajectory. If false, a fixed number
+  # of trajectory neighbors will be selected, according to the defined
+  # constant NN_COUNT.
+  USE_AVG_PIX_DIST_THRESH = true
+
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager
     puts "Using local variance for computing similarities: #{is_using_local_variance}"
@@ -175,8 +185,19 @@ class SimilarityMatrix
   #   and is located at "#{base_fname}"
   # @param base_fname [String] filepath where file will be located.
   def save_sp_nn(base_fname)
-    puts "Saving the #{NN_COUNT} spatially nearest neighbors per trajectory..."
-    sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+    if USE_AVG_PIX_DIST_THRESH
+      puts "Using all trajectories as neighbors that are having an avg distance at most #{AVG_PIX_DIST_THRESH} pixels per trajectory..."
+    else
+      puts "Saving the #{NN_COUNT} spatially nearest neighbors per trajectory..."
+    end
+    #sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+
+    if USE_AVG_PIX_DIST_THRESH
+      sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors_below_thresh(100.0)
+    else
+      sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+    end
+
     sp_nn_list = sp_nn_list.map do |tra|
       tra.to_s.gsub(/(\[|\])/,'')
     end

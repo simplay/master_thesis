@@ -37,6 +37,23 @@ class TrajectoryManager
     end
   end
 
+  # Obtain a label list of the spatially closest neighbors
+  # for every trajectory.
+  #
+  # @param nn_count [Integer] number of closest neighbors that
+  #   should be returned.
+  # @return Array<Array<Intger>> closest spatial neighbor labels.
+  def select_nearest_spatial_trajectory_neighbors_below_thresh(sp_thresh)
+    trajectories.map do |tra|
+      selection = tra.spatial_distances.select do |_, dist| dist <= sp_thresh end
+      tra_dist = selection.sort_by { |_, dist| dist }
+
+      # sp_nn is an array of arrays that contain as first
+      # element the label and as 2nd element the distance.
+      tra_dist.map(&:first).sort
+    end
+  end
+
   # Fetch all trajectories in this manager that have points
   # that tracked outside of their image.
   def find_issue_trajectories

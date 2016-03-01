@@ -56,13 +56,26 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         initBalancedSets(dummyCount);
         this.REPS = REPS;
+        System.out.print("Computing multi-label clustering via alpha-beta expansion");
+        System.out.print("Solving for " + clusterCount + " clusters by using " + dummyCount + "dummy vertices");
     }
 
     private void initBalancedSets(int dummyCount) {
         // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
-        initSetsEmptyFull(dummyCount);
+        // initSetsEmptyFull(dummyCount);
+        initAllEmptyButOne(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
+    }
+
+    public void initAllEmptyButOne(int dummyCount) {
+        for (Vertex v : graph.vertices) {
+            setList.get(0).add(v);
+            for (int k = 1; k < setList.size(); k++) {
+                setList.get(k).add(new Vertex(-1, graph.vertexCount(), true));
+            }
+        }
+        addDummies(dummyCount);
     }
 
     public void assignModN(int dummy_count) {
@@ -145,8 +158,10 @@ public class GraphPartitioner {
     public void runKernighanLin(int MAXITER) {
         // iterate over all pairs: #cluster low 2
         for (int repet=0; repet < REPS; repet++) {
+            System.out.println("Round " + (repet+1) + "/"+REPS);
             for (int m = 0; m < clusterCount; m++) {
                 for (int n = m + 1; n < clusterCount; n++) {
+                    System.out.println("Computing pair (m,n)="+"("+m+","+n+")...");
                     _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
                 }
             }
