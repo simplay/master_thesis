@@ -19,7 +19,7 @@ class SimilarityMatrix
 
   # Number of spatially nearest neighbors that should be returned
   # per trajectory
-  NN_COUNT = 500
+  NN_COUNT = 1400
 
   # Maximal accepted Average pixel distance a neighbor may exhibit
   # in order to be selected.
@@ -30,6 +30,8 @@ class SimilarityMatrix
   # of trajectory neighbors will be selected, according to the defined
   # constant NN_COUNT.
   USE_AVG_PIX_DIST_THRESH = false
+
+  USE_TOP_AND_WORST = true
 
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager
@@ -195,7 +197,12 @@ class SimilarityMatrix
     if USE_AVG_PIX_DIST_THRESH
       sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors_below_thresh(100.0)
     else
-      sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+      if USE_TOP_AND_WORST
+        sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors_topN_Rand_N(NN_COUNT/2)
+      else
+        sp_nn_list = @tm.select_nearest_spatial_trajectory_neighbors(NN_COUNT)
+
+      end
     end
 
     sp_nn_list = sp_nn_list.map do |tra|

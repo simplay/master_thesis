@@ -43,6 +43,25 @@ class TrajectoryManager
   # @param nn_count [Integer] number of closest neighbors that
   #   should be returned.
   # @return Array<Array<Intger>> closest spatial neighbor labels.
+  def select_nearest_spatial_trajectory_neighbors_topN_Rand_N(nn_count)
+    trajectories.map do |tra|
+      tra_dist = tra.spatial_distances.sort_by { |_, dist| dist }
+      top_sp_nn = tra_dist[0..nn_count]
+      worst_sp_nn = tra_dist[-1-nn_count..-1]
+      sp_nn = top_sp_nn + worst_sp_nn
+
+      # sp_nn is an array of arrays that contain as first
+      # element the label and as 2nd element the distance.
+      sp_nn.map(&:first).sort
+    end
+  end
+
+  # Obtain a label list of the spatially closest neighbors
+  # for every trajectory.
+  #
+  # @param nn_count [Integer] number of closest neighbors that
+  #   should be returned.
+  # @return Array<Array<Intger>> closest spatial neighbor labels.
   def select_nearest_spatial_trajectory_neighbors_below_thresh(sp_thresh)
     trajectories.map do |tra|
       selection = tra.spatial_distances.select do |_, dist| dist <= sp_thresh end
