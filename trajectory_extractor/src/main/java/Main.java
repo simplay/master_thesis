@@ -8,10 +8,15 @@ public class Main {
         String dataset = "c14";
         String fileNr = "1";
 
-        new CandidateFileReader(dataset, fileNr);
+        // TODO make a for loop to read all files
+        //new CandidateFileReader(dataset, fileNr);
 
-        for (Integer i : TrackingCandidates.getInstance().getCandidateOfFrame(0).getFirst()) {
-            System.out.print(i + " ");
-        }
+
+        // TODO read flow files here
+        FlowField ff_fw = new FlowFileReader(dataset, "fw", fileNr).getFlowField();
+        FlowField ff_bw = new FlowFileReader(dataset, "bw", fileNr).getFlowField();
+
+
+        //TODO start tracking
     }
 }

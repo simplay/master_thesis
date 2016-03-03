@@ -45,14 +45,27 @@ for t=START_FRAME_IDX:END_FRAME_IDX
         fclose(fid);
     end
     
-    
-    
-    
     % extract flow data
     fw_flow_t = fwf{t};
     bw_flow_t = bwf{t};
     
+    forward_flow = readFlowFile(fw_flow_t);
+    forward_flow_u = forward_flow(:,:,2);
+    forward_flow_v = forward_flow(:,:,1);
     
+    backward_flow = readFlowFile(bw_flow_t);
+    backward_flow_u = backward_flow(:,:,2);
+    backward_flow_v = backward_flow(:,:,1);
+    
+    fwuName = strcat(BASE_OUTPUT_PATH,'fw_u_',num2str(t),'.mat');
+    bwuName = strcat(BASE_OUTPUT_PATH,'bw_u_',num2str(t),'.mat');
+    fwvName = strcat(BASE_OUTPUT_PATH,'fw_v_',num2str(t),'.mat');
+    bwvName = strcat(BASE_OUTPUT_PATH,'bw_v_',num2str(t),'.mat');
+    
+    dlmwrite(fwuName,forward_flow_u, 'delimiter',' ','precision',6);
+    dlmwrite(bwuName,backward_flow_u, 'delimiter', ' ','precision',6);
+    dlmwrite(fwvName,forward_flow_v, 'delimiter',' ','precision',6);
+    dlmwrite(bwvName,backward_flow_v, 'delimiter',' ','precision',6);
     
  end
 
