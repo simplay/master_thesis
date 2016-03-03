@@ -14,7 +14,7 @@ public class Main {
         String dataset = "c14";
         String baseOutputPath = "../output/graph_part/";
         int clusterCount = 3;
-        int dummyCount = 1000;
+        int dummyCount = 0;
         int max_iterations = 10;
         int repetitionCount = 3;
 

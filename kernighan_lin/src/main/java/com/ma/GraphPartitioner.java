@@ -63,8 +63,8 @@ public class GraphPartitioner {
     private void initBalancedSets(int dummyCount) {
         // assignModN(dummyCount);
         // initSetsMod2(dummyCount);
-        initSetsEmptyFull(dummyCount);
-        // initAllEmptyButOne(dummyCount);
+        // initSetsEmptyFull(dummyCount);
+        initAllEmptyButOne(dummyCount);
         // initSetsSplitLeftRight(dummyCount);
     }
 
