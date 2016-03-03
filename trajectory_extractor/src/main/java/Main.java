@@ -10,5 +10,8 @@ public class Main {
 
         new CandidateFileReader(dataset, fileNr);
 
+        for (Integer i : TrackingCandidates.getInstance().getCandidateOfFrame(0).getFirst()) {
+            System.out.print(i + " ");
+        }
     }
 }

@@ -1,15 +1,16 @@
 import java.io.*;
+import java.util.LinkedList;
 
 /**
  * Created by simplay on 03/03/16.
  */
 public class CandidateFileReader {
+    private LinkedList<String[]> candidates;
+
     public CandidateFileReader(String dataset, String fileNr) {
 
         String baseFileName = "../output/tracker_data/" + dataset + "/candidates_"+ fileNr + ".txt";
-
-        File f = new File(baseFileName);
-        System.out.println("Expecting data in Folder : " + f.getAbsolutePath());
+        candidates = new LinkedList<String[]>();
 
         FileInputStream fstream = null;
         try {
@@ -34,9 +35,11 @@ public class CandidateFileReader {
             e.printStackTrace();
         }
 
+        TrackingCandidates.getInstance().addCandidate(candidates.getFirst(), candidates.getLast());
     }
 
     private void processLine(String line) {
-        System.out.println(line);
+        String[] elements = line.split("\\[|\\]")[1].split(" ");
+        candidates.add(elements);
     }
 }
