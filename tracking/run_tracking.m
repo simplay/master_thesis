@@ -92,6 +92,7 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
         prev_backward_flow = 0;
         % initially, there are no tracked to positions
         tracked_to_positions = zeros(m,n);
+        tracking_tensor = zeros(m,n,7,END_FRAME_IDX-START_FRAME_IDX+1);
         for t=START_FRAME_IDX:END_FRAME_IDX,
             frame_t = imgs{t};
             im_tp1 = imgs{t+1};
@@ -123,9 +124,16 @@ function run_tracking( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY,
             start_mask = old_start_mask;
             tracked_to_positions = tracked_pixels(:,:,1);
             prev_tacked_pixels = tracked_pixels;
+            
+            
+            tens_idx = t-START_FRAME_IDX+1;
+            tracking_tensor(:,:,:,tens_idx) = tracked_pixels;
+            
             disp(['Processed flow field ', num2str(t)]);
         end
-    
+        fnpath = strcat('../output/tracking_tensor/');
+        savefile = strcat(fnpath, strcat(DATASETNAME,'.mat'));
+        save(savefile, 'tracking_tensor');
     end
 
     %% compute local and global variance
