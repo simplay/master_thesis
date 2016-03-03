@@ -1,13 +1,11 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Created by simplay on 03/03/16.
  */
 public class FlowFileReader {
     private ArrayList<float[]> activeRowDir;
-    private FlowField ff;
 
     public FlowFileReader(String dataset, String type, String fileNr) {
         String baseFileNameU = "../output/tracker_data/" + dataset + "/" + type + "_u_"+ fileNr + ".mat";
@@ -25,17 +23,20 @@ public class FlowFileReader {
         int m = activeRowDir.size();
         int n = activeRowDir.get(0).length;
 
-        ff = new FlowField(m, n, type);
+        FlowField ff = new FlowField(m, n, type);
 
         for (int k = 0; k < m; k++) {
             ff.setRow(k, u_rows.get(k), v_rows.get(k));
         }
 
+        if (ff.isForwardFlow()) {
+            FlowFieldManager.getInstance().addForwardFlow(ff);
+        } else if (ff.isBackwardFlow()) {
+            FlowFieldManager.getInstance().addBackwardFlow(ff);
+        } else {
+            System.err.println("Wrong flow type assigned");
+        }
 
-    }
-
-    public FlowField getFlowField() {
-        return ff;
     }
 
     private void read_flow_dir_matrix(String baseFileName) {
