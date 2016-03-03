@@ -21,6 +21,7 @@ public class Trajectory implements Iterable<Point2f>{
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
+        points = new ArrayList<Point2f>();
     }
 
     public void addPoint(Point2f p) {
@@ -35,7 +36,32 @@ public class Trajectory implements Iterable<Point2f>{
         return startFrame;
     }
 
+    public Point2f getPointAtFrame(int frame_idx) {
+        return points.get(frame_idx);
+    }
+
+    /**
+     * Get the currently last frame in which this trajectory is active
+     *
+     * @example
+     *  if trajectory starts at frame 0 and only has one point (the starting point)
+     *  its current active frame is frame 0 (0 + 1 - 1).
+     * @return
+     */
+    public int currentActiveFrame() {
+        return startFrame + points.size() - 1;
+    }
+
     public Iterator<Point2f> iterator() {
         return points.iterator();
+    }
+
+    public String toString() {
+        String header = "l="+label+" s="+startFrame;
+        String content = "";
+        for (Point2f p : points) {
+            content += p.toString() + " ";
+        }
+        return header+ " " +content;
     }
 }
