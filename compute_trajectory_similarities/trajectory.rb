@@ -165,7 +165,7 @@ class Trajectory
     idx = frame_idx - start_frame
     if idx >= count or idx < 0
       puts "in point_at at frame #{frame_idx}"
-      binding.pry
+      #binding.pry
     else
       @points[idx]
     end

@@ -1,4 +1,3 @@
-require 'pry'
 require 'java'
 require 'thread'
 require_relative 'similarity_task'
@@ -19,7 +18,7 @@ class SimilarityMatrix
 
   # Number of spatially nearest neighbors that should be returned
   # per trajectory
-  NN_COUNT = 1400
+  NN_COUNT = 1500
 
   # Maximal accepted Average pixel distance a neighbor may exhibit
   # in order to be selected.
@@ -31,7 +30,7 @@ class SimilarityMatrix
   # constant NN_COUNT.
   USE_AVG_PIX_DIST_THRESH = false
 
-  USE_TOP_AND_WORST = true
+  USE_TOP_AND_WORST = false
 
   def initialize(tracking_manager, is_using_local_variance=true)
     @tm = tracking_manager

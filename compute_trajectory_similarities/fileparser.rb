@@ -7,7 +7,7 @@ require_relative 'point3f'
 require_relative 'meta_info'
 require_relative 'cie_lab'
 
-require 'pry'
+#require 'pry'
 
 class Fileparser
 
@@ -46,7 +46,7 @@ class Fileparser
     if in_demo_mode?
       a = @sim_mat.trajectory_similarities_for(15)
       top_n_neighbors = @tm.most_sim_neighbors_of_trajectory(a, 5)
-      binding.pry
+      #binding.pry
     else
       @sim_mat.to_mat
     end
