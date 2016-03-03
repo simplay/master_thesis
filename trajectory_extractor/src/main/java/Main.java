@@ -22,7 +22,8 @@ public class Main {
 
         }
 
-        System.out.println("files loaded...");
+            System.out.println("files loaded...");
+        new Tracker();
 
     }
 }
