@@ -40,7 +40,7 @@ public class Tracker {
      */
     private void continueTrackToNextFrame(int currentFrame) {
         FlowField fw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
-        FlowField bw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
+        FlowField bw_currentFrame = FlowFieldManager.getInstance().getBackwardFlow(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
             // System.out.println(tra.toString());

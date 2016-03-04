@@ -35,10 +35,10 @@ public class FlowFieldManager {
     }
 
     public void addBackwardFlow(FlowField flow) {
-        forwardFlows.add(flow);
+        backwardFlows.add(flow);
     }
 
     public FlowField getBackwardFlow(int frame_idx) {
-        return forwardFlows.get(frame_idx);
+        return backwardFlows.get(frame_idx);
     }
 }
