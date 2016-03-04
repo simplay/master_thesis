@@ -50,5 +50,6 @@ public class Main {
         String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
         System.out.print("Writting trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
+
     }
 }

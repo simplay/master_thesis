@@ -75,6 +75,12 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return header + "\n" + content;
     }
 
+    public String toFramewiseString(int frame_idx) {
+        int idx = frame_idx - startFrame;
+        Point2f p = points.get(idx);
+        return label + " " + p.u() + " " + p.v();
+    }
+
     @Override
     public int compareTo(Trajectory o) {
         if (label < o.getLabel()) {

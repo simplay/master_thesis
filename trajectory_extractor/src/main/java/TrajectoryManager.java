@@ -83,7 +83,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
      * Select all trajectories that have a given length value.
      *
      * @param length expected trajectory length value.
-     * @return Collection of trajectories all having a expected length value.
+     * @return Collection of trajectories all having an expected length value.
      */
     public LinkedList<Trajectory> allTrajectoryWithLength(int length) {
         LinkedList<Trajectory> actives = new LinkedList<Trajectory>();
@@ -138,6 +138,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return content.trim();
     }
 
+    public String toFramewiseOutputString(int frame_idx) {
+        String content = "";
+        LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesStartingAt(frame_idx);
+        Collections.sort(allTrajectoriesStartingAt(frame_idx));
+
+        for (Trajectory tra : trajectoriesAtGivenFrame) {
+            content = content + tra.toFramewiseString(frame_idx) + "\n";
+        }
+        return content.trim();
+    }
+
 
     /**
      * @param fPathName file path name for this graph's partition file.
@@ -145,6 +156,16 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     public void saveTrajectoriesToFile(String fPathName) {
         try {
             try (PrintWriter out = new PrintWriter(fPathName)) {
+                out.println(toOutputString());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveFramewiseTrajectoryDataToFile(String fpName, int till_idx) {
+        try {
+            try (PrintWriter out = new PrintWriter(fpName)) {
                 out.println(toOutputString());
             }
         } catch (FileNotFoundException e) {
