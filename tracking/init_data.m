@@ -67,6 +67,12 @@ for t=START_FRAME_IDX:END_FRAME_IDX
     dlmwrite(fwvName,forward_flow_v, 'delimiter',' ','precision',6);
     dlmwrite(bwvName,backward_flow_v, 'delimiter',' ','precision',6);
     
+    bwvName = strcat(BASE_OUTPUT_PATH,'d_fw_flow_',num2str(t),'.mat');
+    % compute |du|^2 + |dv|^2 from fw flow.
+    d_fw_u_flow = mat2gradfield(forward_flow_u);
+    d_fw_v_flow = mat2gradfield(forward_flow_v); 
+    d_fw_flow_nsq = (d_fw_u_flow.^2+d_fw_v_flow.^2);
+    dlmwrite(bwvName,d_fw_flow_nsq, 'delimiter',' ','precision',6);
  end
 
 
