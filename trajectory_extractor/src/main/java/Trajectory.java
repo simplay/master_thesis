@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Trajectory implements Iterable<Point2f>{
+public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
 
     // points that span the trajectory
     private ArrayList<Point2f> points;
@@ -74,4 +74,16 @@ public class Trajectory implements Iterable<Point2f>{
         }
         return header + "\n" + content;
     }
+
+    @Override
+    public int compareTo(Trajectory o) {
+        if (label < o.getLabel()) {
+            return -1;
+        } else if (label == o.getLabel()) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
 }

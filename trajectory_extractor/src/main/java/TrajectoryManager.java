@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -72,7 +73,10 @@ public class TrajectoryManager implements Iterable<Trajectory>{
 
     public String toOutputString() {
         String content = "";
-        for (Trajectory tra : trajectories.values()) {
+        LinkedList<Trajectory> sortedByLabel = new LinkedList<>(trajectories.values());
+        Collections.sort(sortedByLabel);
+
+        for (Trajectory tra : sortedByLabel) {
             content = content + tra.toOutputString();
         }
         return content.trim();

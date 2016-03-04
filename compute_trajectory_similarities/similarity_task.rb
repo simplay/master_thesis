@@ -14,7 +14,7 @@ class SimilarityTask
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1 #0.02 => = 0.0001 works best for cars1, when eps_flow is equal to 0.001
-  DT_THREH = 4 # Num of trajectories - 1,  a pair has to have at least have in commoan
+  DT_THREH = 1 # Num of trajectories - 1,  a pair has to have at least have in commoan
   ZERO_THRESH = 1.0e-12
 
   # Setting this to 0 makes cluster consisting of 1 pixel vanish.
@@ -27,7 +27,7 @@ class SimilarityTask
   DO_SAVE_NN = true
 
   #MIN_NUM_OVERLAPPING_FRAMES = 6
-  MIN_EXPECTED_TRAJ_LEN = 4
+  MIN_EXPECTED_TRAJ_LEN = 2
 
   def initialize(a, trajectories)
     @a = a
