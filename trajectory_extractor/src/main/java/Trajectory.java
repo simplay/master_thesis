@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class Trajectory implements Iterable<Point2f>{
 
     // points that span the trajectory

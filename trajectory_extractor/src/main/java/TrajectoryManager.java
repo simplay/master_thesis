@@ -1,11 +1,7 @@
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class TrajectoryManager implements Iterable<Trajectory>{
 
     private HashMap<Integer, Trajectory> trajectories;

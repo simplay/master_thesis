@@ -1,9 +1,5 @@
-import java.awt.*;
 import java.util.LinkedList;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class Tracker {
 
     private float m;

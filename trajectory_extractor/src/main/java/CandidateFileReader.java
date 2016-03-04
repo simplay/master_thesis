@@ -1,9 +1,5 @@
-import java.io.*;
 import java.util.LinkedList;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class CandidateFileReader extends FileReader{
     private LinkedList<String[]> candidates;
 

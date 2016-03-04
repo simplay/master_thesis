@@ -1,8 +1,5 @@
 import java.io.*;
 
-/**
- * Created by simplay on 04/03/16.
- */
 public abstract class FileReader {
 
     protected void readFile(String fileNamePath) {

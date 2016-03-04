@@ -1,6 +1,3 @@
-/**
- * Created by simplay on 03/03/16.
- */
 public class Point2f {
 
     private float x;

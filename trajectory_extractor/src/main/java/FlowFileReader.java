@@ -1,9 +1,5 @@
-import java.io.*;
 import java.util.ArrayList;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class FlowFileReader extends FileReader{
 
     // current flow direction scalar field that should be filled

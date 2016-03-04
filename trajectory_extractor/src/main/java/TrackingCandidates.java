@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- * Created by simplay on 03/03/16.
- */
 public class TrackingCandidates {
 
     private ArrayList<Integer[]> rows;
