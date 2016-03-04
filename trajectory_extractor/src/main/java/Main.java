@@ -14,6 +14,7 @@ public class Main {
             }
         }
         System.out.println("Tracking points over " + counter + " frames...");
+        System.out.println();
 
         int till_index = counter;
         for (int idx = 1; idx <= till_index; idx++) {
@@ -26,9 +27,24 @@ public class Main {
         }
 
         System.out.println("Files loaded...");
+        System.out.println();
+        System.out.println("Sampling every " + samplingRate + "th pixel");
         new Tracker(till_index, samplingRate);
+        System.out.println();
+        System.out.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        for (int k = 0; k <= till_index+1; k++) {
+            int trajectoryCount = TrajectoryManager.getInstance().allTrajectoryWithLength(k).size();
+            System.out.println("#Trajectories with len=" + k + ": " + trajectoryCount);
+        }
+        System.out.println();
+        // one pointed trajectories have a length of 0.
+        System.out.println("Filtering 1-pointed trajectories...");
 
-        // TODO Filter too short trajectories
+        TrajectoryManager.getInstance().filterOnePointedTrajectories();
+        System.out.println("Filtered too short trajectories...");
+        System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+
         // TODO save Trajectories in output files
+
     }
 }

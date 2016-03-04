@@ -21,6 +21,10 @@ public class Trajectory implements Iterable<Point2f>{
         points = new ArrayList<Point2f>();
     }
 
+    public int length() {
+        return points.size()-1;
+    }
+
     public void addPoint(Point2f p) {
         points.add(p);
     }

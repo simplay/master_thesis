@@ -14,6 +14,9 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return instance;
     }
 
+    public int trajectoryCount() {
+        return trajectories.size();
+    }
     private TrajectoryManager() {
         trajectories = new HashMap<Integer, Trajectory>();
     }
@@ -49,4 +52,19 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return actives;
     }
 
+    public LinkedList<Trajectory> allTrajectoryWithLength(int length) {
+        LinkedList<Trajectory> actives = new LinkedList<Trajectory>();
+        for (Trajectory tra : trajectories.values()) {
+            if (tra.length() == length) {
+                actives.add(tra);
+            }
+        }
+        return actives;
+    }
+
+    public void filterOnePointedTrajectories() {
+        for (Trajectory traj : allTrajectoryWithLength(0)) {
+            trajectories.remove(traj.getLabel());
+        }
+    }
 }
