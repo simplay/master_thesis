@@ -3,6 +3,7 @@ import java.io.*;
 public class Main {
     public static void main(String[] argv) {
         String dataset = "c14";
+        int samplingRate = 8;
 
         File folder = new File("../output/tracker_data/" + dataset);
         File[] fileList = folder.listFiles();
@@ -24,7 +25,10 @@ public class Main {
             // TODO load gradient flow files
         }
 
-        System.out.println("files loaded...");
-        new Tracker(till_index);
+        System.out.println("Files loaded...");
+        new Tracker(till_index, samplingRate);
+
+        // TODO Filter too short trajectories
+        // TODO save Trajectories in output files
     }
 }

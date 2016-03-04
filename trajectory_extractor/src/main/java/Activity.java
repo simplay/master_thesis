@@ -16,30 +16,33 @@ public class Activity {
      */
     public Activity(int m, int n, int samplingRate) {
         states = new boolean[m][n];
+        this.m = m;
+        this.n = n;
         this.samplingRate = samplingRate;
     }
 
     public void markActiveAt(int row_idx, int col_idx) {
-        states[m][n] = true;
+        states[row_idx][col_idx] = true;
     }
 
     /**
      * Iterate over neighborhood of samplingRate/2 and check whether or not
      * there exists an active neighbor.
-     * @param row_idx
-     * @param col_idx
+     * @param p
      * @return
      */
-    public boolean hasActivityAt(int row_idx, int col_idx) {
+    public boolean hasActivityAt(Point2f p) {
+        int row_idx = p.rounded().iU();
+        int col_idx = p.rounded().iV();
         int upper = row_idx - samplingRate/2;
         if (upper < 0) upper = 0;
         int lower = row_idx + samplingRate/2;
-        if (lower > m) lower = m;
+        if (lower >= m) lower = m-1;
 
         int left = col_idx - samplingRate/2;
         if (left < 0) left = 0;
         int right = col_idx + samplingRate/2;
-        if (right > n) right = n;
+        if (right >= n) right = n-1;
 
         boolean hasActiveNeighbor = false;
         for (int k1 = upper; k1 <= lower; k1++) {
@@ -50,4 +53,13 @@ public class Activity {
 
         return hasActiveNeighbor;
     }
+
+    /**
+     * Reset all internal states to false
+     * i.e. they are not active
+     */
+    public void flushStates() {
+        states = new boolean[m][n];
+    }
+
 }

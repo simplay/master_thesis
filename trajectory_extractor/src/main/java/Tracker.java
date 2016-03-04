@@ -4,23 +4,36 @@ public class Tracker {
 
     private float m;
     private float n;
+    private Activity activity;
+    private Activity activity_next;
+    private int samplingRate;
 
-    public Tracker(int till_index) {
-
+    public Tracker(int till_index, int samplingRate) {
+        this.samplingRate = samplingRate;
         m = FlowFieldManager.getInstance().m();
         n = FlowFieldManager.getInstance().n();
 
         System.out.println("Start point tracking...");
 
+        activity = new Activity((int) m, (int) n, samplingRate);
+        activity_next = new Activity((int) m, (int) n, samplingRate);
+
+        // in the first pass, all states should be set to true
+        // activity.setAllStatesEqualTrue();
+
+        // the order here is crucial: first start to start new trajectories
+        // and then continue others.
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
+            activity = activity_next;
+            activity_next.flushStates();
             System.out.println("Tracked Frame " + (frame_idx+1));
         }
+
         System.out.println("Finished point tracking...");
     }
 
-    // TODO only track every k-th sample except (sampling rate)
     private void startNewTrajectory(int frame_idx) {
         LinkedList<Integer[]> currentFrame = TrackingCandidates.getInstance().getCandidateOfFrame(frame_idx);
 
@@ -31,6 +44,13 @@ public class Tracker {
             int row_idx = rows[idx];
             int col_idx = cols[idx];
             Point2f p = new Point2f(row_idx, col_idx);
+
+            if (activity.hasActivityAt(p)) {
+                continue;
+            } else {
+                activity_next.markActiveAt(row_idx, col_idx);
+            }
+
             TrajectoryManager.getInstance().startNewTrajectoryAt(p, frame_idx);
         }
     }
@@ -83,6 +103,7 @@ public class Tracker {
             // position using the tracked to position using bilinear interpolation
             // and the backward flow field
             Point2f next_p = new Point2f(next_u, next_v);
+            activity_next.markActiveAt((int)next_u, (int)next_v);
             TrajectoryManager.getInstance().appendPointTo(tra.getLabel(), next_p);
         }
     }
