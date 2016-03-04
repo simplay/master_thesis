@@ -5,6 +5,9 @@ public class Main {
         String dataset = "c14";
         int samplingRate = 8;
 
+
+        String output_base_path = "../output/trajectories/";
+
         File folder = new File("../output/tracker_data/" + dataset);
         File[] fileList = folder.listFiles();
         int counter = 0;
@@ -44,8 +47,8 @@ public class Main {
         System.out.println("Filtered too short trajectories...");
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
-        // TODO save Trajectories in output files
-        System.out.println(TrajectoryManager.getInstance().toOutputString());
-
+        String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
+        System.out.print("Writting trajectories to output file: " + output_filePathName);
+        TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
     }
 }

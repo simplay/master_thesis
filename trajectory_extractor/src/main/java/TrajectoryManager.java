@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -74,5 +76,19 @@ public class TrajectoryManager implements Iterable<Trajectory>{
             content = content + tra.toOutputString();
         }
         return content;
+    }
+
+
+    /**
+     * @param fPathName file path name for this graph's partition file.
+     */
+    public void saveTrajectoriesToFile(String fPathName) {
+        try {
+            try (PrintWriter out = new PrintWriter(fPathName)) {
+                out.println(toOutputString());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
