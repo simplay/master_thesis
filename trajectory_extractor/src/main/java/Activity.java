@@ -62,4 +62,17 @@ public class Activity {
         states = new boolean[m][n];
     }
 
+    public boolean[][] getStates() {
+        return states;
+    }
+
+    public void copyStates(Activity other) {
+        boolean[][] states_other = other.getStates();
+        for (int k1 = 0; k1 < m; k1++) {
+            for (int k2 = 0; k2 < n; k2++) {
+                states[k1][k2] = states_other[k1][k2];
+            }
+        }
+    }
+
 }

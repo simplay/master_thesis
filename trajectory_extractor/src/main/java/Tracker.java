@@ -26,7 +26,7 @@ public class Tracker {
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
-            activity = activity_next;
+            activity.copyStates(activity_next);
             activity_next.flushStates();
             System.out.println("Tracked Frame " + (frame_idx+1));
         }
@@ -46,6 +46,7 @@ public class Tracker {
             Point2f p = new Point2f(row_idx, col_idx);
 
             if (activity.hasActivityAt(p)) {
+                // System.out.println("too crowded");
                 continue;
             } else {
                 activity_next.markActiveAt(row_idx, col_idx);
