@@ -41,6 +41,7 @@ public class Tracker {
     private void continueTrackToNextFrame(int currentFrame) {
         FlowField fw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
         FlowField bw_currentFrame = FlowFieldManager.getInstance().getBackwardFlow(currentFrame);
+        FlowMagnitudeField fw_sq2_mags = FlowMagManager.getInstance().getMagFlow(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
             // System.out.println(tra.toString());
@@ -66,17 +67,20 @@ public class Tracker {
             float rhs = 0.01f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+0.5f;
             float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
 
+            // occlusion test: if occluded, then end this tracking point
             if (lhs >= rhs) {
                 // System.out.println("occluded");
                 continue;
-
             }
 
 
-            // TODO implement an occlusion check here by computing the tracked from
+            if (fw_sq2_mags.valueAt(p.u(), p.v()) > 0.01f*(du*du+ dv*dv)+0.002f) {
+                // System.out.println("Too bright");
+                continue;
+            }
+
             // position using the tracked to position using bilinear interpolation
             // and the backward flow field
-
             Point2f next_p = new Point2f(next_u, next_v);
             TrajectoryManager.getInstance().appendPointTo(tra.getLabel(), next_p);
         }
