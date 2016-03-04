@@ -4,7 +4,9 @@ import java.util.ArrayList;
 /**
  * Created by simplay on 03/03/16.
  */
-public class FlowFileReader {
+public class FlowFileReader extends FileReader{
+
+    // current flow direction scalar field that should be filled
     private ArrayList<float[]> activeRowDir;
 
     public FlowFileReader(String dataset, String type, String fileNr) {
@@ -15,10 +17,10 @@ public class FlowFileReader {
         ArrayList<float[]> v_rows = new ArrayList<float[]>();
 
         activeRowDir = u_rows;
-        read_flow_dir_matrix(baseFileNameU);
+        readFile(baseFileNameU);
 
         activeRowDir = v_rows;
-        read_flow_dir_matrix(baseFileNameV);
+        readFile(baseFileNameV);
 
         int m = activeRowDir.size();
         int n = activeRowDir.get(0).length;
@@ -39,44 +41,9 @@ public class FlowFileReader {
 
     }
 
-    private void read_flow_dir_matrix(String baseFileName) {
-        FileInputStream fstream = null;
-        try {
-            fstream = new FileInputStream(baseFileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-        String strLine;
-        try {
-            while ((strLine = br.readLine()) != null) {
-                processLine(strLine);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void processLine(String line) {
+    @Override
+    protected void processLine(String line) {
         String[] row = line.split(" ");
         activeRowDir.add(parseToFloatArray(row));
-    }
-
-    private float[] parseToFloatArray(String[] items) {
-        float[] intItems = new float[items.length];
-        int idx = 0;
-        for (String item : items) {
-            intItems[idx] = Float.parseFloat(item);
-            idx++;
-        }
-        return intItems;
     }
 }
