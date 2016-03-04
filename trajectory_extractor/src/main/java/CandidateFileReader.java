@@ -42,4 +42,5 @@ public class CandidateFileReader {
         String[] elements = line.split("\\[|\\]")[1].split(" ");
         candidates.add(elements);
     }
+
 }
