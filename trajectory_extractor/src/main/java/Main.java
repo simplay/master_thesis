@@ -45,6 +45,7 @@ public class Main {
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         // TODO save Trajectories in output files
+        System.out.println(TrajectoryManager.getInstance().toOutputString());
 
     }
 }

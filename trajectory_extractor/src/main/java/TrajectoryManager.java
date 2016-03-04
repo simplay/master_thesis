@@ -67,4 +67,12 @@ public class TrajectoryManager implements Iterable<Trajectory>{
             trajectories.remove(traj.getLabel());
         }
     }
+
+    public String toOutputString() {
+        String content = "";
+        for (Trajectory tra : trajectories.values()) {
+            content = content + tra.toOutputString();
+        }
+        return content;
+    }
 }

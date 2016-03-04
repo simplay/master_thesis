@@ -36,4 +36,8 @@ public class Point2f {
     public String toString() {
         return "(x,y)=("+ x +","+y+")";
     }
+
+    public String toOutputString() {
+        return u() + " " + v();
+    }
 }
