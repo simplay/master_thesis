@@ -15,7 +15,7 @@ public class Main {
                 counter++;
             }
         }
-        System.out.println("Tracking points over " + counter + "frames...");
+        System.out.println("Tracking points over " + counter + " frames...");
 
         int till_index = counter;
         for (int idx = 1; idx <= till_index; idx++) {

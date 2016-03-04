@@ -19,6 +19,7 @@ public class Tracker {
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
+            System.out.println("Tracked Frame " + (frame_idx+1));
         }
         System.out.println("Finished point tracking...");
     }
