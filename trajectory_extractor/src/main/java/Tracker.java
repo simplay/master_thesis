@@ -9,14 +9,14 @@ public class Tracker {
     private float m;
     private float n;
 
-    public Tracker() {
+    public Tracker(int till_index) {
 
         m = FlowFieldManager.getInstance().m();
         n = FlowFieldManager.getInstance().n();
 
         System.out.println("Start point tracking...");
 
-        for (int frame_idx = 0; frame_idx < 2; frame_idx++) {
+        for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
         }
