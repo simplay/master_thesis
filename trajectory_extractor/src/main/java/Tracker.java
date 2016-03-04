@@ -42,12 +42,14 @@ public class Tracker {
      * @param currentFrame
      */
     private void continueTrackToNextFrame(int currentFrame) {
-        FlowField fw_startFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
+        FlowField fw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
+        FlowField bw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
+
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
             System.out.println(tra.toString());
             Point2f p = tra.getPointAtFrame(currentFrame);
-            float du = fw_startFrame.u_valueAt(p.u(), p.v());
-            float dv = fw_startFrame.v_valueAt(p.u(), p.v());
+            float du = fw_currentFrame.u_valueAt(p.u(), p.v());
+            float dv = fw_currentFrame.v_valueAt(p.u(), p.v());
 
             float next_u = p.u() + du;
             float next_v = p.v() + dv;
@@ -56,6 +58,21 @@ public class Tracker {
             if (next_u < 0f || next_v < 0f || next_u > m || next_v > n) {
                 continue;
             }
+
+            float du_prev = bw_currentFrame.u_valueAt(next_u, next_v);
+            float dv_prev = bw_currentFrame.v_valueAt(next_u, next_v);
+
+            // reconstructed tracked from pos p.u() and p.v()
+            float pu_rec = next_u+du_prev;
+            float pv_rec = next_v+dv_prev;
+
+            float rhs = 0.01f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+0.5f;
+            float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
+
+            if (lhs >= rhs) {
+                continue;
+            }
+
 
             // TODO implement an occlusion check here by computing the tracked from
             // position using the tracked to position using bilinear interpolation
