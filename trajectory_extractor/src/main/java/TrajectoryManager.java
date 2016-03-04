@@ -75,7 +75,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         for (Trajectory tra : trajectories.values()) {
             content = content + tra.toOutputString();
         }
-        return content;
+        return content.trim();
     }
 
 

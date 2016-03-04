@@ -10,7 +10,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     %     USE_CLUSTERING_CUE = true;
     
     
-    KERNIGHAN_LIN = true;
+    KERNIGHAN_LIN = false;
     
     
     

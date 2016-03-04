@@ -62,17 +62,17 @@ for t=START_FRAME_IDX:END_FRAME_IDX
     fwvName = strcat(BASE_OUTPUT_PATH,'fw_v_',num2str(t),'.mat');
     bwvName = strcat(BASE_OUTPUT_PATH,'bw_v_',num2str(t),'.mat');
     
-    dlmwrite(fwuName,forward_flow_u, 'delimiter',' ','precision',6);
-    dlmwrite(bwuName,backward_flow_u, 'delimiter', ' ','precision',6);
-    dlmwrite(fwvName,forward_flow_v, 'delimiter',' ','precision',6);
-    dlmwrite(bwvName,backward_flow_v, 'delimiter',' ','precision',6);
+    dlmwrite(fwuName,forward_flow_u, 'delimiter',' ','precision',8);
+    dlmwrite(bwuName,backward_flow_u, 'delimiter', ' ','precision',8);
+    dlmwrite(fwvName,forward_flow_v, 'delimiter',' ','precision',8);
+    dlmwrite(bwvName,backward_flow_v, 'delimiter',' ','precision',8);
     
     diffName = strcat(BASE_OUTPUT_PATH,'d_fw_flow_',num2str(t),'.mat');
     % compute squared flow magnitude |du|^2 + |dv|^2 used to perform checks.
     d_fw_u_flow = mat2gradfield(forward_flow_u);
     d_fw_v_flow = mat2gradfield(forward_flow_v);
     d_fw_flow_nsq = (d_fw_u_flow.^2+d_fw_v_flow.^2);
-    dlmwrite(diffName, d_fw_flow_nsq, 'delimiter',' ','precision',6);
+    dlmwrite(diffName, d_fw_flow_nsq, 'delimiter',' ','precision',8);
  end
 
 

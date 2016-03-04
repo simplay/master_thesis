@@ -8,7 +8,7 @@ clc;
 DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
