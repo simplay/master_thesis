@@ -35,6 +35,7 @@ public class Tracker {
         }
     }
 
+    //TODO mark trajectories as closed when landed in continue clause
     /**
      * @param currentFrame
      */
