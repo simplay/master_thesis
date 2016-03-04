@@ -37,7 +37,7 @@ public class Trajectory implements Iterable<Point2f>{
     }
 
     public Point2f getPointAtFrame(int frame_idx) {
-        return points.get(frame_idx);
+        return points.get(frame_idx-startFrame);
     }
 
     /**

@@ -16,6 +16,14 @@ public class FlowFieldManager {
         return instance;
     }
 
+    public int m() {
+        return forwardFlows.get(0).m();
+    }
+
+    public int n() {
+        return forwardFlows.get(0).n();
+    }
+
     private FlowFieldManager() {
         forwardFlows = new ArrayList<FlowField>();
         backwardFlows = new ArrayList<FlowField>();

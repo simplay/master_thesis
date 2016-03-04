@@ -20,6 +20,24 @@ public class FlowField {
         this.v_dir = new float[m][n];
     }
 
+    /**
+     * Get total row count.
+     *
+     * @return
+     */
+    public int m() {
+        return m;
+    }
+
+    /**
+     * Get total column count
+     *
+     * @return
+     */
+    public int n() {
+        return n;
+    }
+
     public float[][] getU() {
         return u_dir;
     }
