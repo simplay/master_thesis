@@ -46,7 +46,7 @@ public class Tracker {
         FlowField bw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
-            System.out.println(tra.toString());
+            // System.out.println(tra.toString());
             Point2f p = tra.getPointAtFrame(currentFrame);
             float du = fw_currentFrame.u_valueAt(p.u(), p.v());
             float dv = fw_currentFrame.v_valueAt(p.u(), p.v());
@@ -70,7 +70,9 @@ public class Tracker {
             float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
 
             if (lhs >= rhs) {
+                // System.out.println("occluded");
                 continue;
+
             }
 
 
