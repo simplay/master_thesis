@@ -163,13 +163,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         }
     }
 
-    public void saveFramewiseTrajectoryDataToFile(String fpName, int till_idx) {
-        try {
-            try (PrintWriter out = new PrintWriter(fpName)) {
-                out.println(toOutputString());
+    public void saveFramewiseTrajectoryDataToFile(String baseOutPath, int till_idx) {
+        String fname = "";
+        for (int idx = 0; idx < till_idx; idx++) {
+            fname = baseOutPath + "active_tra_f_"+idx+".txt";
+            try {
+                try (PrintWriter out = new PrintWriter(fname)) {
+                    out.print(toFramewiseOutputString(idx));
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

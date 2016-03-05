@@ -48,8 +48,11 @@ public class Main {
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
-        System.out.print("Writting trajectories to output file: " + output_filePathName);
+        System.out.println("Writting trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
 
+        String outTLF = "../output/trajectory_label_frame/";
+        System.out.println("Writting active trajectory frame files: " + outTLF);
+        TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
     }
 }
