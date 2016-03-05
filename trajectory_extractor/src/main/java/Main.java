@@ -51,8 +51,9 @@ public class Main {
         System.out.println("Writting trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
 
-        String outTLF = "../output/trajectory_label_frame/";
+        String outTLF = "../output/trajectory_label_frame/" + dataset + "/";
         System.out.println("Writting active trajectory frame files: " + outTLF);
+        (new File(outTLF)).mkdirs();
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
     }
 }
