@@ -74,12 +74,9 @@ public class Tracker {
             float next_u = p.u() + du;
             float next_v = p.v() + dv;
 
-            if (tra.getLabel() == 34) {
-                System.out.println("knorke");
-            }
-
             // skip all tracked to points that are out of the image frame
             if (next_u < 0f || next_v < 0f || next_u > m || next_v > n) {
+                tra.markClosed();
                 continue;
             }
 
@@ -90,18 +87,21 @@ public class Tracker {
             float pu_rec = next_u+du_prev;
             float pv_rec = next_v+dv_prev;
 
-            float rhs = 0.001f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+0.05f;
+            float rhs = 0.2f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+5f;
             float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
 
             // occlusion test: if occluded, then end this tracking point
             if (lhs >= rhs) {
                 // System.out.println("occluded");
+                tra.markClosed();
                 continue;
+
             }
 
 
             if (fw_sq2_mags.valueAt(p.u(), p.v()) > 0.01f*(du*du+ dv*dv)+0.002f) {
                 // System.out.println("Too bright");
+                tra.markClosed();
                 continue;
             }
 
