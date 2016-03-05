@@ -1,4 +1,4 @@
-function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, img_index, label_mappings, imgs)
+function display_clustering(frames, pixeltensor, label_assignents, row_inds, col_inds, img_index, label_mappings, imgs)
 %DISPLAY_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,7 +15,7 @@ function display_clustering(pixeltensor, label_assignents, row_inds, col_inds, i
         transformed_pixel_label = label_to_vector_index(label_mappings, pixel_label); % pixel_label - 1;
         assignment = label_assignents(transformed_pixel_label);
         % if assignment is not empty, it is empty iff point trajectory was
-        % filtered due to a too small length (in compute_similarity
+        % filtered duea to a too small length (in compute_similarity
         % script).
         if isempty(assignment) == 0
             plot(ay, ax, 'Color', get_cluster_color_of(assignment), 'Marker', '*');

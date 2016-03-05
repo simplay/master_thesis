@@ -15,6 +15,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     
     
     addpath('../libs/flow-code-matlab');
+    addpath('../matlab_shared');
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
     PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
@@ -153,6 +154,8 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     end
 
     % display data
+    frames = loadAllTrajectoryLabelFrames('c14', 1, 4);
+    
     for img_index = frame_idx:frame_idx
         figure
 
@@ -173,7 +176,8 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
             else
                 [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);
             end
-            display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
+            % display_clustering(frames, pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
+            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
             write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
         else
             displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);

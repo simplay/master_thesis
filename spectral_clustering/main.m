@@ -17,8 +17,8 @@ SHOULD_LOAD_W = true;
 PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
-USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 4;
+USE_CLUSER_EW_COUNT = false;
+FORCE_EW_COUNT = 14;
 
 THRESH = 0.0000;
 CLUSTER_CENTER_COUNT =3;
@@ -33,7 +33,7 @@ VAR_IMG = 1;
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 302
 %SELECTED_ENTITY_IDX = 3
-frame_idx = 1;
+frame_idx = 2;
 
 %%
 if exist('W','var') == 0
