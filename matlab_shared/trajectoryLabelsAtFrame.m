@@ -7,6 +7,6 @@ function [labels, ax, ay] = trajectoryLabelsAtFrame(dataset, frame_idx)
     fname = strcat('active_tra_f_',num2str(frame_idx),'.txt');
     filepath = strcat(basePath, dataset, '/', fname);
     
-    [labels, ax, ay] = textscan(filepath, '%d %f %f');
+    [labels, ax, ay] = textread(filepath, '%d %f %f');
 end
 
