@@ -38,6 +38,6 @@ public class Point2f {
     }
 
     public String toOutputString() {
-        return u() + " " + v();
+        return x + " " + y;
     }
 }

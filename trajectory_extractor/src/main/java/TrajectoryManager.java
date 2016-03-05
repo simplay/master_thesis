@@ -72,7 +72,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     public LinkedList<Trajectory> getActivesForFrame(int frame_idx) {
         LinkedList<Trajectory> actives = new LinkedList<Trajectory>();
         for (Trajectory tra : trajectories.values()) {
-            if (tra.currentActiveFrame() == frame_idx) {
+            if ((tra.currentActiveFrame() == frame_idx) && tra.notClosed() ) {
                 actives.add(tra);
             }
         }
@@ -110,6 +110,21 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         }
         return actives;
     }
+    /**
+     * Select all trajectories that start at a given frame.
+     *
+     * @param frame_idx index of frame the trajectories should start.
+     * @return a collection of trajectories all starting at a given frame.
+     */
+    public LinkedList<Trajectory> allTrajectoriesActiveInGivenFrame(int frame_idx) {
+        LinkedList<Trajectory> actives = new LinkedList<Trajectory>();
+        for (Trajectory tra : trajectories.values()) {
+            if (tra.livesInFrame(frame_idx)) {
+                actives.add(tra);
+            }
+        }
+        return actives;
+    }
 
     /**
      * Filter all trajectories from the internal list of trajectories,
@@ -140,7 +155,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
 
     public String toFramewiseOutputString(int frame_idx) {
         String content = "";
-        LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesStartingAt(frame_idx);
+        LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesActiveInGivenFrame(frame_idx);
         Collections.sort(allTrajectoriesStartingAt(frame_idx));
 
         for (Trajectory tra : trajectoriesAtGivenFrame) {

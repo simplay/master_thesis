@@ -5,6 +5,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
 
     // points that span the trajectory
     private ArrayList<Point2f> points;
+    private boolean isClosed = false;
 
     // unique identifier of a trajectory
     private int label;
@@ -19,6 +20,23 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         this.label = label_counter++;
         this.startFrame = startFrame;
         points = new ArrayList<Point2f>();
+    }
+
+    public boolean livesInFrame(int frame_idx) {
+        int till = startFrame+points.size()-1;
+
+        if (frame_idx <= till && frame_idx >= startFrame) {
+            return true;
+        }
+        return false;
+    }
+
+    public void markClosed() {
+        this.isClosed = true;
+    }
+
+    public boolean notClosed() {
+        return !isClosed;
     }
 
     public int length() {
