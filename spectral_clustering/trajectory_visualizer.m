@@ -30,7 +30,7 @@ imshow(I);
 
 % plot all tracked points
 
-num_el = 40;
+num_el = 3;
 [x, y] = ginput(1);
 close(t);
 
@@ -79,10 +79,10 @@ end
 
 
 %%
-
-
-figure
-img = imread(imgs{1});
+disp('the FROM position in img1 has to correspond to the TO position in img2.');
+for k=1:2,
+figure('name', strcat('img ', num2str(k)));
+img = imread(imgs{k});
 imshow(img)
 hold on;
 
@@ -116,4 +116,5 @@ for t=1:length(tracking_p_range),
     plot(y0,x0, '.r')
     plot(y1,x1, '.b')
     drawArrow(y,x);
+end
 end
