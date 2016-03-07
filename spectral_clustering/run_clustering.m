@@ -164,9 +164,20 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
         [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
         
         if SELECT_AFFINITY_IDX
-            [~,idx_pos] = min(sum([row_ids-y,col_ids-x].^2,2));
-            col_sel = pixeltensor(row_ids(idx_pos), col_ids(idx_pos), 2);
-            disp(['Selected label with index ',num2str(col_sel)])
+            frame = frames{img_index};
+            row_ids = frame.ax;
+            col_ids = frame.ay;
+
+            %pixeltensor = tracking_tensor(:,:,:,1);
+            %[row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+
+            distances = sum([row_ids-y,col_ids-x].^2, 2);
+            % [~,idx_pos] = min(distances);
+            num_el = 1;
+            % find smallest num_el labels
+            [~, AIdx] = sort(distances);
+            smallestNIdx = AIdx(1:num_el);
+            col_sel = frame.labels(smallestNIdx(1));
         end
         
         if USE_CLUSTERING_CUE
@@ -188,7 +199,9 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
                     imshow(imv);
                     figure;
                 end
-                display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
+                label_idx = col_sel;
+                visualize_affinities(W, label_idx, frames, imgs, label_mappings, img_index);
+                % display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
             else
                 eigenvalue = S_small(col_sel);
                 display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings, imgs);
