@@ -30,7 +30,7 @@ imshow(I);
 
 % plot all tracked points
 
-num_el = 20;
+num_el = 40;
 [x, y] = ginput(1);
 close(t);
 
@@ -64,7 +64,7 @@ distances = sum([row_ids-y,col_ids-x].^2, 2);
 % [~,idx_pos] = min(distances);
 
 % find smallest num_el labels
-[ASorted AIdx] = sort(distances);
+[ASorted, AIdx] = sort(distances);
 smallestNElements = ASorted(1:num_el);
 smallestNIdx = AIdx(1:num_el);
 
@@ -80,7 +80,7 @@ end
 
 %%
 
-[m, n, features, timesteps] = size(tracking_tensor);
+
 figure
 img = imread(imgs{1});
 imshow(img)
