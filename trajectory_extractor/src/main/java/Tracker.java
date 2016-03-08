@@ -24,6 +24,7 @@ public class Tracker {
         // the order here is crucial: first start to start new trajectories
         // and then continue others.
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
+            System.out.println("starting frame: "+ frame_idx);
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
             activity.copyStates(activity_next);
@@ -80,6 +81,7 @@ public class Tracker {
                 continue;
             }
 
+            /**
             float du_prev = bw_currentFrame.u_valueAt(next_u, next_v);
             float dv_prev = bw_currentFrame.v_valueAt(next_u, next_v);
 
@@ -87,7 +89,7 @@ public class Tracker {
             float pu_rec = next_u+du_prev;
             float pv_rec = next_v+dv_prev;
 
-            float rhs = 0.2f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+5f;
+            float rhs = 0.01f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+0.5f;
             float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
 
             // occlusion test: if occluded, then end this tracking point
@@ -104,6 +106,14 @@ public class Tracker {
                 tra.markClosed();
                 continue;
             }
+
+             **/
+
+            if (fw_sq2_mags.valueAt(p.rounded().u(), p.rounded().v()) == 1f) {
+                continue;
+            }
+
+
 
             // position using the tracked to position using bilinear interpolation
             // and the backward flow field

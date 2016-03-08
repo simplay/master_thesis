@@ -85,7 +85,8 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     }
 
     public String toOutputString() {
-        String header = "### L:" + getLabel() + " S:" + startFrame+1 + " C:" + length();
+        int out_start_frame = startFrame+1;
+        String header = "### L:" + getLabel() + " S:" + out_start_frame + " C:" + length();
         String content = "";
         for (Point2f p : points) {
             content = content + p.toOutputString() + "\n";

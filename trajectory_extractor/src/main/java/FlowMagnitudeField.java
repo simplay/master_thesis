@@ -42,4 +42,8 @@ public class FlowMagnitudeField {
 
         return sum;
     }
+
+    public int valueAt(int row_idx, int column_idx) {
+        return (int) mags[row_idx][column_idx];
+    }
 }
