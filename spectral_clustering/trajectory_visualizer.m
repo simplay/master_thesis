@@ -1,6 +1,5 @@
 DATASET = 'c14';
-MODE = 4;
-img_index = 1;
+img_index = 4;
 START_FRAME = 1;
 END_FRAME = 4;
 
@@ -108,7 +107,9 @@ for t=1:length(tracking_p_range),
     x1 = next_frame.ax(next_data_idx);
     y1 = next_frame.ay(next_data_idx);
 
-
+    if isempty(x1) || isempty(y1)
+        continue;
+    end
 
     %%
     x = [x0, x1];
