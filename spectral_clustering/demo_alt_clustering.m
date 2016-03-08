@@ -153,12 +153,12 @@ img_index = frame_idx;
 
     % load label vector indices mappings
     label_mappings = labelfile2mat(strcat(BASE,DATASET));
-    [~, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
+    [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
 
     % to help the user what values/index pairs can be displayed.
     show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
 
-
+    frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2));
     col_sel = SELECTED_ENTITY_IDX;
 
     
@@ -183,9 +183,9 @@ img_index = frame_idx;
     label_assignments = zeros(length(W), 1);
     
     %%
-    USE_MCM = true;
+    USE_MCM = false;
     N = length(W);
-    for K=4:4%4%min(20,2*m)
+    for K=2:2%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -200,7 +200,7 @@ img_index = frame_idx;
         end
         
         % repeat until convergence, i.e. error is small
-        for t=1:1,  
+        for t=1:3,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
             centroids;
             
@@ -211,7 +211,8 @@ img_index = frame_idx;
             end
             energy
             figure('name', num2str(t))
-            display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
+            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
+            % display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
         end
 
         % compute new best label assignents via graph cut using gcmex
