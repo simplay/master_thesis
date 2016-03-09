@@ -21,7 +21,7 @@ class Trajectory
     eps = 0.5 # floor check threshold
     p = @points.first
     @points[1..-1].all? do |p2|
-      flag = (p.bx-p2.ax).abs < eps && (p.by-p2.ay).abs
+      flag = (p.bx-p2.ax).abs < eps && (p.by-p2.ay).abs < eps
       p = p2
       flag
     end
