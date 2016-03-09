@@ -5,7 +5,7 @@ public class InvalidRegionReader extends FileReader{
     private ArrayList<double[]> rows;
 
     public InvalidRegionReader(String dataset, String fileNr) {
-        String baseFileName = "../output/tracker_data/" + dataset + "/d_fw_flow_"+ fileNr + ".mat";
+        String baseFileName = "../output/tracker_data/" + dataset + "/flow_consistency_"+ fileNr + ".mat";
         rows = new ArrayList<double[]>();
 
         readFile(baseFileName);

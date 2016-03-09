@@ -1,6 +1,8 @@
 addpath('../libs/flow-code-matlab');
 
 DATASETNAME = 'c14';
+
+% Output this info as a meta information
 step_size = 8;
 PRECISSION = 12;
 
@@ -19,9 +21,9 @@ END_FRAME_IDX = boundaries(2); % for car example max 4
 
 for t=START_FRAME_IDX:END_FRAME_IDX
     
-
-    
-    % extract flow data
+    % Save the forward and backward flows, 
+    % decomposes into their scalar fields formed by their direcional
+    % components u and v
     fw_flow_t = fwf{t};
     bw_flow_t = bwf{t};
     
@@ -43,34 +45,15 @@ for t=START_FRAME_IDX:END_FRAME_IDX
     dlmwrite(fwvName,forward_flow_v, 'delimiter',' ','precision',PRECISSION);
     dlmwrite(bwvName,backward_flow_v, 'delimiter',' ','precision',PRECISSION);
     
-    diffName = strcat(BASE_OUTPUT_PATH,'d_fw_flow_',num2str(t),'.mat');
-    % compute squared flow magnitude |du|^2 + |dv|^2 used to perform checks.
-    d_fw_u_flow = mat2gradfield(forward_flow_u);
-    d_fw_v_flow = mat2gradfield(forward_flow_v);
-    d_fw_flow_nsq = (d_fw_u_flow.^2+d_fw_v_flow.^2);
-    dlmwrite(diffName, d_fw_flow_nsq, 'delimiter',' ','precision',PRECISSION);
+    % Save a (m x n) matrix that contains all invalid pixel loations
+    diffName = strcat(BASE_OUTPUT_PATH,'flow_consistency_',num2str(t),'.mat'); 
+    invalid_regions = consistency_check( forward_flow, backward_flow );
+    dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        % extract image data
+    % Save row and column indicess of trackable pixel locations
     frame_t = imgs{t};
     img = im2double(imread(frame_t));
     [ tracking_candidates ] = findTrackingCandidates( img, step_size );
-    
-    [ invalid_regions ] = consistency_check( forward_flow, backward_flow );
-    % tracking_candidates = tracking_candidates .* (1-invalid_regions);
-    dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
-    
-    
     [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
     datasets = [trackable_row, trackable_col]';
     
@@ -93,9 +76,6 @@ for t=START_FRAME_IDX:END_FRAME_IDX
         end    
         fclose(fid);
     end
-    
-    
-    
     
  end
 
