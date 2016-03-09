@@ -1,5 +1,5 @@
 DATASET = 'c14';
-img_index = 4;
+img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
 

@@ -8,7 +8,7 @@ clc;
 DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
@@ -18,22 +18,22 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = false;
-FORCE_EW_COUNT = 14;
+FORCE_EW_COUNT = 2;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT =3;
+CLUSTER_CENTER_COUNT =5;
 
 
-USE_W_VEC = true;
-USE_CLUSTERING_CUE = false;
+USE_W_VEC = false;
+USE_CLUSTERING_CUE = true;
 
 SHOW_LOCAL_VAR = false;
 VAR_IMG = 1;
 
-SELECT_AFFINITY_IDX = true
+SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 64
-%SELECTED_ENTITY_IDX = 3
-frame_idx = 2;
+SELECTED_ENTITY_IDX = 3
+frame_idx = 1;
 
 %%
 if exist('W','var') == 0

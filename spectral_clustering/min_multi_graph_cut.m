@@ -28,6 +28,8 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
  %nu = 0.000000000001;%1e-10;
  
  nu = 0.000000001;
+ 
+ % nu = 0.0000001;
     % A CxN matrix specifying the potentials (data term) for each of the C
     % possible classes at each of the N nodes.
     unary = computeDataTerm(v, lambda, pa, mu, K);
@@ -96,8 +98,10 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
     for a=1:length(pa)
         for bi=1:length(spnn_indices(1,:))
             b = spnn_indices(a,bi);
+
             va = v(a,:);
             vb = v(b,:);
+
             del_sq = sqrt(sum((va-vb).^2));
             sel_ab = 1;%-(pa(a) == pa(b));
             smoothness_term(a,b) = smoothness_term(a,b) + nu*(sel_ab / del_sq);

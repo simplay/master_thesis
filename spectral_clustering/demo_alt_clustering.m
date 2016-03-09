@@ -200,7 +200,7 @@ img_index = frame_idx;
         end
         
         % repeat until convergence, i.e. error is small
-        for t=1:3,  
+        for t=1:10,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
             centroids;
             
