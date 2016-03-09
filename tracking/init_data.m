@@ -1,24 +1,31 @@
+clear all;
+close all;
+clc;
+
 addpath('../libs/flow-code-matlab');
 
 DATASETNAME = 'c14';
-
-% Output this info as a meta information
-step_size = 8;
+STEP_SIZE = 8;
 PRECISSION = 12;
 
-% global variable used for assigning unique label indices
-set_global_label_idx(1);
+COMPUTE_LOCAL_VAR = false; % global variance is still computed
+RUN_BILAT_FILT = true;
+COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 
+VAR_SIGMA_S = 5;
+VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
+
+
+%% 
 BASE_OUTPUT_PATH = strcat('../output/tracker_data/',DATASETNAME,'/');
 METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
+BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET);
 
 [boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
-START_FRAME_IDX = boundaries(1); % inital index 1
-END_FRAME_IDX = boundaries(2); % for car example max 4
-
-
+[m,n,~] = size(imread(imgs{1}));
+START_FRAME_IDX = boundaries(1); 
+END_FRAME_IDX = boundaries(2); 
 for t=START_FRAME_IDX:END_FRAME_IDX
     
     % Save the forward and backward flows, 
@@ -53,7 +60,7 @@ for t=START_FRAME_IDX:END_FRAME_IDX
     % Save row and column indicess of trackable pixel locations
     frame_t = imgs{t};
     img = im2double(imread(frame_t));
-    [ tracking_candidates ] = findTrackingCandidates( img, step_size );
+    [ tracking_candidates ] = findTrackingCandidates( img, STEP_SIZE );
     [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
     datasets = [trackable_row, trackable_col]';
     
@@ -77,6 +84,14 @@ for t=START_FRAME_IDX:END_FRAME_IDX
         fclose(fid);
     end
     
- end
+end
 
+% DO NOT change these parameters
+COMPUTE_TRACKINGS = false;
+MODE = 5; % display mode
+DISPLAY = false; % show tracking point
+WRITE_TRACKINGS_INTO_FILES = false;
+SHOW_VIDEO = false;
 
+%%
+run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB, RUN_BILAT_FILT);
