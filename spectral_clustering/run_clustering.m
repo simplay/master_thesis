@@ -116,7 +116,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
 
     % load label vector indices mappings
     label_mappings = labelfile2mat(strcat(BASE,DATASET));
-    [~, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
+    [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
 
     % to help the user what values/index pairs can be displayed.
     show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
@@ -154,7 +154,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     end
 
     % display data
-    frames = loadAllTrajectoryLabelFrames('c14', 1, 4);
+    frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2));
     
     for img_index = frame_idx:frame_idx
         figure
@@ -204,7 +204,8 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
                 % display_affinity_vec(pixeltensor, displayed_vector, row_ids, col_ids, img_index, col_sel, label_mappings, imgs);
             else
                 eigenvalue = S_small(col_sel);
-                display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings, imgs);
+                visualize_eigenvector(eigenvalue, U_small, col_sel, frames, imgs, label_mappings, img_index);
+                %display_eigenvectors(pixeltensor, displayed_vector, row_ids, col_ids, img_index, eigenvalue, label_mappings, imgs);
             end
         end
     end
