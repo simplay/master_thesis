@@ -37,7 +37,7 @@ VAR_IMG = 1;
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 64
 SELECTED_ENTITY_IDX = 3
-frame_idx = 1;
+frame_idx = 8;
 
 %%
 if exist('W','var') == 0

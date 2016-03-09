@@ -12,7 +12,7 @@ clc;
 
 addpath('../libs/GCMex/');
 
-DATASET = 'c14';
+DATASET = 'car2';
 USE_SPECIAL_NAMING = false;
 
 
@@ -32,7 +32,8 @@ USE_CLUSER_EW_COUNT = false;
 FORCE_EW_COUNT = 5;
 
 THRESH = 0.0000;
-
+USE_BF_BOUND = true;
+BOUND = [1,9];
 
 
 USE_W_VEC = false;
@@ -157,7 +158,12 @@ img_index = frame_idx;
 
     % to help the user what values/index pairs can be displayed.
     show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
-
+    
+    if USE_BF_BOUND
+        boundaries(1) = BOUND(1);
+        boundaries(2) = BOUND(2);
+    end
+    
     frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2));
     col_sel = SELECTED_ENTITY_IDX;
 
