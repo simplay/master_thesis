@@ -69,11 +69,11 @@ public class Tracker {
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
             // System.out.println(tra.toString());
             Point2f p = tra.getPointAtFrame(currentFrame);
-            float du = fw_currentFrame.u_valueAt(p.u(), p.v());
-            float dv = fw_currentFrame.v_valueAt(p.u(), p.v());
+            double du = fw_currentFrame.u_valueAt(p.u(), p.v());
+            double dv = fw_currentFrame.v_valueAt(p.u(), p.v());
 
-            float next_u = p.u() + du;
-            float next_v = p.v() + dv;
+            double next_u = p.u() + du;
+            double next_v = p.v() + dv;
 
             // skip all tracked to points that are out of the image frame
             if (next_u < 0f || next_v < 0f || next_u > m || next_v > n) {
@@ -110,6 +110,7 @@ public class Tracker {
              **/
 
             if (fw_sq2_mags.valueAt(p.rounded().u(), p.rounded().v()) == 1f) {
+                tra.markClosed();
                 continue;
             }
 

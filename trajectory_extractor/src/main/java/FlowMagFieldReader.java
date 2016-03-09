@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public class FlowMagFieldReader extends FileReader{
 
-    private ArrayList<float[]> rows;
+    private ArrayList<double[]> rows;
 
     public FlowMagFieldReader(String dataset, String fileNr) {
         String baseFileName = "../output/tracker_data/" + dataset + "/d_fw_flow_"+ fileNr + ".mat";
-        rows = new ArrayList<float[]>();
+        rows = new ArrayList<double[]>();
 
         readFile(baseFileName);
 
@@ -25,7 +25,7 @@ public class FlowMagFieldReader extends FileReader{
     @Override
     protected void processLine(String line) {
         String[] row = line.split(" ");
-        rows.add(parseToFloatArray(row));
+        rows.add(parseToDoubleArray(row));
     }
 
 }

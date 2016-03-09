@@ -3,14 +3,14 @@ import java.util.ArrayList;
 public class FlowFileReader extends FileReader{
 
     // current flow direction scalar field that should be filled
-    private ArrayList<float[]> activeRowDir;
+    private ArrayList<double[]> activeRowDir;
 
     public FlowFileReader(String dataset, String type, String fileNr) {
         String baseFileNameU = "../output/tracker_data/" + dataset + "/" + type + "_u_"+ fileNr + ".mat";
         String baseFileNameV = "../output/tracker_data/" + dataset + "/" + type + "_v_"+ fileNr + ".mat";
 
-        ArrayList<float[]> u_rows = new ArrayList<float[]>();
-        ArrayList<float[]> v_rows = new ArrayList<float[]>();
+        ArrayList<double[]> u_rows = new ArrayList<double[]>();
+        ArrayList<double[]> v_rows = new ArrayList<double[]>();
 
         activeRowDir = u_rows;
         readFile(baseFileNameU);
@@ -40,6 +40,6 @@ public class FlowFileReader extends FileReader{
     @Override
     protected void processLine(String line) {
         String[] row = line.split(" ");
-        activeRowDir.add(parseToFloatArray(row));
+        activeRowDir.add(parseToDoubleArray(row));
     }
 }

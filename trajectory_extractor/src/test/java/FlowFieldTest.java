@@ -25,14 +25,14 @@ public class FlowFieldTest {
 
         FlowField ff = new FlowField(m, n, "foobar");
 
-        for (float[] row : ff.getU() ) {
-            for (Float item : row) {
-                assertEquals(new Float(0), item);
+        for (double[] row : ff.getU() ) {
+            for (Double item : row) {
+                assertEquals(new Double(0), item);
             }
         }
-        for (float[] row : ff.getV() ) {
-            for (Float item : row) {
-                assertEquals(new Float(0), item);
+        for (double[] row : ff.getV() ) {
+            for (Double item : row) {
+                assertEquals(new Double(0), item);
             }
         }
     }
@@ -44,14 +44,14 @@ public class FlowFieldTest {
 
         FlowField ff = new FlowField(m, n, "foobar");
 
-        for (float[] row : ff.getU() ) {
-            for (Float item : row) {
-                assertEquals(new Float(0), item);
+        for (double[] row : ff.getU() ) {
+            for (Double item : row) {
+                assertEquals(new Double(0), item);
             }
         }
-        for (float[] row : ff.getV() ) {
-            for (Float item : row) {
-                assertEquals(new Float(0), item);
+        for (double[] row : ff.getV() ) {
+            for (Double item : row) {
+                assertEquals(new Double(0), item);
             }
         }
     }

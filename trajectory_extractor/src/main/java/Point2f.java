@@ -2,10 +2,10 @@ import sun.applet.*;
 
 public class Point2f {
 
-    private float x;
-    private float y;
+    private double x;
+    private double y;
 
-    public Point2f(float x, float y) {
+    public Point2f(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -19,17 +19,17 @@ public class Point2f {
     }
 
     public Point2f rounded() {
-        int px = Math.round(x);
-        int py = Math.round(y);
+        int px = (int) Math.round(x);
+        int py = (int) Math.round(y);
 
         return new Point2f(px, py);
     }
 
-    public float u() {
+    public double u() {
         return x;
     }
 
-    public float v() {
+    public double v() {
         return y;
     }
 

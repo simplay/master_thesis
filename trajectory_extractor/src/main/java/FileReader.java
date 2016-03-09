@@ -38,5 +38,14 @@ public abstract class FileReader {
         }
         return intItems;
     }
+    protected double[] parseToDoubleArray(String[] items) {
+        double[] intItems = new double[items.length];
+        int idx = 0;
+        for (String item : items) {
+            intItems[idx] = Double.parseDouble(item);
+            idx++;
+        }
+        return intItems;
+    }
 }
 
