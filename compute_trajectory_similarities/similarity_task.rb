@@ -14,7 +14,7 @@ class SimilarityTask
 
   # see: segmentation of moving objects, section 4.
   LAMBDA = 0.1 #0.02 => = 0.0001 works best for cars1, when eps_flow is equal to 0.001
-  DT_THREH = 1 # Num of trajectories - 1,  a pair has to have at least have in commoan
+  DT_THREH = 4 # Num of trajectories - 1,  a pair has to have at least have in commoan
   ZERO_THRESH = 1.0e-12
 
   # Setting this to 0 makes cluster consisting of 1 pixel vanish.
@@ -27,7 +27,7 @@ class SimilarityTask
   DO_SAVE_NN = true
 
   #MIN_NUM_OVERLAPPING_FRAMES = 6
-  MIN_EXPECTED_TRAJ_LEN = 1
+  MIN_EXPECTED_TRAJ_LEN = 4
 
   def initialize(a, trajectories)
     @a = a
@@ -129,6 +129,7 @@ class SimilarityTask
   # @return [Array] of Float values denoting the temporal distance
   #   between two trajectory segment pairs.
   def temporal_distances_between_2(a, b, lower_idx, upper_idx, dt=1)
+    #binding.pry
     common_frame_count = overlapping_frame_count(lower_idx, upper_idx)
     return [] unless long_enough_trajectory?(common_frame_count)
 
@@ -210,7 +211,12 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
-      sigma_t = sigma_t_at(idx) + EPS_FLOW
+      begin
+        sigma_t = sigma_t_at(idx) + EPS_FLOW
+      rescue Exception => e
+        puts "fail"
+        puts "idx=#{idx}"
+      end
       d_sp_a_b*(dt_AB/sigma_t)
     end
 
