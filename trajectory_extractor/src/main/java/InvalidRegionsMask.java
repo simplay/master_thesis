@@ -1,4 +1,4 @@
-public class FlowMagnitudeField extends Interpolator{
+public class InvalidRegionsMask extends Interpolator{
 
     private double[][] mags;
 
@@ -7,7 +7,7 @@ public class FlowMagnitudeField extends Interpolator{
      * @param m row count
      * @param n column count
      */
-    public FlowMagnitudeField(int m, int n) {
+    public InvalidRegionsMask(int m, int n) {
         mags = new double[m][n];
     }
 
@@ -21,5 +21,12 @@ public class FlowMagnitudeField extends Interpolator{
 
     public int valueAt(int row_idx, int column_idx) {
         return (int) mags[row_idx][column_idx];
+    }
+
+    public boolean isInvalidAt(Point2f p) {
+        if (valueAt(p.rounded().u(), p.rounded().v()) == 1f) {
+            return true;
+        }
+        return false;
     }
 }

@@ -25,7 +25,7 @@ public class Main {
             new CandidateFileReader(dataset, fileNr);
             new FlowFileReader(dataset, FlowField.FORWARD_FLOW, fileNr);
             new FlowFileReader(dataset, FlowField.BACKWARD_FLOW, fileNr);
-            new FlowMagFieldReader(dataset, fileNr);
+            new InvalidRegionReader(dataset, fileNr);
             // TODO load gradient flow files
         }
 

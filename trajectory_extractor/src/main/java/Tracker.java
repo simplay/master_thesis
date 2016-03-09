@@ -18,13 +18,11 @@ public class Tracker {
         activity = new Activity((int) m, (int) n, samplingRate);
         activity_next = new Activity((int) m, (int) n, samplingRate);
 
-        // in the first pass, all states should be set to true
-        // activity.setAllStatesEqualTrue();
-
+        // in the first pass, all states of activity are set to false, i.e. not activity.
         // the order here is crucial: first start to start new trajectories
         // and then continue others.
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
-            System.out.println("starting frame: "+ frame_idx);
+            System.out.println("Starting to track frame "+ (frame_idx+1) + "...");
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
             activity.copyStates(activity_next);
@@ -46,29 +44,33 @@ public class Tracker {
             int col_idx = cols[idx];
             Point2f p = new Point2f(row_idx, col_idx);
 
+            // Checks whether there is already too much activity
+            // in p's region (i.e there is a sample around (k/2)^2
             if (activity.hasActivityAt(p)) {
-                // System.out.println("too crowded");
                 continue;
-            } else {
-                activity_next.markActiveAt(row_idx, col_idx);
             }
 
+            activity_next.markActiveAt(row_idx, col_idx);
             TrajectoryManager.getInstance().startNewTrajectoryAt(p, frame_idx);
         }
     }
 
-    //TODO mark trajectories as closed when landed in continue clause
     /**
      * @param currentFrame
      */
     private void continueTrackToNextFrame(int currentFrame) {
         FlowField fw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
-        FlowField bw_currentFrame = FlowFieldManager.getInstance().getBackwardFlow(currentFrame);
-        FlowMagnitudeField fw_sq2_mags = FlowMagManager.getInstance().getMagFlow(currentFrame);
+        InvalidRegionsMask invalidRegions = InvalidRegionManager.getInstance().getMagFlow(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
-            // System.out.println(tra.toString());
             Point2f p = tra.getPointAtFrame(currentFrame);
+
+            // Performs a consistency check
+            if (invalidRegions.isInvalidAt(p)) {
+                tra.markClosed();
+                continue;
+            }
+
             double du = fw_currentFrame.u_valueAt(p.u(), p.v());
             double dv = fw_currentFrame.v_valueAt(p.u(), p.v());
 
@@ -80,41 +82,6 @@ public class Tracker {
                 tra.markClosed();
                 continue;
             }
-
-            /**
-            float du_prev = bw_currentFrame.u_valueAt(next_u, next_v);
-            float dv_prev = bw_currentFrame.v_valueAt(next_u, next_v);
-
-            // reconstructed tracked from pos p.u() and p.v()
-            float pu_rec = next_u+du_prev;
-            float pv_rec = next_v+dv_prev;
-
-            float rhs = 0.01f*(du*du+ dv*dv+ du_prev*du_prev+ dv_prev*dv_prev)+0.5f;
-            float lhs = (pu_rec-p.u())*(pu_rec-p.u())+(pv_rec-p.v())*(pv_rec-p.v());
-
-            // occlusion test: if occluded, then end this tracking point
-            if (lhs >= rhs) {
-                // System.out.println("occluded");
-                tra.markClosed();
-                continue;
-
-            }
-
-
-            if (fw_sq2_mags.valueAt(p.u(), p.v()) > 0.01f*(du*du+ dv*dv)+0.002f) {
-                // System.out.println("Too bright");
-                tra.markClosed();
-                continue;
-            }
-
-             **/
-
-            if (fw_sq2_mags.valueAt(p.rounded().u(), p.rounded().v()) == 1f) {
-                tra.markClosed();
-                continue;
-            }
-
-
 
             // position using the tracked to position using bilinear interpolation
             // and the backward flow field

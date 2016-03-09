@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
-public class FlowMagFieldReader extends FileReader{
+public class InvalidRegionReader extends FileReader{
 
     private ArrayList<double[]> rows;
 
-    public FlowMagFieldReader(String dataset, String fileNr) {
+    public InvalidRegionReader(String dataset, String fileNr) {
         String baseFileName = "../output/tracker_data/" + dataset + "/d_fw_flow_"+ fileNr + ".mat";
         rows = new ArrayList<double[]>();
 
@@ -13,13 +13,13 @@ public class FlowMagFieldReader extends FileReader{
         int m = rows.size();
         int n = rows.get(0).length;
 
-        FlowMagnitudeField ff = new FlowMagnitudeField(m, n);
+        InvalidRegionsMask ff = new InvalidRegionsMask(m, n);
 
         for (int k = 0; k < m; k++) {
             ff.setRow(k, rows.get(k));
         }
 
-        FlowMagManager.getInstance().addMagFlow(ff);
+        InvalidRegionManager.getInstance().addMagFlow(ff);
     }
 
     @Override
