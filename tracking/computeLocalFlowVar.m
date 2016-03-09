@@ -22,6 +22,10 @@ SHOW_VARS = false;
         [sigmaSq, mu, cov_xy, wl] = localVariance( flowfield, sig_s, sig_r, true, valid_regions);
         var_x = sigmaSq(:,:,1);
         var_y = sigmaSq(:,:,2);
+        
+        var_x(isnan(var_x))=0;
+        var_y(isnan(var_y))=0;
+        cov_xy(isnan(cov_xy))=0;
         if combination_method == 1
             variances = (var_x + var_y)/2;
         else
