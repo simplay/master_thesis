@@ -2,7 +2,7 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] argv) {
-        String dataset = "c14";
+        String dataset = "car2";
         int samplingRate = 8;
 
 

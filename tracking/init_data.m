@@ -4,13 +4,13 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'c14';
+DATASETNAME = 'car2';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
-COMPUTE_LOCAL_VAR = false; % global variance is still computed
+COMPUTE_LOCAL_VAR = true; % global variance is still computed
 RUN_BILAT_FILT = true;
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -21,7 +21,10 @@ BASE_OUTPUT_PATH = strcat('../output/tracker_data/',DATASETNAME,'/');
 METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
 BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET);
-
+% Create the folder if it doesn't exist already.
+if ~exist(BASE_OUTPUT_PATH, 'dir')
+    mkdir(BASE_OUTPUT_PATH);
+end
 [boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
 [m,n,~] = size(imread(imgs{1}));
 START_FRAME_IDX = boundaries(1); 
@@ -64,10 +67,7 @@ for t=START_FRAME_IDX:END_FRAME_IDX
     [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
     datasets = [trackable_row, trackable_col]';
     
-    % Create the folder if it doesn't exist already.
-    if ~exist(BASE_OUTPUT_PATH, 'dir')
-        mkdir(BASE_OUTPUT_PATH);
-    end
+
     
     % save trackable row and col in text file
     fName = strcat(BASE_OUTPUT_PATH,'candidates_',num2str(t),'.txt');
