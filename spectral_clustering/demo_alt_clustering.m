@@ -28,7 +28,7 @@ PERFORM_AUTO_RESCALE = false;
 
 % use a prespecified number of eigenvectors
 SHOULD_FILTER_NEGATIVE_EW = false;
-USE_CLUSER_EW_COUNT = true;
+USE_CLUSER_EW_COUNT = false;
 FORCE_EW_COUNT = 5;
 
 THRESH = 0.0000;
@@ -185,7 +185,7 @@ img_index = frame_idx;
     %%
     USE_MCM = false;
     N = length(W);
-    for K=2:2%4%min(20,2*m)
+    for K=4:4%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
