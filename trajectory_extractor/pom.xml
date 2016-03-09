@@ -26,6 +26,11 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.vx68k.quercus</groupId>
+            <artifactId>quercus-parent</artifactId>
+            <version>4.0.42-MOD3</version>
+        </dependency>
     </dependencies>
 
 
