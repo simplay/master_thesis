@@ -7,7 +7,7 @@ require_relative 'point3f'
 require_relative 'meta_info'
 require_relative 'cie_lab'
 
-#require 'pry'
+require 'pry'
 
 class Fileparser
 
@@ -67,13 +67,12 @@ class Fileparser
   end
 
   def parse
-    File.open(@filepath, "r") do |file|has_depth_data?
-      frame_count = @filepath.split("fc_").last.split(".").first
-      parse_file_lines(file, frame_count)
+    File.open(@filepath, "r") do |file|
+      parse_file_lines(file)
     end
   end
 
-  def parse_file_lines(file, file_id)
+  def parse_file_lines(file)
     while(line = file.gets)
       if line =~/###/
         # is a header line
