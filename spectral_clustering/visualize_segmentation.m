@@ -9,18 +9,19 @@ function visualize_segmentation(frames, imgs, label_assignments, label_mappings,
     
     frame = frames{img_index};
     
-    for idx=1:length(frame.ax)
-        f_label = frame.labels(idx);
-        w_idx = label_idx_to_W_lookup_idx(f_label, label_mappings);
-        if isempty(w_idx)
+    for idx=1:length(label_assignments)
+        lm_idx = label_mappings(idx);
+        fl_idx = find(frame.labels == lm_idx);
+        if (isempty(fl_idx))
             continue;
         end
-        tra_cluster_assignment = label_assignments(w_idx);
-        color = get_cluster_color_of(tra_cluster_assignment);
-        plot(frame.ay(idx), frame.ax(idx), 'Color', color, 'Marker', '*');
+        assignment = label_assignments(idx);
+        color = get_cluster_color_of(assignment);
+        plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color, 'Marker', '*');
         hold on
+        
     end
-
+    
 end
 
 function color_value = get_cluster_color_of(assignment)
