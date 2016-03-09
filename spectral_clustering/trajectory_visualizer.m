@@ -4,6 +4,7 @@ START_FRAME = 1;
 END_FRAME = 4;
 
 addpath('../libs/flow-code-matlab');
+addpath('../matlab_shared');
 BASE = '../output/similarities/';
 % 'cars1_step_8_frame_';
 STEPSIZE_DATA = 8;
