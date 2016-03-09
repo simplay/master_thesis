@@ -2,6 +2,7 @@ DATASET = 'c14';
 img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
+SHOULD_PLOT3D = false;
 
 addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
@@ -80,15 +81,33 @@ end
 
 %%
 disp('the FROM position in img1 has to correspond to the TO position in img2.');
+
+if SHOULD_PLOT3D
+    img1 = imread(imgs{1});
+    img1 = img1(:,:,1);
+    img2 = imread(imgs{2});
+    img2 = img2(:,:,1);
+    figure
+    surf(0*ones(size(img1)), img1,'EdgeColor','none')
+    hold on
+    surf(1*ones(size(img2)), img2,'EdgeColor','none')
+    
+end
+
 for k=1:2,
-figure('name', strcat('img ', num2str(k)));
-img = imread(imgs{k});
-imshow(img)
-hold on;
+if SHOULD_PLOT3D == false
+    figure('name', strcat('img ', num2str(k)));
+    img = imread(imgs{k});
+    imshow(img)
+    hold on;
+end
 
 tracking_p_range = labels(labels > 0);
 
 drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1), y(2)-y(1),0 );
+drawArrow3d = @(x,y,z) quiver3(x(1),y(1),z(1),x(2)-x(1),y(2)-y(1),z(2));
+
+
 for t=1:length(tracking_p_range),
 
     % find tracked pixels at frame 1
@@ -115,8 +134,18 @@ for t=1:length(tracking_p_range),
     %%
     x = [x0, x1];
     y = [y0, y1];
-    plot(y0,x0, '.r')
-    plot(y1,x1, '.b')
-    drawArrow(y,x);
+    if SHOULD_PLOT3D
+        z = [0,1];
+        plot3(y0,x0,0, '.r');
+        plot3(y1,x1,1, '.b');
+        drawArrow3d(y,x,z);   
+    else
+        plot(y0,x0, '.r');
+        plot(y1,x1, '.b');
+        drawArrow(y,x);
+    end
+    
+    
+
 end
 end
