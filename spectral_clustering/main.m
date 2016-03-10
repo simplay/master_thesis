@@ -5,10 +5,10 @@ clc;
 %clear all;
 %close all;
 
-DATASET = 'car2';
+DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
@@ -17,7 +17,7 @@ SHOULD_LOAD_W = true;
 PERFORM_AUTO_RESCALE = false;
 
 % 
-USE_BF_BOUND = true;
+USE_BF_BOUND = false;
 BOUNDARY = [1,9];
 
 % use a prespecified number of eigenvectors
@@ -37,7 +37,7 @@ VAR_IMG = 1;
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 64
 SELECTED_ENTITY_IDX = 3
-frame_idx = 8;
+frame_idx = 1;
 
 %%
 if exist('W','var') == 0

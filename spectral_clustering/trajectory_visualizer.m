@@ -2,7 +2,7 @@ DATASET = 'c14';
 img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
-SHOULD_PLOT3D = false;
+SHOULD_PLOT3D = true;
 
 addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
@@ -31,7 +31,7 @@ imshow(I);
 
 % plot all tracked points
 
-num_el = 3;
+num_el = 40;
 [x, y] = ginput(1);
 close(t);
 

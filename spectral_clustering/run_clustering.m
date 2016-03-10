@@ -10,7 +10,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     %     USE_CLUSTERING_CUE = true;
     
     
-    KERNIGHAN_LIN = true;
+    KERNIGHAN_LIN = false;
     
     
     
@@ -163,9 +163,9 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     for img_index = frame_idx:frame_idx
         figure
 
-        pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
-        pixeltensor = pixeltensor.tracked_pixels;
-        [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+        % pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
+        % pixeltensor = pixeltensor.tracked_pixels;
+        % [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
         
         if SELECT_AFFINITY_IDX
             frame = frames{img_index};
