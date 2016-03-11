@@ -2,9 +2,16 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] argv) {
+        ArgParser.getInstance(argv);
+
         String dataset = "chair3";
         int samplingRate = 8;
 
+        if (ArgParser.hasArgs()) {
+            dataset = ArgParser.getDatasetName();
+        }
+
+        ArgParser.reportUsedArgs();
 
         String output_base_path = "../output/trajectories/";
 
