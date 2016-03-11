@@ -7,7 +7,7 @@ require_relative 'point3f'
 require_relative 'meta_info'
 require_relative 'cie_lab'
 
-require 'pry'
+#require 'pry'
 
 class Fileparser
 
