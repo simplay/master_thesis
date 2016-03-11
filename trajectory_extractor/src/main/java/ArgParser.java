@@ -43,7 +43,7 @@ public class ArgParser {
 
     /**
      * Fetches hesh values by their key
-      * @param key
+     * @param key
      * @return
      */
     public String getHashValue(String key) {

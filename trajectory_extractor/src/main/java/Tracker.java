@@ -22,7 +22,6 @@ public class Tracker {
         // the order here is crucial: first start to start new trajectories
         // and then continue others.
         for (int frame_idx = 0; frame_idx < till_index; frame_idx++) {
-            System.out.println("Starting to track frame "+ (frame_idx+1) + "...");
             startNewTrajectory(frame_idx);
             continueTrackToNextFrame(frame_idx);
             activity.copyStates(activity_next);

@@ -13,7 +13,7 @@ public class Main {
             dataset = ArgParser.getDatasetName();
         }
         ArgParser.reportUsedArgs();
-
+        System.out.println();
 
         /**
          * Read required input data
