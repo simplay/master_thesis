@@ -145,7 +145,7 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         if COMPUTE_LOCAL_VAR
             if RUN_BILAT_FILT
                 fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
-                load(fname);
+                invalid_regions = load(fname, '-ASCII');
                 local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
             else
                 lfv_fName = strcat(BASE_FILE_PATH,'sub/');
