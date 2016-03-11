@@ -2,19 +2,22 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] argv) {
+        String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
+        // Default runtime parameter setup
         String dataset = "chair3";
         int samplingRate = 8;
 
         if (ArgParser.hasArgs()) {
             dataset = ArgParser.getDatasetName();
         }
-
         ArgParser.reportUsedArgs();
 
-        String output_base_path = "../output/trajectories/";
 
+        /**
+         * Read required input data
+         */
         File folder = new File("../output/tracker_data/" + dataset);
         File[] fileList = folder.listFiles();
         int counter = 0;
@@ -33,11 +36,14 @@ public class Main {
             new FlowFileReader(dataset, FlowField.FORWARD_FLOW, fileNr);
             new FlowFileReader(dataset, FlowField.BACKWARD_FLOW, fileNr);
             new InvalidRegionReader(dataset, fileNr);
-            // TODO load gradient flow files
         }
 
         System.out.println("Files loaded...");
         System.out.println();
+
+        /**
+         * Extract trajectories
+         */
         System.out.println("Sampling every " + samplingRate + "th pixel");
         new Tracker(till_index, samplingRate);
         System.out.println();
@@ -47,6 +53,11 @@ public class Main {
             System.out.println("#Trajectories with len=" + k + ": " + trajectoryCount);
         }
         System.out.println();
+
+        /**
+         * Filter extracted trajectories
+         */
+
         // one pointed trajectories have a length of 0.
         System.out.println("Filtering 1-pointed trajectories...");
 
@@ -54,6 +65,11 @@ public class Main {
         System.out.println("Filtered too short trajectories...");
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
+        // TODO compute similartites
+
+        /**
+         * Write output data
+         */
         String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
         System.out.println("Writting trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
@@ -62,5 +78,7 @@ public class Main {
         System.out.println("Writting active trajectory frame files: " + outTLF);
         (new File(outTLF)).mkdirs();
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
+
+        // TODO write similarity matrix, label mapping, nearest neighbors
     }
 }
