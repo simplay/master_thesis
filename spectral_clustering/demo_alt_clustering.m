@@ -12,7 +12,7 @@ clc;
 
 addpath('../libs/GCMex/');
 
-DATASET = 'car2';
+DATASET = 'chair3';
 USE_SPECIAL_NAMING = false;
 
 
@@ -32,7 +32,7 @@ USE_CLUSER_EW_COUNT = false;
 FORCE_EW_COUNT = 5;
 
 THRESH = 0.0000;
-USE_BF_BOUND = true;
+USE_BF_BOUND = false;
 BOUND = [1,9];
 
 
@@ -191,7 +191,7 @@ img_index = frame_idx;
     %%
     USE_MCM = false;
     N = length(W);
-    for K=4:4%4%min(20,2*m)
+    for K=6:6%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -206,7 +206,7 @@ img_index = frame_idx;
         end
         
         % repeat until convergence, i.e. error is small
-        for t=1:10,  
+        for t=1:5,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
             centroids;
             
