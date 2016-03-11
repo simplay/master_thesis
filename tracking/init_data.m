@@ -4,7 +4,7 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'car2';
+DATASETNAME = 'chair3';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
@@ -83,7 +83,7 @@ for t=START_FRAME_IDX:END_FRAME_IDX
         end    
         fclose(fid);
     end
-    
+    disp(strcat('Processed Frame', num2str(t), '...'));
 end
 
 % DO NOT change these parameters

@@ -144,11 +144,8 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         fw_flow = readFlowFile(fw_flow_t);
         if COMPUTE_LOCAL_VAR
             if RUN_BILAT_FILT
-                fname = strcat('../output/trackingdata/',DATASETNAME,'_step_',num2str(STEP_SIZE),'_frame_',num2str(t),'_inv_regions','.mat');
+                fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
                 load(fname);
-                %flow_img = zeros(size(fw_flow), 2);
-                %flow_img(:,:,1) = (1.0-invalid_regions).*fw_flow(:,:,1);
-                %flow_img(:,:,2) = (1.0-invalid_regions).*fw_flow(:,:,2);
                 local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
             else
                 lfv_fName = strcat(BASE_FILE_PATH,'sub/');
