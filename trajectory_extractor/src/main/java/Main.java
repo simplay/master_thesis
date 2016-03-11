@@ -2,7 +2,7 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] argv) {
-        String dataset = "car2";
+        String dataset = "chair3";
         int samplingRate = 8;
 
 
@@ -12,7 +12,7 @@ public class Main {
         File[] fileList = folder.listFiles();
         int counter = 0;
         for (File file : fileList) {
-            if (file.getName().matches("candidates_[\\d].txt")) {
+            if (file.getName().matches("candidates_[\\d]+.txt")) {
                 counter++;
             }
         }
