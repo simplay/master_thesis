@@ -1,12 +1,23 @@
 import java.io.*;
 
+/**
+ * Supported user args
+ *
+ *  required args:
+ *      -d => dataset that should be used
+ *      -task => similarity method that should be used
+ *          1 => runs SumDistTask
+ *  @example:
+ *      -d c14 -task 1
+ */
 public class Main {
     public static void main(String[] argv) {
+
         String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
         // Default runtime parameter setup
-        String dataset = "chair3";
+        String dataset = "c14";
         int samplingRate = 8;
 
         if (ArgParser.hasArgs()) {
@@ -66,6 +77,7 @@ public class Main {
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         // TODO compute similartites
+        new AffinityCalculator();
 
         /**
          * Write output data

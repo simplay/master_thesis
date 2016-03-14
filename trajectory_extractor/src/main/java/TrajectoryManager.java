@@ -1,9 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Singleton containing and managing all existing trajectories.
@@ -27,6 +24,9 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         trajectories = new HashMap<Integer, Trajectory>();
     }
 
+    public static Collection<Trajectory> getTrajectories() {
+        return instance.trajectories.values();
+    }
     /**
      * Number of trajectories this Manager contains.
      *

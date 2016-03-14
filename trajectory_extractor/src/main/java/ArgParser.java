@@ -54,6 +54,11 @@ public class ArgParser {
         return getInstance().getHashValue("d");
     }
 
+    public static SimilarityTask.Types getSimTask() {
+        String taskName = getInstance().getHashValue("task");
+        return SimilarityTask.Types.TypeById(Integer.parseInt(taskName));
+    }
+
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();

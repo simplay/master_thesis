@@ -1,0 +1,2 @@
+public enum TaskType {
+}
