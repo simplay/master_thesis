@@ -21,6 +21,9 @@ public abstract class SimilarityTask implements Runnable {
     // the normalization step,
     protected final double EPS_FLOW = 1d;
 
+    // Thresholds the zero value to truncate too small affinity towards zero.
+    protected final double ZERO_THRESHOLD = 1e-12;
+
 
     public enum Types {
         SD(1, SumDistTask.class),

@@ -24,7 +24,8 @@ public class SumDistTask extends SimilarityTask {
 
         double dist_st_a_b = spatioTemporalDistances(a, b, from_idx, to_idx);
 
-        return Math.exp(-LAMBDA*dist_st_a_b);
+        double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
+        return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
