@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.regex.Matcher;
 
 public class SumDistTask extends SimilarityTask {
 
@@ -13,6 +14,6 @@ public class SumDistTask extends SimilarityTask {
 
     @Override
     protected double similarityBetween(Trajectory a, Trajectory b) {
-        return 0;
+        return 1.2* Math.random();
     }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
@@ -6,6 +7,8 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     // points that span the trajectory
     private ArrayList<Point2f> points;
     private boolean isClosed = false;
+
+    private HashMap<Integer, Double> similarities;
 
     // unique identifier of a trajectory
     private int label;
@@ -20,6 +23,11 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         this.label = label_counter++;
         this.startFrame = startFrame;
         points = new ArrayList<Point2f>();
+        this.similarities = new HashMap<>();
+    }
+
+    public synchronized void assignSimilarityValueTo(int trajectoryLabel, double value) {
+        similarities.put(trajectoryLabel, value);
     }
 
     public boolean livesInFrame(int frame_idx) {

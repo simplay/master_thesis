@@ -65,8 +65,8 @@ public abstract class SimilarityTask implements Runnable {
     public void run() {
         for (Trajectory b : trajectories) {
             double similarityValue = similarityBetween(a, b);
-            // a.append_similarity(b.label, value)
-            // b.append_similarity(a.label, value)
+            a.assignSimilarityValueTo(b.getLabel(), similarityValue);
+            b.assignSimilarityValueTo(a.getLabel(), similarityValue);
         }
     }
 }
