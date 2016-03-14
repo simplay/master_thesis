@@ -10,6 +10,24 @@ public class Point2f {
         this.y = y;
     }
 
+    public Point2f copy() {
+        return new Point2f(x,y);
+    }
+
+    public Point2f sub(Point2f other) {
+        x -= other.x();
+        y -= other.y();
+        return this;
+    }
+
+    public double x() {
+        return u();
+    }
+
+    public double y() {
+        return v();
+    }
+
     public int iU() {
         return (int) x;
     }
@@ -23,6 +41,10 @@ public class Point2f {
         int py = (int) Math.round(y);
 
         return new Point2f(px, py);
+    }
+
+    public double length() {
+        return Math.sqrt(x*x + y*y);
     }
 
     public double u() {

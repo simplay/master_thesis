@@ -45,14 +45,22 @@ public class SumDistTask extends SimilarityTask {
         }
 
         double max = 0;
+        double avgDist = 0;
+        double len = u - from_idx + 1;
         for (int l = from_idx; l <= u; l++) {
             double dist = Math.random();
+
+            Point2f pa = a.getPointAtFrame(l);
+            Point2f pb = b.getPointAtFrame(l);
+
+            double sp_len = pa.copy().sub(pb).length();
+            avgDist += sp_len;
 
             if (dist > max) {
                 max = dist;
             }
         }
-
-        return max;
+        avgDist = avgDist / len;
+        return avgDist*max;
     }
 }
