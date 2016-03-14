@@ -14,6 +14,10 @@ public abstract class SimilarityTask implements Runnable {
     // minimal expected trajectory length
     protected final int MIN_EXPECTED_TRAJ_LEN = 3;
 
+    // Minimal assigned flow variance value used within
+    // the normalization step,
+    protected final double EPS_FLOW = 1d;
+
 
     public enum Types {
         SD(1, SumDistTask.class),
@@ -115,6 +119,21 @@ public abstract class SimilarityTask implements Runnable {
      */
     protected boolean isTooShortOverlapping(int overlappingFrameCount) {
         return overlappingFrameCount-1 < MIN_EXPECTED_TRAJ_LEN;
+    }
+
+    /**
+     * Compute the value of the tangent of a given trajectory at a given location.
+     *
+     * @param tra
+     * @param dt
+     * @param frame_idx
+     * @return
+     */
+    protected Point2f forward_difference(Trajectory tra, int dt, int frame_idx) {
+        Point2f p_i = tra.getPointAtFrame(frame_idx);
+        Point2f p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
+        Point2f p = p_i_pl_t.copy().sub(p_i);
+        return p.div_by(dt + 1);
     }
 
     @Override

@@ -48,7 +48,6 @@ public class SumDistTask extends SimilarityTask {
         double avgDist = 0;
         double len = u - from_idx + 1;
         for (int l = from_idx; l <= u; l++) {
-            double dist = Math.random();
 
             Point2f pa = a.getPointAtFrame(l);
             Point2f pb = b.getPointAtFrame(l);
@@ -56,6 +55,16 @@ public class SumDistTask extends SimilarityTask {
             double sp_len = pa.copy().sub(pb).length();
             avgDist += sp_len;
 
+            Point2f dt_a = forward_difference(a, timestep, l);
+            Point2f dt_b = forward_difference(b, timestep, l);
+
+            double dt_ab = dt_a.sub(dt_b).length_squared();
+
+            // TODO implement variance lookup and accumulate it here
+            double sigma_t = EPS_FLOW;
+
+
+            double dist = dt_ab / sigma_t;
             if (dist > max) {
                 max = dist;
             }

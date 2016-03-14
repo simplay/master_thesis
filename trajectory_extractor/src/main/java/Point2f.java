@@ -20,6 +20,12 @@ public class Point2f {
         return this;
     }
 
+    public Point2f div_by(double f) {
+        x /= f;
+        y /= f;
+        return this;
+    }
+
     public double x() {
         return u();
     }
@@ -44,7 +50,11 @@ public class Point2f {
     }
 
     public double length() {
-        return Math.sqrt(x*x + y*y);
+        return Math.sqrt(length_squared());
+    }
+
+    public double length_squared() {
+        return x*x + y*y;
     }
 
     public double u() {
