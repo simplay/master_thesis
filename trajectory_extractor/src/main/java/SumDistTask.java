@@ -24,8 +24,7 @@ public class SumDistTask extends SimilarityTask {
 
         double dist_st_a_b = spatioTemporalDistances(a, b, from_idx, to_idx);
 
-
-        return dist_st_a_b* Math.random();
+        return Math.exp(-LAMBDA*dist_st_a_b);
     }
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
@@ -36,10 +35,9 @@ public class SumDistTask extends SimilarityTask {
         }
 
         int timestep = timestepSize(commonFrameCount);
-        double dist_spatial = 0;
-
         int u = to_idx-timestep;
 
+        // guard: in case there is no overlapping segment, skip computations
         if (u < from_idx) {
             return 0;
         }

@@ -32,7 +32,6 @@ public class AffinityCalculator {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
 
-        System.out.println("foobar");
-
+        System.out.println("Computed trajectory affinities...");
     }
 }

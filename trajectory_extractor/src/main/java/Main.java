@@ -77,8 +77,11 @@ public class Main {
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         // TODO compute similartites
+        System.out.println("Starts computing affinity values between remaining trajectories...");
         new AffinityCalculator();
 
+
+        // TODO apply post-filtering step: all zero-trajectories
         /**
          * Write output data
          */
@@ -90,6 +93,7 @@ public class Main {
         System.out.println("Writting active trajectory frame files: " + outTLF);
         (new File(outTLF)).mkdirs();
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
+
 
         // TODO write similarity matrix, label mapping, nearest neighbors
     }
