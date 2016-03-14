@@ -12,7 +12,7 @@ public abstract class SimilarityTask implements Runnable {
     protected final double EIGENSIMILARITY_VALUE = 0d;
 
     // minimal expected trajectory length
-    protected final int MIN_EXPECTED_TRAJ_LEN = 4;
+    protected final int MIN_EXPECTED_TRAJ_LEN = 3;
 
 
     public enum Types {

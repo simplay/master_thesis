@@ -45,7 +45,7 @@ public class SumDistTask extends SimilarityTask {
         }
 
         double max = 0;
-        for (int l = from_idx; l <= u; u++) {
+        for (int l = from_idx; l <= u; l++) {
             double dist = Math.random();
 
             if (dist > max) {
