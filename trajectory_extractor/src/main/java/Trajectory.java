@@ -18,12 +18,14 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
 
     // assumption: first frame is equal 0
     private int startFrame;
+    private int endFrame;
 
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
         points = new ArrayList<Point2f>();
         this.similarities = new HashMap<>();
+        this.endFrame = -1;
     }
 
     public synchronized void assignSimilarityValueTo(int trajectoryLabel, double value) {
@@ -39,8 +41,18 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return false;
     }
 
+    public int getEndFrame() {
+        return endFrame;
+    }
+
+    /**
+     * A closed trajectory cannot be continued and is thus not selected
+     * by the tracker anymore. In addition, the trajectories end frame is
+     * assigned, when closed, which is the current active frame at that time.
+     */
     public void markClosed() {
         this.isClosed = true;
+        endFrame = currentActiveFrame();
     }
 
     public boolean notClosed() {
