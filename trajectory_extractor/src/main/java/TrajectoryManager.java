@@ -27,6 +27,14 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     public static Collection<Trajectory> getTrajectories() {
         return instance.trajectories.values();
     }
+
+    public static List<Trajectory> getTrajectorySubset(int from_idx) {
+        int n = getTrajectories().size();
+        ArrayList<Trajectory> collection = new ArrayList<>(getTrajectories());
+        return collection.subList(from_idx, n-1);
+    }
+
+
     /**
      * Number of trajectories this Manager contains.
      *

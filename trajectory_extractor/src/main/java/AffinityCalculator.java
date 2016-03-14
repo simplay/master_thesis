@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -10,9 +11,13 @@ public class AffinityCalculator {
         SimilarityTask.Types taskType = ArgParser.getSimTask();
         ArrayList<SimilarityTask> tasks = new ArrayList<>();
 
+        int from_idx = 0;
+        // assign upper triangular matrix
         for (Trajectory a : TrajectoryManager.getTrajectories()) {
-            SimilarityTask task = SimilarityTask.buildTask(taskType, a);
+            Collection<Trajectory> trajectories = TrajectoryManager.getTrajectorySubset(from_idx);
+            SimilarityTask task = SimilarityTask.buildTask(taskType, a, trajectories);
             tasks.add(task);
+            from_idx++;
         }
 
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());

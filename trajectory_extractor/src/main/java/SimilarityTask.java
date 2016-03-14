@@ -30,10 +30,10 @@ public abstract class SimilarityTask implements Runnable {
 
     }
 
-    static SimilarityTask buildTask(Types taskType, Trajectory a) {
+    static SimilarityTask buildTask(Types taskType, Trajectory a, Collection<Trajectory> trajectories) {
         SimilarityTask task = null;
         try {
-            task = (SimilarityTask) taskType.getTaskClass().getConstructor(Trajectory.class).newInstance(a);
+            task = (SimilarityTask) taskType.getTaskClass().getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -50,11 +50,13 @@ public abstract class SimilarityTask implements Runnable {
     protected Trajectory a;
 
     /**
+     *
      * @param a
+     * @param trajectories
      */
-    public SimilarityTask(Trajectory a) {
+    public SimilarityTask(Trajectory a, Collection<Trajectory> trajectories) {
         this.a = a;
-        this.trajectories = TrajectoryManager.getTrajectories();
+        this.trajectories = trajectories;
     }
 
     protected abstract double similarityBetween(Trajectory a, Trajectory b);
