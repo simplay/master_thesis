@@ -1,6 +1,19 @@
 import java.io.*;
-
+// TODO write more descriptive information:
+// value range of input data, invalid values, what they do, where they are used
+// what data is required / optional
+// where it is computed and stored
 /**
+ * The following input data (frame-wise) is always read into memory:
+ *  tracking candidate locations
+ *  invalid tracking regions
+ *  forward-and backward flow fields
+ *  local and global flow variance values
+ *  cie lab color values
+ *
+ *  optional input data:
+ *      depth fields: not that the value zero indicates invalid pixel regions.
+ *
  * Supported user args
  *
  *  required args:
@@ -18,6 +31,8 @@ public class Main {
 
         // Default runtime parameter setup
         String dataset = "c14";
+
+        // TODO: determine this value automatically
         int samplingRate = 8;
 
         if (ArgParser.hasArgs()) {
