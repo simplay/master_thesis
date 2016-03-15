@@ -47,5 +47,15 @@ public abstract class FileReader {
         }
         return intItems;
     }
+
+    /**
+     * Extracts all elements in a row of a serialized Matlab matrix.
+     *
+     * @param line a row of a serialized Matlab matrix.
+     * @return matrix elements as string array.
+     */
+    protected String[] extractElementsFromMatlabMatrixRow(String line) {
+        return line.split("\\[|\\]")[1].split(" ");
+    }
 }
 

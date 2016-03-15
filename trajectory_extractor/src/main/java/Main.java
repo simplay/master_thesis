@@ -47,6 +47,8 @@ public class Main {
             new FlowFileReader(dataset, FlowField.FORWARD_FLOW, fileNr);
             new FlowFileReader(dataset, FlowField.BACKWARD_FLOW, fileNr);
             new InvalidRegionReader(dataset, fileNr);
+            new FlowVarFileReader(dataset, fileNr);
+            new GlobalVarFileReader(dataset);
         }
 
         System.out.println("Files loaded...");

@@ -12,7 +12,7 @@ public class CandidateFileReader extends FileReader{
 
     @Override
     protected void processLine(String line) {
-        String[] elements = line.split("\\[|\\]")[1].split(" ");
+        String[] elements = extractElementsFromMatlabMatrixRow(line);
         candidates.add(elements);
     }
 }
