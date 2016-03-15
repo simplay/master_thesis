@@ -60,7 +60,7 @@ public class SumDistTask extends SimilarityTask {
             double dt_ab = dt_a.sub(dt_b).length_squared();
 
             // TODO implement variance lookup and accumulate it here
-            double sigma_t = EPS_FLOW;
+            double sigma_t = EPS_FLOW + getVariance(l, a, b);
 
 
             double dist = dt_ab / sigma_t;

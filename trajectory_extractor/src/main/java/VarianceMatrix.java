@@ -6,6 +6,10 @@ public class VarianceMatrix extends Interpolator {
         this.matrix = new double[m][n];
     }
 
+    public double valueAt(Point2f p) {
+        return interpolatedValueAt(matrix, p.x(), p.y());
+    }
+
     public double valueAt(double row_idx, double col_idx) {
         return interpolatedValueAt(matrix, row_idx, col_idx);
     }

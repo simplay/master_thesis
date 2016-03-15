@@ -142,6 +142,20 @@ public abstract class SimilarityTask implements Runnable {
         return p.div_by(dt + 1);
     }
 
+    protected double getVariance(int frame_idx, Trajectory a, Trajectory b) {
+        return (ArgParser.useLocalVariance())
+                ? localVarAt(frame_idx, a, b)
+                : VarianceManager.getInstance().getGlobalVarianceValue(frame_idx);
+    }
+
+    private double localVarAt(int frame_idx, Trajectory a, Trajectory b) {
+        Point2f pa = a.getPointAtFrame(frame_idx);
+        Point2f pb = b.getPointAtFrame(frame_idx);
+        double var_a = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pa);
+        double var_b = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pb);
+        return Math.min(var_a, var_b);
+    }
+
     @Override
     public void run() {
         for (Trajectory b : trajectories) {
