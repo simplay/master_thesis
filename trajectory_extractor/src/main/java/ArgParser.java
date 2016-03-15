@@ -80,13 +80,19 @@ public class ArgParser {
         Iterator it = arguments.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            msg += "-" + pair.getKey() + " " + pair.getValue() + "\n";
+            msg += "-" + pair.getKey() + " " + pair.getValue() + " ";
         }
         return msg.trim();
     }
 
-    public static void reportUsedArgs() {
-        System.out.println("Using the following input args: \n" + getInstance().toString());
+    public static void reportUsedParameters() {
+        System.out.print("Provided runtime args: ");
+        System.out.println(getInstance().toString());
+        System.out.println("Using the following runtime parameter setting:");
+        System.out.println("+ Using dataset: " + getDatasetName());
+        System.out.println("+ Running task: " + getSimTask().name());
+        System.out.println("+ Using local variances: " + useLocalVariance());
+        System.out.println("+ Using color cues: " + useColorCues());
     }
 
 

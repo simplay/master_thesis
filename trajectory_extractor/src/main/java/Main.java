@@ -41,7 +41,7 @@ public class Main {
         if (ArgParser.hasArgs()) {
             dataset = ArgParser.getDatasetName();
         }
-        ArgParser.reportUsedArgs();
+        ArgParser.reportUsedParameters();
         System.out.println();
 
         /**
