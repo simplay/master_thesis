@@ -64,6 +64,7 @@ public class Main {
             new InvalidRegionReader(dataset, fileNr);
             new FlowVarFileReader(dataset, fileNr);
             new GlobalVarFileReader(dataset);
+            new ColorImageReader(dataset, fileNr);
         }
 
         System.out.println("Files loaded...");
