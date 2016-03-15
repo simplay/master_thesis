@@ -4,7 +4,7 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'chair3';
+DATASETNAME = 'c14';
 STEP_SIZE = 8;
 PRECISSION = 12;
 

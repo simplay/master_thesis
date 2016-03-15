@@ -164,7 +164,7 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         end
         global_variances = [global_variances, var(fw_flow(:))];
     end
-    fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
+    fName = strcat('../output/tracker_data/',DATASET,'/global_variances','.txt');
     fid = fopen(fName,'w');
 
     if fid ~= -1
@@ -184,8 +184,8 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         for k=1:END_FRAME_IDX
             lv = local_flow_variances(:,:,k);
             
-            fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
-            imgfile = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.png');
+            fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
+            imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');
             imwrite(lv, imgfile);
             fid = fopen(fname,'w');
             if fid ~= -1
