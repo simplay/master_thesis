@@ -5,7 +5,6 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
     % DISPLAY = false; % show tracking point
     % WRITE_TRACKINGS_INTO_FILES = true;
     addpath('../libs/flow-code-matlab');
-    addpath('fast_bfilt/');
     %% 
 
     % global variable used for assigning unique label indices
@@ -57,9 +56,9 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
             colorTransform = makecform('srgb2lab');
             lab = applycform(img, colorTransform);
             [rows, columns, ~] = size(lab);
-            fname = strcat(DATASETNAME,'_lab_',num2str(t),'.txt');
+            fname = strcat('color_lab_',num2str(t),'.txt');
             disp(['Computing ', fname]);
-            fpname = strcat('../output/cie_lab_color_imgs/',DATASETNAME,'/', fname);
+            fpname = strcat('../output/tracker_data/',DATASETNAME,'/', fname);
             fid = fopen(fpname, 'wt');
             for col = 1 : columns
                 for row = 1 : rows

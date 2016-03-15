@@ -8,9 +8,9 @@ DATASETNAME = 'c14';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
-COMPUTE_LOCAL_VAR = true; % global variance is still computed
+COMPUTE_LOCAL_VAR = false; % global variance is still computed
 RUN_BILAT_FILT = true;
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
