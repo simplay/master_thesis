@@ -59,6 +59,14 @@ public class ArgParser {
         return SimilarityTask.Types.TypeById(Integer.parseInt(taskName));
     }
 
+    public static boolean useColorCues() {
+        String useColorState = getInstance().getHashValue("color");
+        if (useColorState == null || !useColorState.equals("1")) {
+            return false;
+        }
+        return true;
+    }
+
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();

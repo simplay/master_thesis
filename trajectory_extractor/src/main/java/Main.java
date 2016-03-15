@@ -9,9 +9,9 @@ import java.io.*;
  *  invalid tracking regions
  *  forward-and backward flow fields
  *  local and global flow variance values
- *  cie lab color values
  *
  *  optional input data:
+ *      cie lab color values
  *      depth fields: not that the value zero indicates invalid pixel regions.
  *
  * Supported user args
@@ -20,6 +20,9 @@ import java.io.*;
  *      -d => dataset that should be used
  *      -task => similarity method that should be used
  *          1 => runs SumDistTask
+ *      -color => should color cues be used for later computations?
+ *          -color 1 => use color cues, i.e. load color files
+ *          -color 0 => do not load color images
  *  @example:
  *      -d c14 -task 1
  */
@@ -64,7 +67,10 @@ public class Main {
             new InvalidRegionReader(dataset, fileNr);
             new FlowVarFileReader(dataset, fileNr);
             new GlobalVarFileReader(dataset);
-            new ColorImageReader(dataset, fileNr);
+
+            // optionally loaded cue-data
+            if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
+            // TODO load depth information
         }
 
         System.out.println("Files loaded...");
