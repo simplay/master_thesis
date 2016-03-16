@@ -1,3 +1,9 @@
+package pipeline_components;
+
+import datastructures.Trajectory;
+import managers.TrajectoryManager;
+import similarity.SimilarityTask;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;

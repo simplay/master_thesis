@@ -1,3 +1,5 @@
+package readers;
+
 import java.io.*;
 
 public abstract class FileReader {

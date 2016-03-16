@@ -1,3 +1,7 @@
+package readers;
+
+import datastructures.TrackingCandidates;
+
 import java.util.LinkedList;
 
 public class CandidateFileReader extends FileReader{

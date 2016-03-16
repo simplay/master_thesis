@@ -1,3 +1,10 @@
+package readers;
+
+import datastructures.ColorImage;
+import datastructures.Point3d;
+import managers.ColorImgManager;
+import managers.FlowFieldManager;
+
 public class ColorImageReader extends FileReader {
 
     private ColorImage img;

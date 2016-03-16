@@ -1,4 +1,6 @@
-public class FlowField extends Interpolator{
+package datastructures;
+
+public class FlowField extends Interpolator {
 
     private String type;
     private int m;

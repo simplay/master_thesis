@@ -1,3 +1,10 @@
+package pipeline_components;
+
+import datastructures.*;
+import managers.FlowFieldManager;
+import managers.InvalidRegionManager;
+import managers.TrajectoryManager;
+
 import java.util.LinkedList;
 
 public class Tracker {

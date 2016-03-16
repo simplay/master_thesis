@@ -1,3 +1,8 @@
+package readers;
+
+import datastructures.FlowField;
+import managers.FlowFieldManager;
+
 import java.util.ArrayList;
 
 public class FlowFileReader extends FileReader{

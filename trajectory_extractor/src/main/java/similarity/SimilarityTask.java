@@ -1,3 +1,10 @@
+package similarity;
+
+import datastructures.Point2f;
+import datastructures.Trajectory;
+import managers.VarianceManager;
+import pipeline_components.ArgParser;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
@@ -52,7 +59,7 @@ public abstract class SimilarityTask implements Runnable {
 
     }
 
-    static SimilarityTask buildTask(Types taskType, Trajectory a, Collection<Trajectory> trajectories) {
+    public static SimilarityTask buildTask(Types taskType, Trajectory a, Collection<Trajectory> trajectories) {
         SimilarityTask task = null;
         try {
             task = (SimilarityTask) taskType.getTaskClass().getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);

@@ -1,3 +1,7 @@
+package readers;
+
+import managers.VarianceManager;
+
 public class GlobalVarFileReader extends FileReader {
 
     public GlobalVarFileReader(String dataset) {

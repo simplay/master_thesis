@@ -1,4 +1,6 @@
-public class InvalidRegionsMask extends Interpolator{
+package datastructures;
+
+public class InvalidRegionsMask extends Interpolator {
 
     private double[][] mags;
 

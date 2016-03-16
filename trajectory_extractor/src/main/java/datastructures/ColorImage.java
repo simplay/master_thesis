@@ -1,4 +1,6 @@
-public class ColorImage extends Interpolator{
+package datastructures;
+
+public class ColorImage extends Interpolator {
 
     private Point3d[][] rgbValues;
 

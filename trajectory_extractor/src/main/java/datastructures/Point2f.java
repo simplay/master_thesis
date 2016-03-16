@@ -1,4 +1,4 @@
-import sun.applet.*;
+package datastructures;
 
 public class Point2f {
 

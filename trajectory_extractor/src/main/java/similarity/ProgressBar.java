@@ -1,3 +1,7 @@
+package similarity;
+
+import managers.TrajectoryManager;
+
 public class ProgressBar {
     private static ProgressBar instance = null;
 

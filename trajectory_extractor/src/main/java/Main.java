@@ -1,3 +1,10 @@
+import datastructures.FlowField;
+import managers.TrajectoryManager;
+import readers.*;
+import pipeline_components.AffinityCalculator;
+import pipeline_components.ArgParser;
+import pipeline_components.Tracker;
+
 import java.io.*;
 // TODO write more descriptive information:
 // value range of input data, invalid values, what they do, where they are used

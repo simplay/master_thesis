@@ -1,3 +1,8 @@
+package readers;
+
+import datastructures.InvalidRegionsMask;
+import managers.InvalidRegionManager;
+
 import java.util.ArrayList;
 
 public class InvalidRegionReader extends FileReader{

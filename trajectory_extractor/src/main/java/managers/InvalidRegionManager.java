@@ -1,3 +1,7 @@
+package managers;
+
+import datastructures.InvalidRegionsMask;
+
 import java.util.ArrayList;
 
 public class InvalidRegionManager {

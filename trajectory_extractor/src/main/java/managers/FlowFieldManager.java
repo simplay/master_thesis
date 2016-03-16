@@ -1,3 +1,7 @@
+package managers;
+
+import datastructures.FlowField;
+
 import java.util.ArrayList;
 
 public class FlowFieldManager {

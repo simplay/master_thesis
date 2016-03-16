@@ -1,3 +1,8 @@
+package managers;
+
+import datastructures.Point2f;
+import datastructures.Trajectory;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;

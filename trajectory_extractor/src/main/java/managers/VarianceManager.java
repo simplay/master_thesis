@@ -1,3 +1,7 @@
+package managers;
+
+import datastructures.VarianceMatrix;
+
 import java.util.ArrayList;
 
 public class VarianceManager {

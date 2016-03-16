@@ -1,5 +1,9 @@
+package similarity;
+
+import datastructures.Point2f;
+import datastructures.Trajectory;
+
 import java.util.Collection;
-import java.util.regex.Matcher;
 
 public class SumDistTask extends SimilarityTask {
 

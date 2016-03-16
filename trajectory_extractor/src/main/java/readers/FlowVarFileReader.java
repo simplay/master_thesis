@@ -1,3 +1,8 @@
+package readers;
+
+import datastructures.VarianceMatrix;
+import managers.VarianceManager;
+
 import java.util.LinkedList;
 
 public class FlowVarFileReader extends FileReader{

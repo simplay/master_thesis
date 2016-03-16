@@ -1,3 +1,5 @@
+package datastructures;
+
 public class Point3d {
     private double x;
     private double y;

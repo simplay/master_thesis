@@ -1,3 +1,7 @@
+package pipeline_components;
+
+import similarity.SimilarityTask;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
