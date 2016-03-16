@@ -39,7 +39,6 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return collection.subList(from_idx, n-1);
     }
 
-
     /**
      * Number of trajectories this Manager contains.
      *
@@ -155,6 +154,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     public void filterOnePointedTrajectories() {
         for (Trajectory traj : allTrajectoryWithLength(0)) {
             trajectories.remove(traj.getLabel());
+        }
+    }
+
+    public void filterNoSimilarityTrajectories() {
+        for (Trajectory traj : getTrajectories()) {
+            if (!traj.hasSimilarityValues()) {
+                for (Trajectory other : getTrajectories()) {
+                    other.filterSimilarityOfTrajectory(traj.getLabel());
+                }
+                trajectories.remove(traj.getLabel());
+            }
         }
     }
 

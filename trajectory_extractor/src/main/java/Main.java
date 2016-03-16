@@ -4,6 +4,7 @@ import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
+import writers.SimilarityWriter;
 
 import java.io.*;
 // TODO write more descriptive information:
@@ -121,6 +122,8 @@ public class Main {
         System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
 
         // TODO apply post-filtering step: all zero-trajectories
+        TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
+
         /**
          * Write output data
          */
@@ -135,6 +138,13 @@ public class Main {
 
 
         // TODO write similarity matrix, label mapping, nearest neighbors
+        // TrajectoryManager.sortTrajectories();
+        try {
+            new SimilarityWriter(dataset);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         long tillFinishedTime = System.currentTimeMillis();
         System.out.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
     }

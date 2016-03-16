@@ -25,6 +25,8 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     private int startFrame;
     private int endFrame;
 
+    private boolean hasSimilarityValues = false;
+
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
@@ -44,6 +46,14 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         this.similarities = new HashMap<>(n);
     }
 
+    public boolean hasSimilarityValues() {
+        return hasSimilarityValues;
+    }
+
+    public void filterSimilarityOfTrajectory(int label) {
+        similarities.remove(label);
+    }
+
     /**
      * Assign the similarity value between this trajectory and another trajectory given
      * by its label value.
@@ -53,6 +63,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
      */
     public void assignSimilarityValueTo(int trajectoryLabel, double value) {
         synchronized (similarities) {
+            hasSimilarityValues = true;
             similarities.put(trajectoryLabel, value);
         }
     }
@@ -162,6 +173,10 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         int idx = frame_idx - startFrame;
         Point2f p = points.get(idx);
         return label + " " + p.u() + " " + p.v();
+    }
+
+    public String toSimilarityString() {
+        return similarities.values().toString();
     }
 
     @Override
