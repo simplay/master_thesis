@@ -9,6 +9,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     private boolean isClosed = false;
 
     private HashMap<Integer, Double> similarities;
+    private HashMap<Integer, Double> avgSpatialDistToNeighbors;
 
     // unique identifier of a trajectory
     private int label;
@@ -26,6 +27,17 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         points = new ArrayList<Point2f>();
         this.similarities = new HashMap<>();
         this.endFrame = -1;
+        this.avgSpatialDistToNeighbors = new HashMap<>();
+    }
+
+    /**
+     * Pre-allocate memory for data-structures used during
+     * the computation of similarity values during computation.
+     */
+    public void initSimilarityDatastructures() {
+        int n = TrajectoryManager.getTrajectories().size();
+        this.avgSpatialDistToNeighbors = new HashMap<>(n);
+        this.similarities = new HashMap<>(n);
     }
 
     public synchronized void assignSimilarityValueTo(int trajectoryLabel, double value) {

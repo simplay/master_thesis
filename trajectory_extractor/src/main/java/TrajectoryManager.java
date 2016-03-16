@@ -88,6 +88,15 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
+     * All in advance required steps to start the similarity computation.
+     */
+    public static void prepareForSimilarityCompuation() {
+        for (Trajectory tra : getTrajectories()) {
+            tra.initSimilarityDatastructures();
+        }
+    }
+
+    /**
      * Select all trajectories that have a given length value.
      *
      * @param length expected trajectory length value.

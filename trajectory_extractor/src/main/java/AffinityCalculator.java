@@ -8,8 +8,14 @@ public class AffinityCalculator {
 
     public AffinityCalculator() {
 
+        // performance improvement: pre-allocate all involved datastructures.
+        TrajectoryManager.prepareForSimilarityCompuation();
+
+        // determine which task should be used for the computation
         SimilarityTask.Types taskType = ArgParser.getSimTask();
         ArrayList<SimilarityTask> tasks = new ArrayList<>();
+        
+        System.out.println("Running similarity task: " + taskType.name());
 
         int from_idx = 0;
         // assign upper triangular matrix
@@ -21,7 +27,6 @@ public class AffinityCalculator {
         }
 
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
         for (SimilarityTask task : tasks) {
             executor.execute(task);
         }
