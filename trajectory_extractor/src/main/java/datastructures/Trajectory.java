@@ -44,10 +44,38 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         this.similarities = new HashMap<>(n);
     }
 
-    public synchronized void assignSimilarityValueTo(int trajectoryLabel, double value) {
-        similarities.put(trajectoryLabel, value);
+    /**
+     * Assign the similarity value between this trajectory and another trajectory given
+     * by its label value.
+     *
+     * @param trajectoryLabel identifier of other trajectory
+     * @param value the similarity value
+     */
+    public void assignSimilarityValueTo(int trajectoryLabel, double value) {
+        synchronized (similarities) {
+            similarities.put(trajectoryLabel, value);
+        }
     }
 
+    /**
+     * Assign the average spatial distance of the overlapping parts between this and
+     * another trajectory given by its trajectory label.
+     *
+     * @param trajectoryLabel identifier of the other trajectory
+     * @param value the avg spatial distance (in pixel units) of the overlapping segments.
+     */
+    public void appendAvgSpatialDist(int trajectoryLabel, double value) {
+        synchronized (avgSpatialDistToNeighbors) {
+            avgSpatialDistToNeighbors.put(trajectoryLabel, value);
+        }
+    }
+
+    /**
+     * Checks whether this trajectory was tracked in a certain frame.
+     *
+     * @param frame_idx unique number of frame
+     * @return true if this trajectory has a tracking point in the given frame.
+     */
     public boolean livesInFrame(int frame_idx) {
         int till = startFrame+points.size()-1;
 

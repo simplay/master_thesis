@@ -163,6 +163,11 @@ public abstract class SimilarityTask implements Runnable {
         return Math.min(var_a, var_b);
     }
 
+    protected void appendAvgSpatialDistances(Trajectory a, Trajectory b, double sp_dist) {
+        a.appendAvgSpatialDist(b.getLabel(), sp_dist);
+        b.appendAvgSpatialDist(a.getLabel(), sp_dist);
+    }
+
     @Override
     public void run() {
         for (Trajectory b : trajectories) {

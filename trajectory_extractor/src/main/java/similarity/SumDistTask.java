@@ -70,6 +70,7 @@ public class SumDistTask extends SimilarityTask {
             }
         }
         avgSpatialDist = avgSpatialDist / len;
+        appendAvgSpatialDistances(a, b, avgSpatialDist);
         return avgSpatialDist*maxDistance;
     }
 }
