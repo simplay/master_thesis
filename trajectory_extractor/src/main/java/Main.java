@@ -30,6 +30,9 @@ import java.io.*;
  *      -color => should color cues be used for later computations?
  *          -color 1 => use color cues, i.e. load color files
  *          -color 0 => do not load color images
+ *      -var => should the local variance be used
+ *          -var 1 => use the local flow variance values for normalization
+ *          -var 0 => use the global flow variance values.
  *  @example:
  *      -d c14 -task 1
  */
