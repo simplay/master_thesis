@@ -26,10 +26,7 @@ public class SumDistTask extends SimilarityTask {
         int from_idx = getLowerFrameIndexBetween(a,b);
         int to_idx = getUpperFrameIndexBetween(a,b);
 
-        double dist_st_a_b = spatioTemporalDistances(a, b, from_idx, to_idx);
-
-        double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
-        return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
+        return spatioTemporalDistances(a, b, from_idx, to_idx);
     }
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
@@ -71,6 +68,8 @@ public class SumDistTask extends SimilarityTask {
         }
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
-        return avgSpatialDist*maxDistance;
+        double dist_st_a_b = avgSpatialDist*maxDistance;
+        double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
+        return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 }
