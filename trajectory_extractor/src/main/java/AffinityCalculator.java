@@ -14,7 +14,7 @@ public class AffinityCalculator {
         // determine which task should be used for the computation
         SimilarityTask.Types taskType = ArgParser.getSimTask();
         ArrayList<SimilarityTask> tasks = new ArrayList<>();
-        
+
         System.out.println("Running similarity task: " + taskType.name());
 
         int from_idx = 0;

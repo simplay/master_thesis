@@ -28,7 +28,7 @@ import java.io.*;
  */
 public class Main {
     public static void main(String[] argv) {
-
+        long startTime = System.currentTimeMillis();
         String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
@@ -72,8 +72,8 @@ public class Main {
             if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
             // TODO load depth information
         }
-
-        System.out.println("Files loaded...");
+        long tillFileLoadedTime = System.currentTimeMillis();
+        System.out.println("Files loaded in "+((tillFileLoadedTime-startTime)/1000d) +"s...");
         System.out.println();
 
         /**
@@ -81,6 +81,10 @@ public class Main {
          */
         System.out.println("Sampling every " + samplingRate + "th pixel");
         new Tracker(till_index, samplingRate);
+
+        long tillTrajectoriesTrackedTime = System.currentTimeMillis();
+        System.out.println("Tracking took " + ((tillTrajectoriesTrackedTime-tillFileLoadedTime)/1000d)+ "s");
+
         System.out.println();
         System.out.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
         for (int k = 0; k <= till_index+1; k++) {
@@ -88,7 +92,6 @@ public class Main {
             System.out.println("#Trajectories with len=" + k + ": " + trajectoryCount);
         }
         System.out.println();
-
         /**
          * Filter extracted trajectories
          */
@@ -102,8 +105,10 @@ public class Main {
 
         // TODO compute similartites
         System.out.println("Starts computing affinity values between remaining trajectories...");
+        long beforeAffCompTime = System.currentTimeMillis();
         new AffinityCalculator();
-
+        long afterAffCompTime = System.currentTimeMillis();
+        System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
 
         // TODO apply post-filtering step: all zero-trajectories
         /**
@@ -120,5 +125,7 @@ public class Main {
 
 
         // TODO write similarity matrix, label mapping, nearest neighbors
+        long tillFinishedTime = System.currentTimeMillis();
+        System.out.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
     }
 }
