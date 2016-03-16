@@ -163,5 +163,6 @@ public abstract class SimilarityTask implements Runnable {
             a.assignSimilarityValueTo(b.getLabel(), similarityValue);
             b.assignSimilarityValueTo(a.getLabel(), similarityValue);
         }
+        ProgressBar.reportStatus();
     }
 }
