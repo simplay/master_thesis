@@ -5,10 +5,10 @@ clc;
 %clear all;
 %close all;
 
-DATASET = 'chair3';
+DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
@@ -25,11 +25,11 @@ USE_CLUSER_EW_COUNT = false;
 FORCE_EW_COUNT = 2;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT =4;
+CLUSTER_CENTER_COUNT =5;
 
 
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 SHOW_LOCAL_VAR = false;
 VAR_IMG = 1;
