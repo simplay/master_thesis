@@ -9,8 +9,10 @@ import java.util.List;
 
 public class SimilarityWriter extends LargeFileWriter{
 
-    public SimilarityWriter(String dataset) throws IOException {
+    public SimilarityWriter(String dataset) {
         String outputPath = "../output/similarities/"+dataset + "_sim.dat";
+        reportFilePath(outputPath, "Writing similarity matrix to output file:");
+
         int n = TrajectoryManager.getTrajectories().size();
         int counter = 0;
         List<String> strLines = new LinkedList<>();
@@ -20,6 +22,11 @@ public class SimilarityWriter extends LargeFileWriter{
             strLines.add(tmp + ((counter < n-1)? "\n" : ""));
             counter++;
         }
-        writeFile(strLines, outputPath);
+
+        try {
+            writeFile(strLines, outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

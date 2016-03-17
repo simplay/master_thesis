@@ -31,4 +31,28 @@ public class LargeFileWriter {
         }
         rwChannel.close();
     }
+
+    /**
+     * Writes fast a huge collection of Strings into a files
+     *
+     * @param item collection of file lines
+     * @param fileName file path name with extension
+     * @throws IOException
+     */
+    public void writeFile(String item, String fileName) throws IOException {
+        // number of bytes apart from the starting position.
+
+        FileChannel rwChannel = new RandomAccessFile(fileName, "rw").getChannel();
+        byte[] buffer = item.getBytes();
+
+        // Number of bytes the current line requires
+        int buff_len = buffer.length;
+        ByteBuffer wrBuf = rwChannel.map(FileChannel.MapMode.READ_WRITE, 0, buff_len);
+        wrBuf.put(buffer);
+        rwChannel.close();
+    }
+
+    public void reportFilePath(String filePath, String msg) {
+        System.out.println(msg + " `" + filePath + "`");
+    }
 }

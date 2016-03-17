@@ -4,6 +4,7 @@ import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
+import writers.LabelMappingWriter;
 import writers.LargeFileWriter;
 import writers.SimilarityWriter;
 
@@ -125,6 +126,8 @@ public class Main {
 
         // TODO apply post-filtering step: all zero-trajectories
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
+        System.out.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
+        System.out.println();
 
         /**
          * Write output data
@@ -138,12 +141,9 @@ public class Main {
         (new File(outTLF)).mkdirs();
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
 
-
-        try {
-            new SimilarityWriter(dataset);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Write clustering related files
+        new SimilarityWriter(dataset);
+        new LabelMappingWriter(dataset);
 
         long tillFinishedTime = System.currentTimeMillis();
         System.out.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
