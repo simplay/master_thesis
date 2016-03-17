@@ -31,7 +31,7 @@ class Fileparser
     $is_debugging = in_simple_mode? ? true : false
     puts "Script runs in debug mode: #{$is_debugging}"
     puts "Summing constraints for computing affinities: #{$use_sum_affinity}"
-    FlowVariance.build(OUT_PATH+dataset)
+    FlowVariance.build("../output/tracker_data/"+dataset)
     DepthField.build(DEPTH_FPATH, dataset) if has_depth_data?
     CieLab.build(dataset) if use_sum_affinity
     @tm = TrajectoryManager.new
@@ -82,7 +82,7 @@ class Fileparser
         @frame_idx = @start_frame
       else
         point_data = line.split(" ").map &:to_f
-        point = Point.new(point_data)
+        point = Point.new(point_data, true)
         next if point.out_of_range?
         if has_depth_data?
           point = Point3f.build_from(point, @frame_idx)
