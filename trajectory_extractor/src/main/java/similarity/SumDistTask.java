@@ -51,7 +51,7 @@ public class SumDistTask extends SimilarityTask {
         double maxDistance = 0;
         double avgSpatialDist = 0;
         double len = u - from_idx + 1;
-        
+
         for (int l = from_idx; l <= u; l++) {
 
             Point2f pa = a.getPointAtFrame(l);
