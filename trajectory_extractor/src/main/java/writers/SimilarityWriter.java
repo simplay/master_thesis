@@ -10,7 +10,7 @@ import java.util.List;
 public class SimilarityWriter extends LargeFileWriter{
 
     public SimilarityWriter(String dataset) throws IOException {
-        String outputPath = "../output/similarities/"+dataset+"_foobar1337.dat";
+        String outputPath = "../output/similarities/"+dataset + "_sim.dat";
         int n = TrajectoryManager.getTrajectories().size();
         int counter = 0;
         List<String> strLines = new LinkedList<>();
