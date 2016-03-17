@@ -37,7 +37,7 @@ public class TrackingCandidates {
         Integer[] intItems = new Integer[items.length];
         int idx = 0;
         for (String item : items) {
-            
+
             // Since Matlab's indices start counting at 1
             // but Java's at 0, we have to perform an index shift
             // by minus 1 in order to have a correct lookup position.

@@ -11,18 +11,18 @@ import java.util.Collection;
 public abstract class SimilarityTask implements Runnable {
 
     // Affinity scaling factor, acts as a sensivity parameter
-    protected final double LAMBDA = 7000d;
+    protected final double LAMBDA = 0.1d;
 
     // minimal expected timestep size
     // trajectory overlaps shorter than that value will be ignored
-    protected final int MIN_TIMESTEP_SIZE = 1;
+    protected final int MIN_TIMESTEP_SIZE = 4;
 
     // The similarity value when comparing the trajectory with itself.
     // Setting this to 0 makes cluster consisting of 1 pixel vanish.
     protected final double EIGENSIMILARITY_VALUE = 0d;
 
     // minimal expected trajectory length
-    protected final int MIN_EXPECTED_TRAJ_LEN = 1;
+    protected final int MIN_EXPECTED_TRAJ_LEN = 3;
 
     // Minimal assigned flow variance value used within
     // the normalization step,
