@@ -2,11 +2,9 @@ package similarity;
 
 import datastructures.Point2f;
 import datastructures.Trajectory;
-
 import java.util.Collection;
 
 public class SumDistTask extends SimilarityTask {
-
 
     /**
      * @param a
@@ -30,10 +28,6 @@ public class SumDistTask extends SimilarityTask {
     }
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
-
-        if (a.getLabel() == 88 && b.getLabel() == 89) {
-            System.out.println("foobar");
-        }
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
         if (isTooShortOverlapping(commonFrameCount)) {
             return 0;
@@ -75,9 +69,6 @@ public class SumDistTask extends SimilarityTask {
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
         double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
-        //if (w_ab > 0) {
-        //    System.out.println("(a,b,sim,dist)=(" + a.getLabel() + ","+ b.getLabel()+"," + w_ab + "," + dist_st_a_b + ")");
-        //}
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 }

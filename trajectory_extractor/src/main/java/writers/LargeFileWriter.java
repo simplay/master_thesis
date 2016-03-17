@@ -52,6 +52,12 @@ public class LargeFileWriter {
         rwChannel.close();
     }
 
+    /**
+     * Report filepath bound with a custom msg.
+     *
+     * @param filePath relative file path to generated file.
+     * @param msg custom msg prepended to logging msg.
+     */
     public void reportFilePath(String filePath, String msg) {
         System.out.println(msg + " `" + filePath + "`");
     }
