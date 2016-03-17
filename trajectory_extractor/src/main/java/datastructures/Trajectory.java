@@ -37,6 +37,16 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     }
 
     /**
+     * Checks whether this trajectory closed.
+     * note that closed means, that its end frame is correctly assigned.
+     *
+     * @return
+     */
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    /**
      * Pre-allocate memory for data-structures used during
      * the computation of similarity values during computation.
      */

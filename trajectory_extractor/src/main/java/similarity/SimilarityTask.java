@@ -15,14 +15,14 @@ public abstract class SimilarityTask implements Runnable {
 
     // minimal expected timestep size
     // trajectory overlaps shorter than that value will be ignored
-    protected final int MIN_TIMESTEP_SIZE = 4;
+    protected final int MIN_TIMESTEP_SIZE = 1;
 
     // The similarity value when comparing the trajectory with itself.
     // Setting this to 0 makes cluster consisting of 1 pixel vanish.
     protected final double EIGENSIMILARITY_VALUE = 0d;
 
     // minimal expected trajectory length
-    protected final int MIN_EXPECTED_TRAJ_LEN = 3;
+    protected final int MIN_EXPECTED_TRAJ_LEN = 1;
 
     // Minimal assigned flow variance value used within
     // the normalization step,
@@ -121,7 +121,7 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     protected int timestepSize(int common_frame_count) {
-        return Math.min(common_frame_count, MIN_TIMESTEP_SIZE) - 1;
+        return Math.min(common_frame_count, MIN_TIMESTEP_SIZE);
     }
 
     /**
@@ -136,17 +136,21 @@ public abstract class SimilarityTask implements Runnable {
 
     /**
      * Compute the value of the tangent of a given trajectory at a given location.
+     * Given a time-step h, then any function f can be approximated by the Taylor series
+     * f(x+h) = f(x) + h*f'(x) + O(h^2)
+     * => [f(x+h) - f(x)] / h = f'(x)
      *
-     * @param tra
-     * @param dt
-     * @param frame_idx
-     * @return
+     * @param tra trajectory
+     * @param dt time step size
+     * @param frame_idx active frame
+     * @return forward difference value of the trajectory active at the target
+     *  frame when using the given step size.
      */
     protected Point2f forward_difference(Trajectory tra, int dt, int frame_idx) {
         Point2f p_i = tra.getPointAtFrame(frame_idx);
         Point2f p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
         Point2f p = p_i_pl_t.copy().sub(p_i);
-        return p.div_by(dt + 1);
+        return p.div_by(dt);
     }
 
     protected double getVariance(int frame_idx, Trajectory a, Trajectory b) {

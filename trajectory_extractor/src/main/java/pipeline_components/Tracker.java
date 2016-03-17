@@ -36,6 +36,13 @@ public class Tracker {
             System.out.println("Tracked Frame " + (frame_idx+1));
         }
 
+        // Cloe all max length trajectories
+        for (Trajectory tra : TrajectoryManager.getTrajectories()) {
+            if (!tra.isClosed()) {
+                tra.markClosed();
+            }
+        }
+
         System.out.println("Finished point tracking...");
     }
 

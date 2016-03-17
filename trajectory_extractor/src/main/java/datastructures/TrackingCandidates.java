@@ -37,7 +37,7 @@ public class TrackingCandidates {
         Integer[] intItems = new Integer[items.length];
         int idx = 0;
         for (String item : items) {
-            intItems[idx] = Integer.parseInt(item);
+            intItems[idx] = Integer.parseInt(item)-1;
             idx++;
         }
         return intItems;

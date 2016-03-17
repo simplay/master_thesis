@@ -31,22 +31,27 @@ public class SumDistTask extends SimilarityTask {
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
 
+        if (a.getLabel() == 88 && b.getLabel() == 89) {
+            System.out.println("foobar");
+        }
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
         if (isTooShortOverlapping(commonFrameCount)) {
             return 0;
         }
 
+        // is <= MIN_TIMESTEP_SIZE
         int timestep = timestepSize(commonFrameCount);
         int u = to_idx-timestep;
 
         // guard: in case there is no overlapping segment, skip computations
-        if (u < from_idx) {
+        if (u < from_idx || timestep == 0) {
             return 0;
         }
 
         double maxDistance = 0;
         double avgSpatialDist = 0;
         double len = u - from_idx + 1;
+        
         for (int l = from_idx; l <= u; l++) {
 
             Point2f pa = a.getPointAtFrame(l);
@@ -70,6 +75,9 @@ public class SumDistTask extends SimilarityTask {
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
         double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
+        //if (w_ab > 0) {
+        //    System.out.println("(a,b,sim,dist)=(" + a.getLabel() + ","+ b.getLabel()+"," + w_ab + "," + dist_st_a_b + ")");
+        //}
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 }
