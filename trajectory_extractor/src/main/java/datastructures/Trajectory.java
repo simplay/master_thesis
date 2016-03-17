@@ -12,6 +12,9 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     private ArrayList<Point2f> points;
     private boolean isClosed = false;
 
+    // indicates whether this trajectory should be filtered
+    private boolean isDeletable = false;
+
     private HashMap<Integer, Double> similarities;
     private HashMap<Integer, Double> avgSpatialDistToNeighbors;
 
@@ -56,6 +59,21 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         this.similarities = new HashMap<>(n);
     }
 
+    /**
+     * Flags this trajectory as deletable.
+     * A trajectory is marked as deletable if and only if
+     * it has either no similarity values to any other trajectory assigned to
+     * or it exhibits no similarity value greater than zero. Therefore, such
+     * trajectories do not carry any useful information and thus can be deleted.
+     */
+    public void markAsDeletable() {
+        this.isDeletable = true;
+    }
+
+    public boolean isDeletable() {
+        return isDeletable;
+    }
+
     public boolean hasSimilarityValues() {
         return hasSimilarityValues;
     }
@@ -73,7 +91,9 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
      */
     public void assignSimilarityValueTo(int trajectoryLabel, double value) {
         synchronized (similarities) {
-            hasSimilarityValues = true;
+            if (value > 0d) {
+                hasSimilarityValues = true;
+            }
             similarities.put(trajectoryLabel, value);
         }
     }

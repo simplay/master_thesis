@@ -157,16 +157,34 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         }
     }
 
+    /**
+     * Filters every trajectory from the set of all extracted trajectory
+     * that do not exhibit any similarity values, referring to those trajectories,
+     * that either only include zeros or no similarity entries at all.
+     */
     public void filterNoSimilarityTrajectories() {
         for (Trajectory traj : getTrajectories()) {
             if (!traj.hasSimilarityValues()) {
                 for (Trajectory other : getTrajectories()) {
                     other.filterSimilarityOfTrajectory(traj.getLabel());
                 }
-                trajectories.remove(traj.getLabel());
+                traj.markAsDeletable();
+            }
+        }
+
+        // Filter all deletable trajectories:
+        // Note that we are forced to make a copy of the old trajectories
+        // since we otherwise would end up having a runtime error since the hash map
+        // references to null entries during iteration since we
+        // perform deletion operations of trajectories on-the-fly.
+        LinkedList<Trajectory> c_tras = new LinkedList<>(trajectories.values());
+        for (Trajectory tra : c_tras) {
+            if (tra.isDeletable()) {
+                trajectories.remove(tra.getLabel());
             }
         }
     }
+
 
     /**
      * String representation of all trajectories in the format the
@@ -198,6 +216,14 @@ public class TrajectoryManager implements Iterable<Trajectory>{
 
 
     /**
+     * Saves all trajectories to a file, using the old format,
+     * readable by the ruby code basis.
+     *
+     * @info: Note that we are reporting java-ish coordinates,
+     *  i.e. indices are starting at 0. This implies
+     *  that we have to perform an index shift when using the extracted coordinates
+     *  in any language that starts index counting at 1 (such as Matlab or Ruby).
+     *
      * @param fPathName file path name for this graph's partition file.
      */
     public void saveTrajectoriesToFile(String fPathName) {

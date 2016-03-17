@@ -139,8 +139,6 @@ public class Main {
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
 
 
-        // TODO write similarity matrix, label mapping, nearest neighbors
-        // TrajectoryManager.sortTrajectories();
         try {
             new SimilarityWriter(dataset);
         } catch (IOException e) {
