@@ -32,7 +32,7 @@ import java.util.LinkedList;
  *  required args:
  *      -d => dataset that should be used
  *      -task => similarity method that should be used
- *          1 => runs SumDistTask
+ *          1 => runs ProdDistTask
  *      -color => should color cues be used for later computations?
  *          -color 1 => use color cues, i.e. load color files
  *          -color 0 => do not load color images

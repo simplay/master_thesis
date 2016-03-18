@@ -34,7 +34,7 @@ public abstract class SimilarityTask implements Runnable {
 
     public enum Types {
         SD(1, SumDistTask.class),
-        MD(2, SumDistTask.class);
+        PD(2, ProdDistTask.class);
 
         private int value;
         private Class targetClass;
