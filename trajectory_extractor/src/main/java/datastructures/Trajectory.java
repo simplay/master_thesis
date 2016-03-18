@@ -2,9 +2,7 @@ package datastructures;
 
 import managers.TrajectoryManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
 
@@ -78,8 +76,43 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return hasSimilarityValues;
     }
 
+    /**
+     * Fast fetching of nearest N avg spatial neighbors
+     *
+     * Returns an ordered list of the nearest n neighbors according to their spatial
+     * avg distance to this trajectory.
+     *
+     * @param numberOfNeighbors number of top n neighbors that should be returned.
+     * @return n top neighbors according to their average spatial distance to this trajectory
+     *  (regarding their overlapping trackings).
+     */
+    public List<Integer> nearestAvgSpatialNeighbors(int numberOfNeighbors) {
+        Iterator<Map.Entry<Integer, Double>> it = avgSpatialDistToNeighbors.entrySet().iterator();
+        int counter = 0;
+        NearestNeighborsHeap avgSpDist = new NearestNeighborsHeap(numberOfNeighbors);
+        while (it.hasNext()) {
+            Map.Entry<Integer, Double> el = it.next();
+            int label = el.getKey();
+            double dist = el.getValue();
+            avgSpDist.addItem(label, dist);
+            counter++;
+        }
+        return avgSpDist.toIntList(numberOfNeighbors);
+    }
+
+    /**
+     * Filter the similarity and spatial avg distance value of
+     * an now invalid neighboring trajectory.
+     *
+     * @param label unique identifier of an invalid neighborhood trajectory
+     *  for which similarity and avg spatial values were computed.
+     */
     public void filterSimilarityOfTrajectory(int label) {
         similarities.remove(label);
+
+        // only deletes neighbors that have a zero similarity to this trajectory
+        // but are still in the list of neighbors.
+        avgSpatialDistToNeighbors.remove(label);
     }
 
     /**

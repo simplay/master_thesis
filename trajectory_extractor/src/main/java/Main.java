@@ -1,4 +1,5 @@
 import datastructures.FlowField;
+import datastructures.Trajectory;
 import managers.TrajectoryManager;
 import readers.*;
 import pipeline_components.AffinityCalculator;
@@ -6,6 +7,7 @@ import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
 import writers.LabelMappingWriter;
 import writers.LargeFileWriter;
+import writers.NearestSpatialNeighborsWriter;
 import writers.SimilarityWriter;
 
 import java.io.*;
@@ -48,6 +50,7 @@ public class Main {
 
         // Default runtime parameter setup
         String dataset = "c14";
+        int numberOfNNToSave = 100;
 
         // TODO: determine this value automatically
         int samplingRate = 8;
@@ -135,20 +138,21 @@ public class Main {
          *  + the label mappings: transformation which column/row a label belongs to in the similarity matrix
          */
 
-        //TODO export output writing logic in trajectory manager to a file writer class
-
+        // TODO export output writing logic in trajectory manager to a file writer class
+        // TODO make writing tracking data to output optinal, since it is only required for debugging purposes.
         String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
-        System.out.println("Writting trajectories to output file: " + output_filePathName);
+        System.out.println("Writing trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
 
         String outTLF = "../output/trajectory_label_frame/" + dataset + "/";
-        System.out.println("Writting active trajectory frame files: " + outTLF);
+        System.out.println("Writing active trajectory frame files: " + outTLF);
         (new File(outTLF)).mkdirs();
         TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
 
         // Write clustering related files
         new SimilarityWriter(dataset);
         new LabelMappingWriter(dataset);
+        new NearestSpatialNeighborsWriter(dataset, numberOfNNToSave);
 
         long tillFinishedTime = System.currentTimeMillis();
         System.out.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
