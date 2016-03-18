@@ -40,7 +40,10 @@ public class SumDistTask extends SimilarityTask {
         int from_idx = getLowerFrameIndexBetween(a,b);
         int to_idx = getUpperFrameIndexBetween(a,b);
 
-        if (to_idx-from_idx < 0) return 0.0d;
+        int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
+        if (isTooShortOverlapping(commonFrameCount)) {
+            return 0;
+        }
 
         double d_motion = motion_dist(a, b, from_idx, to_idx);
         double d_spatial = avg_spatial_dist(a, b, from_idx, to_idx);
@@ -54,8 +57,24 @@ public class SumDistTask extends SimilarityTask {
         return 0d;
     }
 
+    /**
+     * Computes the average spatial distance between the tracked points of the overlapping frames
+     * of two given trajectories.
+     *
+     * @param a
+     * @param b
+     * @param from_idx
+     * @param to_idx
+     * @return
+     */
     protected double avg_spatial_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
-        return 0d;
+        double len = 0.0d;
+        for (int idx = from_idx; idx <= to_idx; idx++) {
+            Point2f pa = a.getPointAtFrame(idx);
+            Point2f pb = b.getPointAtFrame(idx);
+            len = len + pa.copy().sub(pb).length();
+        }
+        return len / overlappingFrameCount(from_idx, to_idx);
     }
 
     /**
