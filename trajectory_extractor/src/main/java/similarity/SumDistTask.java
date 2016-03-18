@@ -49,12 +49,39 @@ public class SumDistTask extends SimilarityTask {
         double d_spatial = avg_spatial_dist(a, b, from_idx, to_idx);
         double d_color = color_dist(a, b, from_idx, to_idx);
 
+        appendAvgSpatialDistances(a, b, d_spatial);
+
         double z_ab = z_ab(d_motion, d_spatial, d_color);
         return z_ab + prior_probability();
     }
 
     protected double motion_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
-        return 0d;
+        int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
+
+        // is <= MIN_TIMESTEP_SIZE
+        int timestep = timestepSize(commonFrameCount);
+        int u = to_idx-timestep;
+
+        // guard: in case there is no overlapping segment, skip computations
+        if (u < from_idx || timestep == 0) {
+            return 0;
+        }
+
+        double maxDistance = 0;
+        for (int l = from_idx; l <= u; l++) {
+
+            Point2f dt_a = forward_difference(a, timestep, l);
+            Point2f dt_b = forward_difference(b, timestep, l);
+
+            double dt_ab = dt_a.sub(dt_b).length_squared();
+            double sigma_t = EPS_FLOW + getVariance(l, a, b);
+
+            double dist = dt_ab / sigma_t;
+            if (dist > maxDistance) {
+                maxDistance = dist;
+            }
+        }
+        return Math.sqrt(maxDistance);
     }
 
     /**
