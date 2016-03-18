@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.*;
 import java.util.List;
 
 public class LargeFileWriter {
@@ -16,6 +17,11 @@ public class LargeFileWriter {
      * @throws IOException
      */
     public void writeFile(List<String> strLines, String fileName) throws IOException {
+        // delete old version of this file, if it exists, to prevent the od bug of writing
+        // weird bytes into the file. This issue only occurs in case the file was previously
+        // already generated.
+        deleteFile(fileName);
+
         // number of bytes apart from the starting position.
         int offset = 0;
 
@@ -40,7 +46,10 @@ public class LargeFileWriter {
      * @throws IOException
      */
     public void writeFile(String item, String fileName) throws IOException {
-        // number of bytes apart from the starting position.
+        // delete old version of this file, if it exists, to prevent the od bug of writing
+        // weird bytes into the file. This issue only occurs in case the file was previously
+        // already generated.
+        deleteFile(fileName);
 
         FileChannel rwChannel = new RandomAccessFile(fileName, "rw").getChannel();
         byte[] buffer = item.getBytes();
@@ -60,5 +69,31 @@ public class LargeFileWriter {
      */
     public void reportFilePath(String filePath, String msg) {
         System.out.println(msg + " `" + filePath + "`");
+    }
+
+    /**
+     * Deletes a file with a given filename pointing to the target file.
+     *
+     * @info: This method is used to delete an old version of an already existing
+     *  file when re-generating it. This is required, since sometimes, writing
+     *  a regenerated version of an already existing file may cause problem, resulting
+     *  in writing weird bytes into the file, corrupting it completely.
+     *
+     * @example deleteFile("../output/similarities/c14_sim.dat") tries to
+     *  delete the file c14_sim.dat located at `../output/similarities/`
+     * @param filepath file path name to target file that should be deleted.
+     */
+    public void deleteFile(String filepath) {
+        Path path = FileSystems.getDefault().getPath(filepath);
+        try {
+            Files.delete(path);
+        } catch (NoSuchFileException x) {
+            System.err.format("%s: no such" + " file or directory%n", path);
+        } catch (DirectoryNotEmptyException x) {
+            System.err.format("%s not empty%n", path);
+        } catch (IOException x) {
+            // File permission problems are caught here.
+            System.err.println(x);
+        }
     }
 }
