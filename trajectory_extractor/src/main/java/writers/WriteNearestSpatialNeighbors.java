@@ -1,4 +1,4 @@
 package writers;
 
-public class WriteNearestSpatialNeighbors extends LargeFileWriter{
+public class WriteNearestSpatialNeighbors extends LargeFileWriter {
 }

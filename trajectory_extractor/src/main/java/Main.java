@@ -117,21 +117,26 @@ public class Main {
         System.out.println("Filtered too short trajectories...");
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
-        // TODO compute similartites
         System.out.println("Starts computing affinity values between remaining trajectories...");
         long beforeAffCompTime = System.currentTimeMillis();
         new AffinityCalculator();
         long afterAffCompTime = System.currentTimeMillis();
         System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
 
-        // TODO apply post-filtering step: all zero-trajectories
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
         System.out.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         System.out.println();
 
         /**
          * Write output data
+         *  + extracted trajectories
+         *  + the frame-wise trajectory points
+         *  + the similarity matrix
+         *  + the label mappings: transformation which column/row a label belongs to in the similarity matrix
          */
+
+        //TODO export output writing logic in trajectory manager to a file writer class
+
         String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
         System.out.println("Writting trajectories to output file: " + output_filePathName);
         TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
