@@ -12,6 +12,10 @@ public class ColorImage extends Interpolator {
         return interpolatedValueAt(rgbValues, row_idx, col_idx);
     }
 
+    public Point3d valueAt(Point2f p) {
+        return interpolatedValueAt(rgbValues, p.x(), p.y());
+    }
+
     /**
      * Set a rgb triple at a given index location in the color image
      *
