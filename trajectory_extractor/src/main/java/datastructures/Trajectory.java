@@ -1,5 +1,6 @@
 package datastructures;
 
+import managers.DepthManager;
 import managers.TrajectoryManager;
 
 import java.util.*;
@@ -251,6 +252,41 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         } else {
             return 1;
         }
+    }
+
+    /**
+     * Transforms tracked trajectory points into the Euclidian space
+     * by making use of depth cues.
+     *
+     * Z = depth_image[v,u];
+     * X = (u - cx) * Z / fx;
+     * Y = (v - cy) * Z / fy;
+     */
+    public void transformTrackedPoints() {
+        ArrayList<Point2d> transformedPoints = new ArrayList<>();
+        for (Point2d p : points) {
+            // TODO implement euclidian transformation
+            Point2d euclidianPoint = null; //p.euclidianTransformed();
+            transformedPoints.add(euclidianPoint);
+        }
+        points = transformedPoints;
+    }
+
+    /**
+     * Does this trajectory have associated valid depth values.
+     *
+     * @return true if it has valid depth information.
+     */
+    public boolean hasValidDepths() {
+        int idx = startFrame;
+        for (Point2d p : points) {
+            DepthField depthField = DepthManager.getInstance().get(idx);
+            if (!depthField.validRegionAt(p.x(), p.y())) {
+                return false;
+            }
+            idx++;
+        }
+        return true;
     }
 
 }

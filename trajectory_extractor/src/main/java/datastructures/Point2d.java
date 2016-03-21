@@ -1,5 +1,7 @@
 package datastructures;
 
+import managers.DepthManager;
+
 public class Point2d {
 
     private double x;
@@ -24,6 +26,25 @@ public class Point2d {
         x /= f;
         y /= f;
         return this;
+    }
+
+    public Point2d euclidianTransformed(int frame_idx) {
+        /**
+        depth = z*depth_scale(true)
+        _x = ((p.x-MetaInfo.build.p_d.x) / MetaInfo.build.f_d.x)*depth
+        _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*depth
+        p3 = Point3f.new([_x, _y, depth])
+        pp3 = MetaInfo.build.extrinsic_camera_mat.mult(p3)
+        return pp3 if cameras_overlapping
+                depth = pp3.z
+        x = (pp3.x*MetaInfo.build.f_c.x)/depth + MetaInfo.build.p_c.x
+        y = (pp3.y*MetaInfo.build.f_c.y)/depth + MetaInfo.build.p_c.y
+        Point.new([x, y])
+        **/
+
+        double depth = DepthManager.getInstance().get(frame_idx).valueAt(x,y);
+
+        return new Point2d(0,0);
     }
 
     public double x() {

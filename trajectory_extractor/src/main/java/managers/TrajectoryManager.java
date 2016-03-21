@@ -250,4 +250,21 @@ public class TrajectoryManager implements Iterable<Trajectory>{
             }
         }
     }
+
+    /**
+     * Transforms all remaining trajectories to the Euclidian space using
+     * extrinsic camera the calibration matrices and depth cues.
+     */
+    public void transformTrajectoryPointsToEuclidianSpace() {
+        for (Trajectory tra : trajectories.values()) {
+
+            // in case a trajectory has no valid depth information associated with its tracked points
+            // mark it as deletable and proceed the next trajectory.
+            if (!tra.hasValidDepths()) {
+                tra.markAsDeletable();
+                continue;
+            }
+            tra.transformTrackedPoints();
+        }
+    }
 }

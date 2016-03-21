@@ -49,12 +49,12 @@ public class Main {
         ArgParser.getInstance(argv);
 
         // Default runtime parameter setup
-        String dataset = "chair3";
         int numberOfNNToSave = 1500;
 
         // TODO: determine this value automatically
         int samplingRate = 8;
 
+        String dataset = "";
         if (ArgParser.hasArgs()) {
             dataset = ArgParser.getDatasetName();
         }
@@ -119,6 +119,11 @@ public class Main {
         TrajectoryManager.getInstance().filterOnePointedTrajectories();
         System.out.println("Filtered too short trajectories...");
         System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+
+        // Transform trajectory points to euclidian space
+        if (ArgParser.useDepthCues()) {
+            TrajectoryManager.getInstance().transformTrajectoryPointsToEuclidianSpace();
+        }
 
         System.out.println("Starts computing affinity values between remaining trajectories...");
         long beforeAffCompTime = System.currentTimeMillis();

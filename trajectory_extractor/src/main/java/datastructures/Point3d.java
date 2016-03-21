@@ -23,6 +23,11 @@ public class Point3d {
         return this;
     }
 
+    public static Point3d buildEuclidianPoint() {
+        // TODO implement this
+        return new Point3d(0,0,0);
+    }
+
     /**
      * Computed the l2 distance to the origin
      * @return
