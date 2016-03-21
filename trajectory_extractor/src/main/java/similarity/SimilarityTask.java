@@ -1,6 +1,6 @@
 package similarity;
 
-import datastructures.Point2f;
+import datastructures.Point2d;
 import datastructures.Trajectory;
 import managers.VarianceManager;
 import pipeline_components.ArgParser;
@@ -146,10 +146,10 @@ public abstract class SimilarityTask implements Runnable {
      * @return forward difference value of the trajectory active at the target
      *  frame when using the given step size.
      */
-    protected Point2f forward_difference(Trajectory tra, int dt, int frame_idx) {
-        Point2f p_i = tra.getPointAtFrame(frame_idx);
-        Point2f p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
-        Point2f p = p_i_pl_t.copy().sub(p_i);
+    protected Point2d forward_difference(Trajectory tra, int dt, int frame_idx) {
+        Point2d p_i = tra.getPointAtFrame(frame_idx);
+        Point2d p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
+        Point2d p = p_i_pl_t.copy().sub(p_i);
         return p.div_by(dt);
     }
 
@@ -160,8 +160,8 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     private double localVarAt(int frame_idx, Trajectory a, Trajectory b) {
-        Point2f pa = a.getPointAtFrame(frame_idx);
-        Point2f pb = b.getPointAtFrame(frame_idx);
+        Point2d pa = a.getPointAtFrame(frame_idx);
+        Point2d pb = b.getPointAtFrame(frame_idx);
         double var_a = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pa);
         double var_b = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pb);
         return Math.min(var_a, var_b);

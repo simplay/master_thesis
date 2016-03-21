@@ -1,6 +1,6 @@
 package managers;
 
-import datastructures.Point2f;
+import datastructures.Point2d;
 import datastructures.Trajectory;
 
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
      * @param p starting point the new trajectory is supposed to start
      * @param startingFrame frame index where the new trajectory will start at.
      */
-    public void startNewTrajectoryAt(Point2f p, int startingFrame) {
+    public void startNewTrajectoryAt(Point2d p, int startingFrame) {
         Trajectory tra = new Trajectory(startingFrame);
         tra.addPoint(p);
         trajectories.put(tra.getLabel(), tra);
@@ -66,7 +66,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
      * @param trajectory_label trajectory identifier referencing the target trajectory.
      * @param p point to be added to the target trajectory
      */
-    public void appendPointTo(int trajectory_label, Point2f p) {
+    public void appendPointTo(int trajectory_label, Point2d p) {
         Trajectory tra = trajectories.get(trajectory_label);
         tra.addPoint(p);
     }

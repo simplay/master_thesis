@@ -55,7 +55,7 @@ public class Tracker {
         for (int idx = 0; idx < rows.length; idx++) {
             int row_idx = rows[idx];
             int col_idx = cols[idx];
-            Point2f p = new Point2f(row_idx, col_idx);
+            Point2d p = new Point2d(row_idx, col_idx);
 
             // Checks whether there is already too much activity
             // in p's region (i.e there is a sample around (k/2)^2
@@ -76,7 +76,7 @@ public class Tracker {
         InvalidRegionsMask invalidRegions = InvalidRegionManager.getInstance().getMagFlow(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
-            Point2f p = tra.getPointAtFrame(currentFrame);
+            Point2d p = tra.getPointAtFrame(currentFrame);
 
             // Performs a consistency check
             if (invalidRegions.isInvalidAt(p)) {
@@ -98,7 +98,7 @@ public class Tracker {
 
             // position using the tracked to position using bilinear interpolation
             // and the backward flow field
-            Point2f next_p = new Point2f(next_u, next_v);
+            Point2d next_p = new Point2d(next_u, next_v);
             activity_next.markActiveAt((int)next_u, (int)next_v);
             TrajectoryManager.getInstance().appendPointTo(tra.getLabel(), next_p);
         }

@@ -12,7 +12,7 @@ public class ColorImage extends Interpolator {
         return interpolatedValueAt(rgbValues, row_idx, col_idx);
     }
 
-    public Point3d valueAt(Point2f p) {
+    public Point3d valueAt(Point2d p) {
         return interpolatedValueAt(rgbValues, p.x(), p.y());
     }
 

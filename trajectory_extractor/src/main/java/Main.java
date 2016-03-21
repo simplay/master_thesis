@@ -50,7 +50,7 @@ public class Main {
 
         // Default runtime parameter setup
         String dataset = "c14";
-        int numberOfNNToSave = 100;
+        int numberOfNNToSave = 1500;
 
         // TODO: determine this value automatically
         int samplingRate = 8;

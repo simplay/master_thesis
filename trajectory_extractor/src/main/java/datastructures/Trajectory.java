@@ -4,10 +4,10 @@ import managers.TrajectoryManager;
 
 import java.util.*;
 
-public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
+public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     // points that span the trajectory
-    private ArrayList<Point2f> points;
+    private ArrayList<Point2d> points;
     private boolean isClosed = false;
 
     // indicates whether this trajectory should be filtered
@@ -31,7 +31,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
-        points = new ArrayList<Point2f>();
+        points = new ArrayList<Point2d>();
         this.similarities = new HashMap<>();
         this.endFrame = -1;
         this.avgSpatialDistToNeighbors = new HashMap<>();
@@ -181,7 +181,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return points.size()-1;
     }
 
-    public void addPoint(Point2f p) {
+    public void addPoint(Point2d p) {
         points.add(p);
     }
 
@@ -193,7 +193,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return startFrame;
     }
 
-    public Point2f getPointAtFrame(int frame_idx) {
+    public Point2d getPointAtFrame(int frame_idx) {
         return points.get(frame_idx-startFrame);
     }
 
@@ -209,14 +209,14 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         return startFrame + points.size() - 1;
     }
 
-    public Iterator<Point2f> iterator() {
+    public Iterator<Point2d> iterator() {
         return points.iterator();
     }
 
     public String toString() {
         String header = "l="+label+" s="+startFrame;
         String content = "";
-        for (Point2f p : points) {
+        for (Point2d p : points) {
             content += p.toString() + " ";
         }
         return header+ " " +content;
@@ -226,7 +226,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
         int out_start_frame = startFrame+1;
         String header = "### L:" + getLabel() + " S:" + out_start_frame + " C:" + length();
         String content = "";
-        for (Point2f p : points) {
+        for (Point2d p : points) {
             content = content + p.toOutputString() + "\n";
         }
         return header + "\n" + content;
@@ -234,7 +234,7 @@ public class Trajectory implements Iterable<Point2f>, Comparable<Trajectory>{
 
     public String toFramewiseString(int frame_idx) {
         int idx = frame_idx - startFrame;
-        Point2f p = points.get(idx);
+        Point2d p = points.get(idx);
         return label + " " + p.u() + " " + p.v();
     }
 

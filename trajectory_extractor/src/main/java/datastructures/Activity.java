@@ -33,7 +33,7 @@ public class Activity {
      * @param p
      * @return
      */
-    public boolean hasActivityAt(Point2f p) {
+    public boolean hasActivityAt(Point2d p) {
         int row_idx = p.rounded().iU();
         int col_idx = p.rounded().iV();
         int upper = row_idx - samplingRate/2;

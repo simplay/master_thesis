@@ -1,7 +1,7 @@
 package similarity;
 
 import datastructures.ColorImage;
-import datastructures.Point2f;
+import datastructures.Point2d;
 import datastructures.Point3d;
 import datastructures.Trajectory;
 import managers.ColorImgManager;
@@ -70,8 +70,8 @@ public class SumDistTask extends SimilarityTask {
         double maxDistance = 0;
         for (int l = from_idx; l <= u; l++) {
 
-            Point2f dt_a = forward_difference(a, timestep, l);
-            Point2f dt_b = forward_difference(b, timestep, l);
+            Point2d dt_a = forward_difference(a, timestep, l);
+            Point2d dt_b = forward_difference(b, timestep, l);
 
             double dt_ab = dt_a.sub(dt_b).length_squared();
             double sigma_t = EPS_FLOW + getVariance(l, a, b);
@@ -97,8 +97,8 @@ public class SumDistTask extends SimilarityTask {
     protected double avg_spatial_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         double len = 0.0d;
         for (int idx = from_idx; idx <= to_idx; idx++) {
-            Point2f pa = a.getPointAtFrame(idx);
-            Point2f pb = b.getPointAtFrame(idx);
+            Point2d pa = a.getPointAtFrame(idx);
+            Point2d pb = b.getPointAtFrame(idx);
             len = len + pa.copy().sub(pb).length();
         }
         return len / overlappingFrameCount(from_idx, to_idx);
@@ -118,8 +118,8 @@ public class SumDistTask extends SimilarityTask {
         double len = 0d;
 
         for (int idx = from_idx; idx <= to_idx; idx++) {
-            Point2f pa = a.getPointAtFrame(idx);
-            Point2f pb = b.getPointAtFrame(idx);
+            Point2d pa = a.getPointAtFrame(idx);
+            Point2d pb = b.getPointAtFrame(idx);
 
             ColorImage img = ColorImgManager.getInstance().get(from_idx);
 

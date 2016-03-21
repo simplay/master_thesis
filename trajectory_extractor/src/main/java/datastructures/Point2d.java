@@ -1,26 +1,26 @@
 package datastructures;
 
-public class Point2f {
+public class Point2d {
 
     private double x;
     private double y;
 
-    public Point2f(double x, double y) {
+    public Point2d(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point2f copy() {
-        return new Point2f(x,y);
+    public Point2d copy() {
+        return new Point2d(x,y);
     }
 
-    public Point2f sub(Point2f other) {
+    public Point2d sub(Point2d other) {
         x -= other.x();
         y -= other.y();
         return this;
     }
 
-    public Point2f div_by(double f) {
+    public Point2d div_by(double f) {
         x /= f;
         y /= f;
         return this;
@@ -42,11 +42,11 @@ public class Point2f {
         return (int) y;
     }
 
-    public Point2f rounded() {
+    public Point2d rounded() {
         int px = (int) Math.round(x);
         int py = (int) Math.round(y);
 
-        return new Point2f(px, py);
+        return new Point2d(px, py);
     }
 
     public double length() {

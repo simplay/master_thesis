@@ -8,7 +8,7 @@ public class VarianceMatrix extends Interpolator {
         this.matrix = new double[m][n];
     }
 
-    public double valueAt(Point2f p) {
+    public double valueAt(Point2d p) {
         return interpolatedValueAt(matrix, p.x(), p.y());
     }
 

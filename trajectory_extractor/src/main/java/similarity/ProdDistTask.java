@@ -1,6 +1,6 @@
 package similarity;
 
-import datastructures.Point2f;
+import datastructures.Point2d;
 import datastructures.Trajectory;
 import java.util.Collection;
 
@@ -48,14 +48,14 @@ public class ProdDistTask extends SimilarityTask {
 
         for (int l = from_idx; l <= u; l++) {
 
-            Point2f pa = a.getPointAtFrame(l);
-            Point2f pb = b.getPointAtFrame(l);
+            Point2d pa = a.getPointAtFrame(l);
+            Point2d pb = b.getPointAtFrame(l);
 
             double sp_len = pa.copy().sub(pb).length();
             avgSpatialDist += sp_len;
 
-            Point2f dt_a = forward_difference(a, timestep, l);
-            Point2f dt_b = forward_difference(b, timestep, l);
+            Point2d dt_a = forward_difference(a, timestep, l);
+            Point2d dt_b = forward_difference(b, timestep, l);
 
             double dt_ab = dt_a.sub(dt_b).length_squared();
             double sigma_t = EPS_FLOW + getVariance(l, a, b);

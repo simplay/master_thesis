@@ -25,7 +25,7 @@ public class InvalidRegionsMask extends Interpolator {
         return (int) mags[row_idx][column_idx];
     }
 
-    public boolean isInvalidAt(Point2f p) {
+    public boolean isInvalidAt(Point2d p) {
         if (valueAt(p.rounded().u(), p.rounded().v()) == 1f) {
             return true;
         }
