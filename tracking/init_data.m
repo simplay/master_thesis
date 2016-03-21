@@ -4,7 +4,7 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'wh1';
+DATASETNAME = 'chair3';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
@@ -98,9 +98,12 @@ end
 % and in OpenCV by loading it into an image of type IPL_DEPTH_16U.
 if EXTRACT_DEPTH_FIELDS
     path = ['../data/ldof/', DATASETNAME, '/depth/'];
+    listing = dir(strcat('../data/ldof/', DATASETNAME, '/depth/*.png'));
     for k=START_FRAME_IDX:END_FRAME_IDX
-        disp(strcat('Extracted depth field ', num2str(k)));
-        fpath = strcat(path, num2str(k), '.png');
+        f = listing(k);
+        disp(strcat(num2str(k), '. Iteration - extracted depth field: ', f.name));
+     
+        fpath = strcat(path, f.name);
         lv = imread(fpath);
         fname = strcat('../output/tracker_data/',DATASETNAME,'/depth_',num2str(k),'.txt');
         fid = fopen(fname,'w');
