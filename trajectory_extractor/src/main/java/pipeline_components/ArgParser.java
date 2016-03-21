@@ -104,6 +104,7 @@ public class ArgParser {
         System.out.println("+ Using dataset: " + getDatasetName());
         System.out.println("+ Running task: " + getSimTask().name());
         System.out.println("+ Using local variances: " + useLocalVariance());
+        System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());
     }
 
