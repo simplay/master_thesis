@@ -21,11 +21,11 @@ USE_BF_BOUND = false;
 BOUNDARY = [1,9];
 
 % use a prespecified number of eigenvectors
-USE_CLUSER_EW_COUNT = false;
-FORCE_EW_COUNT = 2;
+USE_CLUSER_EW_COUNT = true;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT =5;
+CLUSTER_CENTER_COUNT =6;
 
 
 USE_W_VEC = false;

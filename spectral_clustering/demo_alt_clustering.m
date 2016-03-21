@@ -12,7 +12,7 @@ clc;
 
 addpath('../libs/GCMex/');
 
-DATASET = 'chair3';
+DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
 
