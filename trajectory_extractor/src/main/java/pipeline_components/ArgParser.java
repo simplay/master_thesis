@@ -71,6 +71,14 @@ public class ArgParser {
         return true;
     }
 
+    public static boolean useDepthCues() {
+        String useDepthState = getInstance().getHashValue("depth");
+        if (useDepthState == null || !useDepthState.equals("1")) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean useLocalVariance() {
         String useVarState = getInstance().getHashValue("var");
         if (useVarState == null || !useVarState.equals("1")) {

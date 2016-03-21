@@ -49,7 +49,7 @@ public class Main {
         ArgParser.getInstance(argv);
 
         // Default runtime parameter setup
-        String dataset = "c14";
+        String dataset = "chair3";
         int numberOfNNToSave = 1500;
 
         // TODO: determine this value automatically
@@ -87,7 +87,7 @@ public class Main {
 
             // optionally loaded cue-data
             if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
-            // TODO load depth information
+            if (ArgParser.useDepthCues()) new DepthFieldReader(dataset, fileNr);
         }
         long tillFileLoadedTime = System.currentTimeMillis();
         System.out.println("Files loaded in "+((tillFileLoadedTime-startTime)/1000d) +"s...");

@@ -93,4 +93,25 @@ public class Interpolator {
       }
       return data[idx][idy];
    }
+
+   public boolean interpolAtEqVal(double[][] data, double x, double y, double refValue) {
+      int px_i = (int) Math.floor(x);
+      int py_i = (int) Math.floor(y);
+
+      int px_i2 = px_i + 1;
+      int py_i2 = py_i + 1;
+
+      double dx = x - px_i;
+      double dy = y - py_i;
+
+      double f_00 = data[px_i][py_i];
+      double f_01 = saveGetAt(data, px_i, py_i2); // data[px_i][py_i2];
+      double f_10 = saveGetAt(data, px_i2, py_i); // data[px_i2][py_i];
+      double f_11 = saveGetAt(data, px_i2, py_i2); // data[px_i2][py_i2];
+
+      if (f_00 == refValue || f_01 == refValue || f_10 == refValue || f_11 == refValue) {
+         return true;
+      }
+      return false;
+   }
 }
