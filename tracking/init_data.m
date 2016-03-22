@@ -4,14 +4,14 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'chair3';
+DATASETNAME = 'c14';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_LOCAL_VAR = false; % global variance is still computed
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -33,7 +33,7 @@ end
 START_FRAME_IDX = boundaries(1); 
 END_FRAME_IDX = boundaries(2); 
 
-% extract flows, trackable regions, flow consistency regions
+%% extract flows, trackable regions, flow consistency regions
 if COMPUTE_TRACKING_DATA
     for t=START_FRAME_IDX:END_FRAME_IDX
 
@@ -91,6 +91,22 @@ if COMPUTE_TRACKING_DATA
     end
 end
 
+%% save metadata into file
+fname = strcat('../output/tracker_data/',DATASETNAME,'/metainfo.txt');
+fid = fopen(fname,'w');
+
+% fileformat
+data = [m, n, STEP_SIZE];
+if fid ~= -1
+    a_row = strcat(...
+        num2str(data(1)), ',', ...
+        num2str(data(2)), ',', ...
+        num2str(data(3))...
+    );
+    fprintf(fid,'%s\r\n', a_row);
+end
+fclose(fid);
+%%
 % A single-channel uint16 depth image. 
 % Each pixel gives the depth in millimeters, 
 % with 0 denoting missing depth. 

@@ -1,5 +1,6 @@
 package pipeline_components;
 
+import managers.MetaDataManager;
 import similarity.SimilarityTask;
 
 import java.util.HashMap;

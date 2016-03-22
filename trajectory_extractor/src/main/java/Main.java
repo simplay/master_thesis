@@ -1,17 +1,16 @@
 import datastructures.FlowField;
-import datastructures.Trajectory;
+import managers.CalibrationManager;
+import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
 import writers.LabelMappingWriter;
-import writers.LargeFileWriter;
 import writers.NearestSpatialNeighborsWriter;
 import writers.SimilarityWriter;
 
 import java.io.*;
-import java.util.LinkedList;
 // TODO write more descriptive information:
 // value range of input data, invalid values, what they do, where they are used
 // what data is required / optional
@@ -54,13 +53,13 @@ public class Main {
         int numberOfNNToSave = 1500;
 
         // TODO: determine this value automatically
-        int samplingRate = 8;
 
-        String dataset = "";
-        if (ArgParser.hasArgs()) {
-            dataset = ArgParser.getDatasetName();
-        }
+        String dataset = ArgParser.getDatasetName();
         ArgParser.reportUsedParameters();
+        System.out.println();
+        new MetaInfoReader(dataset);
+        int samplingRate = MetaDataManager.samplingRate();
+        MetaDataManager.reportStatus();
         System.out.println();
 
         /**
