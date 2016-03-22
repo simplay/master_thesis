@@ -40,6 +40,8 @@ import java.io.*;
  *          -var 0 => use the global flow variance values.
  *      -depth => should depth cues be used
  *          -depth 1 => use depth cues
+ *      -nn => number of nearest neighbors that should be saved per trajectory
+ *          -nn 1000 => save the top 1000 nearest neighbors, default value is 100
  *  @example:
  *      -d c14 -task 1
  */
@@ -49,9 +51,8 @@ public class Main {
         String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
-        // Default runtime parameter setup
-        // TODO set this value via an input arg having a certain default value
-        int numberOfNNToSave = 1500;
+        // The number of spatially nearest neighbors per trajectory that should be written into an output file.
+        int numberOfNNToSave = ArgParser.getNearestNeighborhoodCount();
 
         String dataset = ArgParser.getDatasetName();
         ArgParser.reportUsedParameters();

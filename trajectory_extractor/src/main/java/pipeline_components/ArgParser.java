@@ -64,6 +64,14 @@ public class ArgParser {
         return SimilarityTask.Types.TypeById(Integer.parseInt(taskName));
     }
 
+    public static int getNearestNeighborhoodCount() {
+        String nnCount = getInstance().getHashValue("nn");
+        if (nnCount == null) {
+            return 100;
+        }
+        return Integer.parseInt(nnCount);
+    }
+
     public static boolean useColorCues() {
         String useColorState = getInstance().getHashValue("color");
         if (useColorState == null || !useColorState.equals("1")) {
@@ -107,7 +115,6 @@ public class ArgParser {
         System.out.println("+ Using local variances: " + useLocalVariance());
         System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());
+        System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
     }
-
-
 }
