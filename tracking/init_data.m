@@ -4,14 +4,14 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'c14';
+DATASETNAME = 'wh1';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_LOCAL_VAR = false; % global variance is still computed
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
+EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -118,10 +118,12 @@ if EXTRACT_DEPTH_FIELDS
     for k=START_FRAME_IDX:END_FRAME_IDX
         f = listing(k);
         disp(strcat(num2str(k), '. Iteration - extracted depth field: ', f.name));
-     
+        
         fpath = strcat(path, f.name);
         lv = imread(fpath);
-        fname = strcat('../output/tracker_data/',DATASETNAME,'/depth_',num2str(k),'.txt');
+        tillDot = strfind(listing(1).name,'.png');
+        fileNr = listing(1).name(1:tillDot-1);
+        fname = strcat('../output/tracker_data/',DATASETNAME,'/depth_',fileNr,'.txt');
         fid = fopen(fname,'w');
         if fid ~= -1
             for t=1:size(lv,1)
