@@ -185,24 +185,6 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         }
     }
 
-
-    /**
-     * String representation of all trajectories in the format the
-     * similarity computation script expects its input to be.
-     *
-     * @return
-     */
-    public String toOutputString() {
-        String content = "";
-        LinkedList<Trajectory> sortedByLabel = new LinkedList<>(trajectories.values());
-        Collections.sort(sortedByLabel);
-
-        for (Trajectory tra : sortedByLabel) {
-            content = content + tra.toOutputString();
-        }
-        return content.trim();
-    }
-
     public String toFramewiseOutputString(int frame_idx) {
         String content = "";
         LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesActiveInGivenFrame(frame_idx);
@@ -212,28 +194,6 @@ public class TrajectoryManager implements Iterable<Trajectory>{
             content = content + tra.toFramewiseString(frame_idx) + "\n";
         }
         return content.trim();
-    }
-
-
-    /**
-     * Saves all trajectories to a file, using the old format,
-     * readable by the ruby code basis.
-     *
-     * @info: Note that we are reporting java-ish coordinates,
-     *  i.e. indices are starting at 0. This implies
-     *  that we have to perform an index shift when using the extracted coordinates
-     *  in any language that starts index counting at 1 (such as Matlab or Ruby).
-     *
-     * @param fPathName file path name for this graph's partition file.
-     */
-    public void saveTrajectoriesToFile(String fPathName) {
-        try {
-            try (PrintWriter out = new PrintWriter(fPathName)) {
-                out.println(toOutputString());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public void saveFramewiseTrajectoryDataToFile(String baseOutPath, int till_idx) {

@@ -6,10 +6,7 @@ import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
-import writers.LabelMappingWriter;
-import writers.NearestSpatialNeighborsWriter;
-import writers.SimilarityWriter;
-import writers.TraWriter;
+import writers.*;
 
 import java.io.*;
 // TODO write more descriptive information:
@@ -68,6 +65,7 @@ public class Main {
         /**
          * Read required input data
          */
+
         File folder = new File("../output/tracker_data/" + dataset);
         File[] fileList = folder.listFiles();
         int counter = 0;
@@ -105,6 +103,7 @@ public class Main {
         /**
          * Extract trajectories
          */
+
         System.out.println("Sampling every " + samplingRate + "th pixel");
         System.out.println("Tracking points over " + counter + " frames...");
         System.out.println();
@@ -120,6 +119,7 @@ public class Main {
             System.out.println("#Trajectories with len=" + k + ": " + trajectoryCount);
         }
         System.out.println();
+
         /**
          * Filter extracted trajectories
          */
@@ -154,14 +154,8 @@ public class Main {
          *  + the label mappings: transformation which column/row a label belongs to in the similarity matrix
          */
 
-        // TODO export output writing logic in trajectory manager to a file writer class
-        // TODO make writing tracking data to output optinal, since it is only required for debugging purposes.
         if (ArgParser.runInDebugMode()) new TraWriter(output_base_path, dataset, till_index);
-
-        String outTLF = "../output/trajectory_label_frame/" + dataset + "/";
-        System.out.println("Writing active trajectory frame files: " + outTLF);
-        (new File(outTLF)).mkdirs();
-        TrajectoryManager.getInstance().saveFramewiseTrajectoryDataToFile(outTLF, till_index);
+        new FramewiseActiveTraWriter(dataset, till_index);
 
         // Write clustering related files
         new SimilarityWriter(dataset);
