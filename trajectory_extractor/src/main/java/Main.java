@@ -43,6 +43,8 @@ import java.io.*;
  *          -depth 1 => use depth cues
  *      -nn => number of nearest neighbors that should be saved per trajectory
  *          -nn 1000 => save the top 1000 nearest neighbors, default value is 100
+ *      -debug => should the program run in the debug mode. If so, it will dumb intermediate calculated data
+ *          -debug 1 => run in debug mode, otherwise in normal mode, by default a program runs in normal mode.
  *  @example:
  *      -d c14 -task 1
  */
@@ -154,7 +156,7 @@ public class Main {
 
         // TODO export output writing logic in trajectory manager to a file writer class
         // TODO make writing tracking data to output optinal, since it is only required for debugging purposes.
-        new TraWriter(output_base_path, dataset, till_index);
+        if (ArgParser.runInDebugMode()) new TraWriter(output_base_path, dataset, till_index);
 
         String outTLF = "../output/trajectory_label_frame/" + dataset + "/";
         System.out.println("Writing active trajectory frame files: " + outTLF);

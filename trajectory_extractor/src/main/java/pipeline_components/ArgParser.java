@@ -80,6 +80,21 @@ public class ArgParser {
         return true;
     }
 
+    /**
+     * Does the program run in the debug state?
+     * Forces to dumb many intermediate data.
+     * by default a program does not run in the debug mode.
+     *
+     * @return true if specified by user via flag -debug 1
+     */
+    public static boolean runInDebugMode() {
+        String isInDebugState = getInstance().getHashValue("debug");
+        if (isInDebugState == null || !isInDebugState.equals("1")) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean useDepthCues() {
         String useDepthState = getInstance().getHashValue("depth");
         if (useDepthState == null || !useDepthState.equals("1")) {
@@ -116,5 +131,6 @@ public class ArgParser {
         System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());
         System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
+        System.out.println("+ Program runs in debug mode: " + runInDebugMode());
     }
 }
