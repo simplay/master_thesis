@@ -29,6 +29,8 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     private boolean hasSimilarityValues = false;
 
+    private String traOutRepresentation = null;
+
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
@@ -172,6 +174,11 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     public void markClosed() {
         this.isClosed = true;
         endFrame = currentActiveFrame();
+        traOutRepresentation = toOutputString();
+    }
+
+    public String getOutputString() {
+        return traOutRepresentation;
     }
 
     public boolean notClosed() {

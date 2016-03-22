@@ -9,6 +9,7 @@ import pipeline_components.Tracker;
 import writers.LabelMappingWriter;
 import writers.NearestSpatialNeighborsWriter;
 import writers.SimilarityWriter;
+import writers.TraWriter;
 
 import java.io.*;
 // TODO write more descriptive information:
@@ -73,7 +74,7 @@ public class Main {
                 counter++;
             }
         }
-        System.out.println("Tracking points over " + counter + " frames...");
+        System.out.println("Loading input data...");
         System.out.println();
 
         int till_index = counter;
@@ -103,6 +104,8 @@ public class Main {
          * Extract trajectories
          */
         System.out.println("Sampling every " + samplingRate + "th pixel");
+        System.out.println("Tracking points over " + counter + " frames...");
+        System.out.println();
         new Tracker(till_index, samplingRate);
 
         long tillTrajectoriesTrackedTime = System.currentTimeMillis();
@@ -151,9 +154,7 @@ public class Main {
 
         // TODO export output writing logic in trajectory manager to a file writer class
         // TODO make writing tracking data to output optinal, since it is only required for debugging purposes.
-        String output_filePathName = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
-        System.out.println("Writing trajectories to output file: " + output_filePathName);
-        TrajectoryManager.getInstance().saveTrajectoriesToFile(output_filePathName);
+        new TraWriter(output_base_path, dataset, till_index);
 
         String outTLF = "../output/trajectory_label_frame/" + dataset + "/";
         System.out.println("Writing active trajectory frame files: " + outTLF);
