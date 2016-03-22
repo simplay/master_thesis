@@ -50,9 +50,8 @@ public class Main {
         ArgParser.getInstance(argv);
 
         // Default runtime parameter setup
+        // TODO set this value via an input arg having a certain default value
         int numberOfNNToSave = 1500;
-
-        // TODO: determine this value automatically
 
         String dataset = ArgParser.getDatasetName();
         ArgParser.reportUsedParameters();
@@ -93,8 +92,6 @@ public class Main {
 
         // load relevant transformation data in order to transform pixel coordinates to euclid. coordinates,
         // using depth cues and applying the appropriate extrinsic and intrinsic transformations.
-        // TODO remove the line below: just for testing purposes...
-        new CalibrationsReader(dataset);
         if (ArgParser.useDepthCues()) new CalibrationsReader(dataset);
 
         long tillFileLoadedTime = System.currentTimeMillis();

@@ -10,8 +10,8 @@ public class Mat3x4 {
     // matrix elements
     private double[][] data;
 
-    // matrix rows
-    private final ArrayList<Point3d> rows = new ArrayList<>(3);
+    // matrix cols
+    private final ArrayList<Point3d> cols = new ArrayList<>(4);
 
     /**
      * Create a new matrix by its rows
@@ -25,19 +25,20 @@ public class Mat3x4 {
         data[1] = r2;
         data[2] = r3;
 
-        rows.add(new Point3d(r1[0], r1[1], r1[2]));
-        rows.add(new Point3d(r2[0], r2[1], r2[2]));
-        rows.add(new Point3d(r3[0], r3[1], r3[2]));
+        cols.add(new Point3d(r1[0], r2[0], r3[0]));
+        cols.add(new Point3d(r1[1], r2[1], r3[1]));
+        cols.add(new Point3d(r1[2], r2[2], r3[2]));
+        cols.add(new Point3d(r1[3], r2[3], r3[3]));
     }
 
     /**
-     * Returns the i-th row.
+     * Returns the i-th col.
      * Not that indices are enumerated starting at index 0.
      *
-     * @param row_idx target row index of the matrix
-     * @return a row encoded as a point3d instance.
+     * @param col_idx target col index of the matrix
+     * @return a col encoded as a point3d instance.
      */
-    public Point3d getRow(int row_idx) {
-        return rows.get(row_idx);
+    public Point3d getCol(int col_idx) {
+        return cols.get(col_idx);
     }
 }

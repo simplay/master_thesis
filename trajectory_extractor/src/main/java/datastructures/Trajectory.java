@@ -254,6 +254,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         }
     }
 
+    // TODO check if this method should overwrite points? Better have an additional field? Are lookups still correct?
     /**
      * Transforms tracked trajectory points into the Euclidian space
      * by making use of depth cues.
@@ -264,10 +265,11 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public void transformTrackedPoints() {
         ArrayList<Point2d> transformedPoints = new ArrayList<>();
+        int idx = startFrame;
         for (Point2d p : points) {
-            // TODO implement euclidian transformation
-            Point2d euclidianPoint = null; //p.euclidianTransformed();
+            Point2d euclidianPoint = p.transformToOveralappingDepthColorCamPixelCoors(idx);
             transformedPoints.add(euclidianPoint);
+            idx++;
         }
         points = transformedPoints;
     }

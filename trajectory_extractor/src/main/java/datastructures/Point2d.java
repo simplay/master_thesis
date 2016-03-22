@@ -1,6 +1,8 @@
 package datastructures;
 
+import managers.CalibrationManager;
 import managers.DepthManager;
+import readers.CandidateFileReader;
 
 public class Point2d {
 
@@ -33,23 +35,26 @@ public class Point2d {
         return this;
     }
 
-    public Point2d euclidianTransformed(int frame_idx) {
-        /**
-        depth = z*depth_scale(true)
-        _x = ((p.x-MetaInfo.build.p_d.x) / MetaInfo.build.f_d.x)*depth
-        _y = ((p.y-MetaInfo.build.p_d.y) / MetaInfo.build.f_d.y)*depth
-        p3 = Point3f.new([_x, _y, depth])
-        pp3 = MetaInfo.build.extrinsic_camera_mat.mult(p3)
-        return pp3 if cameras_overlapping
-                depth = pp3.z
-        x = (pp3.x*MetaInfo.build.f_c.x)/depth + MetaInfo.build.p_c.x
-        y = (pp3.y*MetaInfo.build.f_c.y)/depth + MetaInfo.build.p_c.y
-        Point.new([x, y])
-        **/
-
+    /**
+     * Transforms to Euclidian space and back to camera space
+     *
+     * P = [(u-p_x^d)/f_x^d *z, (v-p_y^d)/f_y^d *z), z]
+     * E*P = [xx, yy, zz]
+     * (x/z * f_x^c + p_x^c, y/z * f_y^c + p_y^c)
+     */
+    public Point2d transformToOveralappingDepthColorCamPixelCoors(int frame_idx) {
         double depth = DepthManager.getInstance().get(frame_idx).valueAt(x,y);
+        double _x = depth*((x - CalibrationManager.depth_principal_point().x()) / CalibrationManager.depth_focal_len().x());
+        double _y = depth*((y - CalibrationManager.depth_principal_point().y()) / CalibrationManager.depth_focal_len().y());
 
-        return new Point2d(0,0);
+        // 3d euclidian space point
+        Point3d p3 = new Point3d(_x, _y, depth);
+        p3.scaleByMat(CalibrationManager.extrinsicMat());
+
+        return new Point2d(
+                (p3.x()*CalibrationManager.rgb_focal_len().x() / depth) + CalibrationManager.rgb_principal_point().x(),
+                (p3.y()*CalibrationManager.rgb_focal_len().y() / depth) + CalibrationManager.rgb_principal_point().y()
+        );
     }
 
     public double x() {
