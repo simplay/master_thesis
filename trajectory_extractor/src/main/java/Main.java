@@ -89,6 +89,11 @@ public class Main {
             if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
             if (ArgParser.useDepthCues()) new DepthFieldReader(dataset, fileNr);
         }
+
+        // load relevant transformation data in order to transform pixel coordinates to euclid. coordinates,
+        // using depth cues and applying the appropriate extrinsic and intrinsic transformations.
+        if (ArgParser.useDepthCues()) new CalibrationsReader(dataset);
+
         long tillFileLoadedTime = System.currentTimeMillis();
         System.out.println("Files loaded in "+((tillFileLoadedTime-startTime)/1000d) +"s...");
         System.out.println();
