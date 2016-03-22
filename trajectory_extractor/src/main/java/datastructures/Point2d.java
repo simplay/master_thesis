@@ -12,6 +12,11 @@ public class Point2d {
         this.y = y;
     }
 
+    public Point2d(String[] xy) {
+        this.x = Double.parseDouble(xy[0]);
+        this.y = Double.parseDouble(xy[1]);
+    }
+
     public Point2d copy() {
         return new Point2d(x,y);
     }

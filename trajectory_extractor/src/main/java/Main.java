@@ -39,6 +39,8 @@ import java.util.LinkedList;
  *      -var => should the local variance be used
  *          -var 1 => use the local flow variance values for normalization
  *          -var 0 => use the global flow variance values.
+ *      -depth => should depth cues be used
+ *          -depth 1 => use depth cues
  *  @example:
  *      -d c14 -task 1
  */
@@ -92,6 +94,8 @@ public class Main {
 
         // load relevant transformation data in order to transform pixel coordinates to euclid. coordinates,
         // using depth cues and applying the appropriate extrinsic and intrinsic transformations.
+        // TODO remove the line below: just for testing purposes...
+        new CalibrationsReader(dataset);
         if (ArgParser.useDepthCues()) new CalibrationsReader(dataset);
 
         long tillFileLoadedTime = System.currentTimeMillis();
