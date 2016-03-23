@@ -171,12 +171,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
                 traj.markAsDeletable();
             }
         }
+        filterDeletableTrajectories();
+    }
 
-        // Filter all deletable trajectories:
-        // Note that we are forced to make a copy of the old trajectories
-        // since we otherwise would end up having a runtime error since the hash map
-        // references to null entries during iteration since we
-        // perform deletion operations of trajectories on-the-fly.
+    /**
+     * Filter all deletable trajectories:
+     * Note that we are forced to make a copy of the old trajectories
+     * since we otherwise would end up having a runtime error since the hash map
+     * references to null entries during iteration since we
+     * perform deletion operations of trajectories on-the-fly.
+     */
+    public void filterDeletableTrajectories() {
         LinkedList<Trajectory> c_tras = new LinkedList<>(trajectories.values());
         for (Trajectory tra : c_tras) {
             if (tra.isDeletable()) {

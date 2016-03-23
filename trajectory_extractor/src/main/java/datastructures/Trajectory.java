@@ -5,16 +5,24 @@ import managers.TrajectoryManager;
 
 import java.util.*;
 
+/**
+ * A Trajectory is a set of coherently tracked points of a particular feature over a set of frames.
+ */
 public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     // points that span the trajectory
     private ArrayList<Point2d> points;
+
+    // Marks whether this trajectory can be continued during the tracking step
     private boolean isClosed = false;
 
     // indicates whether this trajectory should be filtered
     private boolean isDeletable = false;
 
+    // all similarities between this and any other trajectory
     private HashMap<Integer, Double> similarities;
+
+    // all avg spatial pixel distances between this and any other trajectory
     private HashMap<Integer, Double> avgSpatialDistToNeighbors;
 
     // unique identifier of a trajectory
@@ -23,10 +31,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // shared resource among trajectories
     private static int label_counter = 1;
 
+    // frame index of first the first tracking point of this trajectory.
     // assumption: first frame is equal 0
     private int startFrame;
+
+    // Frame index the last tracked point of this trajectory belongs to.
     private int endFrame;
 
+    // Indicates whether any similarity value were computed for this trajectory
     private boolean hasSimilarityValues = false;
 
     private String traOutRepresentation = null;

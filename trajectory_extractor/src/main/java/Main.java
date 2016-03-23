@@ -74,6 +74,14 @@ public class Main {
         System.out.println("Loading input data...");
         System.out.println();
 
+        /**
+         * For a dataset consisting of a image sequence of N frames load
+         *  + N-1 flow files
+         *  + N-1 candidates
+         *  + N   color files
+         *  + N-1 consistency images
+         *  + N   depth images
+         */
         int till_index = counter;
         for (int idx = 1; idx <= till_index; idx++) {
             String fileNr = Integer.toString(idx);
@@ -88,6 +96,9 @@ public class Main {
             if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
             if (ArgParser.useDepthCues()) new DepthFieldReader(dataset, fileNr);
         }
+        String fileNr = Integer.toString(till_index+1);
+        if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
+        if (ArgParser.useDepthCues()) new DepthFieldReader(dataset, fileNr);
 
         // load relevant transformation data in order to transform pixel coordinates to euclid. coordinates,
         // using depth cues and applying the appropriate extrinsic and intrinsic transformations.
@@ -131,6 +142,8 @@ public class Main {
         // Transform trajectory points to euclidian space
         if (ArgParser.useDepthCues()) {
             TrajectoryManager.getInstance().transformTrajectoryPointsToEuclidianSpace();
+            TrajectoryManager.getInstance().filterDeletableTrajectories();
+            System.out.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
         }
 
         System.out.println("Starts computing affinity values between remaining trajectories...");
