@@ -183,6 +183,17 @@ public abstract class SimilarityTask implements Runnable {
         b.appendAvgSpatialDist(a.getLabel(), sp_dist);
     }
 
+    /**
+     * Checks whether a given pair of comparison points is valid.
+     * Valid means that they have valid depth information assigned.
+     * @param pa
+     * @param pb
+     * @return true if they are invalid, false otherwise.
+     */
+    protected boolean trajectoryPointsInvalid(Point2d pa, Point2d pb) {
+        return (!pa.isValid() || !pb.isValid());
+    }
+
     @Override
     public void run() {
         for (Trajectory b : trajectories) {

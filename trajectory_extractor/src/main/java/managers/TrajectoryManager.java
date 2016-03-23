@@ -205,7 +205,8 @@ public class TrajectoryManager implements Iterable<Trajectory>{
 
             // in case a trajectory has no valid depth information associated with its tracked points
             // mark it as deletable and proceed the next trajectory.
-            if (!tra.hasValidDepths()) {
+            boolean allTrackedPointsInvalid = tra.markInvalidPoints();
+            if (allTrackedPointsInvalid) {
                 tra.markAsDeletable();
                 continue;
             }

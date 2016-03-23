@@ -283,20 +283,24 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
-     * Does this trajectory have associated valid depth values.
+     * Marks every tracked trajectory point that does not have
+     * a valid depth field position.
      *
-     * @return true if it has valid depth information.
+     * @return true if all tracked points are labeled as invalid.
      */
-    public boolean hasValidDepths() {
+    public boolean markInvalidPoints() {
         int idx = startFrame;
+        int count = points.size();
+        int invCounter = 0;
         for (Point2d p : points) {
             DepthField depthField = DepthManager.getInstance().get(idx);
             if (!depthField.validRegionAt(p.x(), p.y())) {
-                return false;
+                p.markAsInvalid();
+                invCounter++;
             }
             idx++;
         }
-        return true;
+        return count == invCounter;
     }
 
 }

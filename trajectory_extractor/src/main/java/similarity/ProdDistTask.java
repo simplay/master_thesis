@@ -51,6 +51,11 @@ public class ProdDistTask extends SimilarityTask {
             Point2d pa = a.getPointAtFrame(l);
             Point2d pb = b.getPointAtFrame(l);
 
+            if (trajectoryPointsInvalid(pa, pb)) {
+                len--;
+                continue;
+            }
+
             double sp_len = pa.copy().sub(pb).length();
             avgSpatialDist += sp_len;
 

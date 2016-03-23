@@ -8,6 +8,7 @@ public class Point2d {
 
     private double x;
     private double y;
+    private boolean isValid = true;
 
     public Point2d(double x, double y) {
         this.x = x;
@@ -17,6 +18,14 @@ public class Point2d {
     public Point2d(String[] xy) {
         this.x = Double.parseDouble(xy[0]);
         this.y = Double.parseDouble(xy[1]);
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void markAsInvalid() {
+        this.isValid = false;
     }
 
     public Point2d copy() {
