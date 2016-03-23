@@ -9,7 +9,7 @@ import java.util.List;
 public class NearestSpatialNeighborsWriter extends LargeFileWriter {
 
     public NearestSpatialNeighborsWriter(String dataset, int nn_count) {
-        String outputPath = "../output/similarities/"+dataset + "_spnn.txt";
+        String outputPath = "../output/similarities/" + getOutputFilename(dataset) + "_spnn.txt";
         reportFilePath(outputPath, "Writing the " + nn_count + " nearest avg spatial dist neighbors to output file:");
 
 

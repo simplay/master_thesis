@@ -121,6 +121,27 @@ public class ArgParser {
         return Double.parseDouble(cutProb);
     }
 
+    /**
+     * Obtain custom, user-specified output file name prefix.
+     *
+     * @return if no prefix is specified, return the empty string.
+     */
+    public static String getCustomFileNamePrefix() {
+        String fnamePrefix = getInstance().getHashValue("prefix");
+        if (fnamePrefix == null) {
+            return "";
+        }
+        return fnamePrefix;
+    }
+
+    /**
+     * Has the user provided a custom output filename prefix.
+     * @return
+     */
+    public static boolean hasCustomFileNamePrefix() {
+        return !getCustomFileNamePrefix().isEmpty();
+    }
+
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();
@@ -136,6 +157,9 @@ public class ArgParser {
         System.out.println(getInstance().toString());
         System.out.println("Using the following runtime parameter setting:");
         System.out.println("+ Using dataset: " + getDatasetName());
+        if (hasCustomFileNamePrefix()) {
+            System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
+        }
         System.out.println("+ Running task: " + getSimTask().name());
         if (useColorCues()) {
             System.out.println("+ Using cut probability: " + getCutProbability());

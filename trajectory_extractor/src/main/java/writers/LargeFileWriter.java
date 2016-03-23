@@ -1,5 +1,7 @@
 package writers;
 
+import pipeline_components.ArgParser;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -95,5 +97,20 @@ public class LargeFileWriter {
             // File permission problems are caught here.
             System.err.println(x);
         }
+    }
+
+    /**
+     * Obtain the correct filename prefix for a given dataset.
+     * Changes, in case a user has provided a custom filename prefix.
+     *
+     * @param dataset dataset name used during computation.
+     *
+     * @return filename prefix of outputted similarity files.
+     */
+    protected String getOutputFilename(String dataset) {
+        if (ArgParser.hasCustomFileNamePrefix()) {
+            return ArgParser.getCustomFileNamePrefix() + "_" + dataset;
+        }
+        return dataset;
     }
 }

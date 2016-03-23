@@ -41,6 +41,7 @@ import java.io.*;
  *          -debug 1 => run in debug mode, otherwise in normal mode, by default a program runs in normal mode.
  *      -prob => value of cut probability used for the PD similarity task
  *          -prob V => V is a supposed to be a value: V > 0 AND V < 1.
+ *      -prefix => custom output file name prefix, by default the empty string.
  *  @example:
  *      -d c14 -task 1
  */

@@ -8,7 +8,7 @@ import java.io.IOException;
 public class LabelMappingWriter extends LargeFileWriter {
 
     public LabelMappingWriter(String dataset) {
-        String outputPath = "../output/similarities/"+dataset + "_labels.txt";
+        String outputPath = "../output/similarities/" + getOutputFilename(dataset) + "_labels.txt";
         reportFilePath(outputPath, "Writing label mappings to output file:");
         String line = "";
         for (Trajectory tra : TrajectoryManager.getTrajectories()) {
