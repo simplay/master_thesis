@@ -4,14 +4,14 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'wh1';
+DATASETNAME = 'chair3';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
-COMPUTE_LOCAL_VAR = false; % global variance is still computed
+COMPUTE_LOCAL_VAR = true; % global variance is still computed
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -115,12 +115,32 @@ fclose(fid);
 if EXTRACT_DEPTH_FIELDS
     path = ['../data/ldof/', DATASETNAME, '/depth/'];
     listing = dir(strcat('../data/ldof/', DATASETNAME, '/depth/*.png'));
-    for k=START_FRAME_IDX:END_FRAME_IDX
+    
+    minFilenameIndex = 1000000;
+    maxFilenameIndex = -1;
+    for k=1:length(listing)
+        f = listing(k);
+        tillDot = strfind(f.name,'.png');
+        fileNr = str2num(f.name(1:tillDot-1));
+        
+        if (fileNr < minFilenameIndex)
+            minFilenameIndex = fileNr;
+        end
+        
+        if (fileNr > maxFilenameIndex)
+            maxFilenameIndex = fileNr;
+        end
+        
+    end
+    minFilenameIndex = minFilenameIndex - 1;
+    
+    for k=1:length(imgs)
         f = listing(k);
         fpath = strcat(path, f.name);
         lv = imread(fpath);
         tillDot = strfind(f.name,'.png');
         fileNr = f.name(1:tillDot-1);
+        fileNr = num2str(str2num(fileNr) - minFilenameIndex);
         fname = strcat('depth_',fileNr,'.txt');
         disp(strcat(num2str(k), '. Iteration - extracted depth field: ', fname));
         fnamePath = strcat('../output/tracker_data/',DATASETNAME,'/', fname);
