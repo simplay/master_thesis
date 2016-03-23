@@ -107,6 +107,20 @@ public class ArgParser {
         return true;
     }
 
+    /**
+     * Obtain the user-specified segmentation cut probability used for the PD task
+     * Default value is 0.5.
+     *
+     * @return user specified cut probability or the pre-defined default value.
+     */
+    public static double getCutProbability() {
+        String cutProb = getInstance().getHashValue("prob");
+        if (cutProb == null) {
+            return 0.5d;
+        }
+        return Double.parseDouble(cutProb);
+    }
+
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();
@@ -123,6 +137,9 @@ public class ArgParser {
         System.out.println("Using the following runtime parameter setting:");
         System.out.println("+ Using dataset: " + getDatasetName());
         System.out.println("+ Running task: " + getSimTask().name());
+        if (useColorCues()) {
+            System.out.println("+ Using cut probability: " + getCutProbability());
+        }
         System.out.println("+ Using local variances: " + useLocalVariance());
         System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());

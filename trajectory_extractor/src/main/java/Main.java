@@ -39,6 +39,8 @@ import java.io.*;
  *          -nn 1000 => save the top 1000 nearest neighbors, default value is 100
  *      -debug => should the program run in the debug mode. If so, it will dumb intermediate calculated data
  *          -debug 1 => run in debug mode, otherwise in normal mode, by default a program runs in normal mode.
+ *      -prob => value of cut probability used for the PD similarity task
+ *          -prob V => V is a supposed to be a value: V > 0 AND V < 1.
  *  @example:
  *      -d c14 -task 1
  */

@@ -5,6 +5,7 @@ import datastructures.Point2d;
 import datastructures.Point3d;
 import datastructures.Trajectory;
 import managers.ColorImgManager;
+import pipeline_components.ArgParser;
 
 import java.util.Collection;
 
@@ -18,8 +19,8 @@ public class SumDistTask extends SimilarityTask {
     private final double BETA_3 = -0.02d;
 
     // cut probabilities
-    private final double P_BAR = 0.999d;
-    private final double P = 0.5;
+    private double P_BAR;
+    private final double P = 0.5d;
 
     /**
      * @param a
@@ -27,6 +28,7 @@ public class SumDistTask extends SimilarityTask {
      */
     public SumDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
+        P_BAR = ArgParser.getCutProbability();
     }
 
     @Override
