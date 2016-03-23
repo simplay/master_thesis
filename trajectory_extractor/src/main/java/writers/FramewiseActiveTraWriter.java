@@ -13,12 +13,10 @@ public class FramewiseActiveTraWriter extends LargeFileWriter {
         // create directory if not present yet
         (new File(outputPath)).mkdirs();
 
-        // TODO replace
+        // TODO: replace this approach by a more efficient version: do not iterate and compute active tra (compute them beforehand, during thracking step)
         String fname = "";
-        // List<String> strLines;
         for (int idx = 0; idx <= till_index; idx++) {
             System.out.println("+ Iteration " + (idx+1));
-            // strLines = new LinkedList<>();
             fname = outputPath + "active_tra_f_" + (idx+1) + ".txt";
             String activeTra = TrajectoryManager.getInstance().toFramewiseOutputString(idx);
             try {
@@ -27,8 +25,5 @@ public class FramewiseActiveTraWriter extends LargeFileWriter {
                 e.printStackTrace();
             }
         }
-
-
-
     }
 }
