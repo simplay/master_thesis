@@ -5,7 +5,7 @@ clc;
 %clear all;
 %close all;
 
-DATASET = 'chair3';
+DATASET = 'wh1';
 USE_SPECIAL_NAMING = false;
 
 COMPUTE_EIGS = false;
@@ -21,15 +21,15 @@ USE_BF_BOUND = false;
 BOUNDARY = [1,9];
 
 % use a prespecified number of eigenvectors
-USE_CLUSER_EW_COUNT = false;
-FORCE_EW_COUNT = 2;
+USE_CLUSER_EW_COUNT = true;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT =4;
+CLUSTER_CENTER_COUNT = 3;
 
 
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 SHOW_LOCAL_VAR = false;
 VAR_IMG = 1;
@@ -37,7 +37,7 @@ VAR_IMG = 1;
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 64
 SELECTED_ENTITY_IDX = 1
-frame_idx = 1;
+frame_idx = 35;
 
 %%
 if exist('W','var') == 0

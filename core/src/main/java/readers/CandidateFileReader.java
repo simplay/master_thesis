@@ -1,0 +1,22 @@
+package readers;
+
+import datastructures.TrackingCandidates;
+
+import java.util.LinkedList;
+
+public class CandidateFileReader extends FileReader{
+    private LinkedList<String[]> candidates;
+
+    public CandidateFileReader(String dataset, String fileNr) {
+        String baseFileName = "../output/tracker_data/" + dataset + "/candidates_"+ fileNr + ".txt";
+        candidates = new LinkedList<String[]>();
+        readFile(baseFileName);
+        TrackingCandidates.getInstance().addCandidate(candidates.getFirst(), candidates.getLast());
+    }
+
+    @Override
+    protected void processLine(String line) {
+        String[] elements = extractElementsFromMatlabMatrixRow(line);
+        candidates.add(elements);
+    }
+}

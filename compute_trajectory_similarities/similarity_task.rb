@@ -117,7 +117,7 @@ class SimilarityTask
     !(common_frame_count-1 < MIN_EXPECTED_TRAJ_LEN)
   end
 
-
+require 'pry'
   # Compute temoral distance between temporal overlapping segments
   # of two given trajectories.
   #
@@ -129,6 +129,7 @@ class SimilarityTask
   # @return [Array] of Float values denoting the temporal distance
   #   between two trajectory segment pairs.
   def temporal_distances_between_2(a, b, lower_idx, upper_idx, dt=1)
+
     #binding.pry
     common_frame_count = overlapping_frame_count(lower_idx, upper_idx)
     return [] unless long_enough_trajectory?(common_frame_count)
@@ -153,6 +154,7 @@ class SimilarityTask
       dt_A = foreward_differece_on(a, timestep, idx)
       dt_B = foreward_differece_on(b, timestep, idx)
       dt_AB = dt_A.sub(dt_B).length_squared
+      binding.pry
       s_dt = (USE_WINDOWING_VAR) ? timestep : 1
       sigma_t = EPS_FLOW+local_sigma_t_at(idx, a, b, s_dt)
       (d_sp_a_b*dt_AB)/sigma_t
@@ -235,7 +237,7 @@ class SimilarityTask
     till = idx+dt-1 # till offset stepsize -1
 
     del = (dt == 1)? 1 : 0
-    till = till - del
+    #till = till - del
 
     # do not perform the last variance lookup since it might have landed at
     # an invalid region.
@@ -267,7 +269,7 @@ class SimilarityTask
     p_i = trajectory.point_at(frame_idx)
     p_i_pl_t = trajectory.point_at(frame_idx+dt)
     p = p_i_pl_t.copy.sub(p_i)
-    p.div_by(dt+1.0)
+    p.div_by(dt)
   end
 
   # compute the average spatial distance between all overlapping points of two given

@@ -5,7 +5,6 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
     % DISPLAY = false; % show tracking point
     % WRITE_TRACKINGS_INTO_FILES = true;
     addpath('../libs/flow-code-matlab');
-    addpath('fast_bfilt/');
     %% 
 
     % global variable used for assigning unique label indices
@@ -57,13 +56,13 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
             colorTransform = makecform('srgb2lab');
             lab = applycform(img, colorTransform);
             [rows, columns, ~] = size(lab);
-            fname = strcat(DATASETNAME,'_lab_',num2str(t),'.txt');
+            fname = strcat('color_lab_',num2str(t),'.txt');
             disp(['Computing ', fname]);
-            fpname = strcat('../output/cie_lab_color_imgs/',DATASETNAME,'/', fname);
+            fpname = strcat('../output/tracker_data/',DATASETNAME,'/', fname);
             fid = fopen(fpname, 'wt');
             for col = 1 : columns
                 for row = 1 : rows
-                    fprintf(fid, '%d, %d = (%d, %d, %d)\n', ...
+                    fprintf(fid, '%d,%d = (%d,%d,%d)\n', ...
                         row, col, ...
                         lab(row, col, 1),...
                         lab(row, col, 2),...
@@ -164,7 +163,7 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         end
         global_variances = [global_variances, var(fw_flow(:))];
     end
-    fName = strcat('../output/trackings/',DATASET,'global_variances','.txt');
+    fName = strcat('../output/tracker_data/',DATASET,'/global_variances','.txt');
     fid = fopen(fName,'w');
 
     if fid ~= -1
@@ -184,8 +183,8 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
         for k=1:END_FRAME_IDX
             lv = local_flow_variances(:,:,k);
             
-            fname = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.txt');
-            imgfile = strcat('../output/trackings/',DATASET,'local_variances_',num2str(k),'.png');
+            fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
+            imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');
             imwrite(lv, imgfile);
             fid = fopen(fname,'w');
             if fid ~= -1
