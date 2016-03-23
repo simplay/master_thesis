@@ -2,6 +2,7 @@ package datastructures;
 
 import managers.DepthManager;
 import managers.TrajectoryManager;
+import pipeline_components.ArgParser;
 
 import java.util.*;
 
@@ -12,6 +13,8 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     // points that span the trajectory
     private ArrayList<Point2d> points;
+
+    private ArrayList<Point2d> transformedPoints;
 
     // Marks whether this trajectory can be continued during the tracking step
     private boolean isClosed = false;
@@ -217,6 +220,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return points.get(frame_idx-startFrame);
     }
 
+    // TODO better naming
+    public Point2d getSpatialPointAtFrame(int frame_idx) {
+        if (ArgParser.useDepthCues()) {
+          return transformedPoints.get(frame_idx-startFrame);
+        }
+        return points.get(frame_idx-startFrame);
+    }
+
     /**
      * Get the currently last frame in which this trajectory is active
      *
@@ -291,7 +302,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
             transformedPoints.add(euclidianPoint);
             idx++;
         }
-        points = transformedPoints;
+        this.transformedPoints = transformedPoints;
     }
 
     /**

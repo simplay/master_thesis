@@ -142,6 +142,8 @@ public class Main {
         // Transform trajectory points to euclidian space
         if (ArgParser.useDepthCues()) {
             TrajectoryManager.getInstance().transformTrajectoryPointsToEuclidianSpace();
+
+            // all remaining trajectories exhibit at least one tracking point that has a valid depth value associated.
             TrajectoryManager.getInstance().filterDeletableTrajectories();
             System.out.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
         }

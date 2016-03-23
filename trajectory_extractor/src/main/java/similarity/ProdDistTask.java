@@ -21,6 +21,10 @@ public class ProdDistTask extends SimilarityTask {
             return EIGENSIMILARITY_VALUE;
         }
 
+        if (a.getLabel() == 1 && b.getLabel() == 117) {
+            System.out.println("");
+        }
+
         int from_idx = getLowerFrameIndexBetween(a,b);
         int to_idx = getUpperFrameIndexBetween(a,b);
 
@@ -56,6 +60,9 @@ public class ProdDistTask extends SimilarityTask {
                 continue;
             }
 
+            pa = a.getSpatialPointAtFrame(l);
+            pb = b.getSpatialPointAtFrame(l);
+
             double sp_len = pa.copy().sub(pb).length();
             avgSpatialDist += sp_len;
 
@@ -70,6 +77,9 @@ public class ProdDistTask extends SimilarityTask {
                 maxDistance = dist;
             }
         }
+
+        if (len == 0) return 0d;
+        
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
