@@ -196,21 +196,6 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return content.trim();
     }
 
-    public void saveFramewiseTrajectoryDataToFile(String baseOutPath, int till_idx) {
-        String fname = "";
-
-        for (int idx = 0; idx <= till_idx; idx++) {
-            fname = baseOutPath + "active_tra_f_" + (idx+1) + ".txt";
-            try {
-                try (PrintWriter out = new PrintWriter(fname)) {
-                    out.print(toFramewiseOutputString(idx));
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * Transforms all remaining trajectories to the Euclidian space using
      * extrinsic camera the calibration matrices and depth cues.
