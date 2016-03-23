@@ -117,14 +117,14 @@ if EXTRACT_DEPTH_FIELDS
     listing = dir(strcat('../data/ldof/', DATASETNAME, '/depth/*.png'));
     for k=START_FRAME_IDX:END_FRAME_IDX
         f = listing(k);
-        disp(strcat(num2str(k), '. Iteration - extracted depth field: ', f.name));
-        
         fpath = strcat(path, f.name);
         lv = imread(fpath);
-        tillDot = strfind(listing(1).name,'.png');
-        fileNr = listing(1).name(1:tillDot-1);
-        fname = strcat('../output/tracker_data/',DATASETNAME,'/depth_',fileNr,'.txt');
-        fid = fopen(fname,'w');
+        tillDot = strfind(f.name,'.png');
+        fileNr = f.name(1:tillDot-1);
+        fname = strcat('depth_',fileNr,'.txt');
+        disp(strcat(num2str(k), '. Iteration - extracted depth field: ', fname));
+        fnamePath = strcat('../output/tracker_data/',DATASETNAME,'/', fname);
+        fid = fopen(fnamePath,'w');
         if fid ~= -1
             for t=1:size(lv,1)
                 a_row = mat2str(lv(t,:));

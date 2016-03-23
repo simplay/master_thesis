@@ -2,7 +2,7 @@
 %clear all;
 close all;
 
-DATASETNAME = 'c14';
+DATASETNAME = 'wh1';
 STEP_SIZE = 8;
 MODE = 5; % display mode
 DISPLAY = false; % show tracking point
