@@ -29,7 +29,7 @@ CLUSTER_CENTER_COUNT = 3;
 
 
 USE_W_VEC = false;
-USE_CLUSTERING_CUE = false;
+USE_CLUSTERING_CUE = true;
 
 SHOW_LOCAL_VAR = false;
 VAR_IMG = 1;

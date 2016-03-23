@@ -21,10 +21,6 @@ public class ProdDistTask extends SimilarityTask {
             return EIGENSIMILARITY_VALUE;
         }
 
-        if (a.getLabel() == 1 && b.getLabel() == 117) {
-            System.out.println("");
-        }
-
         int from_idx = getLowerFrameIndexBetween(a,b);
         int to_idx = getUpperFrameIndexBetween(a,b);
 
@@ -78,8 +74,11 @@ public class ProdDistTask extends SimilarityTask {
             }
         }
 
+        // this check is required when using depth cues:
+        // the points of overlapping trajectories may be all invalid,
+        // resulting in len == 0, which would result in a NaN similarity assignment.
         if (len == 0) return 0d;
-        
+
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
