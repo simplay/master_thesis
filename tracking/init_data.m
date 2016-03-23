@@ -4,14 +4,19 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 
-DATASETNAME = 'chair3';
+DATASETNAME = 'wh1';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
-COMPUTE_LOCAL_VAR = true; % global variance is still computed
+COMPUTE_LOCAL_VAR = false; % global variance is still computed
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
+EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+
+% encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
+% i.e. real depth value is d = 255*G + B
+USE_OWN_DEPTHS = true;
+
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -138,6 +143,16 @@ if EXTRACT_DEPTH_FIELDS
         f = listing(k);
         fpath = strcat(path, f.name);
         lv = imread(fpath);
+        
+        % own extracted depths provided by code 3dDataAcquisition
+        % stored depth images are 16 bit depth values, using the red and
+        % blue color channel. See the method 3dDataAcquisition /
+        % fileWriteTask.cpp#fileWriteTask::run()
+        % depth = 0*R + 255*G + B
+        if USE_OWN_DEPTHS
+            dlv = im2double(lv)*255;
+            lv = dlv(:,:,2)*255 + dlv(:,:,3);
+        end
         tillDot = strfind(f.name,'.png');
         fileNr = f.name(1:tillDot-1);
         fileNr = num2str(str2num(fileNr) - minFilenameIndex);
