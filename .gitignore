@@ -28,3 +28,4 @@ tags.*
 *.class
 kernighan_lin/temp_debug.m
 trajectory_extractor/out
+core/out/
