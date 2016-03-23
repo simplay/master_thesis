@@ -73,11 +73,7 @@ public class ArgParser {
     }
 
     public static boolean useColorCues() {
-        String useColorState = getInstance().getHashValue("color");
-        if (useColorState == null || !useColorState.equals("1")) {
-            return false;
-        }
-        return true;
+        return getSimTask().usesColorCues();
     }
 
     /**

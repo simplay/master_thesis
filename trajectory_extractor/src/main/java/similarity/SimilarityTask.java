@@ -33,15 +33,17 @@ public abstract class SimilarityTask implements Runnable {
 
 
     public enum Types {
-        SD(1, SumDistTask.class),
-        PD(2, ProdDistTask.class);
+        SD(1, SumDistTask.class, false),
+        PD(2, ProdDistTask.class, true);
 
         private int value;
         private Class targetClass;
+        private boolean usesColorCues;
 
-        private Types(int value, Class targetClass) {
+        private Types(int value, Class targetClass, boolean usesColorCues) {
             this.value = value;
             this.targetClass = targetClass;
+            this.usesColorCues = usesColorCues;
         }
 
         public Class getTaskClass() {
@@ -55,6 +57,15 @@ public abstract class SimilarityTask implements Runnable {
                 }
             }
             return null;
+        }
+
+        /***
+         * Is the corresponding task required to use color cues?
+         *
+         * @return true if the tasks required color cues otherwise false.
+         */
+        public boolean usesColorCues() {
+            return usesColorCues;
         }
 
     }
