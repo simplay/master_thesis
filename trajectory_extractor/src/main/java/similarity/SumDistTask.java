@@ -70,6 +70,12 @@ public class SumDistTask extends SimilarityTask {
         double maxDistance = 0;
         for (int l = from_idx; l <= u; l++) {
 
+            Point2d pa = a.getPointAtFrame(l);
+            Point2d pb = b.getPointAtFrame(l);
+            if (trajectoryPointsInvalid(pa, pb)) {
+                continue;
+            }
+
             Point2d dt_a = forward_difference(a, timestep, l);
             Point2d dt_b = forward_difference(b, timestep, l);
 
@@ -96,12 +102,21 @@ public class SumDistTask extends SimilarityTask {
      */
     protected double avg_spatial_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         double len = 0.0d;
+        int visitedTrackingPoints = overlappingFrameCount(from_idx, to_idx);
         for (int idx = from_idx; idx <= to_idx; idx++) {
             Point2d pa = a.getPointAtFrame(idx);
             Point2d pb = b.getPointAtFrame(idx);
+            if (trajectoryPointsInvalid(pa, pb)) {
+                visitedTrackingPoints--;
+                continue;
+            }
+            pa = a.getSpatialPointAtFrame(idx);
+            pb = b.getSpatialPointAtFrame(idx);
+
             len = len + pa.copy().sub(pb).length();
         }
-        return len / overlappingFrameCount(from_idx, to_idx);
+        if (visitedTrackingPoints == 0) return 0d;
+        return len / visitedTrackingPoints;
     }
 
     /**
@@ -116,10 +131,17 @@ public class SumDistTask extends SimilarityTask {
      */
     protected double color_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         double len = 0d;
+        int visitedTrackingPoints = overlappingFrameCount(from_idx, to_idx);
 
         for (int idx = from_idx; idx <= to_idx; idx++) {
             Point2d pa = a.getPointAtFrame(idx);
             Point2d pb = b.getPointAtFrame(idx);
+
+            // Skip invalid Points
+            if (trajectoryPointsInvalid(pa, pb)) {
+                visitedTrackingPoints--;
+                continue;
+            }
 
             ColorImage img = ColorImgManager.getInstance().get(from_idx);
 
@@ -128,6 +150,7 @@ public class SumDistTask extends SimilarityTask {
 
             len += rgb_pa.copy().sub(rgb_pb).length();
         }
+        if (visitedTrackingPoints == 0) return 0d;
         return len / overlappingFrameCount(from_idx, to_idx);
     }
 
