@@ -3,15 +3,16 @@ close all;
 clc;
 
 addpath('../libs/flow-code-matlab');
+addpath('src');
 
-DATASETNAME = 'wh1';
+DATASETNAME = 'c14';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_LOCAL_VAR = false; % global variance is still computed
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
