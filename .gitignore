@@ -1,4 +1,4 @@
-*.m~
+*.m
 tags
 .DS_Store
 output/**/*.txt
@@ -29,3 +29,7 @@ tags.*
 kernighan_lin/temp_debug.m
 trajectory_extractor/out
 core/out/
+compute_flows/data/
+compute_flows/srsf/output/
+compute_flows/srsf/Images/
+compute_flows/srsf/libRGBD.a
