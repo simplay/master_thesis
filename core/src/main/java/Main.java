@@ -145,7 +145,6 @@ public class Main {
         System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
         System.out.println();
 
-        // TODO: check why the filter removes all trajectories when using depth cues.
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
         System.out.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         System.out.println();

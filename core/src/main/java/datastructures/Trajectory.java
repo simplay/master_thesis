@@ -285,7 +285,6 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     // TODO check if this method should overwrite points? Better have an additional field? Are lookups still correct?
-    // TODO rather introduce a new field `transformed points` which is accessed whenever we want to compute pixel distances.
     /**
      * Transforms tracked trajectory points into the Euclidian space
      * by making use of depth cues.
