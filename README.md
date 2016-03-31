@@ -11,4 +11,4 @@
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/simplay/master_thesis/blob/master/LICENSE).
+This project is licensed under the [MIT License](https://github.com/simplay/master_thesis/blob/predef-doc-structure/LICENSE).
