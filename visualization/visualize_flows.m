@@ -1,5 +1,5 @@
 addpath('../libs/flow-code-matlab');
-addpath('../matlab_share'); 
+addpath('../matlab_shared'); 
 DATASETNAME1 = 'square';
 DATASETNAME2 = 'car2';
 METHODNAME = 'ldof';
