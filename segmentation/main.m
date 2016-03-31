@@ -4,11 +4,14 @@
 clc;
 %clear all;
 %close all;
+addpath('src');
+addpath('../matlab_shared');
+addpath('../libs/flow-code-matlab');
 
-DATASET = 'wh1';
+DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
 LAMBDA = 0.1%1% 7000%0.1;
@@ -22,7 +25,7 @@ BOUNDARY = [1,9];
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 12;
+FORCE_EW_COUNT = 8;
 
 THRESH = 0.0000;
 CLUSTER_CENTER_COUNT = 3;
@@ -37,7 +40,7 @@ VAR_IMG = 1;
 SELECT_AFFINITY_IDX = false
 SELECTED_ENTITY_IDX = 64
 SELECTED_ENTITY_IDX = 1
-frame_idx = 35;
+frame_idx = 1;
 
 %%
 if exist('W','var') == 0

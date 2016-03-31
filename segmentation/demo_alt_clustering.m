@@ -11,8 +11,11 @@ clc;
 %close all;
 
 addpath('../libs/GCMex/');
+addpath('src');
+addpath('../matlab_shared');
+addpath('../libs/flow-code-matlab');
 
-DATASET = 'c14';
+DATASET = 'c16';
 USE_SPECIAL_NAMING = false;
 
 
@@ -176,11 +179,6 @@ img_index = frame_idx;
     
     % display data
     figure('name', 'Motion Segmentation')
-
-    pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
-    pixeltensor = pixeltensor.tracked_pixels;
-    [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
-
     CLUSTER_CENTER_COUNT = 5;
     
     m = size(UU,2);
@@ -218,14 +216,11 @@ img_index = frame_idx;
             energy
             figure('name', num2str(t))
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
-            % display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
         end
 
         % compute new best label assignents via graph cut using gcmex
     end
     
-    %display_clustering(pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
-    % store findings
     %write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
 
 

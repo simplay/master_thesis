@@ -12,10 +12,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
     
     KERNIGHAN_LIN = false;
     
-    
-    
-    addpath('../libs/flow-code-matlab');
-    addpath('../matlab_shared');
+
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
     PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
