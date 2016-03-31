@@ -15,7 +15,7 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'c16';
+DATASET = 'c14';
 USE_SPECIAL_NAMING = false;
 
 
