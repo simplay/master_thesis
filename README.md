@@ -1,4 +1,6 @@
-# My Master Thesis Pipeline
+# Master Thesis 
+
+## Pipeline
 
 **Given**: A sequence of temporal coherent images (movie) and their depth maps.
 
