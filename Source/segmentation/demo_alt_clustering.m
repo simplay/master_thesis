@@ -77,7 +77,7 @@ img_index = frame_idx;
     
     METHODNAME = 'ldof'; %other,ldof
     DATASETP = strcat(DATASETNAME,'/');
-    BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
+    BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASETP);
 
     %% load appropriate data
     if COMPUTE_EIGS

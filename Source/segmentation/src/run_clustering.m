@@ -15,19 +15,19 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, STEPSIZE_DATA, CLU
 
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
-    PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
+    % PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
     
     if USE_SPECIAL_NAMING
         
         idx = regexp(DATASET,'v');
         DATASETNAME = DATASET(1:idx-1);
-        PREFIX_FRAME_TENSOR_FILE = [DATASETNAME,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
+        % PREFIX_FRAME_TENSOR_FILE = [DATASETNAME,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
     else    
         DATASETNAME = DATASET;
     end
     METHODNAME = 'ldof'; %other,ldof
     DATASETP = strcat(DATASETNAME,'/');
-    BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
+    BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASETP);
 
     %% load appropriate data
     if COMPUTE_EIGS

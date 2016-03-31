@@ -14,7 +14,7 @@ PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
 DATASETNAME = DATASET;
 METHODNAME = 'ldof'; %other,ldof
 DATASETP = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASETP);
+BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASETP);
 
 label_mappings = labelfile2mat(strcat(BASE,DATASET));
 [~, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);

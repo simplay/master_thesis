@@ -11,8 +11,8 @@ PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_LOCAL_VAR = false; % global variance is still computed
-COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
+COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
+EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
@@ -27,7 +27,7 @@ VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
 BASE_OUTPUT_PATH = strcat('../output/tracker_data/',DATASETNAME,'/');
 METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET);
+BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASET);
 
 % Create the folder if it doesn't exist already.
 if ~exist(BASE_OUTPUT_PATH, 'dir')
@@ -119,8 +119,8 @@ fclose(fid);
 % The depth image can be read using MATLAB with the standard function (imread), 
 % and in OpenCV by loading it into an image of type IPL_DEPTH_16U.
 if EXTRACT_DEPTH_FIELDS
-    path = ['../data/ldof/', DATASETNAME, '/depth/'];
-    listing = dir(strcat('../data/ldof/', DATASETNAME, '/depth/*.png'));
+    path = ['../../Data/ldof/', DATASETNAME, '/depth/'];
+    listing = dir(strcat('../../Data/ldof/', DATASETNAME, '/depth/*.png'));
     
     minFilenameIndex = 1000000;
     maxFilenameIndex = -1;

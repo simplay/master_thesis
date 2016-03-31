@@ -12,7 +12,7 @@ function run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS
 
     METHODNAME = 'ldof';
     DATASET = strcat(DATASETNAME,'/');
-    BASE_FILE_PATH = strcat('../data/',METHODNAME,'/',DATASET); % dataset that should be used
+    BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASET); % dataset that should be used
 
     [boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
     START_FRAME_IDX = boundaries(1); % inital index 1
