@@ -5,9 +5,16 @@
 + **Advisor**: Mr. Peter Bertholet
 + **Contact**: silent.simplay@gmail.com
 
+## Abstract
+
 ## Project Structure
 
-+ [Source/](https://github.com/simplay/master_thesis/blob/predef-doc-structure/Source/README.md): Contains the source code of the pipeline.
++ `Animations/`:
++ `Applications/`:
++ `Data/`:
++ `Document/`:
++ `Presentation/`:
++ `Source/`: Contains the source code of the pipeline. For further information read the corresponding [README](https://github.com/simplay/master_thesis/blob/predef-doc-structure/Source/README.md).
 
 ## License
 
