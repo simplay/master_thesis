@@ -8,12 +8,17 @@ import pipeline_components.Tracker;
 import writers.*;
 import java.io.*;
 
-// TODO support special outfile naming
-// TODO write more descriptive information:
-// value range of input data, invalid values, what they do, where they are used
-// what data is required / optional
-// where it is computed and stored
+// TODO allow to define which nearest neighbors should be chosen: top N, top N + worst N/2, top N/2 + distinct(rand(N/2))
 /**
+ * Runs the core pipeline:
+ *
+ *  1. Parse runtime args and load input data
+ *  2. Perform point tracking:
+ *      2.1. start new trackings at candidate locations
+ *      2.2. continue existing trackings
+ *  3. Extract trajectories from tracked coherent points
+ *  4. Compute the affinity matrix formed by the trajectory similarities.
+ *
  * The following input data (frame-wise) is always read into memory:
  *  tracking candidate locations
  *  invalid tracking regions
@@ -24,26 +29,8 @@ import java.io.*;
  *      cie lab color values
  *      depth fields: not that the value zero indicates invalid pixel regions.
  *
- * Supported user args
+ * For a complete description of all supported runtime arguments, please have a look at the README.md file.
  *
- *  required args:
- *      -d => dataset that should be used
- *      -task => similarity method that should be used
- *          1 => runs ProdDistTask
- *      -var => should the local variance be used
- *          -var 1 => use the local flow variance values for normalization
- *          -var 0 => use the global flow variance values.
- *      -depth => should depth cues be used
- *          -depth 1 => use depth cues
- *      -nn => number of nearest neighbors that should be saved per trajectory
- *          -nn 1000 => save the top 1000 nearest neighbors, default value is 100
- *      -debug => should the program run in the debug mode. If so, it will dumb intermediate calculated data
- *          -debug 1 => run in debug mode, otherwise in normal mode, by default a program runs in normal mode.
- *      -prob => value of cut probability used for the PD similarity task
- *          -prob V => V is a supposed to be a value: V > 0 AND V < 1.
- *      -prefix => custom output file name prefix, by default the empty string.
- *  @example:
- *      -d c14 -task 1
  */
 public class Main {
     public static void main(String[] argv) {
@@ -158,7 +145,6 @@ public class Main {
         System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
         System.out.println();
 
-        // TODO: check why the filter removes all trajectories when using depth cues.
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
         System.out.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         System.out.println();

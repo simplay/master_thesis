@@ -1,3 +1,0 @@
-load_path_slash: 
-main_ruby_file: compute_similarities
-source_dirs: ./;src

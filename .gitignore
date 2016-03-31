@@ -1,4 +1,4 @@
-*.m~
+*.m
 tags
 .DS_Store
 output/**/*.txt
@@ -13,9 +13,7 @@ compute_trajectory_similarities/src/
 testcase/*.png
 output/**/*.*
 data/**/*.*
-segmentantation/**/*.ppm
 tracking/*.flo
-segmentantation/**/*.zip
 flow/srsf/Images/**
 *.zip
 testcase/data/
@@ -29,3 +27,7 @@ tags.*
 kernighan_lin/temp_debug.m
 trajectory_extractor/out
 core/out/
+compute_flows/data/
+compute_flows/srsf/output/
+compute_flows/srsf/Images/
+compute_flows/srsf/libRGBD.a
