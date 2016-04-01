@@ -4,6 +4,7 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 addpath('src');
+addpath('../matlab_shared');
 
 DATASETNAME = 'foo';
 METHODNAME = 'ldof';
