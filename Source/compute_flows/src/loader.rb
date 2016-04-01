@@ -26,6 +26,10 @@ class Loader
     when FLOW_METHODS[0]
       @task_type = LdofFlowTask
       folder_path = dataset_path
+
+      @subfolder_path = "#{folder_path}#{FLOW_METHODS[0].downcase}"
+      Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+
       genarate_normalized_images(folder_path, skip_comp)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
@@ -52,9 +56,11 @@ class Loader
       file.puts "#use"
       file.puts "#{lower+1}\n#{upper+1}"
       file.puts "#imgs"
+
       imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
         fname.include?("LDOF")
       end
+
       len = imgs.count
       imgs = imgs.sort_by do |a| a.split("/").last.to_i end
       nupper = upper
@@ -62,17 +68,18 @@ class Loader
       imgs[lower..nupper].each do |img|
         file.puts img.split("/").last
       end
+
       file.puts "#fwf"
-      imgs = Dir["#{folder_path}*.flo"].select do |fname|
+      imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
         fname.include?("fwf")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
-
       imgs.each do |img|
         file.puts img.split("/").last
       end
+
       file.puts "#bwf"
-      imgs = Dir["#{folder_path}*.flo"].select do |fname|
+      imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
         fname.include?("bwf")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
@@ -103,7 +110,7 @@ class Loader
 
       @total_tasks = sliced_range.length-1
       tasks = sliced_range.map do |fnames|
-        FutureTask.new(@task_type.new(dataset, fnames) )
+        FutureTask.new(@task_type.new(dataset, fnames, @subfolder_path) )
       end
 
       tasks.each do |task|
