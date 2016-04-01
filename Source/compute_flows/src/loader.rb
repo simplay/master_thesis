@@ -12,14 +12,20 @@ java_import 'java.lang.Runtime'
 
 class Loader
 
+  FLOW_METHODS = [
+    "LDOF",
+    "SRSF"
+  ]
+
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
-  def initialize(dataset, variant, from_idx, to_idx, skip_comp)
-    case variant.to_i
-    when 1
+  def initialize(dataset_path, variant, from_idx, to_idx, skip_comp)
+    dataset = dataset_path.split(/\//).last
+    case variant
+    when FLOW_METHODS[0]
       @task_type = LdofFlowTask
-      folder_path = "data/#{dataset}/"
+      folder_path = dataset_path
       genarate_normalized_images(folder_path, skip_comp)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
@@ -27,7 +33,7 @@ class Loader
       #rename_generated_flows(folder_path, "fwf")
       #rename_generated_flows(folder_path, "bwf")
       generate_association_file(folder_path, lower, upper)
-    when 2
+    when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
       folder_path = "srsf/Images/#{dataset}/color/"
       fnames = sorted_dataset_fnames(folder_path, '.png')
