@@ -11,7 +11,7 @@ STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-COMPUTE_LOCAL_VAR = true; % global variance is still computed
+COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
 COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 
@@ -171,15 +171,6 @@ if EXTRACT_DEPTH_FIELDS
     end
 end
 
-% DO NOT change these parameters
-COMPUTE_TRACKINGS = false;
-MODE = 5; % display mode
-DISPLAY = false; % show tracking point
-WRITE_TRACKINGS_INTO_FILES = false;
-SHOW_VIDEO = false;
-RUN_BILAT_FILT = true;
-
-
 % generate cie lab imgs
 if COMPUTE_CIE_LAB
     disp('Generating CIE L*a*b* files...')
@@ -207,53 +198,39 @@ if COMPUTE_CIE_LAB
 end
 
 %% compute local and global variance
-global_variances = [];
-local_flow_variances = zeros(m,n,END_FRAME_IDX);
-for t=START_FRAME_IDX:END_FRAME_IDX
-    fw_flow_t = fwf{t};
-    fw_flow = readFlowFile(fw_flow_t);
-    if COMPUTE_LOCAL_VAR
-        if RUN_BILAT_FILT
-            fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
-            invalid_regions = load(fname, '-ASCII');
-            local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
-        else
-            lfv_fName = strcat(BASE_FILE_PATH,'sub/');
-            base = 'localFlowVariation';
-            ext = '.pgm';
-            idx = END_FRAME_IDX-START_FRAME_IDX+t;
-            fName = strcat(lfv_fName,base,num2str(t-1),ext);
-            lfvImg = imread(fName);
-            lfvImg = im2double(lfvImg);
-
-            % rescale variances of current frame by its extreme values
-            % since brox' implementation actually returns the std, we
-            % have to square the values element-wise.
-            local_flow_variances(:,:,t) = (lfvImg*varMaxima(t)+varMinima(t)).^2;
-        end
+if COMPUTE_FLOW_VARIANCES
+    
+    global_variances = [];
+    local_flow_variances = zeros(m,n,END_FRAME_IDX);
+    for t=START_FRAME_IDX:END_FRAME_IDX
+        fw_flow_t = fwf{t};
+        fw_flow = readFlowFile(fw_flow_t);
+        
+        % store local variance data
+        fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
+        invalid_regions = load(fname, '-ASCII');
+        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
+        
+        global_variances = [global_variances, var(fw_flow(:))];
     end
-    global_variances = [global_variances, var(fw_flow(:))];
-end
-fName = strcat('../output/tracker_data/',DATASET,'/global_variances','.txt');
-fid = fopen(fName,'w');
+    fName = strcat('../output/tracker_data/',DATASET,'/global_variances','.txt');
+    fid = fopen(fName,'w');
 
-if fid ~= -1
-    for k=1:length(global_variances)
-     row_k = global_variances(k);
+    if fid ~= -1
+        for k=1:length(global_variances)
+         row_k = global_variances(k);
 
-     % print only tracked pixels locations
-     if row_k(1) ~= 0
-        fprintf(fid,'%s\r\n',num2str(row_k));
-     end
-    end    
-    fclose(fid);
-end
+         % print only tracked pixels locations
+         if row_k(1) ~= 0
+            fprintf(fid,'%s\r\n',num2str(row_k));
+         end
+        end    
+        fclose(fid);
+    end
 
-if COMPUTE_LOCAL_VAR
     % write local flow variances into mat files.
     for k=1:END_FRAME_IDX
         lv = local_flow_variances(:,:,k);
-
         fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
         imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');
         imwrite(lv, imgfile);
@@ -267,12 +244,3 @@ if COMPUTE_LOCAL_VAR
         fclose(fid);
     end
 end
-
-
-
-
-
-
-
-%%
-%run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB, RUN_BILAT_FILT);
