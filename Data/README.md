@@ -93,5 +93,45 @@ After having defined a valid dataset for which we want to extract its motion seg
 The followind additional cues can be fed into the pipeline, which enables additional, accurater motion segmentation extraction modes within the pipeline:
 
 + **Depth fields**: One depth field per color image. Each such depth field is supposed to be well-enumerated and should be put into `./Data/my_dataset/depth`.
++ **Extrinsic Camera Clibration Parameters**: Put a file called `Dataset/my_dataset/meta/calib.txt`. The content of such a file looks like the following:
+
+```
+line1: Dimensions x,y
+line2: rgb inntrinsic params: focal length x y
+line3: rgb inntrinsic params: principal point x y
+
+line4: empty line
+
+line5: Dimensions x,y
+line6: depth intrinsic params: focal length x y
+line7: depth intrinsic params: principal point x y
+
+line8: empty line
+
+# The Extrinsic parameters 4x3 matrix describing
+the transformation from color to depth
+
+line9: 1st row of the extrinsic 4x3 matrix
+line10: 2nd row of the extrinsic 4x3 matrix
+line11: 3rd row of the extrinsic 4x3 matrix
+
+```
+
+**Example calib.txt** file: 
+
+```
+640 480
+504.261 503.905
+352.457 272.202
+
+640 480
+573.71 574.394
+346.471 249.031
+
+0.999749 0.00518867 0.0217975 0.0243073
+-0.0051649 0.999986 -0.0011465 -0.000166518
+-0.0218031 0.00103363 0.999762 0.0151706
+
+```
 
 By Running the a valid dataset on `./Source/init_data/init_data.m` we will generate all the required pipeline inputs. Please read the corresponding docs of the script `init_data.m`. 
