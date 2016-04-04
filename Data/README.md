@@ -4,6 +4,11 @@ This README describes the expected structure of any dataset such that it can be 
 
 ## Quick Start
 
++ Complete valid dataset structure (see below)
++ Optionally, re-enumerate images by using the scripts in `.Source/normalize_sensor_data/`.
++ Run `.Source/compute_flows/run.sh` to generate the optical flow fields. Those will be stored in the dataset's root directory.
++ Run `.Source/init_data/init_data.m` to generated all required pipeline inputs. 
+
 ```
 Data/
   my_dataset/
@@ -82,3 +87,11 @@ Then we have to:
 
 1. Create a subfolder `./Data/foo/`.
 2. Put the png images into `foo/`.
+ 
+After having defined a valid dataset for which we want to extract its motion segmentation, we initially have to generate its optical flow fields by running `.Source/compute_flows/run.sh`. This script guides the user through the generation process. Please also read the corresponding readme located at `.Source/compute_flows/`.
+
+The followind additional cues can be fed into the pipeline, which enables additional, accurater motion segmentation extraction modes within the pipeline:
+
++ **Depth fields**: One depth field per color image. Each such depth field is supposed to be well-enumerated and should be put into `./Data/my_dataset/depth`.
+
+By Running the a valid dataset on `./Source/init_data/init_data.m` we will generate all the required pipeline inputs. Please read the corresponding docs of the script `init_data.m`. 
