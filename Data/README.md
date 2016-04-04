@@ -92,7 +92,7 @@ After having defined a valid dataset for which we want to extract its motion seg
 
 The followind additional cues can be fed into the pipeline, which enables additional, accurater motion segmentation extraction modes within the pipeline:
 
-+ **Depth fields**: One depth field per color image. Each such depth field is supposed to be well-enumerated and should be put into `./Data/my_dataset/depth`.
++ **Depth fields**: One depth field per color image. Each such depth field is supposed to be well-enumerated and should be put into `./Data/my_dataset/depth`. Have a look at [here](http://www.ais.uni-bonn.de/download/objecttracking.html) or [there](http://vision.in.tum.de/data/datasets/rgbd-dataset/file_formats) to obtain more information about the used depth maps.
 + **Extrinsic Camera Clibration Parameters**: Put a file called `Dataset/my_dataset/meta/calib.txt`. The content of such a file looks like the following:
 
 ```
