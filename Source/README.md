@@ -53,7 +53,7 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 + Extract trajectories and compute their similarity matrix by running the code located at `./core/`. Please Read its [README](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/core/README.md) beforehand.
 + Compute the motion segmentations by applying either:
  + The **Spectral clustering** or **Min Cut** method. Their scripts are located at `./segmentation/`. or
- + The **Kernighan Lin** method, located at `./kernighan_lin/`. Please read the provided README files beforehand to obtain further information about the usages and the generated output.
+ + The **Kernighan Lin** method, located at `./segmentation/kernighan_lin/`. Please read the provided README files beforehand to obtain further information about the usages and the generated output.
  + Run the evaluation of the generated dataset by running the scripts located at `./eval/`.
  
 In general, please all provided README files carefully before running any code.
