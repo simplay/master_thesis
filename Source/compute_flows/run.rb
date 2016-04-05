@@ -1,8 +1,6 @@
 require 'java'
 require_relative 'src/loader'
 
-require 'pry'
-
 if ARGV[0] == '-guided'
   datasets = Dir["../../Data/*"].entries.select { |e| File.directory? e }
   puts "Select a target dataset by its number in brackets:"
