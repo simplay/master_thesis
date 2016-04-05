@@ -1,9 +1,9 @@
 addpath('../libs/flow-code-matlab');
-
+addpath('../matlab_shared');
 %% load ground truth img
-DS = 'car2';
+DS = 'c14';
 imgName = '01.pgm';
-DS_BASE_PATH = strcat('../data/ldof/',DS,'/gt/',imgName);
+DS_BASE_PATH = strcat('../../Data/',DS,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
 figure('name', 'ground truth')
 imshow(gtImg);
@@ -26,16 +26,21 @@ label_mappings = labelfile2mat(strcat(BASE,DS));
 img_index = 1;
 STEPSIZE_DATA = 8;
 DATASET = DS;
-PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
-pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
-pixeltensor = pixeltensor.tracked_pixels;
-[row_inds, col_inds, ~] = find(pixeltensor(:,:,2) > 0);
+
+frames = loadAllTrajectoryLabelFrames(DATASET, 1, 4);
+frame = frames{img_index};
+row_inds = frame.ax;
+col_inds = frame.ay;
+
+
 
 dsImg = zeros(size(gtImg));
 for k=1:length(row_inds)
-    pixel_label = pixeltensor(row_inds(k), col_inds(k), 2);
-    ax = pixeltensor(row_inds(k), col_inds(k), 3);
-    ay = pixeltensor(row_inds(k), col_inds(k), 4);
+        pixel_label = frame.labels(k);
+        ax = frame.ax(k);
+        ay = frame.ay(k);
+    
+    
     
     
     % since the first label is 2 but the first lookup index is 1
@@ -171,7 +176,7 @@ else
         % samples classified to forground that do belong to the background
         FP = (forgroundSamples == curr_flabel) - (TP > 0);
         FP_Count = sum(sum(FP > 0));
-
+        precission = TP_Count / (TP_Count + FP_Count);
         avg_precission = avg_precission + (TP_Count / (TP_Count + FP_Count));
         avg_recall = avg_recall + (TP_Count / (TP_Count + FN_Count));
         avg_F1_score = avg_F1_score + 2*((precission*recall) / (precission+recall));
