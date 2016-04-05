@@ -12,11 +12,11 @@ public class Main {
         long startTime = System.currentTimeMillis();
 
         String dataset = "c14";
-        String baseOutputPath = "../output/graph_part/";
-        int clusterCount = 3;
+        String baseOutputPath = "../../output/graph_part/";
+        int clusterCount = 2;
         int dummyCount = 0;
-        int max_iterations = 10;
-        int repetitionCount = 3;
+        int max_iterations = 1;
+        int repetitionCount = 1;
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();

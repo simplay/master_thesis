@@ -12,7 +12,7 @@ public abstract class GraphFileReader {
     protected int fileLineCount;
 
     // File path where all computed trajectory similarity data is located at.
-    private final String basePath = "../output/similarities/";
+    private final String basePath = "../../output/similarities/";
 
     public GraphFileReader(String fname, Graph graph) {
         this.graph = graph;
