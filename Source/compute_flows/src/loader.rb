@@ -34,8 +34,6 @@ class Loader
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper, skip_comp)
-      #rename_generated_flows(folder_path, "fwf")
-      #rename_generated_flows(folder_path, "bwf")
       generate_association_file(folder_path, lower, upper)
     when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
@@ -68,7 +66,7 @@ class Loader
       file.puts "#imgs"
 
       imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
-        fname.include?("LDOF")
+        fname.include?("LDOF") or fname.include?("Flow")
       end
 
       len = imgs.count
@@ -194,7 +192,9 @@ class Loader
   # @return [Array<String>] set of sorted image filenames.
   def sorted_dataset_fnames(filepath, f_ext=".ppm")
     dataset_fnames = Dir["#{filepath}*#{f_ext}"]
-    dataset_fnames = dataset_fnames.reject { |fname| fname.include? 'LDOF.ppm' }
+    dataset_fnames = dataset_fnames.reject do |fname|
+      fname.include? 'LDOF.ppm' or fname.include?('Flow')
+    end
     dataset_fnames.sort_by { |a| a.split("/").last.to_i }
   end
 
