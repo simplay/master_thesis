@@ -23,7 +23,7 @@ Source/xml_to_flo/output
 Source/tracking/fast_bfilt/*
 tags.*
 *.class
-Source/kernighan_lin/temp_debug.m
+Source/segmentation/kernighan_lin/temp_debug.m
 Source/trajectory_extractor/out
 Source/core/out/
 Source/compute_flows/data/
