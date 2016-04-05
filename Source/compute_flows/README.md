@@ -22,6 +22,8 @@ Manual Usage: `./run.sh REL_DS_PATH FLOW_METHOD START_FR END_FR SKIP`
 
 The flow fields for all frames with and in between the starting and ending frame will be computed.
 
+Run `./run.sh -guided -skip` will skip the flow generation but will generate the `used_input.txt` file.
+
 ## Outputs
 
 The generated output will directly be writting into the root of of the chosen dataset directory.
