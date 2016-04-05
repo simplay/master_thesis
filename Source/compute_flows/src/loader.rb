@@ -22,6 +22,8 @@ class Loader
 
   def initialize(dataset_path, variant, from_idx, to_idx, skip_comp)
     dataset = dataset_path.split(/\//).last
+    well_enumerate_files(dataset_path) if File.exists?(dataset_path + "associations.txt")
+
     case variant
     when FLOW_METHODS[0]
       @task_type = LdofFlowTask
@@ -94,6 +96,22 @@ class Loader
       imgs.each do |img|
         file.puts img.split("/").last
       end
+    end
+  end
+
+  def well_enumerate_files(path)
+    counter = 1
+    fname_pairs = {}
+    File.open("#{path}associations.txt", 'r') do |file|
+      while line = file.gets
+        fname = file.gets.strip.split(" ").last.split("/").last
+        fname_pairs[counter] = fname
+        counter = counter + 1
+      end
+    end
+    fname_pairs.each do |key, value|
+      ext = "."+value.split(".").last
+      File.rename(path+value, path + key.to_s + ext)
     end
   end
 
