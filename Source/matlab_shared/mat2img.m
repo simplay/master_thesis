@@ -7,6 +7,8 @@ function [img] = mat2img(A, B, C)
 
     if nargin == 1
         B = A; C = A;
+    elseif nargin == 2
+        C = B;
     end
     
     % get dimensions [m, n]
