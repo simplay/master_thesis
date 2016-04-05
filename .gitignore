@@ -30,3 +30,6 @@ Source/compute_flows/data/
 Source/compute_flows/srsf/output/
 Source/compute_flows/srsf/Images/
 Source/compute_flows/srsf/libRGBD.a
+Source/compute_flows/xml_to_flo/input/
+Source/compute_flows/xml_to_flo/output/
+Source/compute_flows/xml_to_flo/**/*.xml
