@@ -33,3 +33,4 @@ Source/compute_flows/srsf/libRGBD.a
 Source/compute_flows/xml_to_flo/input/
 Source/compute_flows/xml_to_flo/output/
 Source/compute_flows/xml_to_flo/**/*.xml
+Source/evaluation/*.png
