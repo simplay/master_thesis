@@ -11,7 +11,7 @@ imshow(gtImg);
 %% load eval img
 % load label
 
-SIMPLIFIED_STATISTICS = false;
+SIMPLIFIED_STATISTICS = true;
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
 CF_PATH = '../output/clustering/';
@@ -176,15 +176,15 @@ else
         % samples classified to forground that do belong to the background
         FP = (forgroundSamples == curr_flabel) - (TP > 0);
         FP_Count = sum(sum(FP > 0));
-        precission = TP_Count / (TP_Count + FP_Count);
+
         avg_precission = avg_precission + (TP_Count / (TP_Count + FP_Count));
         avg_recall = avg_recall + (TP_Count / (TP_Count + FN_Count));
-        avg_F1_score = avg_F1_score + 2*((precission*recall) / (precission+recall));
+        avg_F1_score = avg_F1_score + 2*((avg_precission*avg_recall) / (avg_precission+avg_recall));
     end
     
     precission = avg_precission / length(forgroundLabels);
     recall = avg_recall / length(forgroundLabels);
-    F1_score = avg_F1_score / length(forgroundLabels);
+    F1_score = avg_F1_score / (length(forgroundLabels)+1);
     
     disp(['density: ', num2str(100*density), '%'])
     disp(['precission: ', num2str(100*precission), '%'])
