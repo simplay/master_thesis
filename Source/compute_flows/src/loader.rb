@@ -12,27 +12,47 @@ java_import 'java.lang.Runtime'
 
 class Loader
 
+  FLOW_METHODS = [
+    "LDOF",
+    "SRSF"
+  ]
+
   MAX_POOL_THREADS = 16
   $core_pool_threads = Runtime.getRuntime.availableProcessors
 
-  def initialize(dataset, variant, from_idx, to_idx, skip_comp)
-    case variant.to_i
-    when 1
+  def initialize(dataset_path, variant, from_idx, to_idx, skip_comp)
+    dataset = dataset_path.split(/\//).last
+    well_enumerate_files(dataset_path) if File.exists?(dataset_path + "associations.txt")
+
+    case variant
+    when FLOW_METHODS[0]
       @task_type = LdofFlowTask
-      folder_path = "data/#{dataset}/"
+      folder_path = dataset_path
+
+      @subfolder_path = "#{folder_path}#{FLOW_METHODS[0].downcase}"
+      Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+
       genarate_normalized_images(folder_path, skip_comp)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
-      generate_flows(fnames, dataset, lower, upper, skip_comp)
-      #rename_generated_flows(folder_path, "fwf")
-      #rename_generated_flows(folder_path, "bwf")
+      generate_flows(fnames, dataset, lower, upper) unless skip_comp
       generate_association_file(folder_path, lower, upper)
-    when 2
+    when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
-      folder_path = "srsf/Images/#{dataset}/color/"
-      fnames = sorted_dataset_fnames(folder_path, '.png')
+      folder_path = dataset_path
+      @subfolder_path = "#{folder_path}#{FLOW_METHODS[1].downcase}"
+      Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+      fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
-      generate_flows(fnames, dataset, lower, upper, skip_comp)
+      generate_flows(fnames, dataset, lower, upper) unless skip_comp
+      # run matlab code
+      ds_name = dataset_path.split("Data/").last.split("/").first
+      run_matlab = <<-FOO
+        matlab -nodisplay -nosplash -nodesktop -r \"run ${PWD}/xml_to_flo(\'#{ds_name}\') ; exit\"
+      FOO
+      system("cd xml_to_flo/ && " + run_matlab) unless skip_comp
+
+      generate_association_file(folder_path, lower, upper)
     end
   end
 
@@ -46,9 +66,11 @@ class Loader
       file.puts "#use"
       file.puts "#{lower+1}\n#{upper+1}"
       file.puts "#imgs"
+
       imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
-        fname.include?("LDOF")
+        fname.include?("LDOF") or fname.include?("Flow")
       end
+
       len = imgs.count
       imgs = imgs.sort_by do |a| a.split("/").last.to_i end
       nupper = upper
@@ -56,18 +78,19 @@ class Loader
       imgs[lower..nupper].each do |img|
         file.puts img.split("/").last
       end
+
       file.puts "#fwf"
-      imgs = Dir["#{folder_path}*.flo"].select do |fname|
-        fname.include?("fwf")
+      imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
+        fname.include?("fw")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
-
       imgs.each do |img|
         file.puts img.split("/").last
       end
+
       file.puts "#bwf"
-      imgs = Dir["#{folder_path}*.flo"].select do |fname|
-        fname.include?("bwf")
+      imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
+        fname.include?("bw")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
       imgs.each do |img|
@@ -76,43 +99,57 @@ class Loader
     end
   end
 
-
-  def generate_flows(filepath_names, dataset, lower, upper, skip_comp)
-    unless skip_comp
-      @task_count = 0
-      dataset_files = filepath_names[lower..(upper+1)]
-      executor = ThreadPoolExecutor.new($core_pool_threads,
-                                        MAX_POOL_THREADS,
-                                        60, # keep alive time
-                                        TimeUnit::SECONDS,
-                                        LinkedBlockingQueue.new)
-
-      sliced_range = []
-      file_count = dataset_files.count
-      dataset_files.each_with_index do |item, idx|
-        if idx+1 < file_count
-          sliced_range << [item, dataset_files[idx+1]]
-        end
+  def well_enumerate_files(path)
+    counter = 1
+    fname_pairs = {}
+    File.open("#{path}associations.txt", 'r') do |file|
+      while line = file.gets
+        fname = file.gets.strip.split(" ").last.split("/").last
+        fname_pairs[counter] = fname
+        counter = counter + 1
       end
-
-      @total_tasks = sliced_range.length-1
-      tasks = sliced_range.map do |fnames|
-        FutureTask.new(@task_type.new(dataset, fnames) )
-      end
-
-      tasks.each do |task|
-        executor.execute(task)
-      end
-
-      # wait for all threads to complete
-      @counter = java.util.concurrent.atomic.AtomicInteger.new
-      tasks.each do |task|
-        report_progress
-        task.get
-      end
-
-      executor.shutdown
     end
+    fname_pairs.each do |key, value|
+      ext = "."+value.split(".").last
+      File.rename(path+value, path + key.to_s + ext)
+    end
+  end
+
+
+  def generate_flows(filepath_names, dataset, lower, upper)
+    @task_count = 0
+    dataset_files = filepath_names[lower..(upper+1)]
+    executor = ThreadPoolExecutor.new($core_pool_threads,
+                                      MAX_POOL_THREADS,
+                                      60, # keep alive time
+                                      TimeUnit::SECONDS,
+                                      LinkedBlockingQueue.new)
+
+    sliced_range = []
+    file_count = dataset_files.count
+    dataset_files.each_with_index do |item, idx|
+      if idx+1 < file_count
+        sliced_range << [item, dataset_files[idx+1]]
+      end
+    end
+
+    @total_tasks = sliced_range.length-1
+    tasks = sliced_range.map do |fnames|
+      FutureTask.new(@task_type.new(dataset, fnames, @subfolder_path) )
+    end
+
+    tasks.each do |task|
+      executor.execute(task)
+    end
+
+    # wait for all threads to complete
+    @counter = java.util.concurrent.atomic.AtomicInteger.new
+    tasks.each do |task|
+      report_progress
+      task.get
+    end
+
+    executor.shutdown
   end
 
   def compute_flow(dataset_fnames, dataset, range, text)
@@ -171,7 +208,9 @@ class Loader
   # @return [Array<String>] set of sorted image filenames.
   def sorted_dataset_fnames(filepath, f_ext=".ppm")
     dataset_fnames = Dir["#{filepath}*#{f_ext}"]
-    dataset_fnames = dataset_fnames.reject { |fname| fname.include? 'LDOF.ppm' }
+    dataset_fnames = dataset_fnames.reject do |fname|
+      fname.include? 'LDOF.ppm' or fname.include?('Flow')
+    end
     dataset_fnames.sort_by { |a| a.split("/").last.to_i }
   end
 

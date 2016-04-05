@@ -4,15 +4,17 @@ clc;
 
 addpath('../libs/flow-code-matlab');
 addpath('src');
+addpath('../matlab_shared');
 
-DATASETNAME = 'c14';
+DATASETNAME = 'foo';
+METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
-COMPUTE_LOCAL_VAR = false; % global variance is still computed
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
+COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
@@ -25,16 +27,15 @@ VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
 
 %% 
 BASE_OUTPUT_PATH = strcat('../output/tracker_data/',DATASETNAME,'/');
-METHODNAME = 'ldof';
 DATASET = strcat(DATASETNAME,'/');
-BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASET);
+BASE_FILE_PATH = strcat('../../Data/',DATASET);
 
 % Create the folder if it doesn't exist already.
 if ~exist(BASE_OUTPUT_PATH, 'dir')
     mkdir(BASE_OUTPUT_PATH);
 end
 
-[boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH);
+[boundaries, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH, METHODNAME);
 [m,n,~] = size(imread(imgs{1}));
 START_FRAME_IDX = boundaries(1); 
 END_FRAME_IDX = boundaries(2); 
@@ -119,8 +120,8 @@ fclose(fid);
 % The depth image can be read using MATLAB with the standard function (imread), 
 % and in OpenCV by loading it into an image of type IPL_DEPTH_16U.
 if EXTRACT_DEPTH_FIELDS
-    path = ['../../Data/ldof/', DATASETNAME, '/depth/'];
-    listing = dir(strcat('../../Data/ldof/', DATASETNAME, '/depth/*.png'));
+    path = ['../../Data/', DATASETNAME, '/depth/'];
+    listing = dir(strcat('../../Data/', DATASETNAME, '/depth/*.png'));
     
     minFilenameIndex = 1000000;
     maxFilenameIndex = -1;
@@ -171,13 +172,76 @@ if EXTRACT_DEPTH_FIELDS
     end
 end
 
-% DO NOT change these parameters
-COMPUTE_TRACKINGS = false;
-MODE = 5; % display mode
-DISPLAY = false; % show tracking point
-WRITE_TRACKINGS_INTO_FILES = false;
-SHOW_VIDEO = false;
-RUN_BILAT_FILT = true;
+% generate cie lab imgs
+if COMPUTE_CIE_LAB
+    disp('Generating CIE L*a*b* files...')
+    for t=START_FRAME_IDX:END_FRAME_IDX+1
+        img = imread(imgs{t});
+        colorTransform = makecform('srgb2lab');
+        lab = applycform(img, colorTransform);
+        [rows, columns, ~] = size(lab);
+        fname = strcat('color_lab_',num2str(t),'.txt');
+        disp(['Computing ', fname]);
+        fpname = strcat('../output/tracker_data/',DATASETNAME,'/', fname);
+        fid = fopen(fpname, 'wt');
+        for col = 1 : columns
+            for row = 1 : rows
+                fprintf(fid, '%d,%d = (%d,%d,%d)\n', ...
+                    row, col, ...
+                    lab(row, col, 1),...
+                    lab(row, col, 2),...
+                    lab(row, col, 3));
+            end
+        end
+        fclose(fid);
+    end
+    disp('CIE L*a*b* files generated.')
+end
 
-%%
-run_tracking_data_extraction( DATASETNAME, STEP_SIZE, COMPUTE_TRACKINGS, MODE, DISPLAY, WRITE_TRACKINGS_INTO_FILES, VAR_SIGMA_S, VAR_SIGMA_R, SHOW_VIDEO, COMPUTE_LOCAL_VAR, COMPUTE_CIE_LAB, RUN_BILAT_FILT);
+%% compute local and global variance
+if COMPUTE_FLOW_VARIANCES
+    
+    global_variances = [];
+    local_flow_variances = zeros(m,n,END_FRAME_IDX);
+    for t=START_FRAME_IDX:END_FRAME_IDX
+        fw_flow_t = fwf{t};
+        fw_flow = readFlowFile(fw_flow_t);
+        
+        % store local variance data
+        fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
+        invalid_regions = load(fname, '-ASCII');
+        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
+        
+        global_variances = [global_variances, var(fw_flow(:))];
+    end
+    fName = strcat('../output/tracker_data/',DATASET,'/global_variances','.txt');
+    fid = fopen(fName,'w');
+
+    if fid ~= -1
+        for k=1:length(global_variances)
+         row_k = global_variances(k);
+
+         % print only tracked pixels locations
+         if row_k(1) ~= 0
+            fprintf(fid,'%s\r\n',num2str(row_k));
+         end
+        end    
+        fclose(fid);
+    end
+
+    % write local flow variances into mat files.
+    for k=1:END_FRAME_IDX
+        lv = local_flow_variances(:,:,k);
+        fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
+        imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');
+        imwrite(lv, imgfile);
+        fid = fopen(fname,'w');
+        if fid ~= -1
+            for t=1:size(lv,1)
+                a_row = mat2str(lv(t,:));
+                fprintf(fid,'%s\r\n', a_row);
+            end
+        end
+        fclose(fid);
+    end
+end

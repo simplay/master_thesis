@@ -11,9 +11,10 @@ class FlowTask
 
   include Callable
 
-  def initialize(dataset, fnames)
+  def initialize(dataset, fnames, flow_store_path)
     @dataset = dataset
     @fnames = fnames
+    @path = flow_store_path + "/"
   end
 
   def call
@@ -27,7 +28,6 @@ class FlowTask
 
   def compute_flow(dataset_fnames, dataset, text, is_fwf)
     total = dataset_fnames.count
-    #puts "Computing #{text} for dataset #{dataset}..."
     dataset_fnames.each_with_index do |_, idx|
       if idx+1 < total
         @i1 = dataset_fnames[idx]
@@ -49,8 +49,7 @@ class LdofFlowTask < FlowTask
     f_name = @i1.split(".ppm").first + "LDOF.flo"
     prefix = (is_fwf) ? "fwf_" : "bwf_"
     elements = f_name.split("/")
-    path = elements[0..-2].join("/") + "/"
-    ren_cmd = "mv #{f_name} #{path + prefix + elements.last}"
+    ren_cmd = "mv #{f_name} #{@path + prefix + elements.last}"
     puts "#{ren_cmd}"
     "./ldof/ldof #{@i1} #{@i2} && #{ren_cmd}"
   end
@@ -61,7 +60,8 @@ class SrsfFlowTask < FlowTask
   def flow_method(is_fwf)
     idx1 = @i1.split("/").last.split(".").first
     idx2 = @i2.split("/").last.split(".").first
-    cmd = "cd srsf/ && ./semirigSF #{idx1} #{idx2} 1 #{@dataset}"
+    dataset_path = "../" + @path.split("srsf/").first
+    cmd = "cd srsf/ && ./semirigSF #{dataset_path} #{idx1} #{idx2} 1"
     puts cmd
     cmd
   end

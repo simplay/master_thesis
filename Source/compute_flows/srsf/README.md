@@ -1,124 +1,18 @@
-Binaries for running dense Semi-Rigid Scene Flow (SRSF) V 1.0
+# Modified version of the dense Semi-Rigid Scene Flow (SRSF) V 1.0 method
 
-Copyright (c) 2014 Julian Quiroga
+This is a modified version of the optical flow generation method dense Semi-Rigid Scene Flow (SRSF) V 1.0. The whole path handling has been reworked in order to be conform to another pipeline, which uses this method for comparison purpsoses. All rights belong to the original authors mentioned in the original readme below.
 
-------------------------------
-Terms of use
-------------------------------
+## Usage
 
-This program is provided for research purposes only. Any commercial
-use is prohibited. If you are interested in a commercial use, please 
-contact the copyright holder. 
+Run `./semirigSF path_to_dataset from_frame_idx to_frame_idx use_rigid_transform`
 
-If you used this program in your research work, you should cite the 
-following publication:
+Where 
++ **path_to_dataset**: Is the relative path to a target dataset
++ **from_frame_idx**: Is the _from_ frame index of a well-enumerated dataset.
++ **to_frame_idx**: Is the _to_ frame index of a well-enumerated dataset.
++ **use_rigid_transform**: Should a rigit transformation be used. 0 = Non-Rigid, 1 = Rigid, 2 =  Rigid + Non-Rigid
 
-@inproceedings{quirogaECCV2014,
-year={2014},
-booktitle={European Conference on Computer Vision},
-title={Dense Semi-rigid Scene Flow Estimation from RGBD Images},
-keywords={motion; scene flow; RGBD image},
-author={Quiroga, Julian and Brox, Thomas and Devernay, Frederic and Crowley, James},
-pages={567-582},
-}
+for further information, please read the [original readme](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/srsf/original_readme.txt).
+The source code of this method can be found [here](https://github.com/simplay/modified_srsf_method).
 
-This program is distributed WITHOUT ANY WARRANTY.
-
-------------------------------
-Install
-------------------------------
-
-+ Run `brew tap homebrew/science`
-+ Run `brew install opencv`
-+ For compiling, go to the source folder and type make
-
-
-------------------------------
-Data
-------------------------------
-
-i) RGB images should be stored in the folder "Images", in png format and following the label shown in the examples.
-ii) Depth images should be stored in the folder Images, in png format, 16 bits and following the label shown in the examples (Depth in mm).
-iii) Camera matrix should be stored in the folder "settings".
-iv) The 3 components of the Scene Flow {SFx,SFy,SFz} and the Optical Flow {OFx,OFy} are stored in the xml file SFlow in CvMat format. The matrix Flag takes the value 255 if a valid depth measure is available and so that an estimation for this pixel is available. 
-
-------------------------------
-Usage
-------------------------------
-
-a) To run SRSF with default parameters:
-
-./semirigSF num1 num2 Sel
-
-with
-
-*num1: first image number
-*num2: last image number
-*Sel: Selection = 0 <- Non-Rigid, 1 <- Rigid, 2 <- Rigid + Non-Rigid
-
-Example:
-
-./semirigSF 10 11 0    -----/ Non-rigid Scene flow between frames 10 and 11
-
-./semirigSF 10 11 1    -----/ Rigid Scene flow between frames 10 and 11
-
-b) To run LGSF adjusting some parameters:
-
-** NON-RIGID estimation
-
-	./semirigSF num1 num2 0 Npyr Nwarps W Step MaxZ Alfa
-
-	with
-
-	Npyr: Levels of the pyramid
-	Nwarps: Number of alternations between GN algorithm and TV solver at each level of the pyramid
-	W: size of the window -- 2W+1 x 2W+1
-	Step: the algorithm process every "Step + 1" pixel (to run faster)
-	MaxZ: maximum depth to be processed (cm)
-	Alfa: Regularization weight
-
-	Example:
-
-	./semirigSF 20 21 0 2 3 2 1 140 10
-
-** RIGID estimation
-
-	./semirigSF num1 num2 1 Npyr Step MaxZ
-
-	with
-
-	Npyr: Levels of the pyramid
-	Step: the algorithm process every "Step + 1" pixel (to run faster)
-	MaxZ: maximum depth to be processed (cm)
-
-	Example:
-
-	./semirigSF 10 11 1 2 1 100
-
-** RIGID plus NON-RIGID estimation
-
-	./semirigSF num1 num2 2 Npyr Nalter Nwarps W Step MaxZ Alfa
-
-	with
-
-	Npyr: Levels of the pyramid
-	Nalter: Number of alternations between RIGID and NON-RIGID estimation at each level of the pyramid
-	Nwarps: Number of alternations between GN algorithm and TV solver at each level of the pyramid
-	W: size of the window -- 2W+1 x 2W+1
-	Step: the algorithm process every "Step + 1" pixel (to run faster)
-	MaxZ: maximum depth to be processed (cm)
-	Alfa: Regularization weight
-	
-	Example:
-
-	./semirigSF 20 21 2 2 3 1 2 1 140 10
-
-
-Additional parameters can be set directly in mainSRSF.cpp
-
-------------------------------
-Bugs and Comments
-------------------------------
-
-Please report to Julian Quiroga (julian.quiroga@inria.fr)
-
+Example: `./semirigSF ../../../Data/foo/ 11 10 0`

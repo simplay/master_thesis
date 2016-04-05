@@ -16,10 +16,9 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
 DATASET = 'c14';
+METHODNAME = 'ldof';
+
 USE_SPECIAL_NAMING = false;
-
-
-
 
 COMPUTE_EIGS = true;
 USE_EIGS = true;
@@ -75,9 +74,9 @@ img_index = frame_idx;
         DATASETNAME = DATASET;
     end
     
-    METHODNAME = 'ldof'; %other,ldof
+
     DATASETP = strcat(DATASETNAME,'/');
-    BASE_FILE_PATH = strcat('../../Data/',METHODNAME,'/',DATASETP);
+    BASE_FILE_PATH = strcat('../../Data/', DATASETP);
 
     %% load appropriate data
     if COMPUTE_EIGS
@@ -157,7 +156,7 @@ img_index = frame_idx;
 
     % load label vector indices mappings
     label_mappings = labelfile2mat(strcat(BASE,DATASET));
-    [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH);
+    [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
     % to help the user what values/index pairs can be displayed.
     show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
