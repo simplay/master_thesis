@@ -49,7 +49,7 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 
 + Define a dataset as described [here](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Data).
 + Generate flow field data as described [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/README.md).
-+ Extract important pipeline data by running the scripts located at `./init_data`. Please read its Readme.
++ Extract important pipeline data by running the scripts located at `./initialize_data/`. Please read its [Readme](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Source/initialize_data).
 + Extract trajectories and compute their similarity matrix by running the code located at `./core/`. Please Read its [README](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/core/README.md) beforehand.
 + Compute the motion segmentations by applying either:
  + The **Spectral clustering** or **Min Cut** method. Their scripts are located at `./segmentation/`. or
