@@ -11,7 +11,7 @@
 4. compute similarites between all determined trajectoires.
 5. compute the segmentation using a special variant of spectral clustering using the trajectory similarities as a cue.
 
-A detailed explanation of the whole pipeline can be found [here](https://github.com/simplay/ma_my_pipeline/blob/master/pipeline.md).
+A detailed explanation of the whole pipeline can be found [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/pipeline.md).
 
 ## Information:
 + **.flo** file format [specification](http://vision.middlebury.edu/flow/code/flow-code/README.txt).
