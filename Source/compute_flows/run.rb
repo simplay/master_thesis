@@ -20,13 +20,14 @@ if ARGV[0] == '-guided'
   method_idx = STDIN.gets.chomp.to_i
   selected_method = Loader::FLOW_METHODS[method_idx]
   puts "Selected flow method name: #{selected_method}"
+  skip_comp = ARGV[1] == '-skip'
 else
   dataset = ARGV[0] # name of subfolder in folder 'data'
   selected_method = ARGV[1] # which variant should be run
+  skip_comp = ARGV[4].nil? ? false : (ARGV[3].to_i == 1)
 end
 from_idx = ARGV[2] # first image index, first image has index 1
 to_idx = ARGV[3] # last image index, has index total image count
-skip_comp = ARGV[4].nil? ? false : (ARGV[3].to_i == 1)
 if dataset.nil? or selected_method.nil?
   raise ArgumentError.new "No dataset or no variant passed."
 end
