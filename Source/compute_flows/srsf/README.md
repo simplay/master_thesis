@@ -12,6 +12,7 @@ Where
 + **to_frame_idx**: Is the _to_ frame index of a well-enumerated dataset.
 + **use_rigid_transform**: Should a rigit transformation be used. 0 = Non-Rigid, 1 = Rigid, 2 =  Rigid + Non-Rigid
 
-for further information, please read the original readme.
+for further information, please read the [original readme](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/srsf/original_readme.txt).
+The source code of this method can be found [here](https://github.com/simplay/modified_srsf_method).
 
 Example: `./semirigSF ../../../Data/foo/ 11 10 0`
