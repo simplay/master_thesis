@@ -60,7 +60,8 @@ class SrsfFlowTask < FlowTask
   def flow_method(is_fwf)
     idx1 = @i1.split("/").last.split(".").first
     idx2 = @i2.split("/").last.split(".").first
-    cmd = "cd srsf/ && ./semirigSF #{idx1} #{idx2} 1 #{@dataset}"
+    dataset_path = "../" + @path.split("srsf/").first
+    cmd = "cd srsf/ && ./semirigSF #{dataset_path} #{idx1} #{idx2} 1"
     puts cmd
     cmd
   end

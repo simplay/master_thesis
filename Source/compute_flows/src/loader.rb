@@ -39,8 +39,10 @@ class Loader
       generate_association_file(folder_path, lower, upper)
     when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
-      folder_path = "srsf/Images/#{dataset}/color/"
-      fnames = sorted_dataset_fnames(folder_path, '.png')
+      folder_path = dataset_path
+      @subfolder_path = "#{folder_path}#{FLOW_METHODS[1].downcase}"
+      Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+      fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper, skip_comp)
     end
