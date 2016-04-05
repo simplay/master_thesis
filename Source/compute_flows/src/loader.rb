@@ -33,7 +33,7 @@ class Loader
       genarate_normalized_images(folder_path, skip_comp)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
-      generate_flows(fnames, dataset, lower, upper, skip_comp)
+      generate_flows(fnames, dataset, lower, upper) unless skip_comp
       generate_association_file(folder_path, lower, upper)
     when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
@@ -42,13 +42,13 @@ class Loader
       Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
-      generate_flows(fnames, dataset, lower, upper, skip_comp)
+      generate_flows(fnames, dataset, lower, upper) unless skip_comp
       # run matlab code
       ds_name = dataset_path.split("Data/").last.split("/").first
       run_matlab = <<-FOO
         matlab -nodisplay -nosplash -nodesktop -r \"run ${PWD}/xml_to_flo(\'#{ds_name}\') ; exit\"
       FOO
-      system("cd xml_to_flo/ && " + run_matlab)
+      system("cd xml_to_flo/ && " + run_matlab) unless skip_comp
 
       generate_association_file(folder_path, lower, upper)
     end
@@ -98,42 +98,40 @@ class Loader
   end
 
 
-  def generate_flows(filepath_names, dataset, lower, upper, skip_comp)
-    unless skip_comp
-      @task_count = 0
-      dataset_files = filepath_names[lower..(upper+1)]
-      executor = ThreadPoolExecutor.new($core_pool_threads,
-                                        MAX_POOL_THREADS,
-                                        60, # keep alive time
-                                        TimeUnit::SECONDS,
-                                        LinkedBlockingQueue.new)
+  def generate_flows(filepath_names, dataset, lower, upper)
+    @task_count = 0
+    dataset_files = filepath_names[lower..(upper+1)]
+    executor = ThreadPoolExecutor.new($core_pool_threads,
+                                      MAX_POOL_THREADS,
+                                      60, # keep alive time
+                                      TimeUnit::SECONDS,
+                                      LinkedBlockingQueue.new)
 
-      sliced_range = []
-      file_count = dataset_files.count
-      dataset_files.each_with_index do |item, idx|
-        if idx+1 < file_count
-          sliced_range << [item, dataset_files[idx+1]]
-        end
+    sliced_range = []
+    file_count = dataset_files.count
+    dataset_files.each_with_index do |item, idx|
+      if idx+1 < file_count
+        sliced_range << [item, dataset_files[idx+1]]
       end
-
-      @total_tasks = sliced_range.length-1
-      tasks = sliced_range.map do |fnames|
-        FutureTask.new(@task_type.new(dataset, fnames, @subfolder_path) )
-      end
-
-      tasks.each do |task|
-        executor.execute(task)
-      end
-
-      # wait for all threads to complete
-      @counter = java.util.concurrent.atomic.AtomicInteger.new
-      tasks.each do |task|
-        report_progress
-        task.get
-      end
-
-      executor.shutdown
     end
+
+    @total_tasks = sliced_range.length-1
+    tasks = sliced_range.map do |fnames|
+      FutureTask.new(@task_type.new(dataset, fnames, @subfolder_path) )
+    end
+
+    tasks.each do |task|
+      executor.execute(task)
+    end
+
+    # wait for all threads to complete
+    @counter = java.util.concurrent.atomic.AtomicInteger.new
+    tasks.each do |task|
+      report_progress
+      task.get
+    end
+
+    executor.shutdown
   end
 
   def compute_flow(dataset_fnames, dataset, range, text)
