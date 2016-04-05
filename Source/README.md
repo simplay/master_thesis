@@ -13,6 +13,12 @@
 
 A detailed explanation of the whole pipeline can be found [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/pipeline.md).
 
+## Requirements
++ Java >= 7
++ Matlab
++ JRuby
++ Bundler
+
 ## Installation
 
 ### Windows 7 or higher:
@@ -39,11 +45,19 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 6. Change path to target directory: `cd path_to_target_directory_in_cloned_repo`
 7. Install required ruby plugins and setup their dependencies: `bundle`
 
-## Requirements
-+ Java >= 7
-+ Matlab
-+ JRuby
-+ Bundler
+## Usage
+
++ Define a dataset as described [here](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Data).
++ Generate flow field data as described [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/README.md).
++ Extract important pipeline data by running the scripts located at `./init_data`. Please read its Readme.
++ Extract trajectories and compute their similarity matrix by running the code located at `./core/`. Please Read its [README](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/core/README.md) beforehand.
++ Compute the motion segmentations by applying either:
+ + The **Spectral clustering** or **Min Cut** method. Their scripts are located at `./segmentation/`. or
+ + The **Kernighan Lin** method, located at `./kernighan_lin/`. Please read the provided README files beforehand to obtain further information about the usages and the generated output.
+ + Run the evaluation of the generated dataset by running the scripts located at `./eval/`.
+ 
+In general, please all provided README files carefully before running any code.
+
 
 ## Sources
 
