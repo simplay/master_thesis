@@ -1,7 +1,7 @@
-function xml_to_flo( dataset )
+function xml_to_flo(dataset)
 %XML_TO_FLO Summary of this function goes here
 %   Detailed explanation goes here
-
+% dataset = 'dummy';
     addpath('util');
     addpath('../../libs/flow-code-matlab');
     addpath('../../matlab_shared');

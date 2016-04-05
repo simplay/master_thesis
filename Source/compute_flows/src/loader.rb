@@ -45,6 +45,14 @@ class Loader
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper, skip_comp)
+      # run matlab code
+      ds_name = dataset_path.split("Data/").last.split("/").first
+      run_matlab = <<-FOO
+        matlab -nodisplay -nosplash -nodesktop -r \"run ${PWD}/xml_to_flo(\'#{ds_name}\') ; exit\"
+      FOO
+      system("cd xml_to_flo/ && " + run_matlab)
+
+      generate_association_file(folder_path, lower, upper)
     end
   end
 
@@ -73,7 +81,7 @@ class Loader
 
       file.puts "#fwf"
       imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
-        fname.include?("fwf")
+        fname.include?("fw")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
       imgs.each do |img|
@@ -82,7 +90,7 @@ class Loader
 
       file.puts "#bwf"
       imgs = Dir["#{@subfolder_path+"/"}*.flo"].select do |fname|
-        fname.include?("bwf")
+        fname.include?("bw")
       end
       imgs = imgs.sort_by do |a| a.split("_").last.split("L").first.to_i end
       imgs.each do |img|
