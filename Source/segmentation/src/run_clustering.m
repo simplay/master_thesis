@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING, USE_BF_BOUND, BOUNDARY)
+function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, METHODNAME, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING, USE_BF_BOUND, BOUNDARY, U_full, S_full)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,9 +9,10 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSI
     %     USE_W_VEC = false;
     %     USE_CLUSTERING_CUE = true;
     
+    U_small = U_full;
+    S_small = S_full;
     
     KERNIGHAN_LIN = false;
-    
 
     BASE = '../output/similarities/';
     % 'cars1_step_8_frame_';
@@ -70,6 +71,9 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSI
             [U_small,S_small] = eig(B);
         end
         
+        U_full = U_small;
+        S_full = S_small;
+        
         if USE_T
             T = zeros(size(U_small));
             for k=1:size(U_small,1)
@@ -79,18 +83,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSI
         end
         
         
-        d = diag(S_small);
-        [d, s_idx] = sort(d);
-        U_small = aggregate_mat_cols(U_small, s_idx);
-        
-        
-        if USE_CLUSER_EW_COUNT
-            aa = 1:FORCE_EW_COUNT;
-        else
-        
-        [aa,~,~] = find(d < 0.1);
-        end
-        UU = U_small;
+
 
     %     if USE_SPECTRAL_GAP
     %         deltas = S_small(2:end)-S_small(1:end-1);
@@ -100,15 +93,31 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSI
     %         [aa, ~] = find(aa <= use_till);
     %     end
 
-        U_small = aggregate_mat_cols(U_small, aa);
-        S_small = d(aa);
+
         
         % filter the eigenvector that belongs to eigenvalue 0
-        S_small = S_small(S_small > 0);
-        U_small = U_small(:,S_small > 0);
+
 
     end
+    
+    d = diag(S_small);
+    [d, s_idx] = sort(d);
+    U_small = aggregate_mat_cols(U_small, s_idx);
+        
+    if USE_CLUSER_EW_COUNT
+        aa = 1:FORCE_EW_COUNT;
+    else
 
+    [aa,~,~] = find(d < 0.1);
+    end
+    UU = U_small;
+
+    U_small = aggregate_mat_cols(U_small, aa);
+    S_small = d(aa);
+
+    S_small = S_small(S_small > 0);
+    U_small = U_small(:,S_small > 0);
+    
     %% display segmentation and its data.
 
     % load label vector indices mappings
@@ -155,6 +164,7 @@ function [W, U_small, S_small, WW] = run_clustering( DATASET, METHODNAME, STEPSI
         boundaries(1) = BOUNDARY(1);
         boundaries(2) = BOUNDARY(2);
     end
+
     frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2));
     
     for img_index = frame_idx:frame_idx

@@ -6,7 +6,7 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'foo';
+DATASETNAME = 'chair_3_cast';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
