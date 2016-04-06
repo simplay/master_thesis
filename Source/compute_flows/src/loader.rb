@@ -22,8 +22,6 @@ class Loader
 
   def initialize(dataset_path, variant, from_idx, to_idx, skip_comp)
     dataset = dataset_path.split(/\//).last
-    well_enumerate_files(dataset_path) if File.exists?(dataset_path + "associations.txt")
-
     case variant
     when FLOW_METHODS[0]
       @task_type = LdofFlowTask
@@ -99,23 +97,6 @@ class Loader
     end
   end
 
-  def well_enumerate_files(path)
-    counter = 1
-    fname_pairs = {}
-    File.open("#{path}associations.txt", 'r') do |file|
-      while line = file.gets
-        fname = file.gets.strip.split(" ").last.split("/").last
-        fname_pairs[counter] = fname
-        counter = counter + 1
-      end
-    end
-    fname_pairs.each do |key, value|
-      ext = "."+value.split(".").last
-      File.rename(path+value, path + key.to_s + ext)
-    end
-  end
-
-
   def generate_flows(filepath_names, dataset, lower, upper)
     @task_count = 0
     dataset_files = filepath_names[lower..(upper+1)]
@@ -150,27 +131,6 @@ class Loader
     end
 
     executor.shutdown
-  end
-
-  def compute_flow(dataset_fnames, dataset, range, text)
-    puts "Computing #{text} for dataset #{dataset}..."
-    range.each do |idx|
-      i1 = dataset_fnames[idx]
-      i2 = dataset_fnames[idx+1]
-      puts "Computing #{text} from #{i1} to #{i2}."
-      system("./ldof/ldof #{i1} #{i2}")
-    end
-  end
-
-  def rename_generated_flows(folder_path, flow_prefix)
-    flow_files = Dir["#{folder_path}*.flo"]
-    flow_files = flow_files.reject {|fnames| fnames.include? "fwf" or fnames.include? "bwf"}
-    binding.pry
-    flow_files.each do |fname|
-      filename = File.basename(fname, File.extname(fname))
-      new_name = "#{flow_prefix}_"+filename
-      File.rename(fname, folder_path + new_name + File.extname(fname))
-    end
   end
 
   # Converts a given set of images to .ppm image files.
