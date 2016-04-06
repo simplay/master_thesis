@@ -7,7 +7,7 @@ This README describes the expected structure of any dataset such that it can be 
 + Complete valid dataset structure (see below)
 + Optionally, re-enumerate the dataset files by using [this](https://github.com/simplay/file_renamer/blob/master/renamer.rb) file renamer.
 + Run `.Source/compute_flows/run.sh` to generate the optical flow fields. Those will be stored in the dataset's root directory.
-+ Run `.Source/init_data/init_data.m` to generated all required pipeline inputs. 
++ Run `.Source/initialize_data/init_data.m` to generated all required pipeline inputs. 
 
 ```
 Data/
