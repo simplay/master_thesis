@@ -11,53 +11,39 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     
     U_small = U_full;
     S_small = S_full;
-    
-    KERNIGHAN_LIN = false;
 
     BASE = '../output/similarities/';
     if USE_SPECIAL_NAMING
-        idx = regexp(DATASET,'v');
+        idx = regexp(DATASET, 'v');
         DATASETNAME = DATASET(1:idx-1);
     else    
         DATASETNAME = DATASET;
     end
 
-    DATASETP = strcat(DATASETNAME,'/');
+    DATASETP = strcat(DATASETNAME, '/');
     BASE_FILE_PATH = strcat('../../Data/', DATASETP);
 
     %% load appropriate data
     if COMPUTE_EIGS
-        if SHOULD_LOAD_W %1 == 0
-            fname = strcat(BASE,DATASET,'_sim.dat');
+        if SHOULD_LOAD_W
+            fname = strcat(BASE, DATASET, '_sim.dat');
             W = load(fname);
         end
-        
-        %keyboard;
+
         WW = W + ones(size(W))*THRESH;
 
         d_a = sum(WW,2);
         D = diag(d_a);
         D12 = diag(sqrt(1./d_a));
-        % keyboard;
         B = D12*(D-WW)*D12;
         if USE_EIGS
-            [U_small,S_small,FLAG] = eigs(B,50,1e-6);
+            [U_small, S_small, FLAG] = eigs(B, 50, 1e-6);
         else
-            [U_small,S_small] = eig(B);
+            [U_small, S_small] = eig(B);
         end
         
         U_full = U_small;
         S_full = S_small;
-        
-        if USE_T
-            T = zeros(size(U_small));
-            for k=1:size(U_small,1)
-            T(k,:) = U_small(k,:) ./ sqrt(sum(U_small(k,:).^2));
-            end
-            U_small = T;
-        end
-        
-
 
     end
     
@@ -105,7 +91,7 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     %   975 - front car car front (issue case: no neighboring assignments)
     
     if SELECT_AFFINITY_IDX
-        t = figure
+        t = figure;
         filename = imgs{frame_idx};
         img = imread(filename);
         I = mat2img(img(:,:,1));
@@ -137,25 +123,25 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
     end
     
+    % prepare output directories, name prefixes.
     path = strcat('../output/clustering/', DATASET, '/');
-    mkdir(path);
+    pref_meth = '';
+    if isempty(PREFIX_OUTPUT_FILENAME) == 0
+        pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
+    end
+    method_id = strcat(METHODNAME, pref_meth);
+    mkdir(strcat(path, method_id));
     
+    % For each frame under consideration, perform appropriate segmentation
     for img_index = range
-        
+       
         if SAVE_FIGURES
             fig = figure('name', strcat('Frame ', num2str(img_index)));
         end
         
-        pref_meth = '';
-        if isempty(PREFIX_OUTPUT_FILENAME) == 0
-            pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
-        end
-        
-        method_id = strcat(METHODNAME, pref_meth);
-        
         disp(['Processing frame ',num2str(img_index), '...']);
         
-        fpname = strcat(path, 'seg_', method_id, '_f_', num2str(img_index), '.jpg');
+        fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
 
         if SELECT_AFFINITY_IDX
             frame = frames{img_index};
@@ -198,4 +184,3 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     end
 
 end
-
