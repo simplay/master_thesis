@@ -6,7 +6,7 @@ function write_label_clustering_file(label_assignments, label_mappings, img_inde
 %   i.e. a it consits of the label value and its cluster assignment,
 %   separated by a ','.
 
-    fName = strcat('../output/clustering/',dataset,'_labels_',num2str(img_index),'.txt');
+    fName = strcat('../output/clustering/', dataset,'/labels_',num2str(img_index),'.txt');
     fid = fopen(fName,'w');
     if fid ~= -1
         for k=1:length(label_assignments)
