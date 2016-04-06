@@ -1,4 +1,4 @@
-function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, METHODNAME, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING, USE_BF_BOUND, BOUNDARY, U_full, S_full)
+function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, METHODNAME, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING, USE_BF_BOUND, BOUNDARY, U_full, S_full, COMPUTE_FULL_RANGE)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,14 +15,9 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     KERNIGHAN_LIN = false;
 
     BASE = '../output/similarities/';
-    % 'cars1_step_8_frame_';
-    % PREFIX_FRAME_TENSOR_FILE = [DATASET,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
-    
     if USE_SPECIAL_NAMING
-        
         idx = regexp(DATASET,'v');
         DATASETNAME = DATASET(1:idx-1);
-        % PREFIX_FRAME_TENSOR_FILE = [DATASETNAME,'_step_',num2str(STEPSIZE_DATA),'_frame_'];
     else    
         DATASETNAME = DATASET;
     end
@@ -37,29 +32,9 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
             W = load(fname);
         end
         
-        if PERFORM_AUTO_RESCALE
-            
-            % a well performing example has for f:
-            % when f = sum(W(:))/(length(W)^2)
-            % then f == 0.0557
-            well_scale = 0.0557
-            len = size(W,1);
-            scale = sum(W(:))/(len*len);
-            f = (scale/well_scale);
-            
-            w = -(log(W)/LAMBDA);
-            w(isinf(w)) = 1000000;
-            WWW = W;
-            %W = (exp(-w*(LAMBDA/f)));
-            W = (exp(-w*(LAMBDA/f)*0.3));
-        end
         %keyboard;
         WW = W + ones(size(W))*THRESH;
-        %WW = W + eye(size(W,1));
-        
-        %WW = W + diag(THRESH*ones(size(W,1),1));
-        
-        %sW = sort(W,2, 'descend'); ten = sW(:,100); thresh = repmat(ten, 1, size(W,2)); biggest = W.*(W>thresh); WW = max(biggest,biggest');
+
         d_a = sum(WW,2);
         D = diag(d_a);
         D12 = diag(sqrt(1./d_a));
@@ -82,20 +57,6 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
             U_small = T;
         end
         
-        
-
-
-    %     if USE_SPECTRAL_GAP
-    %         deltas = S_small(2:end)-S_small(1:end-1);
-    %         dbm = deltas <= mean(deltas); % deltas below mean
-    %         zero_idxs = find(dbm == 0);
-    %         use_till = zero_idxs(1)-1;
-    %         [aa, ~] = find(aa <= use_till);
-    %     end
-
-
-        
-        % filter the eigenvector that belongs to eigenvalue 0
 
 
     end
@@ -167,13 +128,25 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
 
     frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2));
     
-    for img_index = frame_idx:frame_idx
-        figure
-
-        % pixeltensor = load(strcat('../output/trackingdata/',PREFIX_FRAME_TENSOR_FILE,num2str(img_index),'.mat'));
-        % pixeltensor = pixeltensor.tracked_pixels;
-        % [row_ids, col_ids, ~] = find(pixeltensor(:,:,2) > 0);
+    range = frame_idx:frame_idx;
+    if COMPUTE_FULL_RANGE
+        range = boundaries(1):1:boundaries(2);
+    end
+    
+    if USE_CLUSTERING_CUE
+        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
+    end
+    
+    path = strcat('../output/clustering/', DATASET, '/');
+    mkdir(path);
+    
+    for img_index = range
+        fig = figure('name', strcat('Frame ', num2str(img_index)));
+        method_id = strcat(METHODNAME);
+        disp('');
         
+        fpname = strcat(path, 'seg_', method_id, '_f_', num2str(img_index), '.jpg');
+
         if SELECT_AFFINITY_IDX
             frame = frames{img_index};
             row_ids = frame.ax;
@@ -192,15 +165,9 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         end
         
         if USE_CLUSTERING_CUE
-            if KERNIGHAN_LIN
-                [trajectory_identifiers, label_assignments] = textread('../output/graph_part/c14_part.txt','%f %f','delimiter', ',');
-                label_assignments = label_assignments + 1;
-            else
-                [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);
-            end
-            % display_clustering(frames, pixeltensor, label_assignments, row_ids, col_ids, img_index, label_mappings, imgs);
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
             write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
+            saveas(fig, fpname);
         else
             displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
             if USE_W_VEC
