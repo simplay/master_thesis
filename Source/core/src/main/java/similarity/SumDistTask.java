@@ -112,10 +112,7 @@ public class SumDistTask extends SimilarityTask {
                 visitedTrackingPoints--;
                 continue;
             }
-            pa = a.getSpatialPointAtFrame(idx);
-            pb = b.getSpatialPointAtFrame(idx);
-
-            len = len + pa.copy().sub(pb).length();
+            len = len + spatialDistBetween(a, b, idx);
         }
         if (visitedTrackingPoints == 0) return 0d;
         return len / visitedTrackingPoints;

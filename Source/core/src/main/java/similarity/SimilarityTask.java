@@ -32,11 +32,11 @@ public abstract class SimilarityTask implements Runnable {
     // Thresholds the zero value to truncate too small affinity towards zero.
     protected final double ZERO_THRESHOLD = 1e-12;
 
-
     public enum Types {
-        SD(1, SumDistTask.class, true, "Sum of Distances"),
+        SD(1, SumDistTask.class, true, "Sum of Distances", SumDistEuclidTask.class),
         PD(2, ProdDistTask.class, false, "Product of Distances", ProdDistEuclidTask.class),
-        PED(3, ProdDistEuclidTask.class, false, "Product of Euclidian Distances");
+        PED(3, ProdDistEuclidTask.class, false, "Product of Euclidian Distances"),
+        SED(4, SumDistEuclidTask.class, true, "Sum of Euclidian Distances");
 
         private int value;
         private Class targetClass;
@@ -215,6 +215,20 @@ public abstract class SimilarityTask implements Runnable {
     protected void appendAvgSpatialDistances(Trajectory a, Trajectory b, double sp_dist) {
         a.appendAvgSpatialDist(b.getLabel(), sp_dist);
         b.appendAvgSpatialDist(a.getLabel(), sp_dist);
+    }
+
+    /**
+     * Compute the spatial distance between two trajectory points overlapping at a certain given frame.
+     *
+     * @param a Trajectory
+     * @param b Trajectory
+     * @param frame_idx frame index where trajectory frames are overlapping.
+     * @return spatial distance of overlapping trajectory points.
+     */
+    protected double spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
+        Point2d pa = a.getSpatialPointAtFrame(frame_idx);
+        Point2d pb = b.getSpatialPointAtFrame(frame_idx);
+        return pa.copy().sub(pb).length();
     }
 
     /**

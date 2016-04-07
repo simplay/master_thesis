@@ -24,7 +24,7 @@ public class AffinityCalculator {
 
         String taskName = taskType.name();
         if (taskType.shouldUseAlternativeTask()) {
-            System.err.println("No Extrinsic Transformation Required. Changing Similarity task ...");
+            System.err.println("No extrinsic transformation provided. Changed similarity task to its alternative...");
             taskName = taskType.getAlternativeTaskClass().getName();
         }
 

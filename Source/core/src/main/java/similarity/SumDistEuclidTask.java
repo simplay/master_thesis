@@ -5,12 +5,12 @@ import datastructures.Trajectory;
 
 import java.util.Collection;
 
-public class ProdDistEuclidTask extends ProdDistTask {
+public class SumDistEuclidTask extends SumDistTask {
     /**
      * @param a
      * @param trajectories
      */
-    public ProdDistEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
+    public SumDistEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
     }
 
