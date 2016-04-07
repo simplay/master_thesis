@@ -159,8 +159,7 @@ public class Main {
          */
 
         if (ArgParser.runInDebugMode()) new TraWriter(output_base_path, dataset, till_index);
-        // if (ArgParser.runInDebugMode())
-            new FramewiseActiveTraWriter(dataset, till_index);
+        new FramewiseActiveTraWriter(dataset, till_index);
 
         // Write clustering related files
         new SimilarityWriter(dataset);

@@ -2,6 +2,7 @@ package writers;
 
 import datastructures.Trajectory;
 import managers.TrajectoryManager;
+import pipeline_components.ArgParser;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -21,7 +22,9 @@ import java.util.List;
 public class TraWriter extends LargeFileWriter {
 
     public TraWriter(String output_base_path, String dataset, int till_index) {
-        String outputPath = output_base_path + "traj_out_" + dataset+"_fc_" + till_index + ".txt";
+        String prefix = ArgParser.getCustomFileNamePrefix();
+        if (!prefix.isEmpty()) prefix += "_";
+        String outputPath = output_base_path + prefix + "traj_out_" + dataset + "_fc_" + till_index + ".txt";
         reportFilePath(outputPath, "Writing trajectories to output file:");
 
         LinkedList<Trajectory> sortedByLabel = new LinkedList<>(TrajectoryManager.getTrajectories());
