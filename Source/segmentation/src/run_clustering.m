@@ -28,20 +28,6 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     label_mappings = labelfile2mat(strcat(BASE, DATASET));
     [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
-    % to help the user what values/index pairs can be displayed.
-    show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
-    
-    if SELECT_AFFINITY_IDX
-        t = figure;
-        filename = imgs{frame_idx};
-        img = imread(filename);
-        I = mat2img(img(:,:,1));
-        imshow(I);
-        [x, y] = ginput(1);
-        close(t);
-    end
-    col_sel = SELECTED_ENTITY_IDX;
-
     % display data
     if USE_BF_BOUND
         boundaries(1) = BOUNDARY(1);
@@ -55,61 +41,35 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         range = boundaries(1):1:boundaries(2);
     end
     
-    if USE_CLUSTERING_CUE
-        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
+    %% run spectral clustering
+       % to help the user what values/index pairs can be displayed.
+    show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
+    
+    col_sel = SELECTED_ENTITY_IDX;
+    if SELECT_AFFINITY_IDX
+        t = figure;
+        filename = imgs{frame_idx};
+        img = imread(filename);
+        I = mat2img(img(:,:,1));
+        imshow(I);
+        [x, y] = ginput(1);
+        close(t);
+
+        frame = frames{1};
+        row_ids = frame.ax;
+        col_ids = frame.ay;
+
+        distances = sum([row_ids-y,col_ids-x].^2, 2);
+        num_el = 1;
+
+        % find smallest num_el labels
+        [~, AIdx] = sort(distances);
+        smallestNIdx = AIdx(1:num_el);
+        col_sel = frame.labels(smallestNIdx(1));
     end
     
-    % For each frame under consideration, perform appropriate segmentation
-    for img_index = range
-       
-        if SAVE_FIGURES
-            fig = figure('name', strcat('Frame ', num2str(img_index)));
-        end
-        
-        disp(['Processing frame ',num2str(img_index), '...']);
-        
-        fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
-
-        if SELECT_AFFINITY_IDX
-            frame = frames{img_index};
-            row_ids = frame.ax;
-            col_ids = frame.ay;
-
-            distances = sum([row_ids-y,col_ids-x].^2, 2);
-            num_el = 1;
-            
-            % find smallest num_el labels
-            [~, AIdx] = sort(distances);
-            smallestNIdx = AIdx(1:num_el);
-            col_sel = frame.labels(smallestNIdx(1));
-        end
-        
-        if USE_CLUSTERING_CUE
-
-            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
-            write_label_clustering_file(label_assignments, label_mappings, img_index, path);
-            if SAVE_FIGURES
-                saveas(fig, fpname);
-            end
-            if SHOW_SEGMENTATION == 0
-                close(fig);
-            end
-        else
-            displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
-            if USE_W_VEC
-                if SHOW_LOCAL_VAR
-                    var_im_name = strcat('../output/trackings/',DATASET,'/local_variances_',num2str(VAR_IMG),'.png');
-                    imv = imread(var_im_name);
-                    imshow(imv);
-                    figure;
-                end
-                label_idx = col_sel;
-                visualize_affinities(W, label_idx, frames, imgs, label_mappings, img_index);
-            else
-                eigenvalue = S_small(col_sel);
-                visualize_eigenvector(eigenvalue, U_small, col_sel, frames, imgs, label_mappings, img_index);
-            end
-        end
-    end
-
+    % generate the actual segmentation data and run the corresponding
+    % visualizations.
+    run_spectral_clustering( W, U_small, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, USE_CLUSTERING_CUE, SAVE_FIGURES, SHOW_SEGMENTATION, USE_W_VEC, col_sel);
+    
 end
