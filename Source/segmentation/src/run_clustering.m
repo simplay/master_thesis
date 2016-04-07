@@ -9,8 +9,7 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     %     USE_W_VEC = false;
     %     USE_CLUSTERING_CUE = true;
     
-    U_small = U_full;
-    S_small = S_full;
+
 
     BASE = '../output/similarities/';
     if USE_SPECIAL_NAMING
@@ -48,46 +47,10 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     
 
     %% load appropriate data
-    if COMPUTE_EIGS
-        if SHOULD_LOAD_W
-            fname = strcat(BASE, DATASET, '_sim.dat');
-            W = load(fname);
-        end
-
-        WW = W + ones(size(W))*THRESH;
-
-        d_a = sum(WW,2);
-        D = diag(d_a);
-        D12 = diag(sqrt(1./d_a));
-        B = D12*(D-WW)*D12;
-        if USE_EIGS
-            [U_small, S_small, FLAG] = eigs(B, 50, 1e-6);
-        else
-            [U_small, S_small] = eig(B);
-        end
-        
-        U_full = U_small;
-        S_full = S_small;
-
-    end
-    
-    d = diag(S_small);
-    [d, s_idx] = sort(d);
-    U_small = aggregate_mat_cols(U_small, s_idx);
-        
-    if USE_CLUSER_EW_COUNT
-        aa = 1:FORCE_EW_COUNT;
-    else
-
-    [aa,~,~] = find(d < 0.1);
-    end
-    UU = U_small;
-
-    U_small = aggregate_mat_cols(U_small, aa);
-    S_small = d(aa);
-
-    S_small = S_small(S_small > 0);
-    U_small = U_small(:,S_small > 0);
+    [U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, ...
+                                                                  U_full, S_full, ...
+                                                                  COMPUTE_EIGS, SHOULD_LOAD_W, ... 
+                                                                  USE_CLUSER_EW_COUNT, FORCE_EW_COUNT);
     
     %% display segmentation and its data.
 
