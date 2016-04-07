@@ -10,14 +10,14 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = '';
+PREFIX_OUTPUT_FILENAME = 'md_d_c_8_ev_20';
 PREFIX_INPUT_FILENAME = 'md_d';
 USE_SPECIAL_NAMING = false;
 
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 USE_EIGS = true;
 STEPSIZE_DATA = 8;
-LAMBDA = 0.1%1% 7000%0.1;
+LAMBDA = 0.1;%1% 7000%0.1;
 USE_T = false;
 SHOULD_LOAD_W = true;
 PERFORM_AUTO_RESCALE = false;
@@ -40,10 +40,10 @@ USE_CLUSTERING_CUE = true;
 SHOW_LOCAL_VAR = false;
 
 % show the segmentation figure
-SHOW_SEGMENTATION = true;
+SHOW_SEGMENTATION = false;
 
 % saves the figure as an image and also opens a new figure per image
-SAVE_FIGURES = false;
+SAVE_FIGURES = true;
 
 VAR_IMG = 1;
 

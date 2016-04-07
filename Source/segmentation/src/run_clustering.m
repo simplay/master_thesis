@@ -124,13 +124,14 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     end
     
     % prepare output directories, name prefixes.
-    path = strcat('../output/clustering/', DATASET, '/');
+    path = strcat('../output/clustering/');
     pref_meth = '';
     if isempty(PREFIX_OUTPUT_FILENAME) == 0
         pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
     end
-    method_id = strcat(METHODNAME, pref_meth);
-    mkdir(strcat(path, method_id));
+    method_id = strcat(DATASET, '_', METHODNAME, pref_meth);
+    path = strcat(path, method_id, '/');
+    mkdir(path);
     
     % For each frame under consideration, perform appropriate segmentation
     for img_index = range
@@ -158,12 +159,14 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         end
         
         if USE_CLUSTERING_CUE
-            if SHOW_SEGMENTATION
-                visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
-            end
-            write_label_clustering_file(label_assignments, label_mappings, img_index, DATASET);
+
+            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
+            write_label_clustering_file(label_assignments, label_mappings, img_index, path);
             if SAVE_FIGURES
                 saveas(fig, fpname);
+            end
+            if SHOW_SEGMENTATION == 0
+                close(fig);
             end
         else
             displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
