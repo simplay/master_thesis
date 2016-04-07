@@ -10,7 +10,7 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_c_8_ev_20';
+PREFIX_OUTPUT_FILENAME = 'md_d_spec_clust';
 PREFIX_INPUT_FILENAME = 'md_d';
 USE_SPECIAL_NAMING = false;
 
@@ -21,7 +21,7 @@ LAMBDA = 0.1;%1% 7000%0.1;
 USE_T = false;
 SHOULD_LOAD_W = true;
 PERFORM_AUTO_RESCALE = false;
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 USE_BF_BOUND = false;
 BOUNDARY = [1,9];
@@ -52,6 +52,10 @@ SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 1;
 frame_idx = 40;
 
+PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
+if USE_CLUSER_EW_COUNT
+    PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_ev_', num2str(FORCE_EW_COUNT));
+end
 %%
 if exist('W','var') == 0
     disp('setting initial values...')
