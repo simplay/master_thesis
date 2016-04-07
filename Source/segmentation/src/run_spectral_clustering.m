@@ -1,8 +1,8 @@
-function run_spectral_clustering( W, U_small, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, USE_CLUSTERING_CUE, SAVE_FIGURES, SHOW_SEGMENTATION, USE_W_VEC, col_sel)
+function run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, SAVE_FIGURES, SHOW_SEGMENTATION, col_sel)
 %RUN_SPECTRAL_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
     
-    if USE_CLUSTERING_CUE
+    if RUN_MODE == 1
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
     end
     
@@ -17,8 +17,7 @@ function run_spectral_clustering( W, U_small, CLUSTER_CENTER_COUNT, frames, imgs
         
         fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
 
-        if USE_CLUSTERING_CUE
-
+        if RUN_MODE == 1
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
             write_label_clustering_file(label_assignments, label_mappings, img_index, path);
             if SAVE_FIGURES
@@ -27,14 +26,11 @@ function run_spectral_clustering( W, U_small, CLUSTER_CENTER_COUNT, frames, imgs
             if SHOW_SEGMENTATION == 0
                 close(fig);
             end
-        else
-            displayed_vector = extract_vector( U_small, W, col_sel, USE_W_VEC, label_mappings);
-            if USE_W_VEC
-                visualize_affinities(W, col_sel, frames, imgs, label_mappings, img_index);
-            else
-                eigenvalue = S_small(col_sel);
-                visualize_eigenvector(eigenvalue, U_small, col_sel, frames, imgs, label_mappings, img_index);
-            end
+        elseif RUN_MODE == 2
+            visualize_affinities(W, col_sel, frames, imgs, label_mappings, img_index);
+        elseif RUN_MODE == 3
+            eigenvalue = S_small(col_sel);
+            visualize_eigenvector(eigenvalue, U_small, col_sel, frames, imgs, label_mappings, img_index);
         end
     end
 

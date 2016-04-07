@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODNAME, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME)
+function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME);
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -13,8 +13,10 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODN
     [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
     
     % prepare output directories, name prefixes.
-    path = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
-    
+    path = '';
+    if RUN_MODE == 1
+        path = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
+    end
 
     %% load appropriate data
     [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT);
@@ -34,7 +36,7 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODN
     
     %% run spectral clustering
        % to help the user what values/index pairs can be displayed.
-    show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
+    show_usage_information(RUN_MODE, W, U_small);
     
     col_sel = SELECTED_ENTITY_IDX;
     if SELECT_AFFINITY_IDX
@@ -61,6 +63,6 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODN
     
     % generate the actual segmentation data and run the corresponding
     % visualizations.
-    run_spectral_clustering(W, U_small, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, USE_CLUSTERING_CUE, SAVE_FIGURES, SHOW_SEGMENTATION, USE_W_VEC, col_sel);
+    run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, SAVE_FIGURES, SHOW_SEGMENTATION, col_sel);
     
 end

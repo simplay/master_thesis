@@ -25,10 +25,4 @@ function visualize_affinities(W, label_idx, frames, imgs, label_mappings, img_in
     plot(frame.ay(row_idx), frame.ax(row_idx),'Color',[1,0,0],'Marker','O');
     hold on
     colorbar;
-    
-
-    
-
-    
-
 end
