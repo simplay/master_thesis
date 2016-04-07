@@ -121,4 +121,12 @@ public class CalibrationManager {
 
         return data;
     }
+
+    public boolean hasNoIntrinsicDepthCalibrations() {
+        return depth_focal_len.isOneVector() && depth_principal_point.isOneVector();
+    }
+
+    public static boolean hasNoIntrinsicDepthProjection() {
+        return getInstance().hasNoIntrinsicDepthCalibrations();
+    }
 }

@@ -160,7 +160,7 @@ public class ArgParser {
         if (hasCustomFileNamePrefix()) {
             System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }
-        System.out.println("+ Running task: " + getSimTask().name());
+        System.out.println("+ Running task: " + getSimTask().getName());
         if (useColorCues()) {
             System.out.println("+ Using cut probability: " + getCutProbability());
         }

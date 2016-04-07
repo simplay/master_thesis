@@ -2,6 +2,7 @@ package similarity;
 
 import datastructures.Point2d;
 import datastructures.Trajectory;
+import managers.CalibrationManager;
 import managers.VarianceManager;
 import pipeline_components.ArgParser;
 
@@ -33,17 +34,46 @@ public abstract class SimilarityTask implements Runnable {
 
 
     public enum Types {
-        SD(1, SumDistTask.class, true),
-        PD(2, ProdDistTask.class, false);
+        SD(1, SumDistTask.class, true, "Sum of Distances"),
+        PD(2, ProdDistTask.class, false, "Product of Distances", ProdDistEuclidTask.class),
+        PED(3, ProdDistEuclidTask.class, false, "Product of Euclidian Distances");
 
         private int value;
         private Class targetClass;
         private boolean usesColorCues;
+        private String taskName;
+        private Class alternativeTaskClass;
 
-        private Types(int value, Class targetClass, boolean usesColorCues) {
+        private Types(int value, Class targetClass, boolean usesColorCues, String taskName, Class alternativTaskClass) {
             this.value = value;
             this.targetClass = targetClass;
             this.usesColorCues = usesColorCues;
+            this.taskName = taskName;
+            this.alternativeTaskClass = alternativTaskClass;
+        }
+
+        private Types(int value, Class targetClass, boolean usesColorCues, String taskName) {
+            this(value, targetClass, usesColorCues, taskName, null);
+        }
+
+        public String getName() {
+            return taskName;
+        }
+
+        /**
+         * Checks whether the alternative task should be used.
+         * This is the case whenever depth cues should be used but the color and depth camera are overlapping
+         * and we are not already an alternative task.
+         *
+         * @return true if the alternative task should be used otherwise false.
+         */
+        public boolean shouldUseAlternativeTask() {
+            if (alternativeTaskClass == null) return false;
+            return CalibrationManager.hasNoIntrinsicDepthProjection() && ArgParser.useDepthCues();
+        }
+
+        public Class getAlternativeTaskClass() {
+            return alternativeTaskClass;
         }
 
         public Class getTaskClass() {
@@ -73,7 +103,11 @@ public abstract class SimilarityTask implements Runnable {
     public static SimilarityTask buildTask(Types taskType, Trajectory a, Collection<Trajectory> trajectories) {
         SimilarityTask task = null;
         try {
-            task = (SimilarityTask) taskType.getTaskClass().getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);
+            Class type = taskType.getTaskClass();
+            if (taskType.shouldUseAlternativeTask()) {
+                type = taskType.getAlternativeTaskClass();
+            }
+            task = (SimilarityTask) type.getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

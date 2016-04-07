@@ -1,4 +1,5 @@
 import datastructures.FlowField;
+import managers.CalibrationManager;
 import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import readers.*;

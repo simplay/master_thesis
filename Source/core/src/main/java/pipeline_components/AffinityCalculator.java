@@ -1,6 +1,7 @@
 package pipeline_components;
 
 import datastructures.Trajectory;
+import managers.CalibrationManager;
 import managers.TrajectoryManager;
 import similarity.SimilarityTask;
 
@@ -21,7 +22,13 @@ public class AffinityCalculator {
         SimilarityTask.Types taskType = ArgParser.getSimTask();
         ArrayList<SimilarityTask> tasks = new ArrayList<>();
 
-        System.out.println("Running similarity task: " + taskType.name());
+        String taskName = taskType.name();
+        if (taskType.shouldUseAlternativeTask()) {
+            System.err.println("No Extrinsic Transformation Required. Changing Similarity task ...");
+            taskName = taskType.getAlternativeTaskClass().getName();
+        }
+
+        System.out.println("Running similarity task: " + taskName);
 
         int from_idx = 0;
         // assign upper triangular matrix

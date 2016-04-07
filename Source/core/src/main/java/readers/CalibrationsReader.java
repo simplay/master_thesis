@@ -10,7 +10,7 @@ public class CalibrationsReader extends FileReader {
     public ArrayList<String> fLines;
 
     public CalibrationsReader(String dataset) {
-        String baseFileName = "../data/ldof/" + dataset + "/meta/calib.txt";
+        String baseFileName = "../../Data/" + dataset + "/meta/calib.txt";
         if (DataChecker.hasCalibrationData(baseFileName)) {
             fLines = new ArrayList<>();
             readFile(baseFileName);

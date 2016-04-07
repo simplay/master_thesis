@@ -10,6 +10,11 @@ public class Point2d {
     private double y;
     private boolean isValid = true;
 
+    // Euclidian position is space.
+    private Point3d depthPos;
+
+    private static Point2d ONE = new Point2d(1,1);
+
     public Point2d(double x, double y) {
         this.x = x;
         this.y = y;
@@ -45,6 +50,15 @@ public class Point2d {
     }
 
     /**
+     * Checks whether this Point is equal the one-point, i.e. whether it is equal to (1,1)
+     *
+     * @return true if this point is 1 otherwise false.
+     */
+    public boolean isOneVector() {
+        return (x == Point2d.ONE.x() && y == Point2d.ONE.y());
+    }
+
+    /**
      * Transforms to Euclidian space and back to camera space
      *
      * P = [(u-p_x^d)/f_x^d *z, (v-p_y^d)/f_y^d *z), z]
@@ -59,11 +73,20 @@ public class Point2d {
         // 3d euclidian space point
         Point3d p3 = new Point3d(_x, _y, depth);
         p3.scaleByMat(CalibrationManager.extrinsicMat());
-
+        this.depthPos = p3;
         return new Point2d(
                 (p3.x()*CalibrationManager.rgb_focal_len().x() / depth) + CalibrationManager.rgb_principal_point().x(),
                 (p3.y()*CalibrationManager.rgb_focal_len().y() / depth) + CalibrationManager.rgb_principal_point().y()
         );
+    }
+
+    /**
+     * Depth position in euclidian space after applying the depth/color camera calibrations.
+     *
+     * @return position of this coordinate in the Euclidian space.
+     */
+    public Point3d getEuclidPos() {
+        return depthPos;
     }
 
     public double x() {

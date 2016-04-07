@@ -41,6 +41,10 @@ public class Point3d {
         this.z = col1.z()*x + col2.z()*y + col3.z()*z + col4.z();
     }
 
+    public double length_squared() {
+        return x*x + y*y + z*z;
+    }
+
     /**
      * Computed the l2 distance to the origin
      * @return

@@ -56,11 +56,7 @@ public class ProdDistTask extends SimilarityTask {
                 continue;
             }
 
-            pa = a.getSpatialPointAtFrame(l);
-            pb = b.getSpatialPointAtFrame(l);
-
-            double sp_len = pa.copy().sub(pb).length();
-            avgSpatialDist += sp_len;
+            avgSpatialDist += spatialDistBetween(a, b, l);
 
             Point2d dt_a = forward_difference(a, timestep, l);
             Point2d dt_b = forward_difference(b, timestep, l);
@@ -84,5 +80,19 @@ public class ProdDistTask extends SimilarityTask {
         double dist_st_a_b = avgSpatialDist*maxDistance;
         double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
+    }
+
+    /**
+     * Compute the spatial distance between two trajectory points overlapping at a certain given frame.
+     *
+     * @param a Trajectory
+     * @param b Trajectory
+     * @param frame_idx frame index where trajectory frames are overlapping.
+     * @return spatial distance of overlapping trajectory points.
+     */
+    protected double spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
+        Point2d pa = a.getSpatialPointAtFrame(frame_idx);
+        Point2d pb = b.getSpatialPointAtFrame(frame_idx);
+        return pa.copy().sub(pb).length();
     }
 }
