@@ -127,6 +127,7 @@ public class CalibrationManager {
     }
 
     public static boolean hasNoIntrinsicDepthProjection() {
+        if (instance == null) return true;
         return getInstance().hasNoIntrinsicDepthCalibrations();
     }
 }
