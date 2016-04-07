@@ -18,7 +18,8 @@ VM options: `-Xmx16000m`
  + ID == 1: Summed distances (SD) similarity task.
  + ID == 2: Product distances (PD) similarity task.
  + ID == 3: Product of Euclidian distances (PED) similarity task. Uses 3d trajectory points for computing the spatial distances.
-
+ + ID == 4: Sum of Euclidian distances (SED) similarity task. Uses 3d trajectory points for computing the spatial distances.
+ 
 Whenever we want to make use of depth cues but the color and depth camera are already aligned, 
 the target similarity task is re-assign to one that used 3d trajectory points (i.e. to its alternative task).
  
