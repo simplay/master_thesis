@@ -1,5 +1,6 @@
 DATASETNAME = 'c14';
 METHODNAME = 'ldof';
+DS_PREFIX = '';
 PREFIX = '';
 STEPSIZE_DATA = 8;
 
@@ -38,7 +39,7 @@ num_el = 40;
 close(t);
 
 
-frames = loadAllTrajectoryLabelFrames(DATASETNAME, START_FRAME, END_FRAME);
+frames = loadAllTrajectoryLabelFrames(DATASETNAME, START_FRAME, END_FRAME, DS_PREFIX);
 frame = frames{img_index};
 
 figure('name', 'tracked points');
