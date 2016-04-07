@@ -18,7 +18,7 @@ COMPUTE_EIGS = false;
 USE_EIGS = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 
 % use a prespecified number of eigenvectors
