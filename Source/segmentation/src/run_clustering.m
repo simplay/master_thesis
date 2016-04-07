@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full] = run_clustering( DATASET, METHODNAME, STEPSIZE_DATA, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, U_small, S_small, SELECTED_ENTITY_IDX, USE_T, frame_idx, WW, SHOULD_LOAD_W, PERFORM_AUTO_RESCALE, LAMBDA, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, SHOW_LOCAL_VAR, VAR_IMG, FORCE_EW_COUNT, USE_SPECIAL_NAMING, USE_BF_BOUND, BOUNDARY, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME)
+function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODNAME, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, USE_W_VEC, USE_CLUSTERING_CUE, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -10,10 +10,10 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering( DATASET, METHOD
     %     USE_CLUSTERING_CUE = true;
     
     % load dataset input file paths
-    [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET, USE_SPECIAL_NAMING); 
+    [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
     
     % prepare output directories, name prefixes.
-    [ path ] = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
+    path = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
     
 
     %% load appropriate data
@@ -61,6 +61,6 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering( DATASET, METHOD
     
     % generate the actual segmentation data and run the corresponding
     % visualizations.
-    run_spectral_clustering( W, U_small, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, USE_CLUSTERING_CUE, SAVE_FIGURES, SHOW_SEGMENTATION, USE_W_VEC, col_sel);
+    run_spectral_clustering(W, U_small, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, USE_CLUSTERING_CUE, SAVE_FIGURES, SHOW_SEGMENTATION, USE_W_VEC, col_sel);
     
 end
