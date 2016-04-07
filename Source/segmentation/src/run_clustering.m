@@ -22,6 +22,30 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
 
     DATASETP = strcat(DATASETNAME, '/');
     BASE_FILE_PATH = strcat('../../Data/', DATASETP);
+    
+    
+    
+    % prepare output directories, name prefixes.
+    path = strcat('../output/clustering/');
+    pref_meth = '';
+    if isempty(PREFIX_OUTPUT_FILENAME) == 0
+        pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
+    end
+    method_id = strcat(DATASET, '_', METHODNAME, pref_meth);
+    path = strcat(path, method_id, '/');
+    mkdir(path);
+    
+    
+    dir_exists = exist(path,'dir');
+    if dir_exists
+        disp(['Target directory `', path, '` already exists.'])
+        prompt = 'Should content be overwritten? [y/n]';
+        str = input(prompt,'s');
+        if ~(str == 'y')
+            error('Program exit');
+        end
+    end
+    
 
     %% load appropriate data
     if COMPUTE_EIGS
@@ -123,15 +147,7 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
     end
     
-    % prepare output directories, name prefixes.
-    path = strcat('../output/clustering/');
-    pref_meth = '';
-    if isempty(PREFIX_OUTPUT_FILENAME) == 0
-        pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
-    end
-    method_id = strcat(DATASET, '_', METHODNAME, pref_meth);
-    path = strcat(path, method_id, '/');
-    mkdir(path);
+
     
     % For each frame under consideration, perform appropriate segmentation
     for img_index = range

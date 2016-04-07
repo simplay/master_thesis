@@ -10,8 +10,8 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_spec_clust';
-PREFIX_INPUT_FILENAME = 'md_d';
+PREFIX_OUTPUT_FILENAME = 'md_spec_clust_foobar';
+PREFIX_INPUT_FILENAME = 'md';
 USE_SPECIAL_NAMING = false;
 
 COMPUTE_EIGS = false;
