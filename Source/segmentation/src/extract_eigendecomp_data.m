@@ -1,19 +1,17 @@
-function [ U_full, S_full, U_small, S_small ] = extract_eigendecomp_data(BASE, DATASET, U_full, S_full, COMPUTE_EIGS, SHOULD_LOAD_W, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT)
+function [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT)
 %SELECT_EIGENDECOMP_DATA Summary of this function goes here
 %   Detailed explanation goes here
     
     U_small = U_full;
     S_small = S_full;
     if COMPUTE_EIGS
-        if SHOULD_LOAD_W
-            fname = strcat(BASE, DATASET, '_sim.dat');
-            W = load(fname);
-        end
-        [ U_small, S_small] = similarity_eigendecomp( W );
+        fname = strcat(BASE, DATASET, '_sim.dat');
+        W = load(fname);
+        
+        [U_small, S_small] = similarity_eigendecomp(W, THRESH, USE_EIGS);
         
         U_full = U_small;
         S_full = S_small;
-
     end
     
     d = diag(S_small);
