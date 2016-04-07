@@ -1,6 +1,7 @@
 function [ U_full, S_full, U_small, S_small ] = extract_eigendecomp_data(BASE, DATASET, U_full, S_full, COMPUTE_EIGS, SHOULD_LOAD_W, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT)
 %SELECT_EIGENDECOMP_DATA Summary of this function goes here
 %   Detailed explanation goes here
+    
     U_small = U_full;
     S_small = S_full;
     if COMPUTE_EIGS

@@ -9,41 +9,11 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     %     USE_W_VEC = false;
     %     USE_CLUSTERING_CUE = true;
     
-
-
-    BASE = '../output/similarities/';
-    if USE_SPECIAL_NAMING
-        idx = regexp(DATASET, 'v');
-        DATASETNAME = DATASET(1:idx-1);
-    else    
-        DATASETNAME = DATASET;
-    end
-
-    DATASETP = strcat(DATASETNAME, '/');
-    BASE_FILE_PATH = strcat('../../Data/', DATASETP);
-    
-    
+    % load dataset input file paths
+    [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET, USE_SPECIAL_NAMING); 
     
     % prepare output directories, name prefixes.
-    path = strcat('../output/clustering/');
-    pref_meth = '';
-    if isempty(PREFIX_OUTPUT_FILENAME) == 0
-        pref_meth = strcat('_', PREFIX_OUTPUT_FILENAME);
-    end
-    method_id = strcat(DATASET, '_', METHODNAME, pref_meth);
-    path = strcat(path, method_id, '/');
-    mkdir(path);
-    
-    
-    dir_exists = exist(path,'dir');
-    if dir_exists
-        disp(['Target directory `', path, '` already exists.'])
-        prompt = 'Should content be overwritten? [y/n]';
-        str = input(prompt,'s');
-        if ~(str == 'y')
-            error('Program exit');
-        end
-    end
+    [ path ] = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
     
 
     %% load appropriate data
@@ -60,22 +30,6 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
 
     % to help the user what values/index pairs can be displayed.
     show_usage_information(USE_W_VEC, USE_CLUSTERING_CUE, W, U_small);
-
-    % NOTICE: col_sel stands for the target column of the dataset that should
-    %   be plotted. Since eigenvectors, affinitires and label_assignments
-    %   have different vector dimensionalities, this affects the possible 
-    %   indexing (querry) range. Therefore, when
-    %       plotting eigenvectors, then do not pass a bigger index than
-    %           size(U_small,2)
-    %       plotting affinities, then do not pass a bigger index than length(W)
-    %   when plotting cluster assignments, the chosen index value has no
-    %   effect.
-    %
-    % HINT: nice indices when working with affinities:
-    %   300 - car in background
-    %   2033 - right wheel front car (issue case: no neighboring assignments)
-    %       cmp with 2000
-    %   975 - front car car front (issue case: no neighboring assignments)
     
     if SELECT_AFFINITY_IDX
         t = figure;
@@ -86,12 +40,7 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
         [x, y] = ginput(1);
         close(t);
     end
-    
     col_sel = SELECTED_ENTITY_IDX;
-    % load W in case it is needed.
-    if ~exist('W','var') && USE_W_VEC
-        W = load('../output/similarities/cars1_sim.dat');
-    end
 
     % display data
     if USE_BF_BOUND
@@ -109,8 +58,6 @@ function [W, U_small, S_small, WW, U_full, S_full] = run_clustering( DATASET, ME
     if USE_CLUSTERING_CUE
         [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
     end
-    
-
     
     % For each frame under consideration, perform appropriate segmentation
     for img_index = range
