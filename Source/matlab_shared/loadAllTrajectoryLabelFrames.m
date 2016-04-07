@@ -1,4 +1,4 @@
-function [ frames ] = loadAllTrajectoryLabelFrames( dataset, from_idx, till_idx )
+function [ frames ] = loadAllTrajectoryLabelFrames( dataset, from_idx, till_idx, file_prefix)
 %LOADALLTRAJECTORYLABELFRAMES retrieve all frame labels encoded in a
 %struct.
 %   @example: access labels of first frame: frames{1}.labels
@@ -6,7 +6,7 @@ function [ frames ] = loadAllTrajectoryLabelFrames( dataset, from_idx, till_idx 
 %       the k-th trajectory in frame t: frames{t}.ax(k)
     frames = {};
     for frame_idx=from_idx:till_idx+1
-        [labels, ax, ay] = trajectoryLabelsAtFrame(dataset, frame_idx);
+        [labels, ax, ay] = trajectoryLabelsAtFrame(dataset, frame_idx, file_prefix);
         frame = struct('labels',labels, 'ax', ax, 'ay', ay);
         frames{frame_idx} = frame;
     end
