@@ -38,6 +38,15 @@ public class ArgParser {
         return getInstance().getHashValue("d");
     }
 
+    public static int getClusterCount() {
+        String cc = getInstance().getHashValue("cc");
+        return Integer.parseInt(cc);
+    }
+
+    public static int getDummyCount() {
+        String dc = getInstance().getHashValue("dc");
+        return Integer.parseInt(dc);
+    }
 
     public static String getCustomFileNamePrefix() {
         String fnamePrefix = getInstance().getHashValue("prefix");
@@ -66,6 +75,7 @@ public class ArgParser {
         System.out.println(getInstance().toString());
         System.out.println("Using the following runtime parameter setting:");
         System.out.println("+ Using dataset: " + getDatasetName());
+        System.out.println("+ Number of clusters: " + getClusterCount());
         if (hasCustomFileNamePrefix()) {
             System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }

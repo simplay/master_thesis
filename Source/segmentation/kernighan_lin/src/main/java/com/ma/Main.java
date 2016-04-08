@@ -12,12 +12,15 @@ public class Main {
         long startTime = System.currentTimeMillis();
 
         String baseOutputPath = "../../output/graph_part/";
+        ArgParser.getInstance(args);
+        ArgParser.reportUsedParameters();
 
         // TODO: make these runtime args
-        String dataset = "c14";
-        String customPrefix = "";
-        int clusterCount = 2;
-        int dummyCount = 0;
+        String dataset = ArgParser.getDatasetName();
+        String customPrefix = ArgParser.getCustomFileNamePrefix();
+
+        int clusterCount = ArgParser.getClusterCount();
+        int dummyCount = ArgParser.getDummyCount();
         int max_iterations = 1;
         int repetitionCount = 1;
 
