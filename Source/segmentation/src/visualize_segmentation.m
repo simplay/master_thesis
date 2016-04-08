@@ -1,4 +1,4 @@
-function visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index);
+function visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values)
 %VISUALIZE_SEGMENT Summary of this function goes here
 %   Detailed explanation goes here
     filename = imgs{img_index};
@@ -16,35 +16,15 @@ function visualize_segmentation(frames, imgs, label_assignments, label_mappings,
             continue;
         end
         assignment = label_assignments(idx);
-        color = get_cluster_color_of(assignment);
+        color = get_cluster_color_of(rgb_values, assignment);
         plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color, 'Marker', '*');
         hold on
-        
     end
     
 end
 
-function color_value = get_cluster_color_of(assignment)
-    if assignment == 1
-        color_value = [1,0,0];
-    elseif assignment == 2
-        color_value = [0,1,0];
-    elseif assignment == 3
-        color_value = [0,0,1];
-    elseif assignment == 4
-        color_value = [1,0,1];
-    elseif assignment == 5
-        color_value = [1,1,0];
-    elseif assignment == 6
-        color_value = [0,1,1];
-    elseif assignment == 7
-        color_value = [0.5,0,0.5];
-    elseif assignment == 8
-        color_value = [0,0.5,0.5];
-    elseif assignment == 9
-        color_value = [0.5,0.5,0];            
-    else
-        color_value = [1,1,1];
-    end
+function color_value = get_cluster_color_of(rgb_values, assignment)
+    t = rgb_values(assignment, :);
+    color_value = [t(1), t(2), t(3)];
 end
 
