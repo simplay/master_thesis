@@ -11,8 +11,11 @@ public class Main {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-        String dataset = "c14";
         String baseOutputPath = "../../output/graph_part/";
+
+        // TODO: make these runtime args
+        String dataset = "c14";
+        String customPrefix = "";
         int clusterCount = 2;
         int dummyCount = 0;
         int max_iterations = 1;
@@ -37,7 +40,8 @@ public class Main {
 
         // TODO: output computed graph partitioning
         System.out.println("Storing computed partition...");
-        g.savePartitionToFile(baseOutputPath + dataset + "_part.txt");
+        if (!customPrefix.isEmpty()) customPrefix += "_";
+        g.savePartitionToFile(baseOutputPath + dataset + customPrefix + "_part.txt");
         long totalTime = System.currentTimeMillis();
         System.out.println("Total elapsed time: " + (totalTime - startTime) / 1000.0 + " seconds");
     }
