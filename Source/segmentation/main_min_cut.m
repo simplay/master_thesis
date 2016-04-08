@@ -10,7 +10,7 @@ addpath('../libs/GCMex/');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000';
+PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_foobar';
 PREFIX_INPUT_FILENAME = 'md_d_nn';
 
 % should the eigendecomposition be computed
@@ -20,7 +20,7 @@ COMPUTE_EIGS = false;
 USE_EIGS = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = true;
+COMPUTE_FULL_RANGE = false;
 % 
 
 % use a prespecified number of eigenvectors
@@ -28,6 +28,7 @@ USE_CLUSER_EW_COUNT = true;
 FORCE_EW_COUNT = 20;
 
 THRESH = 0.0000;
+NU = 0.0000000001;
 CLUSTER_CENTER_COUNT = 8;
 
 %
@@ -56,9 +57,10 @@ PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_iters_', num2str(num_o
 if USE_CLUSER_EW_COUNT
     PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_ev_', num2str(FORCE_EW_COUNT));
 end
+PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_nu_', NU);
 %%
 if exist('W','var') == 0
     disp('setting initial values...')
     W = 1; U_full = 1; S_full = 1;
 end
-[W, U, S, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME);
+[W, U, S, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU);

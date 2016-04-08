@@ -1,4 +1,4 @@
-function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices)
+function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K, spnn_indices, nu)
 %MIN_MULTI_GRAPH_CUT compute new cluster assignments of a given set of N
 %nodes solving a MRF minimization problem.
 %
@@ -16,23 +16,18 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
 %   @return label_assignments (1 x N) node cluster assignments
 
 
-% working example:
-% for a 480 by 640 pixel img
-% we get a class dim equal (480*640) x 1
-% unary (C=2) x (480*640)
-% pairwise 480*640 x 480*640
+    % working example:
+    % for a 480 by 640 pixel img
+    % we get a class dim equal (480*640) x 1
+    % unary (C=2) x (480*640)
+    % pairwise 480*640 x 480*640
     
     % regularization parameter
-    nu = 0.000001;%1e-10;
+    
+    % good nu value: weighing the smoothness term
+    % nu = 0.000001;%1e-10;
 
- %nu = 0.000000000001;%1e-10;
- 
- nu = 0.000000001;
- 
- %nu = 0.0000001;
- 
- 
- % nu = 0.0000001;
+
     % A CxN matrix specifying the potentials (data term) for each of the C
     % possible classes at each of the N nodes.
     unary = computeDataTerm(v, lambda, pa, mu, K);
