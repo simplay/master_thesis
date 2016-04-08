@@ -12,3 +12,17 @@ There are 3 different segmentation methods implemented in the pipeline, namely:
  
 + **Min-Cut**: 
 + **Kernighan Lin**: 
+
+## Usage
+
+### Spectral Clustering Segmentation
+
+Run the matlab script `main_spectral_clustering.m`
+
+### Min-Cut Segmentation
+
+Run the matlab script `main_min_cut.m`
+
+### Kernighan-Lin Segmentation
+
+Run the **main.java** java code contained in `./kernighan_lin/`.
