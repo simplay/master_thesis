@@ -28,7 +28,10 @@ USE_CLUSER_EW_COUNT = true;
 FORCE_EW_COUNT = 20;
 
 THRESH = 0.0000;
-NU = 0.0000000001;
+
+% weight of smoothness term.
+% well working smoothness weight: NU = 0.000000001
+NU = 0.000000001
 CLUSTER_CENTER_COUNT = 8;
 
 %
@@ -57,7 +60,7 @@ PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_iters_', num2str(num_o
 if USE_CLUSER_EW_COUNT
     PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_ev_', num2str(FORCE_EW_COUNT));
 end
-PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_nu_', NU);
+PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_nu_', num2str(NU));
 %%
 if exist('W','var') == 0
     disp('setting initial values...')
