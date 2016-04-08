@@ -26,3 +26,8 @@ Run the matlab script `main_min_cut.m`
 ### Kernighan-Lin Segmentation
 
 Run the **main.java** java code contained in `./kernighan_lin/`.
+
+## Output
+
+The generated output is located at `../output/clustering/GENERATED_DATA_DIR_NAME/`.
+For every method, a text file `labels.txt` and an image showing the visual segmentation of every frame of the dataset is generated. The labels file contains a trajectory-label cluster-label mapping. Therefore, it is possible to find the cluster label for a tracked trajectory point in a certain frame by looking up the actual assigned values in this mapping file.
