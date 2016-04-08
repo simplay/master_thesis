@@ -31,7 +31,7 @@ THRESH = 0.0000;
 
 % weight of smoothness term.
 % well working smoothness weight: NU = 0.000000001
-NU = 0.000000001
+NU = 0.000000001;
 CLUSTER_CENTER_COUNT = 8;
 
 %
