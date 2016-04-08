@@ -29,6 +29,9 @@ function [label_assignments, energy] = min_multi_graph_cut(v, lambda, pa, mu, K,
  
  nu = 0.000000001;
  
+ %nu = 0.0000001;
+ 
+ 
  % nu = 0.0000001;
     % A CxN matrix specifying the potentials (data term) for each of the C
     % possible classes at each of the N nodes.

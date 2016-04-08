@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME);
+function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME);
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -53,7 +53,7 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
     %%
     N = length(W);
-    for K=6:6%4%min(20,2*m)
+    for K=CLUSTER_CENTER_COUNT:CLUSTER_CENTER_COUNT%4%min(20,2*m)
     
     % kmeans(X, K) returns the K cluster centroid locations in the K-by-P matrix centroids.
         
@@ -68,15 +68,32 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
         end
         
         % repeat until convergence, i.e. error is small
-        for t=1:5,  
+        for t=1:num_of_iters,  
             [ centroids ] = find_cluster_centers( label_assignments, U_small );
-            centroids;
             [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices);
-            energy
-            figure('name', num2str(t))
-            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
+            disp(['Iteration ', num2str(t),' Remaining energy: ',num2str(energy)]);
+            
+            %visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
         end
-
+        
+        for img_index = range
+            
+            if SAVE_FIGURES
+                fig = figure('name', strcat('Frame ', num2str(img_index)));
+            end  
+            disp(['Processing frame ',num2str(img_index), '...']);
+      
+            fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
+        
+            visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
+                        write_label_clustering_file(label_assignments, label_mappings, img_index, path);
+            if SAVE_FIGURES
+                saveas(fig, fpname);
+            end
+            if SHOW_SEGMENTATION == 0
+                close(fig);
+            end
+        end
         % compute new best label assignents via graph cut using gcmex
     end
     
