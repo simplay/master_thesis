@@ -4,7 +4,8 @@ function run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_C
     rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
     
     if RUN_MODE == 1
-        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);    
+        [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 100, true);  
+        write_label_clustering_file(label_assignments, label_mappings, path);
     end
     
     % For each frame under consideration, perform appropriate segmentation
@@ -19,9 +20,8 @@ function run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_C
         fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
 
         if RUN_MODE == 1
-            
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
-            write_label_clustering_file(label_assignments, label_mappings, img_index, path);
+            
             if SAVE_FIGURES
                 saveas(fig, fpname);
             end

@@ -1,4 +1,4 @@
-function write_label_clustering_file(label_assignments, label_mappings, img_index, filepath)
+function write_label_clustering_file(label_assignments, label_mappings, filepath)
 %WRITE_LABEL_CLUSTERING_FILE create a file with all label cluster assignments
 %   a file exhibiting a line per existing label
 %   every line is formatted like the following: 
@@ -6,7 +6,7 @@ function write_label_clustering_file(label_assignments, label_mappings, img_inde
 %   i.e. a it consits of the label value and its cluster assignment,
 %   separated by a ','.
 
-    fName = strcat(filepath, 'labels_',num2str(img_index),'.txt');
+    fName = strcat(filepath, 'labels.txt');
     fid = fopen(fName,'w');
     if fid ~= -1
         for k=1:length(label_assignments)

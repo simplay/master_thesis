@@ -75,7 +75,7 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
             
             %visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
         end
-        
+        write_label_clustering_file(label_assignments, label_mappings, path);
         for img_index = range
             
             if SAVE_FIGURES
@@ -86,7 +86,7 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
             fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
         
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
-                        write_label_clustering_file(label_assignments, label_mappings, img_index, path);
+            
             if SAVE_FIGURES
                 saveas(fig, fpname);
             end
@@ -94,6 +94,7 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
                 close(fig);
             end
         end
+        
         % compute new best label assignents via graph cut using gcmex
     end
     
