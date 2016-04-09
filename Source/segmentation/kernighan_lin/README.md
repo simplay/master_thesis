@@ -3,6 +3,22 @@
 This program is a standalone executable application that performs a trajectory partitioning. 
 For further information, please have a look at [here](https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm). 
 
+## Usage
+
+The following runtime arguments are currently supported:
++ `-d`: target dataset
++ `-cc`: Number of cluster the graph should be partitioned into
++ `-dc`: Number of dummy vertices put into a cluster set. The more we have, the smaller a segment can get.
++ `-mic`: The maximal number of iterations per optimization step.
++ `-rc`: The number of repetitions of the same optimization approach using the previous computed date.
++ `-prefix`: Output data prefix
+
+### Example: 
+
+`-d c14 -cc 2 -dc 0 -mic 4 -rc 1 -prefix foobar`
+Will run the dataset c14 and partition it into two sets. The output file will be prefixed by _foobar_.
+
+
 ## Download a dataset
 
 Download the following files and store them in the location as described in the section **Expected structure**:
@@ -10,6 +26,8 @@ Download the following files and store them in the location as described in the 
 + [c14_sim.dat](https://www.dropbox.com/s/ah7h5ff9307geud/c14_sim.dat?dl=0)
 + [c14_labels](https://www.dropbox.com/s/11mfizvxw39mf7o/c14_labels.txt?dl=0)
 + [c14_spnn](https://www.dropbox.com/s/hvf1rfqb49lc96m/c14_spnn.txt?dl=0)
+ 
+The datasets should be put into `../output/similarity/`.
 
 
 ## Expected structure
