@@ -15,14 +15,12 @@ public class Main {
         ArgParser.getInstance(args);
         ArgParser.reportUsedParameters();
 
-        // TODO: make these runtime args
         String dataset = ArgParser.getDatasetName();
         String customPrefix = ArgParser.getCustomFileNamePrefix();
-
         int clusterCount = ArgParser.getClusterCount();
         int dummyCount = ArgParser.getDummyCount();
-        int max_iterations = 1;
-        int repetitionCount = 1;
+        int max_iterations = ArgParser.getMaxIterCountPerCluster();
+        int repetitionCount = ArgParser.getRepetitionCount();
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
@@ -41,9 +39,8 @@ public class Main {
         long tillPartitioningTime = System.currentTimeMillis();
         System.out.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
 
-        // TODO: output computed graph partitioning
         System.out.println("Storing computed partition...");
-        if (!customPrefix.isEmpty()) customPrefix += "_";
+        if (!customPrefix.isEmpty()) customPrefix = "_" + customPrefix;
         g.savePartitionToFile(baseOutputPath + dataset + customPrefix + "_part.txt");
         long totalTime = System.currentTimeMillis();
         System.out.println("Total elapsed time: " + (totalTime - startTime) / 1000.0 + " seconds");
