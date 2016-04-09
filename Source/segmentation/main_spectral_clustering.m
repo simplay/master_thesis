@@ -12,7 +12,7 @@ PREFIX_OUTPUT_FILENAME = 'md_spec_clust_foobar';
 PREFIX_INPUT_FILENAME = 'md_d';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
@@ -23,7 +23,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 10;
+FORCE_EW_COUNT = 20;
 
 THRESH = 0.0000;
 CLUSTER_CENTER_COUNT = 8;

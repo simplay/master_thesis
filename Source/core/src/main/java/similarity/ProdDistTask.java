@@ -18,6 +18,7 @@ public class ProdDistTask extends SimilarityTask {
     public ProdDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
         this.lamdba_scale = (ArgParser.useDepthCues())? LAMBDA_D : LAMBDA;
+        System.out.println("Using lambda equal to: " + lamdba_scale);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class ProdDistTask extends SimilarityTask {
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
-        double w_ab = Math.exp(-LAMBDA*dist_st_a_b);
+        double w_ab = Math.exp(-lamdba_scale*dist_st_a_b);
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 
