@@ -50,13 +50,12 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     img_index = SELECTED_ENTITY_IDX;
 
     nn_fpath = strcat('../output/similarities/',pr, DATASET, '_spnn.txt');
+    disp(['Loading spnn file: ' nn_fpath]);
     spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
     
     % display data
     figure('name', 'Motion Segmentation')
-    
-   
-    
+     
     % initial assignments
     label_assignments = zeros(length(W), 1);
     rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
