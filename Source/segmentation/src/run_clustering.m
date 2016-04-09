@@ -24,7 +24,12 @@ function [W, U_small, S_small, U_full, S_full] = run_clustering(DATASET, METHODN
     %% display segmentation and its data.
 
     % load label vector indices mappings
-    label_mappings = labelfile2mat(strcat(BASE, DATASET));
+    pr = '';
+    if isempty(PREFIX_INPUT_FILENAME) == 0
+        pr = strcat(PREFIX_INPUT_FILENAME, '_');
+    end
+    label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
+    
     [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
     frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
