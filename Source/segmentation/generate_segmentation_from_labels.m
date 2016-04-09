@@ -5,10 +5,12 @@ addpath('../matlab_shared');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'md_d_nn';
+PREFIX_INPUT_FILENAME = 'sd';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS = 'c14';
+PART_DS_PREF = 'foobar';
+
+PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
 PREFIX_OUTPUT_FILENAME = 'foobarbaz';
@@ -31,10 +33,16 @@ path = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
 % load label vector indices mappings
 fileID = fopen(LABELS_FILE_PATH);
 C = textscan(fileID,'%d,%d');
-label_assignments = cell2mat(C(2));
+label_assignments = cell2mat(C(2)) + 1;
 fclose(fileID);
 
-label_mappings = labelfile2mat(strcat(BASE, DATASET));
+
+pr = '';
+if isempty(PREFIX_INPUT_FILENAME) == 0
+    pr = strcat(PREFIX_INPUT_FILENAME, '_');
+end
+
+label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
 [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
 frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
