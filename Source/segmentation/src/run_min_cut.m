@@ -10,6 +10,12 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     %     USE_CLUSTERING_CUE = true;
     
     % load dataset input file paths
+    pr = '';
+    if isempty(PREFIX_INPUT_FILENAME) == 0
+        pr = strcat(PREFIX_INPUT_FILENAME, '_');
+    end
+    
+    
     [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
     
     % prepare output directories, name prefixes.
@@ -19,16 +25,13 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     end
 
     %% load appropriate data
-    [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT);
+    [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, pr, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT);
     
     %% display segmentation and its data.
 
     % load label vector indices mappings
     % TODO export this method to own function
-    pr = '';
-    if isempty(PREFIX_INPUT_FILENAME) == 0
-        pr = strcat(PREFIX_INPUT_FILENAME, '_');
-    end
+
     label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
     
     [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
@@ -46,7 +49,7 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     
     img_index = SELECTED_ENTITY_IDX;
 
-    nn_fpath = strcat('../output/similarities/',DATASET,'_spnn.txt');
+    nn_fpath = strcat('../output/similarities/',pr, DATASET, '_spnn.txt');
     spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
     
     % display data

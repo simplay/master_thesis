@@ -10,7 +10,7 @@ addpath('../libs/GCMex/');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_foobar';
+PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_reworked';
 PREFIX_INPUT_FILENAME = 'md_d_nn';
 
 % should the eigendecomposition be computed
