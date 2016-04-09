@@ -2,9 +2,14 @@ package similarity;
 
 import datastructures.Point2d;
 import datastructures.Trajectory;
+import pipeline_components.ArgParser;
+
 import java.util.Collection;
 
 public class ProdDistTask extends SimilarityTask {
+
+    private double lamdba_scale;
+    private final double LAMBDA_D = 0.0001d;
 
     /**
      * @param a
@@ -12,6 +17,7 @@ public class ProdDistTask extends SimilarityTask {
      */
     public ProdDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
+        this.lamdba_scale = (ArgParser.useDepthCues())? LAMBDA_D : LAMBDA;
     }
 
     @Override

@@ -23,10 +23,10 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 20;
+FORCE_EW_COUNT = 10;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT = 20;
+CLUSTER_CENTER_COUNT = 8;
 
 %
 % RUN_MODE = 1 => vis segmentation
