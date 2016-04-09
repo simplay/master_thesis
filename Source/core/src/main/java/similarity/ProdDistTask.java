@@ -9,7 +9,7 @@ import java.util.Collection;
 public class ProdDistTask extends SimilarityTask {
 
     private double lamdba_scale;
-    private final double LAMBDA_D = 0.0001d;
+    private final double LAMBDA_D = 1000d;
 
     /**
      * @param a
