@@ -12,7 +12,7 @@ PREFIX_OUTPUT_FILENAME = 'md_spec_clust_foobar';
 PREFIX_INPUT_FILENAME = 'md_d';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
@@ -26,7 +26,7 @@ USE_CLUSER_EW_COUNT = true;
 FORCE_EW_COUNT = 20;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT = 12;
+CLUSTER_CENTER_COUNT = 20;
 
 %
 % RUN_MODE = 1 => vis segmentation
