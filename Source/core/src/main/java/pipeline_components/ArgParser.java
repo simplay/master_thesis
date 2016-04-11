@@ -86,6 +86,24 @@ public class ArgParser {
         return Double.parseDouble(lambda);
     }
 
+    /**
+     * Gives the appropriate depth field scale.
+     *
+     * Since we are using datasets from different sources (authors, methods), which all have
+     * different depth ranges (and formats), an additional scale of the depth field values may be
+     * required. This particular scale is given by this method.
+     *
+     * @return scaling factor of depth values to obtain measured depths in meters.
+     */
+    public static double getDepthFieldScale() {
+        String depthScale = getInstance().getHashValue("dscale");
+        if (depthScale == null) {
+            // The depth fields measured by our own camera software are scaled by a factor of 1/5000
+            return (1d/5000d);
+        }
+        return Double.parseDouble(depthScale);
+    }
+
     public static boolean useColorCues() {
         return getSimTask().usesColorCues();
     }
@@ -171,18 +189,25 @@ public class ArgParser {
         System.out.println(getInstance().toString());
         System.out.println("Using the following runtime parameter setting:");
         System.out.println("+ Using dataset: " + getDatasetName());
+
         if (hasCustomFileNamePrefix()) {
             System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }
+
         System.out.println("+ Running task: " + getSimTask().getName());
-        if (useColorCues()) {
-            System.out.println("+ Using cut probability: " + getCutProbability());
-        }
         System.out.println("+ Using local variances: " + useLocalVariance());
         System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());
         System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         System.out.println("+ Program runs in debug mode: " + runInDebugMode());
         System.out.println("+ Using Lambda equals: " + getLambda());
+
+        if (useDepthCues()) {
+            System.out.println("+ Scaling depth values by: " + getDepthFieldScale());
+        }
+
+        if (useColorCues()) {
+            System.out.println("+ Using cut probability: " + getCutProbability());
+        }
     }
 }

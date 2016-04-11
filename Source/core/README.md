@@ -41,6 +41,8 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
 
 + **-lambda FLOAT** scale factor in affinity function used for all MD tasks. By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
 
++ **-dscale FLAT** scale of depth field values to have those values in meters.
+
 ## Generated Output Files
 
 When running the code on a dataset called **DATASET**, the following output is generated:

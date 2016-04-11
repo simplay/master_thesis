@@ -2,6 +2,7 @@ package readers;
 
 import datastructures.DepthField;
 import managers.DepthManager;
+import pipeline_components.ArgParser;
 
 import java.util.LinkedList;
 
@@ -20,7 +21,7 @@ public class DepthFieldReader extends FileReader {
 
     public DepthFieldReader(String dataset, String fileNr) {
         String baseFileName = "../output/tracker_data/" + dataset + "/depth_"+ fileNr + ".txt";
-        scale = 1d/5000d;
+        scale = ArgParser.getDepthFieldScale();
 
         rows = new LinkedList<>();
         readFile(baseFileName);
