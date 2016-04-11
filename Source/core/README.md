@@ -39,6 +39,8 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
 
 + **-prefix NAME** custom output file name prefix NAME, by default the empty string.
 
++ **-lambda FLOAT** scale factor in affinity function used for all MD tasks. By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
+
 ## Generated Output Files
 
 When running the code on a dataset called **DATASET**, the following output is generated:

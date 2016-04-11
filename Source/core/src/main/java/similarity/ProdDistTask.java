@@ -8,8 +8,8 @@ import java.util.Collection;
 
 public class ProdDistTask extends SimilarityTask {
 
+    // Affinity scaling factor, acts as a sensivity parameter
     private double lamdba_scale;
-    private final double LAMBDA_D = 1000d;
 
     /**
      * @param a
@@ -17,8 +17,7 @@ public class ProdDistTask extends SimilarityTask {
      */
     public ProdDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
-        this.lamdba_scale = (ArgParser.useDepthCues())? LAMBDA_D : LAMBDA;
-        System.out.println("Using lambda equal to: " + lamdba_scale);
+        this.lamdba_scale = ArgParser.getLambda();
     }
 
     @Override

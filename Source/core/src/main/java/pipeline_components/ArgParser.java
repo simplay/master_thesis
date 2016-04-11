@@ -72,6 +72,20 @@ public class ArgParser {
         return Integer.parseInt(nnCount);
     }
 
+    /**
+     * Affinity scaling factor used for MD sim tasks,
+     * acts as a sensitivity parameter and is different when using depth cues.
+     *
+     * @return affinity md task scaling factor
+     */
+    public static double getLambda() {
+        String lambda = getInstance().getHashValue("lambda");
+        if (lambda == null) {
+            return (ArgParser.useDepthCues())? 1000d : 0.1d;
+        }
+        return Double.parseDouble(lambda);
+    }
+
     public static boolean useColorCues() {
         return getSimTask().usesColorCues();
     }
@@ -169,5 +183,6 @@ public class ArgParser {
         System.out.println("+ Using color cues: " + useColorCues());
         System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         System.out.println("+ Program runs in debug mode: " + runInDebugMode());
+        System.out.println("+ Using Lambda equals: " + getLambda());
     }
 }

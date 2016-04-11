@@ -11,9 +11,6 @@ import java.util.Collection;
 
 public abstract class SimilarityTask implements Runnable {
 
-    // Affinity scaling factor, acts as a sensivity parameter
-    protected final double LAMBDA = 0.1d;
-
     // minimal expected timestep size
     // trajectory overlaps shorter than that value will be ignored
     protected final int MIN_TIMESTEP_SIZE = 4;
