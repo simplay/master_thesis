@@ -107,14 +107,12 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public List<Integer> nearestAvgSpatialNeighbors(int numberOfNeighbors) {
         Iterator<Map.Entry<Integer, Double>> it = avgSpatialDistToNeighbors.entrySet().iterator();
-        int counter = 0;
-        NearestNeighborsHeap avgSpDist = new NearestNeighborsHeap(numberOfNeighbors);
+        NearestNeighborsHeap avgSpDist = new NearestNeighborsHeap(avgSpatialDistToNeighbors.size());
         while (it.hasNext()) {
             Map.Entry<Integer, Double> el = it.next();
             int label = el.getKey();
             double dist = el.getValue();
             avgSpDist.addItem(label, dist);
-            counter++;
         }
         return avgSpDist.toIntList(numberOfNeighbors);
     }

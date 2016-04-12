@@ -1,5 +1,7 @@
 package datastructures;
 
+import pipeline_components.ArgParser;
+
 import java.util.*;
 
 /**
@@ -13,6 +15,49 @@ public class NearestNeighborsHeap {
     private int count = 0;
     private int size;
 
+    /**
+     * Defines which nearest neighbors should be returned
+     */
+    public enum NNMode {
+
+        TOP_N("top"),
+        TOP_AND_WORST_N("both");
+
+        private String id;
+
+        private NNMode(String id) {
+            this.id = id;
+        }
+
+        /**
+         * Get a mode's unique identifier.
+         *
+         * @return mode id name
+         */
+        public String getId() {
+            return id;
+        }
+
+        /**
+         * Find a Mode by its id
+         *
+         * @param id mode identifier
+         * @return the mode that maps to the given id.
+         */
+        public static NNMode getModeById(String id) {
+            for (NNMode t : values() ) {
+                if (t.getId().equals(id)) {
+                    return t;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Build a priority heap-like data-structure containing the spatial neighbors of a trajectory.
+     * @param size heap's size
+     */
     public NearestNeighborsHeap(int size) {
         this.size = size;
         data = new ArrayList<>(size);
@@ -51,6 +96,28 @@ public class NearestNeighborsHeap {
     }
 
     /**
+     * Extract label identifiers of spatial neighbors according to a chosen NN mode.
+     *
+     * @param n number of nearest neighbors that should be extracted
+     * @return a collection of the n nearest neighbors according
+     *  to their avg spatial distance, where the first index corresponds to the
+     *  spatially nearest neighbor.
+     */
+    public List<Integer> toIntList(int n) {
+        switch (ArgParser.getNNMode()) {
+            case TOP_N:
+                return toTopNInList(n);
+            case TOP_AND_WORST_N:
+                List<Integer> tops = toTopNInList(n / 2);
+                List<Integer> worsts = toWorstNIntList(n/2);
+                tops.addAll(worsts);
+                return tops;
+            default:
+                return toTopNInList(n);
+        }
+    }
+
+    /**
      * Extract label identifiers of top N nearest neighbors
      *
      * @param n number of nearest neighbors that should be extracted
@@ -58,7 +125,7 @@ public class NearestNeighborsHeap {
      *  to their avg spatial distance, where the first index corresponds to the
      *  spatially nearest neighbor.
      */
-    public List<Integer> toIntList(int n) {
+    public List<Integer> toTopNInList(int n) {
         List<Integer> nn_labels = new LinkedList<>();
         int counter = 0;
         for (TrajectoryNode node : data) {
@@ -67,6 +134,26 @@ public class NearestNeighborsHeap {
             counter++;
         }
         return nn_labels;
+    }
+
+    /**
+     * Extract the worst N spatially neighbors
+     *
+     * @param n number of worst n neighbors.
+     * @return List of worst n neighbors.
+     */
+    public List<Integer> toWorstNIntList(int n) {
+        List<Integer> worst_nn_labels = new LinkedList<>();
+        int counter = 0;
+        int N = data.size();
+
+        for (int k = 1; k <= n; k++) {
+            if (counter == n) break;
+            int label = data.get(N-k).getLabel();
+            worst_nn_labels.add(label);
+            counter++;
+        }
+        return worst_nn_labels;
     }
 
     /**

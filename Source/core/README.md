@@ -33,6 +33,10 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
  
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
++ **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, the top N nearest neighbors will be returned.
+ + STRING == top: Return the top N neighbors
+ + STRING == bot: Return the top N/2 and worst N/2 neighbors
+
 + **-debug BOOL**:  should the program run in the debug mode. If so, it will dumb intermediate calculated data. By default, the debug mode is disabled.
 
 + **-prob FLOAT**: Set value FLOAT of cut probability used for the PD similarity task. FLOAT is a supposed to be a value: FLOAT > 0 AND FLOAT < 1. By default the probability value 0.5 is used.

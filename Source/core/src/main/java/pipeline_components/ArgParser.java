@@ -1,7 +1,9 @@
 package pipeline_components;
 
+import datastructures.NearestNeighborsHeap;
 import managers.MetaDataManager;
 import similarity.SimilarityTask;
+import writers.NearestSpatialNeighborsWriter;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -174,6 +176,15 @@ public class ArgParser {
         return !getCustomFileNamePrefix().isEmpty();
     }
 
+
+    public static NearestNeighborsHeap.NNMode getNNMode() {
+        String nnMode = getInstance().getHashValue("nnm");
+        if (nnMode == null) {
+            return NearestNeighborsHeap.NNMode.TOP_N;
+        }
+        return NearestNeighborsHeap.NNMode.getModeById(nnMode);
+    }
+
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();
@@ -199,6 +210,7 @@ public class ArgParser {
         System.out.println("+ Using depth cues: " + useDepthCues());
         System.out.println("+ Using color cues: " + useColorCues());
         System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
+        System.out.println("+ Using NN Mode: " + getNNMode().name());
         System.out.println("+ Program runs in debug mode: " + runInDebugMode());
         System.out.println("+ Using Lambda equals: " + getLambda());
 
