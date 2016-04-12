@@ -8,25 +8,27 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_spec_clust_foobar';
-PREFIX_INPUT_FILENAME = 'md_d';
+PREFIX_OUTPUT_FILENAME = 'md_d_spec_clust_foobar_new';
+PREFIX_INPUT_FILENAME = 'md_d_nn';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 20;
+FORCE_EW_COUNT = 10;
 
 THRESH = 0.0000;
-CLUSTER_CENTER_COUNT = 8;
+
+% number of clusters we want to segment the given sequence
+CLUSTER_CENTER_COUNT = 3;
 
 %
 % RUN_MODE = 1 => vis segmentation

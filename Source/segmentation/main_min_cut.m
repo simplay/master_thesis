@@ -10,7 +10,7 @@ addpath('../libs/GCMex/');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_reworked';
+PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_reworked_foo2';
 PREFIX_INPUT_FILENAME = 'md_d_nn';
 
 % should the eigendecomposition be computed
@@ -32,6 +32,10 @@ THRESH = 0.0000;
 % weight of smoothness term.
 % well working smoothness weight: NU = 0.000000001
 NU = 0.000000001;
+%NU = 0.0000000001;
+
+
+% number of clusters we want to segment the given sequence
 CLUSTER_CENTER_COUNT = 8;
 
 %
@@ -54,7 +58,7 @@ SELECTED_ENTITY_IDX = 1;
 frame_idx = 40;
 
 % number of iterations that should be performed for computing the approx.
-num_of_iters = 20;
+num_of_iters = 3;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_iters_', num2str(num_of_iters), '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

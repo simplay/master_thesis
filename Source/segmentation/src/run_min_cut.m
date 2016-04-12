@@ -52,9 +52,6 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     nn_fpath = strcat('../output/similarities/',pr, DATASET, '_spnn.txt');
     disp(['Loading spnn file: ' nn_fpath]);
     spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
-    
-    % display data
-    figure('name', 'Motion Segmentation')
      
     % initial assignments
     label_assignments = zeros(length(W), 1);
