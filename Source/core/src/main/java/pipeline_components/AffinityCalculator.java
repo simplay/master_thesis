@@ -24,11 +24,11 @@ public class AffinityCalculator {
 
         String taskName = taskType.name();
         if (taskType.shouldUseAlternativeTask()) {
-            System.err.println("No extrinsic transformation provided. Changed similarity task to its alternative...");
+            Logger.printError("No extrinsic transformation provided. Changed similarity task to its alternative...");
             taskName = taskType.getAlternativeTaskClass().getName();
         }
 
-        System.out.println("Running similarity task: " + taskName);
+        Logger.println("Running similarity task: " + taskName);
 
         int from_idx = 0;
         // assign upper triangular matrix
@@ -50,6 +50,6 @@ public class AffinityCalculator {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
 
-        System.out.println("Computed trajectory affinities...");
+        Logger.println("Computed trajectory affinities...");
     }
 }

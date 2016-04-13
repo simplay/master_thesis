@@ -1,6 +1,7 @@
 package writers;
 
 import pipeline_components.ArgParser;
+import pipeline_components.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -70,7 +71,7 @@ public class LargeFileWriter {
      * @param msg custom msg prepended to logging msg.
      */
     public void reportFilePath(String filePath, String msg) {
-        System.out.println(msg + " `" + filePath + "`");
+        Logger.println(msg + " `" + filePath + "`");
     }
 
     /**
@@ -90,12 +91,12 @@ public class LargeFileWriter {
         try {
             Files.delete(path);
         } catch (NoSuchFileException x) {
-            System.err.format("%s: no such" + " file or directory%n", path);
+            Logger.printFormattedError("%s: no such" + " file or directory%n", path);
         } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", path);
+            Logger.printFormattedError("%s not empty%n", path);
         } catch (IOException x) {
             // File permission problems are caught here.
-            System.err.println(x);
+            Logger.printError(x.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 package readers;
 
 import managers.CalibrationManager;
+import pipeline_components.Logger;
 import similarity.DataChecker;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class CalibrationsReader extends FileReader {
             readFile(baseFileName);
             CalibrationManager.getInstance(fLines);
         } else {
-            System.err.println("No calibration matrix given at `" + baseFileName + "`");
+            Logger.printError("No calibration matrix given at `" + baseFileName + "`");
         }
     }
 

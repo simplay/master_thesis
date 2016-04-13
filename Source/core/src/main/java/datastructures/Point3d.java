@@ -7,6 +7,9 @@ public class Point3d {
     private double y;
     private double z;
 
+    // A Point is invalid if it has a depth value equal to 0.0d
+    private boolean isValid = true;
+
     public Point3d(double x, double y, double z) {
         this.x = x;
         this.y = y;
@@ -23,6 +26,14 @@ public class Point3d {
         this.z -= other.z();
 
         return this;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void markInvalid() {
+        this.isValid = false;
     }
 
     /**

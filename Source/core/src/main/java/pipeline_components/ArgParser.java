@@ -196,30 +196,30 @@ public class ArgParser {
     }
 
     public static void reportUsedParameters() {
-        System.out.print("Provided runtime args: ");
-        System.out.println(getInstance().toString());
-        System.out.println("Using the following runtime parameter setting:");
-        System.out.println("+ Using dataset: " + getDatasetName());
+        Logger.print("Provided runtime args: ");
+        Logger.println(getInstance().toString());
+        Logger.println("Using the following runtime parameter setting:");
+        Logger.println("+ Using dataset: " + getDatasetName());
 
         if (hasCustomFileNamePrefix()) {
-            System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
+            Logger.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }
 
-        System.out.println("+ Running task: " + getSimTask().getName());
-        System.out.println("+ Using local variances: " + useLocalVariance());
-        System.out.println("+ Using depth cues: " + useDepthCues());
-        System.out.println("+ Using color cues: " + useColorCues());
-        System.out.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
-        System.out.println("+ Using NN Mode: " + getNNMode().name());
-        System.out.println("+ Program runs in debug mode: " + runInDebugMode());
-        System.out.println("+ Using Lambda equals: " + getLambda());
+        Logger.println("+ Running task: " + getSimTask().getName());
+        Logger.println("+ Using local variances: " + useLocalVariance());
+        Logger.println("+ Using depth cues: " + useDepthCues());
+        Logger.println("+ Using color cues: " + useColorCues());
+        Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
+        Logger.println("+ Using NN Mode: " + getNNMode().name());
+        Logger.println("+ Program runs in debug mode: " + runInDebugMode());
+        Logger.println("+ Using Lambda equals: " + getLambda());
 
         if (useDepthCues()) {
-            System.out.println("+ Scaling depth values by: " + getDepthFieldScale());
+            Logger.println("+ Scaling depth values by: " + getDepthFieldScale());
         }
 
         if (useColorCues()) {
-            System.out.println("+ Using cut probability: " + getCutProbability());
+            Logger.println("+ Using cut probability: " + getCutProbability());
         }
     }
 }

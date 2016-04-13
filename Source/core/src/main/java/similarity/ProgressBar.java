@@ -1,6 +1,7 @@
 package similarity;
 
 import managers.TrajectoryManager;
+import pipeline_components.Logger;
 
 public class ProgressBar {
     private static ProgressBar instance = null;
@@ -25,7 +26,7 @@ public class ProgressBar {
         counter++;
         if (counter % 200 == 0) {
             double rate = (counter / n)*100d;
-            System.out.println("+ Progress: " + rate + "%");
+            Logger.println("+ Progress: " + rate + "%");
         }
     }
 

@@ -2,6 +2,7 @@ import datastructures.FlowField;
 import managers.CalibrationManager;
 import managers.MetaDataManager;
 import managers.TrajectoryManager;
+import pipeline_components.Logger;
 import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
@@ -44,11 +45,11 @@ public class Main {
 
         String dataset = ArgParser.getDatasetName();
         ArgParser.reportUsedParameters();
-        System.out.println();
+        Logger.println();
         new MetaInfoReader(dataset);
         int samplingRate = MetaDataManager.samplingRate();
         MetaDataManager.reportStatus();
-        System.out.println();
+        Logger.println();
 
         /**
          * Read required input data
@@ -62,8 +63,8 @@ public class Main {
                 counter++;
             }
         }
-        System.out.println("Loading input data...");
-        System.out.println();
+        Logger.println("Loading input data...");
+        Logger.println();
 
         /**
          * For a dataset consisting of a image sequence of N frames load
@@ -96,39 +97,39 @@ public class Main {
         if (ArgParser.useDepthCues()) new CalibrationsReader(dataset);
 
         long tillFileLoadedTime = System.currentTimeMillis();
-        System.out.println("Files loaded in "+((tillFileLoadedTime-startTime)/1000d) +"s...");
-        System.out.println();
+        Logger.println("Files loaded in "+((tillFileLoadedTime-startTime)/1000d) +"s...");
+        Logger.println();
 
         /**
          * Extract trajectories
          */
 
-        System.out.println("Sampling every " + samplingRate + "th pixel");
-        System.out.println("Tracking points over " + counter + " frames...");
-        System.out.println();
+        Logger.println("Sampling every " + samplingRate + "th pixel");
+        Logger.println("Tracking points over " + counter + " frames...");
+        Logger.println();
         new Tracker(till_index, samplingRate);
 
         long tillTrajectoriesTrackedTime = System.currentTimeMillis();
-        System.out.println("Tracking took " + ((tillTrajectoriesTrackedTime-tillFileLoadedTime)/1000d)+ "s");
+        Logger.println("Tracking took " + ((tillTrajectoriesTrackedTime-tillFileLoadedTime)/1000d)+ "s");
 
-        System.out.println();
-        System.out.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println();
+        Logger.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
         for (int k = 0; k <= till_index+1; k++) {
             int trajectoryCount = TrajectoryManager.getInstance().allTrajectoryWithLength(k).size();
-            System.out.println("#Trajectories with len=" + k + ": " + trajectoryCount);
+            Logger.println("#Trajectories with len=" + k + ": " + trajectoryCount);
         }
-        System.out.println();
+        Logger.println();
 
         /**
          * Filter extracted trajectories
          */
 
         // one pointed trajectories have a length of 0.
-        System.out.println("Filtering 1-pointed trajectories...");
+        Logger.println("Filtering 1-pointed trajectories...");
 
         TrajectoryManager.getInstance().filterOnePointedTrajectories();
-        System.out.println("Filtered too short trajectories...");
-        System.out.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println("Filtered too short trajectories...");
+        Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         // Transform trajectory points to euclidian space
         if (ArgParser.useDepthCues()) {
@@ -136,19 +137,19 @@ public class Main {
 
             // all remaining trajectories exhibit at least one tracking point that has a valid depth value associated.
             TrajectoryManager.getInstance().filterDeletableTrajectories();
-            System.out.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
+            Logger.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
         }
 
-        System.out.println("Starts computing affinity values between remaining trajectories...");
+        Logger.println("Starts computing affinity values between remaining trajectories...");
         long beforeAffCompTime = System.currentTimeMillis();
         new AffinityCalculator();
         long afterAffCompTime = System.currentTimeMillis();
-        System.out.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
-        System.out.println();
+        Logger.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
+        Logger.println();
 
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
-        System.out.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
-        System.out.println();
+        Logger.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println();
 
         /**
          * Write output data
@@ -167,6 +168,9 @@ public class Main {
         new NearestSpatialNeighborsWriter(dataset, numberOfNNToSave);
 
         long tillFinishedTime = System.currentTimeMillis();
-        System.out.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
+        Logger.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
+
+        // Write logger status file to "../output/logs/"
+        Logger.writeLog();
     }
 }

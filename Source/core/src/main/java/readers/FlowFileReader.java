@@ -2,6 +2,7 @@ package readers;
 
 import datastructures.FlowField;
 import managers.FlowFieldManager;
+import pipeline_components.Logger;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class FlowFileReader extends FileReader{
         } else if (ff.isBackwardFlow()) {
             FlowFieldManager.getInstance().addBackwardFlow(ff);
         } else {
-            System.err.println("Wrong flow type assigned");
+            Logger.printError("Wrong flow type assigned");
         }
 
     }

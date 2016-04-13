@@ -2,6 +2,7 @@ package writers;
 
 import managers.TrajectoryManager;
 import pipeline_components.ArgParser;
+import pipeline_components.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class FramewiseActiveTraWriter extends LargeFileWriter {
         String prefix = ArgParser.getCustomFileNamePrefix();
         if (!prefix.isEmpty()) prefix += "_";
         for (int idx = 0; idx <= till_index; idx++) {
-            System.out.println("+ Iteration " + (idx+1));
+            Logger.println("+ Iteration " + (idx+1));
             fname = outputPath + prefix + "active_tra_f_" + (idx+1) + ".txt";
             String activeTra = TrajectoryManager.getInstance().toFramewiseOutputString(idx);
             try {

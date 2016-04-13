@@ -20,7 +20,7 @@ public class Tracker {
         m = FlowFieldManager.getInstance().m();
         n = FlowFieldManager.getInstance().n();
 
-        System.out.println("Start point tracking...");
+        Logger.println("Start point tracking...");
 
         activity = new Activity((int) m, (int) n, samplingRate);
         activity_next = new Activity((int) m, (int) n, samplingRate);
@@ -33,7 +33,7 @@ public class Tracker {
             continueTrackToNextFrame(frame_idx);
             activity.copyStates(activity_next);
             activity_next.flushStates();
-            System.out.println("Tracked Frame " + (frame_idx+1));
+            Logger.println("Tracked Frame " + (frame_idx+1));
         }
 
         // Cloe all max length trajectories
@@ -43,7 +43,7 @@ public class Tracker {
             }
         }
 
-        System.out.println("Finished point tracking...");
+        Logger.println("Finished point tracking...");
     }
 
     private void startNewTrajectory(int frame_idx) {

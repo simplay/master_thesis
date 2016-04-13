@@ -1,5 +1,7 @@
 package managers;
 
+import pipeline_components.Logger;
+
 import java.util.ArrayList;
 
 public class MetaDataManager {
@@ -56,8 +58,8 @@ public class MetaDataManager {
     }
 
     public static void reportStatus() {
-        System.out.println("Read the following meta info:");
-        System.out.println("+ Frame dimensions: (m,n)=(" + m() + "," + n() + ")");
-        System.out.println("+ Sampling every " + samplingRate() + "th pixel");
+        Logger.println("Read the following meta info:");
+        Logger.println("+ Frame dimensions: (m,n)=(" + m() + "," + n() + ")");
+        Logger.println("+ Sampling every " + samplingRate() + "th pixel");
     }
 }

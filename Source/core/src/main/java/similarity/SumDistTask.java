@@ -14,8 +14,8 @@ public class SumDistTask extends SimilarityTask {
     // Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts Used in formula (7)
     private final double BETA_0_TILDE = 6.0d;
     private final double BETA_0 = 2.0d;
-    private final double BETA_1 = -0.02d;
-    private final double BETA_2 = -4.0d;
+    private final double BETA_1 = -0.2d;
+    private final double BETA_2 = -0.4d;
     private final double BETA_3 = -0.02d;
 
     // cut probabilities
@@ -54,7 +54,7 @@ public class SumDistTask extends SimilarityTask {
         appendAvgSpatialDistances(a, b, d_spatial);
 
         double z_ab = z_ab(d_motion, d_spatial, d_color);
-        return z_ab + prior_probability();
+        return z_ab - prior_probability();
     }
 
     protected double motion_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
@@ -160,6 +160,6 @@ public class SumDistTask extends SimilarityTask {
     }
 
     protected double prior_probability() {
-        return Math.log(P_BAR / (1.0-P_BAR)) - Math.log(P/(1.0-P));
+        return (Math.log(P_BAR / (1.0-P_BAR)) - Math.log(P/(1.0-P)));
     }
 }
