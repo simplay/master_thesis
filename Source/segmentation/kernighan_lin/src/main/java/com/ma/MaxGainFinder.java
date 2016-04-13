@@ -38,7 +38,7 @@ public class MaxGainFinder {
         MaxGainContainer mgc = new MaxGainContainer(maxgain, topA, topB);
         LinkedList<MaxGainTask> tasks = new LinkedList<>();
 
-        int step = 1;
+        int step = 100;
         int N = sortedByDvalueA.size();
         for (int k = 0; k <= N; k = k + step) {
             if (k + step > N) break;
