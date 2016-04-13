@@ -6,12 +6,20 @@ For further information, please have a look at [here](https://en.wikipedia.org/w
 ## Usage
 
 The following runtime arguments are currently supported:
-+ `-d`: target dataset
-+ `-cc`: Number of cluster the graph should be partitioned into
-+ `-dc`: Number of dummy vertices put into a cluster set. The more we have, the smaller a segment can get.
-+ `-mic`: The maximal number of iterations per optimization step.
-+ `-rc`: The number of repetitions of the same optimization approach using the previous computed date.
-+ `-prefix`: Output data prefix
+
++ `-d STRING`: Name of the target dataset.
++ `-cc INTEGER`: Number of cluster **INTEGER** the graph should be partitioned into
++ `-dc INTEGER`: Number of dummy vertices **INTEGER** put into a cluster set. The more we have, the smaller a segment can get.
++ `-ipm STRING`: The name of the initial set partition mode (i.e. its abbreviation) that should be used.
+ + `STRING == mn`: Splits sets into modulo n.
+ + `STRING == m2`: Splits sets into modulo 2.
+ + `STRING == ef`: Splits sets empty full.
+ + `STRING == ebo`: Splits sets such that all are empty but one.
+ + `STRING == slr`: Splits sets left/right.
+ 
++ `-mic INTEGER`: The maximal number of iterations **INTEGER** per optimization step.
++ `-rc INTEGER`: The number of repetitions **INTEGER** of the same optimization approach using the previous computed date.
++ `-prefix STRING`: The prefix in the filename of the generated output data.
 
 ### Example: 
 

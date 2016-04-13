@@ -75,6 +75,19 @@ public class ArgParser {
     }
 
     /**
+     * Which initial set partition should be used
+     *
+     * @return initial balanced set partition.
+     */
+    public static InitialPartitionMode getInitialPartitionMode() {
+        String ipm = getInstance().getHashValue("ipm");
+        if (ipm == null) {
+            return InitialPartitionMode.EMPTY_FULL;
+        }
+        return InitialPartitionMode.getModeByName(ipm);
+    }
+
+    /**
      * The number of maximal iteration until we skip convergence computation.
      * By default this is 1.
      *
