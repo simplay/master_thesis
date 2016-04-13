@@ -1,6 +1,6 @@
 package com.ma;
 
-public class NeighborAssignmentTask implements Runnable{
+public class NeighborAssignmentTask implements Runnable {
 
     private Graph g;
     private String[] neighbors;

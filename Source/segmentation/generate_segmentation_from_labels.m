@@ -8,12 +8,12 @@ METHODNAME = 'ldof';
 PREFIX_INPUT_FILENAME = 'foobar';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'pew1337_2';
+PART_DS_PREF = 'pew1337_3';
 
 PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'foobarbaz1337_kl_seg_3';
+PREFIX_OUTPUT_FILENAME = 'foobarbaz1337_kl_seg_4';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 20;
 
