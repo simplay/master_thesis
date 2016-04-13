@@ -1,10 +1,9 @@
 package com.ma;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class MaxGainFinder {
 
@@ -46,16 +45,26 @@ public class MaxGainFinder {
             List<Vertex> sublistA = sortedByDvalueA.subList(k, k + step);
             tasks.add(new MaxGainTask(graph, mgc, sublistA, sortedByDvalueB, topA, topB, maxgain));
         }
+
         int diff = (N % step);
         if (diff != 0) {
             List<Vertex> lastListA = sortedByDvalueA.subList(N - diff, N);
             tasks.add(new MaxGainTask(graph, mgc, lastListA, sortedByDvalueB, topA, topB, maxgain));
         }
 
+        Collection<Future<MaxGainTask>> futures = new LinkedList<>();
         for (MaxGainTask task : tasks) {
-            executor.execute(task);
+            futures.add((Future<MaxGainTask>) executor.submit(task));
         }
-
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return mgc;
     }
 

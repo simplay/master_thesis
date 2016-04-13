@@ -232,7 +232,6 @@ public class GraphPartitioner {
                 topB = container.getTopB();
                 float maxgain = container.getMaxGain();
 
-
                 // update D values for the elements of A = A \ a and B = B \ b
                 HashSet<Vertex> subsetA = new HashSet<>();
                 HashSet<Vertex> subsetB = new HashSet<>();
