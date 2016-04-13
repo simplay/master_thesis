@@ -12,6 +12,16 @@ import java.util.List;
 
 public class LargeFileWriter {
 
+    // Indicates whether files be deleted
+    private boolean deletionIsAllowed = true;
+
+    /**
+     * Prevents this file handler from deleting files.
+     */
+    public void disableDeletionMode() {
+        this.deletionIsAllowed = false;
+    }
+
     /**
      * Writes fast a huge collection of Strings into a files
      *
@@ -87,6 +97,10 @@ public class LargeFileWriter {
      * @param filepath file path name to target file that should be deleted.
      */
     public void deleteFile(String filepath) {
+
+        // Skip deletion attempt, if deletion is not allowed
+        if (!deletionIsAllowed) return;
+
         Path path = FileSystems.getDefault().getPath(filepath);
         try {
             Files.delete(path);

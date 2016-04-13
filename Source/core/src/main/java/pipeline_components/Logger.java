@@ -111,6 +111,7 @@ public class Logger extends LargeFileWriter {
      */
     public Logger(boolean isMuted) {
         this.isMuted = isMuted;
+        disableDeletionMode();
         timestamp = new Timestamp(System.currentTimeMillis()).getDate().getTime();
     }
 
