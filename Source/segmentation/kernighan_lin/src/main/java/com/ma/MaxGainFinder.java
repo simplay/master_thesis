@@ -39,16 +39,18 @@ public class MaxGainFinder {
         MaxGainContainer mgc = new MaxGainContainer(maxgain, topA, topB);
         LinkedList<MaxGainTask> tasks = new LinkedList<>();
 
-        int step = 20;
+        int step = 1;
         int N = sortedByDvalueA.size();
-        for (int k = 0; k < N; k = k + step) {
-            if (k + step >= N) break;
+        for (int k = 0; k <= N; k = k + step) {
+            if (k + step > N) break;
             List<Vertex> sublistA = sortedByDvalueA.subList(k, k + step);
             tasks.add(new MaxGainTask(graph, mgc, sublistA, sortedByDvalueB, topA, topB, maxgain));
         }
         int diff = (N % step);
-        List<Vertex> lastListA = sortedByDvalueA.subList(N-diff, N);
-        tasks.add(new MaxGainTask(graph, mgc, lastListA, sortedByDvalueB, topA, topB, maxgain));
+        if (diff != 0) {
+            List<Vertex> lastListA = sortedByDvalueA.subList(N - diff, N);
+            tasks.add(new MaxGainTask(graph, mgc, lastListA, sortedByDvalueB, topA, topB, maxgain));
+        }
 
         for (MaxGainTask task : tasks) {
             executor.execute(task);

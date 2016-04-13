@@ -13,7 +13,7 @@ public class MaxGainContainer {
     }
 
     public synchronized void updateMaxGainValues(float candidateMaxGain, Vertex cTopA, Vertex cTopB) {
-        if (maxGain < candidateMaxGain) {
+        if (candidateMaxGain > maxGain) {
             maxGain = candidateMaxGain;
             topA = cTopA;
             topB = cTopB;
