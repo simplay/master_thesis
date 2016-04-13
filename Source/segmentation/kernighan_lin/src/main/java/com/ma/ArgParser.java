@@ -149,6 +149,7 @@ public class ArgParser {
         System.out.println(getInstance().toString());
         System.out.println("Using the following runtime parameter setting:");
         System.out.println("+ Using dataset: " + getDatasetName());
+        System.out.println("+ Using initial partition mode: " + getInitialPartitionMode().getName());
         System.out.println("+ Number of clusters: " + getClusterCount());
         System.out.println("+ Max Iterations per Cluster: " + getMaxIterCountPerCluster());
         System.out.println("+ Number of calculation repetitions: " + getRepetitionCount());

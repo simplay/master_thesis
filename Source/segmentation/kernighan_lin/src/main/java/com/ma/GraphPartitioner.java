@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.ma.InitialPartitionMode.*;
+
 /**
  * Solving the graph partitioning problem using the Kernighan–Lin algorithm is a heuristic algorithm.
  * <p>
@@ -65,11 +67,21 @@ public class GraphPartitioner {
     }
 
     private void initBalancedSets(int dummyCount) {
-        // assignModN(dummyCount);
-        // initSetsMod2(dummyCount);
-        // initSetsEmptyFull(dummyCount);
-        initAllEmptyButOne(dummyCount);
-        // initSetsSplitLeftRight(dummyCount);
+
+        switch (ArgParser.getInitialPartitionMode()) {
+            case MOD_N:
+                assignModN(dummyCount);
+                break;
+            case MOD_2:
+                initSetsMod2(dummyCount);
+                break;
+            case EMPTY_FULL:
+                initSetsEmptyFull(dummyCount);
+                break;
+            case EMPTY_BUT_ONE:
+                initAllEmptyButOne(dummyCount);
+                break;
+        }
     }
 
     public void initAllEmptyButOne(int dummyCount) {
