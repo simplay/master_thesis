@@ -12,30 +12,30 @@ VM options: `-Xmx16000m`
  + `-d c14 -task 1 -var 1 -nn 200 -depth 1 -prob 0.99 -prefix foobar`
 
 ### Program arguments: 
-+ **-d NAME**: (**req**) The NAME of the target dataset. Has to correspond to a dataset located at `../data/ldof/`.
++ **-d NAME**: (**req**) The NAME of the target dataset. Has to correspond to a dataset directory name that is located at `../Data/`.
 
 + **-task ID**: (**req**) The target similarity task given by a number ID.
- + ID == 1: Summed distances (SD) similarity task.
- + ID == 2: Product distances (PD) similarity task.
- + ID == 3: Product of Euclidian distances (PED) similarity task. Uses 3d trajectory points for computing the spatial distances.
- + ID == 4: Sum of Euclidian distances (SED) similarity task. Uses 3d trajectory points for computing the spatial distances.
+ + `ID == 1`: Summed distances (SD) similarity task.
+ + `ID == 2`: Product distances (PD) similarity task.
+ + `ID == 3`: Product of Euclidian distances (PED) similarity task. Uses 3d trajectory points for computing the spatial distances.
+ + `ID == 4`: Sum of Euclidian distances (SED) similarity task. Uses 3d trajectory points for computing the spatial distances.
  
 Whenever we want to make use of depth cues but the color and depth camera are already aligned, 
 the target similarity task is re-assign to one that used 3d trajectory points (i.e. to its alternative task).
  
 + **-var BOOL**: Indicates whether the local flow variance values should be used for normalizing similarity values. By default, the global variance values are used.
- + BOOL == 0: Use global flow variance values for normalization.
- + BOOL == 1: Use local flow variance values for normalization.
+ + `BOOL == 0`: Use global flow variance values for normalization.
+ + `BOOL == 1`: Use local flow variance values for normalization.
  
 + **-depth BOOL** should depth cues be used. By default no depth cues are used.
- + BOOL == 0: Do not use any depth cues.
- + BOOL == 1: Use depth field to transform tracked points to the Euclidian space to have a better measure for the average spatial distance.
+ + `BOOL == 0`: Do not use any depth cues.
+ + `BOOL == 1`: Use depth field to transform tracked points to the Euclidian space to have a better measure for the average spatial distance.
  
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
 + **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, the top N nearest neighbors will be returned.
- + STRING == top: Return the top N neighbors
- + STRING == bot: Return the top N/2 and worst N/2 neighbors
+ + `STRING == top`: Return the top N neighbors
+ + `STRING == both`: Return the top N/2 and worst N/2 neighbors
 
 + **-debug BOOL**:  should the program run in the debug mode. If so, it will dumb intermediate calculated data. By default, the debug mode is disabled.
 
@@ -55,6 +55,7 @@ When running the code on a dataset called **DATASET**, the following output is g
  + `DATASET_sim.dat`: The affinity matrix, encoding all similarities between all valid trajectories.
  + `DATASET_labels.txt`: The affinity matrix index trajectory label mapping.
  + `DATASET_spnn.txt`: The set of nearest neighbor indices per trajectory.
++ A list of files named `active_tra_f_FRAMEINDEX` located at `../output/trajectory_label_frame/DATASET/`, encoding all active trajectories (their tracking points) in a given frame. This data is used to visualize the tracking points of the trajectories.
  
 ### Details about the output data and their format:
  
@@ -76,5 +77,4 @@ When running the code on a dataset called **DATASET**, the following output is g
 
 When providing the runtime argument `-debug 1`, the following additional debugging data is dumbed:
 
-+ A list of files named `active_tra_f_FRAMEINDEX` located at `../output/trajectory_label_frame/DATASET/`, encoding all active trajectories (their tracking points) in a given frame. This data is used to visualize the tracking points of the trajectories.
 + A file called `traj_out_DATASET_fc_FRAMECOUNT` located `../output/trajectories/`, encoding the extracted trajectories in a format readable by the old similarity computation code written in ruby.
