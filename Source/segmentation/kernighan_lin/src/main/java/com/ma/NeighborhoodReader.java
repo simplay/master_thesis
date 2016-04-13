@@ -1,10 +1,9 @@
 package com.ma;
 
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Created by simplay on 15/02/16.
@@ -29,11 +28,26 @@ public class NeighborhoodReader extends GraphFileReader {
         System.out.println("Assigning neighborhood using " + availableThreads + " threads...");
 
         ExecutorService executor = Executors.newFixedThreadPool(availableThreads);
-        for (NeighborAssignmentTask task : tasks) {
-            executor.execute(task);
-        }
-        executor.shutdown();
+        //for (NeighborAssignmentTask task : tasks) {
+        //    executor.execute(task);
+        //}
+        //executor.shutdown();
 
+        Collection<Future<NeighborAssignmentTask>> futures = new LinkedList<>();
+        for (NeighborAssignmentTask task : tasks) {
+            futures.add((Future<NeighborAssignmentTask>) executor.submit(task));
+        }
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        executor.shutdown();
         try {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
