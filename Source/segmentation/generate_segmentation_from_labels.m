@@ -3,24 +3,27 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'chair_3_cast';
+DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd';
+PREFIX_INPUT_FILENAME = 'foobar';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'foobar';
+PART_DS_PREF = 'pew1337_2';
 
 PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'foobarbaz';
-COMPUTE_FULL_RANGE = false;
+PREFIX_OUTPUT_FILENAME = 'foobarbaz1337_kl_seg_3';
+COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 20;
 
-frame_idx = 1;
+
+USE_CUSTOM_TILL_BOUND = true;
+frame_idx = 40;
+TILL_FRAME = 4;
 
 SAVE_FIGURES = true;
-SHOW_SEGMENTATION = true;
+SHOW_SEGMENTATION = false;
 
 %% load relevant data
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
@@ -44,6 +47,10 @@ end
 
 label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
 [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
+
+if USE_CUSTOM_TILL_BOUND
+    boundaries(2) = TILL_FRAME;
+end
 
 frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
 

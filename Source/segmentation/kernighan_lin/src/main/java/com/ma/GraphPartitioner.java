@@ -51,7 +51,9 @@ public class GraphPartitioner {
 
         this.graph = graph;
 
-        vertexCount = graph.vertices.size();
+        // The total number of vertices is the number of read
+        // trajectories plus the virtual vertices (i.e. dummies).
+        vertexCount = dummyCount + graph.vertices.size();
 
         this.clusterCount = clusterCount;
 
