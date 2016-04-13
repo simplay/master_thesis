@@ -12,7 +12,7 @@ VM options: `-Xmx16000m`
  + `-d c14 -task 1 -var 1 -nn 200 -depth 1 -prob 0.99 -prefix foobar`
 
 ### Program arguments: 
-+ **-d NAME**: (**req**) The NAME of the target dataset. Has to correspond to a dataset directory name that is located at `../Data/`.
++ **-d NAME**: (**req**) The NAME of the target dataset. Has to correspond to a dataset directory name that is located at `../../Data/`.
 
 + **-task ID**: (**req**) The target similarity task given by a number ID.
  + `ID == 1`: Summed distances (SD) similarity task.
@@ -41,7 +41,7 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
 
 + **-prob FLOAT**: Set value FLOAT of cut probability used for the PD similarity task. FLOAT is a supposed to be a value: FLOAT > 0 AND FLOAT < 1. By default the probability value 0.5 is used.
 
-+ **-prefix NAME** custom output file name prefix NAME, by default the empty string.
++ **-prefix NAME** custom prefix **NAME** appended to all generated output files. By default it is equal to the empty string.
 
 + **-lambda FLOAT** scale factor in affinity function used for all MD tasks. By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
 
@@ -55,6 +55,7 @@ When running the code on a dataset called **DATASET**, the following output is g
  + `DATASET_sim.dat`: The affinity matrix, encoding all similarities between all valid trajectories.
  + `DATASET_labels.txt`: The affinity matrix index trajectory label mapping.
  + `DATASET_spnn.txt`: The set of nearest neighbor indices per trajectory.
+ 
 + A list of files named `active_tra_f_FRAMEINDEX` located at `../output/trajectory_label_frame/DATASET/`, encoding all active trajectories (their tracking points) in a given frame. This data is used to visualize the tracking points of the trajectories.
  
 ### Details about the output data and their format:
@@ -67,7 +68,7 @@ When running the code on a dataset called **DATASET**, the following output is g
  
  In short (tl;dr):
  
- + Not every initially extraced trajectory is returned (some are filtered).
+ + Not every initially extracted trajectory is returned (some are filtered).
  + trajectory (values) are sorted by their label value (a unique natural number)
  + these values are returned in their sorting order.
  + The index-trajectory-label mapping ins defined in the `labels.txt` file.
