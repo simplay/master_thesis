@@ -26,6 +26,7 @@ public class GraphPartitioner {
     private final ArrayList<PartitionSet> setList = new ArrayList<>();
     private int clusterCount;
     private int REPS;
+    private int vertexCount;
 
 
     public PartitionSet getSetA() {
@@ -47,6 +48,9 @@ public class GraphPartitioner {
     public GraphPartitioner(Graph graph, int clusterCount, int dummyCount, int REPS) {
 
         this.graph = graph;
+
+        vertexCount = graph.vertices.size();
+
         this.clusterCount = clusterCount;
 
         for (int k = 0; k < clusterCount; k++) {
@@ -174,6 +178,9 @@ public class GraphPartitioner {
         int[] activeLabels = { setA.getLabel(), setB.getLabel() };
         float diff_gv = 0.0f;
         float prev_max_gv = 0.0f;
+
+        // Iterate until either max_gv become <= 0
+        // or we exceeded the max. number of allowed iterations
         do {
 
             av.clear();
@@ -310,9 +317,18 @@ public class GraphPartitioner {
             diff_gv = prev_max_gv - max_gv;
             System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
             prev_max_gv = max_gv;
+
+            // if there happened the complete permutation or no permutation step,
+            // then we are done.
+            if (max_gv_idx == vertexCount || max_gv_idx == 0) break;
+
+            // If there was no significant enery change comppared to the previous iteration,
+            // then skip
             if (diff_gv == 0.0f) break;
+
         } while ((max_gv > 0.0f) && (iter < MAXITER));
 
+        // Assign labels to vertices contained in partition set.
         for (Vertex v : setA) {
             v.setPartition(setA.getLabel());
         }
