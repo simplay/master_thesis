@@ -141,7 +141,9 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public void assignSimilarityValueTo(int trajectoryLabel, double value) {
         synchronized (similarities) {
-            if (value > 0d) {
+
+            // If there is a meaningful similarity value
+            if (value > 0d || value < 0d) {
                 hasSimilarityValues = true;
             }
             similarities.put(trajectoryLabel, value);
