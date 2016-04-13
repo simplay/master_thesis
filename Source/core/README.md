@@ -57,14 +57,28 @@ When running the code on a dataset called **DATASET**, the following output is g
  + `DATASET_spnn.txt`: The set of nearest neighbor indices per trajectory.
  
 + A list of files named `active_tra_f_FRAMEINDEX` located at `../output/trajectory_label_frame/DATASET/`, encoding all active trajectories (their tracking points) in a given frame. This data is used to visualize the tracking points of the trajectories.
+
++ A log-file located at `../output/logs/` named `core_<TIMESTAMP>.txt` containing the console output after running the pipeline. 
  
 ### Details about the output data and their format:
  
- + The similarity values: A dat file that contains a **m x m** matrix readable by matlab via load('file.dat'). The dimension **m** denotes the number of trajectories that were used. Note that not every extracted trajectory was actually used due to filtering resons. E.g. too short trajectories are filtered. Consult the code for more info about the filtering steps. Since trajectories are well enumerated by their unque label but filtering introduceds holes, we ensure the well-enumeration by returning a label mapping that tells us to which trajectory label each matrix row and column belong to. 
+ + The similarity values: A **.dat** file that contains a **m x m** matrix readable by matlab via load('file.dat'). 
+ The dimension **m** denotes the number of trajectories that were used. 
+ Note that not every extracted trajectory was actually used due to filtering reasons. 
+  + E.g. too short trajectories are filtered. Consult the code for more info about the filtering steps. 
+  + Since trajectories are well enumerated by their unique label but filtering introduced holes, 
+ we ensure the well-enumeration by returning a label mapping that tells us to which trajectory 
+ label each matrix row and column belong to. 
  
- + The trajectory labels: A text file that contains a mapping, indicating to which label any matrix row and column (of the reported .dat file) belongs. The file contains a sequence of numbers. The index of a number denotes the column,row index in the returned similarity matrix, its corresponding value denotes the lable of a trajectory.
+ + The trajectory labels: A text file that contains a mapping, indicating to which label any matrix row / column 
+ (of the reported .dat file) belongs to. The file contains a sequence of numbers. 
+ The index of a number denotes the column, row index in the returned similarity matrix, 
+ its corresponding value denotes the label of a trajectory.
  
- + The 12 spatially nearest trajectory neighbors: a file that contains a sequence of rows of numbers. each row corresponds to the nearest neighbors of a particular trajectory. file row index corresponds to the index in the label file. i.e. in order to obtain the trajectory index, to which the numbers belong to, we have to lookup the corresponding index in the **_labels.txt** file. 
+ + The **NUM** (given as user argument) spatially nearest trajectory neighbors: a file that contains a sequence of rows of numbers. 
+ each row corresponds to the nearest neighbors of a particular trajectory. 
+ file row index corresponds to the index in the label file. i.e. in order to obtain the trajectory index, 
+ to which the numbers belong to, we have to lookup the corresponding index in the **_labels.txt** file. 
  
  In short (tl;dr):
  
