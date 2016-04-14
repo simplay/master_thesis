@@ -3,22 +3,22 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'c14';
+DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'foobar';
+PREFIX_INPUT_FILENAME = 'sd_nn_1600_both';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'pew1337_3';
+PART_DS_PREF = 'c_5_dc_1000';
 
 PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'foobarbaz1337_kl_seg_4';
+PREFIX_OUTPUT_FILENAME = 'kl_c_5';
 COMPUTE_FULL_RANGE = true;
-CLUSTER_CENTER_COUNT = 20;
+CLUSTER_CENTER_COUNT = 5;
 
 
-USE_CUSTOM_TILL_BOUND = true;
+USE_CUSTOM_TILL_BOUND = false;
 frame_idx = 40;
 TILL_FRAME = 4;
 
