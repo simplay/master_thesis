@@ -51,7 +51,9 @@ public class GraphPartitioner {
 
         this.graph = graph;
 
-        vertexCount = graph.vertices.size();
+        // The total number of vertices is the number of read
+        // trajectories plus the virtual vertices (i.e. dummies).
+        vertexCount = dummyCount + graph.vertices.size();
 
         this.clusterCount = clusterCount;
 
@@ -182,6 +184,7 @@ public class GraphPartitioner {
                 }
             }
         }
+        MaxGainFinder.close();
     }
 
     private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
@@ -193,6 +196,7 @@ public class GraphPartitioner {
 
         // Iterate until either max_gv become <= 0
         // or we exceeded the max. number of allowed iterations
+        //MaxGainFinder.start();
         do {
 
             av.clear();
@@ -223,25 +227,11 @@ public class GraphPartitioner {
                 //TODO: could and should be sped up...
                 //for now just n^2 double loop.
                 // Visit all pairs (a,b) and find the (a,b) = max_arg gain(a,b).
-                float maxgain = graph.gain(topA, topB);
-                float candidate_gain;
-                for (Vertex candidateA : sortedByDvalueA) {
-                    if (candidateA.getPartitionSetLabel() == -1) continue;
-                    for (Vertex candidateB : sortedByDvalueB) {
-                        // only consider valid neighbors
-                        if (candidateB.getPartitionSetLabel() == -1) continue;
+                MaxGainContainer container = MaxGainFinder.getMaxGain(graph, sortedByDvalueA, sortedByDvalueB, topA, topB);
+                topA = container.getTopA();
+                topB = container.getTopB();
+                float maxgain = container.getMaxGain();
 
-                        candidate_gain = graph.gain(candidateA, candidateB);
-
-                        //can be sped up with a break here if the candidates are sorted by potential gain
-                        if (candidate_gain > maxgain) {
-                            maxgain = candidate_gain;
-                            topA = candidateA;
-                            topB = candidateB;
-                        }
-
-                    }
-                }
                 // update D values for the elements of A = A \ a and B = B \ b
                 HashSet<Vertex> subsetA = new HashSet<>();
                 HashSet<Vertex> subsetB = new HashSet<>();
@@ -349,7 +339,7 @@ public class GraphPartitioner {
             v.setPartition(setB.getLabel());
         }
 
-
+        //MaxGainFinder.close();
     }
 
 }

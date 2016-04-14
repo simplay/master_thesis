@@ -26,6 +26,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-parent</artifactId>
+            <version>14</version>
+        </dependency>
 
     </dependencies>
 

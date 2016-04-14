@@ -143,7 +143,7 @@ public class Vertex implements Comparable<Vertex> {
      *
      * @param v neighboring vertex.
      */
-    public void appendNearestNeighbord(Vertex v) {
+    public synchronized void appendNearestNeighbord(Vertex v) {
         if (v != null) {
             if (!neighbors.contains(v)) {
                 neighbors.add(v);

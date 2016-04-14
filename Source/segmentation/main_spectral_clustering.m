@@ -8,11 +8,11 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_spec_clust_foobar_new';
+PREFIX_OUTPUT_FILENAME = 'md_d_spec_clust_foobarbaz';
 PREFIX_INPUT_FILENAME = 'md_d_nn';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
