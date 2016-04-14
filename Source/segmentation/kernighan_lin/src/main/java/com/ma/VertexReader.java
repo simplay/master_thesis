@@ -1,9 +1,5 @@
 package com.ma;
 
-
-/**
- * Created by simplay on 15/02/16.
- */
 public class VertexReader extends GraphFileReader {
     private int processedLineCount = 0;
 
@@ -20,7 +16,7 @@ public class VertexReader extends GraphFileReader {
 
     @Override
     protected void stepsAfterFileProcessing() {
-        System.out.println("Similarity Reading done: Processed " + processedLineCount + " vertices.");
+        Logger.println("Similarity Reading done: Processed " + processedLineCount + " vertices.");
     }
 
     @Override

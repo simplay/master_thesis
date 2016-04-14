@@ -4,12 +4,8 @@ package com.ma;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by simplay on 15/02/16.
- */
 public class Graph {
 
     public final List<Vertex> vertices = new ArrayList<Vertex>();
@@ -97,7 +93,7 @@ public class Graph {
 
     public void inspectSimilaritiesForVertex(int id) {
         for (Float t : vertices.get(id).similarities) {
-            System.out.print(t + " ");
+            Logger.print(t + " ");
         }
     }
 

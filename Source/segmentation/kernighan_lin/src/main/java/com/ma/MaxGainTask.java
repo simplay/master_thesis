@@ -11,7 +11,6 @@ public class MaxGainTask implements Runnable {
     private Vertex topA;
     private Vertex topB;
     private float maxgain;
-    private boolean updatedMaxGain = false;
 
     public MaxGainTask(Graph graph, MaxGainContainer container, List<Vertex> sortedByDvalueA,
                        List<Vertex> sortedByDvalueB, Vertex topA, Vertex topB, float maxgain) {

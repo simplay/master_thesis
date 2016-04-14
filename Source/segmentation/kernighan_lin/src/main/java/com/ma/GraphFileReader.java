@@ -3,9 +3,6 @@ package com.ma;
 
 import java.io.*;
 
-/**
- * Created by simplay on 15/02/16.
- */
 public abstract class GraphFileReader {
 
     protected Graph graph;
@@ -19,7 +16,7 @@ public abstract class GraphFileReader {
         String baseFileName = basePath + fname;
 
         File f = new File(baseFileName);
-        System.out.println("Expecting data in Folder : " + f.getAbsolutePath());
+        Logger.println("Expecting data in Folder : " + f.getAbsolutePath());
         checkFileExists(baseFileName);
         assignNumberofLines(baseFileName);
 
@@ -69,9 +66,9 @@ public abstract class GraphFileReader {
     private void checkFileExists(String fname) {
         File f = new File(fname);
         if (f.exists() && !f.isDirectory()) {
-            System.out.println("File " + fname + " does exist");
+            Logger.println("File " + fname + " does exist");
         } else {
-            System.out.println(" File does NOT exist");
+            Logger.println(" File does NOT exist");
         }
     }
 

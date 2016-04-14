@@ -1,9 +1,5 @@
 package com.ma;
 
-
-/**
- * Created by simplay on 15/02/16.
- */
 public class TrajectoryLabelReader extends GraphFileReader {
 
     public TrajectoryLabelReader(String fname, Graph graph) {
@@ -16,7 +12,7 @@ public class TrajectoryLabelReader extends GraphFileReader {
 
     @Override
     protected void stepsAfterFileProcessing() {
-        System.out.println("Trajectory label identifier reading done");
+        Logger.println("Trajectory label identifier reading done");
     }
 
     @Override

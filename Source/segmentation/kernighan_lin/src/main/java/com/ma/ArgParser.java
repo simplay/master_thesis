@@ -145,16 +145,16 @@ public class ArgParser {
     }
 
     public static void reportUsedParameters() {
-        System.out.print("Provided runtime args: ");
-        System.out.println(getInstance().toString());
-        System.out.println("Using the following runtime parameter setting:");
-        System.out.println("+ Using dataset: " + getDatasetName());
-        System.out.println("+ Using initial partition mode: " + getInitialPartitionMode().getName());
-        System.out.println("+ Number of clusters: " + getClusterCount());
-        System.out.println("+ Max Iterations per Cluster: " + getMaxIterCountPerCluster());
-        System.out.println("+ Number of calculation repetitions: " + getRepetitionCount());
+        Logger.print("Provided runtime args: ");
+        Logger.println(getInstance().toString());
+        Logger.println("Using the following runtime parameter setting:");
+        Logger.println("+ Using dataset: " + getDatasetName());
+        Logger.println("+ Using initial partition mode: " + getInitialPartitionMode().getName());
+        Logger.println("+ Number of clusters: " + getClusterCount());
+        Logger.println("+ Max Iterations per Cluster: " + getMaxIterCountPerCluster());
+        Logger.println("+ Number of calculation repetitions: " + getRepetitionCount());
         if (hasCustomFileNamePrefix()) {
-            System.out.println("+ Using custom prefix: " + getCustomFileNamePrefix());
+            Logger.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }
     }
 

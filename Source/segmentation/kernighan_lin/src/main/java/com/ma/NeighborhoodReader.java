@@ -1,13 +1,9 @@
 package com.ma;
 
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.*;
 
-/**
- * Created by simplay on 15/02/16.
- */
 public class NeighborhoodReader extends GraphFileReader {
 
     private int lineCounter = 0;
@@ -25,7 +21,7 @@ public class NeighborhoodReader extends GraphFileReader {
     @Override
     protected void stepsAfterFileProcessing() {
         int availableThreads = Runtime.getRuntime().availableProcessors();
-        System.out.println("Assigning neighborhood using " + availableThreads + " threads...");
+        Logger.println("Assigning neighborhood using " + availableThreads + " threads...");
 
         ExecutorService executor = Executors.newFixedThreadPool(availableThreads);
 
@@ -48,13 +44,12 @@ public class NeighborhoodReader extends GraphFileReader {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
 
-        System.out.println("Assigned neighborhood for " + lineCounter + " trajectories.");
+        Logger.println("Assigned neighborhood for " + lineCounter + " trajectories.");
     }
 
     @Override
     protected void processFileLine(String fline) {
         String[] tokens = fline.split(", ");
-        //graph.assignNearestNeighborsForVertex(lineCounter, tokens);
         tasks.add(new NeighborAssignmentTask(graph, tokens, lineCounter));
         lineCounter++;
     }

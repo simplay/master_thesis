@@ -2,9 +2,6 @@ package com.ma;
 
 import java.util.*;
 
-/**
- * Created by simplay on 18/02/16.
- */
 public class PartitionSet implements Iterable<Vertex> {
 
     public static final int INVALID_LABEL = -1;
@@ -60,12 +57,6 @@ public class PartitionSet implements Iterable<Vertex> {
 
 
     public int size() {
-        /*int validCounter = 0;
-        for (Vertex v : vertices) {
-           if (v.getPartitionSetLabel() != INVALID_LABEL) validCounter++;
-        }
-        return validCounter;*/
-    	//rREMOVED BUG: dummy vertices need definitely to be counted too!
     	return vertices.size();
     }
 

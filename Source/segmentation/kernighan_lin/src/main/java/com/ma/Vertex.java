@@ -1,14 +1,9 @@
 package com.ma;
 
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by simplay on 15/02/16.
- */
 public class Vertex implements Comparable<Vertex> {
 
     private int id;

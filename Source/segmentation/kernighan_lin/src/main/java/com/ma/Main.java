@@ -24,25 +24,27 @@ public class Main {
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
+        Logger.println("Current relative path is: " + s);
 
-        System.out.println("Loading relevant input data...");
-        System.out.println();
+        Logger.println("Loading relevant input data...");
+        Logger.println();
         Graph g = new Graph(dataset);
       
         long tillLoadTime = System.currentTimeMillis();
-        System.out.println("Loading data took " + (tillLoadTime - startTime) / 1000.0 + " seconds");
-        System.out.println("Computing the graph partitioning...");
-        System.out.println();
+        Logger.println("Loading data took " + (tillLoadTime - startTime) / 1000.0 + " seconds");
+        Logger.println("Computing the graph partitioning...");
+        Logger.println();
 
         new GraphPartitioner(g, clusterCount, dummyCount, repetitionCount).runKernighanLin(max_iterations);
         long tillPartitioningTime = System.currentTimeMillis();
-        System.out.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
+        Logger.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
 
-        System.out.println("Storing computed partition...");
+        Logger.println("Storing computed partition...");
         if (!customPrefix.isEmpty()) customPrefix = "_" + customPrefix;
         g.savePartitionToFile(baseOutputPath + dataset + customPrefix + "_part.txt");
         long totalTime = System.currentTimeMillis();
-        System.out.println("Total elapsed time: " + (totalTime - startTime) / 1000.0 + " seconds");
+        Logger.println("Total elapsed time: " + (totalTime - startTime) / 1000.0 + " seconds");
+
+        Logger.writeLog();
     }
 }

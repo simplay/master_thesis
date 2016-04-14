@@ -1,23 +1,15 @@
 package com.ma;
 
-
-import sun.awt.image.ImageWatched;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-
-import static com.ma.InitialPartitionMode.*;
 
 /**
  * Solving the graph partitioning problem using the Kernighan–Lin algorithm is a heuristic algorithm.
- * <p>
- * Created by simplay on 16/02/16.
  */
 public class GraphPartitioner {
 
@@ -64,8 +56,8 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         initBalancedSets(dummyCount);
         this.REPS = REPS;
-        System.out.print("Computing multi-label clustering via alpha-beta expansion");
-        System.out.print("Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
+        Logger.print("Computing multi-label clustering via alpha-beta expansion");
+        Logger.print("Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
     }
 
     private void initBalancedSets(int dummyCount) {
@@ -154,7 +146,7 @@ public class GraphPartitioner {
 
         try {
             File f = new File("./temp_debug.m");
-            System.out.println("Dumpig debug .m file in: " + f.getAbsolutePath());
+            Logger.println("Dumpig debug .m file in: " + f.getAbsolutePath());
 
             BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
             writer.write("Vals = [");
@@ -176,10 +168,10 @@ public class GraphPartitioner {
     public void runKernighanLin(int MAXITER) {
         // iterate over all pairs: #cluster low 2
         for (int repet=0; repet < REPS; repet++) {
-            System.out.println("Round " + (repet+1) + "/"+REPS);
+            Logger.println("Round " + (repet+1) + "/"+REPS);
             for (int m = 0; m < clusterCount; m++) {
                 for (int n = m + 1; n < clusterCount; n++) {
-                    System.out.println("Computing pair (m,n)="+"("+m+","+n+")...");
+                    Logger.println("Computing pair (m,n)="+"("+m+","+n+")...");
                     _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
                 }
             }
@@ -317,7 +309,7 @@ public class GraphPartitioner {
 
             iter++;
             diff_gv = prev_max_gv - max_gv;
-            System.out.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
+            Logger.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
             prev_max_gv = max_gv;
 
             // if there happened the complete permutation or no permutation step,
