@@ -33,7 +33,7 @@ public class Graph {
         new NeighborhoodReader(dataset + "_spnn.txt", this);
         
         //fill in only the nonzero elements in  a new matrix.
-        float[][] tmp_similarity_matrix = new float[vertexCount()][vertexCount()];
+        double[][] tmp_similarity_matrix = new double[vertexCount()][vertexCount()];
         for(Vertex v : vertices){
         	for(Vertex w : v.neighbors){
         		tmp_similarity_matrix[v.getId()][w.getId()] = v.similarities[w.getId()];
@@ -47,11 +47,11 @@ public class Graph {
 	}
 
 
-	public float gain(Vertex a, Vertex b){
-    	return a.getDValue() + b.getDValue() - 2.0f * getWeight(a.getId(), b.getId());
+	public double gain(Vertex a, Vertex b){
+    	return a.getDValue() + b.getDValue() - 2.0d * getWeight(a.getId(), b.getId());
     }
-    public float getWeight(int idxa, int idxb) {
-        if (idxa < 0 || idxb < 0) return 0.0f;
+    public double getWeight(int idxa, int idxb) {
+        if (idxa < 0 || idxb < 0) return 0.0d;
         return vertices.get(idxa).similarities[idxb];
     }
 
@@ -91,7 +91,7 @@ public class Graph {
     }
 
     public void inspectSimilaritiesForVertex(int id) {
-        for (Float t : vertices.get(id).similarities) {
+        for (Double t : vertices.get(id).similarities) {
             Logger.print(t + " ");
         }
     }

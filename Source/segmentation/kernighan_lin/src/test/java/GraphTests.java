@@ -27,9 +27,9 @@ public class GraphTests {
     public void testSimilaritiesAreSymmetric() {
         for (Vertex v : g.vertices) {
             int idx = 0;
-            for (Float sim : v.similarities) {
+            for (Double sim : v.similarities) {
                 Vertex other = g.vertices.get(idx);
-                float other_sim = other.similarities[v.getId()];
+                double other_sim = other.similarities[v.getId()];
                 assertEquals(other_sim, sim);
                 idx++;
             }
@@ -39,15 +39,15 @@ public class GraphTests {
     @Test
     public void testDiagIsZero() {
         for (Vertex v : g.vertices) {
-            assertEquals(v.similarities[v.getId()], 0.0f);
+            assertEquals(v.similarities[v.getId()], 0.0d);
         }
     }
 
     @Test
     public void testhashNegatives() {
-        float min = 1000.0f;
+        double min = 1000.0d;
         for (Vertex v : g.vertices) {
-            for (Float sim : v.similarities) {
+            for (Double sim : v.similarities) {
                 if ( sim < min) {
                     min = sim;
                 }

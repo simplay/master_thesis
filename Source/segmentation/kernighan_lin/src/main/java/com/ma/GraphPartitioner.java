@@ -14,7 +14,7 @@ import java.util.List;
 public class GraphPartitioner {
 
     private Graph graph;
-    private final List<Float> gv = new ArrayList<>();
+    private final List<Double> gv = new ArrayList<>();
     private final List<Vertex> av = new ArrayList<>();
     private final List<Vertex> bv = new ArrayList<>();
     private final ArrayList<PartitionSet> setList = new ArrayList<>();
@@ -182,11 +182,11 @@ public class GraphPartitioner {
     }
 
     private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
-        float max_gv = 0.0f;
+        double max_gv = 0.0f;
         int iter = 0;
         int[] activeLabels = { setA.getLabel(), setB.getLabel() };
-        float diff_gv = 0.0f;
-        float prev_max_gv = 0.0f;
+        double diff_gv = 0.0f;
+        double prev_max_gv = 0.0f;
 
         // Iterate until either max_gv become <= 0
         // or we exceeded the max. number of allowed iterations
@@ -224,7 +224,7 @@ public class GraphPartitioner {
                 MaxGainContainer container = MaxGainFinder.getMaxGain(graph, sortedByDvalueA, sortedByDvalueB, topA, topB);
                 topA = container.getTopA();
                 topB = container.getTopB();
-                float maxgain = container.getMaxGain();
+                double maxgain = container.getMaxGain();
 
                 // update D values for the elements of A = A \ a and B = B \ b
                 HashSet<Vertex> subsetA = new HashSet<>();
@@ -250,13 +250,13 @@ public class GraphPartitioner {
 
                 for (Vertex v : subsetA ) {
                     if (v.isDummy() ) continue;
-                    float tmp = v.getDValue() + 2.0f*topA.getSimValue(v.getId())-2.0f*v.getSimValue(topB.getId());
+                    double tmp = v.getDValue() + 2.0d*topA.getSimValue(v.getId())-2.0d*v.getSimValue(topB.getId());
                     v.setdValue(tmp);
                 }
 
                 for (Vertex v : subsetB ) {
                     if (v.isDummy() ) continue;
-                    float tmp = v.getDValue() + 2.0f*topB.getSimValue(v.getId())-2.0f*v.getSimValue(topA.getId());
+                    double tmp = v.getDValue() + 2.0d*topB.getSimValue(v.getId())-2.0d*v.getSimValue(topA.getId());
                     v.setdValue(tmp);
                 }
 
@@ -270,17 +270,16 @@ public class GraphPartitioner {
                 av.add(n, topA);
                 bv.add(n, topB);
 
-
             }
 
             // find k which maximizes g_max, the sum of gv[1],...,gv[k]
-            max_gv = 0.0f;
+            max_gv = 0.0d;
 
             // find max partial sum of gv with its corresponding index
             int max_gv_idx = 0;
             int current_gv_idx = 0;
-            float current_sum = 0.0f;
-            for (Float gv_value : gv) {
+            double current_sum = 0.0d;
+            for (Double gv_value : gv) {
             	current_sum += gv_value;
             	//REMOVED BUG: This constraint makes no sense; it will always
             	//be true if gv_value is greater 0, so the found k was wrong.
@@ -293,7 +292,7 @@ public class GraphPartitioner {
                 
             }
 
-            if (max_gv > 0.0f) {
+            if (max_gv > 0.0d) {
                 // Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k                
             	// TODO: is here an check necessary? k
             	//removedved BUG: loop boundary needs to be < max_g_idx: max_g_idx = 0 must mean NO swaps 
@@ -320,9 +319,9 @@ public class GraphPartitioner {
 
             // If there was no significant enery change comppared to the previous iteration,
             // then skip
-            if (diff_gv == 0.0f) break;
+            if (diff_gv == 0.0d) break;
 
-        } while ((max_gv > 0.0f) && (iter < MAXITER));
+        } while ((max_gv > 0.0d) && (iter < MAXITER));
 
         // Assign labels to vertices contained in partition set.
         for (Vertex v : setA) {
@@ -333,7 +332,6 @@ public class GraphPartitioner {
             v.setPartition(setB.getLabel());
         }
 
-        //MaxGainFinder.close();
     }
 
 }

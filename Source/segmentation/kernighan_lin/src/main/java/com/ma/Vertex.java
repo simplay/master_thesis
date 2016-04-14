@@ -13,15 +13,15 @@ public class Vertex implements Comparable<Vertex> {
     private boolean is_dummy;
 
     public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    public float[] similarities;
+    public double[] similarities;
 
 
     // D_a = E_a - I_a
-    private float dValue;
+    private double dValue;
 
     public Vertex(int id, int vertexCount) {
         this.id = id;
-        this.similarities = new float[vertexCount];
+        this.similarities = new double[vertexCount];
         this.partitionLabel = -1;
         this.partitionSetLabel = -1;
         this.is_dummy = false;
@@ -29,7 +29,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public Vertex(int id, int vertexCount, boolean is_dummy) {
         this.id = id;
-        this.similarities = new float[vertexCount];
+        this.similarities = new double[vertexCount];
         this.partitionLabel = -1;
         this.partitionSetLabel = -1;
         this.is_dummy = is_dummy;
@@ -56,11 +56,11 @@ public class Vertex implements Comparable<Vertex> {
     }
 
 
-    public float getSimValue(int idx) {
-        return (isDummy() || idx == -1) ? 0.0f : similarities[idx];
+    public double getSimValue(int idx) {
+        return (isDummy() || idx == -1) ? 0.0d : similarities[idx];
     }
 
-    public void setdValue(float newDVal) {
+    public void setdValue(double newDVal) {
         this.dValue = newDVal;
     }
 
@@ -82,8 +82,8 @@ public class Vertex implements Comparable<Vertex> {
     public void computeD() {
         if (is_dummy) return;
         // select all adjacent internal vertices.
-        float I_a = 0.0f;
-        float E_a = 0.0f;
+        double I_a = 0.0d;
+        double E_a = 0.0d;
 
         for(Vertex v : neighbors) {
             // skip vertices with no partition set label
@@ -101,8 +101,8 @@ public class Vertex implements Comparable<Vertex> {
     public void computeD(int[] activeLabels) {
         if (is_dummy) return;
         // select all adjacent internal vertices.
-        float I_a = 0.0f;
-        float E_a = 0.0f;
+        double I_a = 0.0f;
+        double E_a = 0.0f;
 
         for(Vertex v : acitveNeighborsForLabels(activeLabels)) {
             // skip vertices with no partition set label
@@ -129,7 +129,7 @@ public class Vertex implements Comparable<Vertex> {
         return id;
     }
 
-    public float getDValue() {
+    public double getDValue() {
         return dValue;
     }
 
@@ -157,7 +157,7 @@ public class Vertex implements Comparable<Vertex> {
     public void setSimilarities(String[] readSimilarities) {
         int idx = 0;
         for (String sim : readSimilarities) {
-            similarities[idx] = Float.parseFloat(sim);
+            similarities[idx] = Double.parseDouble(sim);
             idx++;
         }
     }
@@ -184,10 +184,10 @@ public class Vertex implements Comparable<Vertex> {
         return id+ "=>" + neighborsNames + "D" + dValue + "\n";
     }
 
-	public void setSimilarities(float[] fs) {
-		assert(fs.length ==  similarities.length);
-		 int idx = 0;
-        for (float sim : fs) {
+	public void setSimilarities(double[] fs) {
+        assert(fs.length ==  similarities.length);
+        int idx = 0;
+        for (double sim : fs) {
             similarities[idx] = sim;
             idx++;
         }

@@ -126,7 +126,7 @@ public void testFoo() {
     for (int i=0; i < M; i++) {
 
         for (int j=0; j < N; j++) {
-            float[] sims = new float[M*N];
+            double[] sims = new double[M*N];
 
             if (j+1 < N) {
                 vertices[i][j].appendNearestNeighbord(vertices[i][j+1]);
@@ -201,9 +201,9 @@ public void testFoo() {
 
     for (Vertex v : g.vertices) {
         idx = 0;
-        for (Float sim : v.similarities) {
+        for (Double sim : v.similarities) {
             Vertex other = g.vertices.get(idx);
-            float other_sim = other.similarities[v.getId()];
+            double other_sim = other.similarities[v.getId()];
             assertEquals(other_sim, sim);
             idx++;
         }

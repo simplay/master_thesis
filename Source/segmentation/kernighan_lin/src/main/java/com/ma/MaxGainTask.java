@@ -10,10 +10,10 @@ public class MaxGainTask implements Runnable {
     private List<Vertex> sortedByDvalueB;
     private Vertex topA;
     private Vertex topB;
-    private float maxgain;
+    private double maxgain;
 
     public MaxGainTask(Graph graph, MaxGainContainer container, List<Vertex> sortedByDvalueA,
-                       List<Vertex> sortedByDvalueB, Vertex topA, Vertex topB, float maxgain) {
+                       List<Vertex> sortedByDvalueB, Vertex topA, Vertex topB, double maxgain) {
         this.graph = graph;
         this.container = container;
         this.sortedByDvalueA = sortedByDvalueA;
@@ -25,7 +25,7 @@ public class MaxGainTask implements Runnable {
 
     @Override
     public void run() {
-        float candidate_gain;
+        double candidate_gain;
         for (Vertex candidateA : sortedByDvalueA) {
             if (candidateA.getPartitionSetLabel() == -1) continue;
             for (Vertex candidateB : sortedByDvalueB) {

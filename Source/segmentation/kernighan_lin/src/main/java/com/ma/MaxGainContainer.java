@@ -4,15 +4,15 @@ public class MaxGainContainer {
 
     private Vertex topA;
     private Vertex topB;
-    private float maxGain;
+    private double maxGain;
 
-    public MaxGainContainer(float maxGain, Vertex topA, Vertex topB) {
+    public MaxGainContainer(double maxGain, Vertex topA, Vertex topB) {
         this.maxGain = maxGain;
         this.topA = topA;
         this.topB = topB;
     }
 
-    public synchronized void updateMaxGainValues(float candidateMaxGain, Vertex cTopA, Vertex cTopB) {
+    public synchronized void updateMaxGainValues(double candidateMaxGain, Vertex cTopA, Vertex cTopB) {
         if (candidateMaxGain > maxGain) {
             maxGain = candidateMaxGain;
             topA = cTopA;
@@ -28,7 +28,7 @@ public class MaxGainContainer {
         return topB;
     }
 
-    public float getMaxGain() {
+    public double getMaxGain() {
         return maxGain;
     }
 }

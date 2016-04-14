@@ -35,7 +35,7 @@ public class MaxGainFinder {
     public MaxGainContainer findMaxGain(Graph graph, List<Vertex> sortedByDvalueA,
                                         List<Vertex> sortedByDvalueB, Vertex topA, Vertex topB) {
 
-        float maxgain = graph.gain(topA, topB);
+        double maxgain = graph.gain(topA, topB);
         MaxGainContainer mgc = new MaxGainContainer(maxgain, topA, topB);
         LinkedList<MaxGainTask> tasks = new LinkedList<>();
 
