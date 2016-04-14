@@ -23,7 +23,7 @@ public class MaxGainFinder {
 
     public void initializeThreadPool() {
         int availableThreads = Runtime.getRuntime().availableProcessors();
-        System.out.println("Assigning neighborhood using " + availableThreads + " threads...");
+        System.out.println("Finding max gain by using " + availableThreads + " threads...");
         executor = Executors.newFixedThreadPool(availableThreads);
     }
 
@@ -34,6 +34,7 @@ public class MaxGainFinder {
 
     public MaxGainContainer findMaxGain(Graph graph, List<Vertex> sortedByDvalueA,
                                         List<Vertex> sortedByDvalueB, Vertex topA, Vertex topB) {
+        
         float maxgain = graph.gain(topA, topB);
         MaxGainContainer mgc = new MaxGainContainer(maxgain, topA, topB);
         LinkedList<MaxGainTask> tasks = new LinkedList<>();
@@ -66,10 +67,6 @@ public class MaxGainFinder {
             }
         }
         return mgc;
-    }
-
-    public static void start() {
-        getInstance().initializeThreadPool();
     }
 
     public static void close() {
