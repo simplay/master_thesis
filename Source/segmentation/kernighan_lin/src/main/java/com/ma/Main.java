@@ -22,22 +22,21 @@ public class Main {
         int max_iterations = ArgParser.getMaxIterCountPerCluster();
         int repetitionCount = ArgParser.getRepetitionCount();
 
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        Logger.println("Current relative path is: " + s);
-
+        Logger.println();
         Logger.println("Loading relevant input data...");
         Logger.println();
         Graph g = new Graph(dataset);
       
         long tillLoadTime = System.currentTimeMillis();
         Logger.println("Loading data took " + (tillLoadTime - startTime) / 1000.0 + " seconds");
+        Logger.println();
         Logger.println("Computing the graph partitioning...");
         Logger.println();
 
         new GraphPartitioner(g, clusterCount, dummyCount, repetitionCount).runKernighanLin(max_iterations);
         long tillPartitioningTime = System.currentTimeMillis();
         Logger.println("Graph partitioning took " + (tillPartitioningTime - tillLoadTime) / 1000.0 + " seconds");
+        Logger.println();
 
         Logger.println("Storing computed partition...");
         if (!customPrefix.isEmpty()) customPrefix = "_" + customPrefix;

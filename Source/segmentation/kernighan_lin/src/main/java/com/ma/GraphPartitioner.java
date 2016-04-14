@@ -56,8 +56,9 @@ public class GraphPartitioner {
         // determine a balanced initial partition of the nodes into sets A and B
         initBalancedSets(dummyCount);
         this.REPS = REPS;
-        Logger.print("Computing multi-label clustering via alpha-beta expansion");
-        Logger.print("Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
+        Logger.println("Computing multi-label clustering via alpha-beta expansion");
+        Logger.println("=> Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
+        Logger.println();
     }
 
     private void initBalancedSets(int dummyCount) {
@@ -175,6 +176,7 @@ public class GraphPartitioner {
                     _runKernighanLin(setList.get(m), setList.get(n), MAXITER);
                 }
             }
+            Logger.println();
         }
         MaxGainFinder.close();
     }
@@ -309,7 +311,7 @@ public class GraphPartitioner {
 
             iter++;
             diff_gv = prev_max_gv - max_gv;
-            Logger.println("Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
+            Logger.println("+ Iteration " + iter + " k=" + max_gv_idx + " gv=" + max_gv);
             prev_max_gv = max_gv;
 
             // if there happened the complete permutation or no permutation step,

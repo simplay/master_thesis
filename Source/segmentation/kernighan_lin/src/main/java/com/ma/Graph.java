@@ -25,7 +25,6 @@ public class Graph {
         return activeVertices;
     }
 
-    
     //put all loading into constructor, to make sure
     //the similarity matrix is always set to 0 for all non connected edges.
     public Graph(String dataset) {
@@ -116,12 +115,11 @@ public class Graph {
      * @param fPathName file path name for this graph's partition file.
      */
     public void savePartitionToFile(String fPathName) {
+        Logger.println("Writing graph partitioning file to: `" + fPathName + "`");
         try {
             try (PrintWriter out = new PrintWriter(fPathName)) {
                 for (Vertex v : vertices) {
                     int labelValue = v.getPartitionLabel();
-                    // TODO: this is some kind of hotfix which is supposed not to be correct
-                    //if (labelValue == -1) labelValue = v.getPartitionSetLabel();
                     String line = v.getTrajectoryId() + "," + labelValue;
                     out.println(line);
                 }
