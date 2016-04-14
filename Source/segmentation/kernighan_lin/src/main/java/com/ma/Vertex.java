@@ -101,8 +101,8 @@ public class Vertex implements Comparable<Vertex> {
     public void computeD(int[] activeLabels) {
         if (is_dummy) return;
         // select all adjacent internal vertices.
-        double I_a = 0.0f;
-        double E_a = 0.0f;
+        double I_a = 0.0d;
+        double E_a = 0.0d;
 
         for(Vertex v : acitveNeighborsForLabels(activeLabels)) {
             // skip vertices with no partition set label
