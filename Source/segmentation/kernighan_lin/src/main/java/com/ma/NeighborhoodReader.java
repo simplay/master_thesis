@@ -28,10 +28,6 @@ public class NeighborhoodReader extends GraphFileReader {
         System.out.println("Assigning neighborhood using " + availableThreads + " threads...");
 
         ExecutorService executor = Executors.newFixedThreadPool(availableThreads);
-        //for (NeighborAssignmentTask task : tasks) {
-        //    executor.execute(task);
-        //}
-        //executor.shutdown();
 
         Collection<Future<NeighborAssignmentTask>> futures = new LinkedList<>();
         for (NeighborAssignmentTask task : tasks) {
