@@ -40,10 +40,9 @@ public class MaxGainTask implements Runnable {
                     maxgain = candidate_gain;
                     topA = candidateA;
                     topB = candidateB;
-                    updatedMaxGain = true;
                 }
             }
         }
-        if (updatedMaxGain) container.updateMaxGainValues(maxgain, topA, topB);
+        container.updateMaxGainValues(maxgain, topA, topB);
     }
 }
