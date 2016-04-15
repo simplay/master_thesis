@@ -54,116 +54,12 @@ public class GraphPartitioner {
         }
 
         // determine a balanced initial partition of the nodes into sets A and B
-        initBalancedSets(dummyCount);
+        new InitialSetPartition(graph, setList, dummyCount, clusterCount);
+
         this.REPS = REPS;
         Logger.println("Computing multi-label clustering via alpha-beta expansion");
         Logger.println("=> Solving for " + clusterCount + " clusters by using " + dummyCount + " dummy vertices");
         Logger.println();
-    }
-
-    private void initBalancedSets(int dummyCount) {
-
-        switch (ArgParser.getInitialPartitionMode()) {
-            case MOD_N:
-                assignModN(dummyCount);
-                break;
-            case MOD_2:
-                initSetsMod2(dummyCount);
-                break;
-            case EMPTY_FULL:
-                initSetsEmptyFull(dummyCount);
-                break;
-            case EMPTY_BUT_ONE:
-                initAllEmptyButOne(dummyCount);
-                break;
-        }
-    }
-
-    public void initAllEmptyButOne(int dummyCount) {
-        for (Vertex v : graph.vertices) {
-            setList.get(0).add(v);
-            for (int k = 1; k < setList.size(); k++) {
-                setList.get(k).add(new Vertex(-1, graph.vertexCount(), true));
-            }
-        }
-        addDummies(dummyCount);
-    }
-
-    public void assignModN(int dummy_count) {
-        int idx = 0;
-        for(Vertex v : graph.vertices) {
-            setList.get(idx % clusterCount).add(v);
-            idx++;
-        }
-    }
-
-    private void initSetsMod2(int count) {
-        int idx = 0;
-        for(Vertex v : graph.vertices) {
-            if (idx % 2 == 0) {
-                setList.get(0).add(v);
-            } else {
-                setList.get(1).add(v);
-            }
-            idx++;
-        }
-        addDummies(count);
-    }
-
-    private void addDummies(int count) {
-        for (int k = 0; k < count; k++) {
-            for (PartitionSet ps : setList) {
-                ps.add(new Vertex(-1, graph.vertexCount(), true));
-            }
-        }
-    }
-
-    private void initSetsEmptyFull(int count) {
-        int fullClusters = clusterCount-1;
-        int idx = 0;
-        for (Vertex v : graph.vertices) {
-            setList.get((idx % fullClusters)+1).add(v);
-            idx++;
-        }
-        int maxVertCount = -1;
-
-        for (PartitionSet ps : setList) {
-            if (ps.count() > maxVertCount) {
-                maxVertCount = ps.count();
-            }
-        }
-
-        for (PartitionSet ps : setList) {
-            int vertDiffCount = maxVertCount - ps.count();
-            for (int k = 0; k < vertDiffCount; k++) {
-                ps.add(new Vertex(-1, graph.vertexCount(), true));
-            }
-        }
-        addDummies(count);
-    }
-    
-    void dumpDValueHistogram(Graph g){
-        if (!Main.DUMP_DATA) return;
-
-        try {
-            File f = new File("./temp_debug.m");
-            Logger.println("Dumpig debug .m file in: " + f.getAbsolutePath());
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
-            writer.write("Vals = [");
-
-            for(Vertex v: graph.vertices){
-                writer.write("" + v.getDValue() + "\n");
-            }
-
-            writer.write("]; cdfplot(Vals);");
-            writer.flush();
-            writer.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void runKernighanLin(int MAXITER) {
@@ -334,4 +230,26 @@ public class GraphPartitioner {
 
     }
 
+    private void dumpDValueHistogram(Graph g){
+        if (!Main.DUMP_DATA) return;
+
+        try {
+            File f = new File("./temp_debug.m");
+            Logger.println("Dumpig debug .m file in: " + f.getAbsolutePath());
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
+            writer.write("Vals = [");
+
+            for(Vertex v: graph.vertices){
+                writer.write("" + v.getDValue() + "\n");
+            }
+
+            writer.write("]; cdfplot(Vals);");
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
