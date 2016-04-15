@@ -2,7 +2,6 @@ package similarity;
 
 import datastructures.Point3d;
 import datastructures.Trajectory;
-
 import java.util.Collection;
 
 public class ProdDistEuclidTask extends ProdDistTask {
@@ -28,4 +27,5 @@ public class ProdDistEuclidTask extends ProdDistTask {
         Point3d pb = b.getEuclidPositionAtFrame(frame_idx);
         return pa.copy().sub(pb).length();
     }
+
 }

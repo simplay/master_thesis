@@ -209,7 +209,7 @@ public abstract class SimilarityTask implements Runnable {
         Point2d p_i = tra.getPointAtFrame(frame_idx);
         Point2d p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
         double d_i = DepthManager.getInstance().get(frame_idx).valueAt(p_i.x(), p_i.y());
-        double d_i_pl_t = DepthManager.getInstance().get(frame_idx).valueAt(p_i_pl_t.x(), p_i_pl_t.y());
+        double d_i_pl_t = DepthManager.getInstance().get(frame_idx+dt).valueAt(p_i_pl_t.x(), p_i_pl_t.y());
 
         double _x1 = d_i*((p_i.x() - CalibrationManager.depth_principal_point().x()) / CalibrationManager.depth_focal_len().x());
         double _y1 = d_i*((p_i.y() - CalibrationManager.depth_principal_point().y()) / CalibrationManager.depth_focal_len().y());
