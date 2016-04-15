@@ -52,6 +52,13 @@ public class Point3d {
         this.z = col1.z()*x + col2.z()*y + col3.z()*z + col4.z();
     }
 
+    public Point3d div_by(double f) {
+        x /= f;
+        y /= f;
+        z /= f;
+        return this;
+    }
+
     public double length_squared() {
         return x*x + y*y + z*z;
     }
