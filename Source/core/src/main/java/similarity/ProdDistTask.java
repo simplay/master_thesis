@@ -64,13 +64,7 @@ public class ProdDistTask extends SimilarityTask {
 
             avgSpatialDist += spatialDistBetween(a, b, l);
 
-            Point2d dt_a = forward_difference(a, timestep, l);
-            Point2d dt_b = forward_difference(b, timestep, l);
-
-            double dt_ab = dt_a.sub(dt_b).length_squared();
-            double sigma_t = EPS_FLOW + getVariance(l, a, b);
-
-            double dist = dt_ab / sigma_t;
+            double dist = d_motion(a, b, timestep, l);
             if (dist > maxDistance) {
                 maxDistance = dist;
             }
@@ -86,6 +80,25 @@ public class ProdDistTask extends SimilarityTask {
         double dist_st_a_b = avgSpatialDist*maxDistance;
         double w_ab = Math.exp(-lamdba_scale*dist_st_a_b);
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
+    }
+
+    /**
+     * Compute the normalized motion distance between two trajectory points having a certain frame distance.
+     *
+     * @param a trajectory
+     * @param b trajectory
+     * @param timestep sum with current frame yields the to-frame.
+     * @param frame_idx starting frame index
+     * @return the motion distance normalized by the flow variance.
+     */
+    protected double d_motion(Trajectory a, Trajectory b, int timestep, int frame_idx) {
+        Point2d dt_a = forward_difference(a, timestep, frame_idx);
+        Point2d dt_b = forward_difference(b, timestep, frame_idx);
+
+        double dt_ab = dt_a.sub(dt_b).length_squared();
+        double sigma_t = EPS_FLOW + getVariance(frame_idx, a, b);
+
+        return dt_ab / sigma_t;
     }
 
 }
