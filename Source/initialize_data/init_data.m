@@ -181,7 +181,7 @@ if EXTRACT_DEPTH_FIELDS
             
             fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.txt');
             imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.png');
-            imwrite(lv, imgfile);
+            imwrite(im, imgfile);
             fid = fopen(fname,'w');
             if fid ~= -1
                 for t=1:size(lv,1)
