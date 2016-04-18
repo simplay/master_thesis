@@ -6,7 +6,7 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'wh1';
+DATASETNAME = 'chair_3_cast';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
@@ -15,10 +15,11 @@ COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flo
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+COMPUTE_DEPTH_VARIANCE = true;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = true;
+USE_OWN_DEPTHS = false;
 DEPTH_SCALE = 0.0002;
 
 VAR_SIGMA_S = 5;
@@ -144,16 +145,18 @@ if EXTRACT_DEPTH_FIELDS
     for k=1:length(imgs)
         f = listing(k);
         fpath = strcat(path, f.name);
-        lv = double(imread(fpath)) * DEPTH_SCALE; % scale factor to tranform to meters
+        lv = double(imread(fpath)); %* DEPTH_SCALE; % scale factor to tranform to meters
         
         % own extracted depths provided by code 3dDataAcquisition
         % stored depth images are 16 bit depth values, using the red and
         % blue color channel. See the method 3dDataAcquisition /
         % fileWriteTask.cpp#fileWriteTask::run()
-        % depth = 0*R + 255*G + B
+        % depth = 0*R + 255*G + B => gives depths in [mm]
+        % but we want to work in meter scales, therefore divide by 1000
         if USE_OWN_DEPTHS
-            dlv = im2double(lv)*255;
-            lv = dlv(:,:,2)*255 + dlv(:,:,3);
+            lv = (lv(:,:,2)*255 + lv(:,:,3)) / 1000;
+        else
+            lv = lv * DEPTH_SCALE; 
         end
         tillDot = strfind(f.name,'.png');
         fileNr = f.name(1:tillDot-1);
@@ -169,6 +172,27 @@ if EXTRACT_DEPTH_FIELDS
             end
         end
         fclose(fid);
+        
+        
+        % compute depth variance
+        
+        if COMPUTE_DEPTH_VARIANCE
+            im = computeLocalDepthVar(lv, VAR_SIGMA_S, VAR_SIGMA_R, lv > 0);
+            
+            fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.txt');
+            imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.png');
+            imwrite(lv, imgfile);
+            fid = fopen(fname,'w');
+            if fid ~= -1
+                for t=1:size(lv,1)
+                    a_row = mat2str(lv(t,:));
+                    fprintf(fid,'%s\r\n', a_row);
+                end
+            end
+            fclose(fid);
+            
+        end
+        
     end
 end
 
