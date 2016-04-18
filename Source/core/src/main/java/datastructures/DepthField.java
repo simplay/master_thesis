@@ -6,7 +6,7 @@ package datastructures;
  * to a distance of 1 meter from the camera, 10000 to 2 meter distance,
  * etc. A pixel value of 0 means missing value/no data.
  */
-public class DepthField extends Interpolator{
+public class DepthField extends Interpolator {
 
     private final double INVALID_DEPTH_VALUE = 0.0d;
 
