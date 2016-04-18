@@ -28,7 +28,7 @@ FORCE_EW_COUNT = 20;
 THRESH = 0.0000;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 12;
+CLUSTER_CENTER_COUNT = 8;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -47,7 +47,7 @@ SAVE_FIGURES = true;
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 3;
-frame_idx = 40;
+frame_idx = 70;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

@@ -115,6 +115,8 @@ if fid ~= -1
 end
 fclose(fid);
 %%
+% IMPORTANT: DEPTH FIELD VALUES HAVE TO BE IN METER SCALE
+%
 % A single-channel uint16 depth image. 
 % Each pixel gives the depth in millimeters, 
 % with 0 denoting missing depth. 
@@ -177,15 +179,34 @@ if EXTRACT_DEPTH_FIELDS
         % compute depth variance
         
         if COMPUTE_DEPTH_VARIANCE
-            im = computeLocalDepthVar(lv, VAR_SIGMA_S, VAR_SIGMA_R, lv > 0);
+            
+            % de-noising issue: wie noise sch?ten:
+            %
+            % mu looks almost like lv, i.e. lv is a good estiator for mu
+            % variance via bilateral filter, dann entlang von kanten
+            % problematisch, besser w?re die nutzung von 3d vektoren. dann
+            % w?rde die annahme "lokal const flow fields" sinnvoller sein.
+            % depth fields haben allerei probleme, daher macht es durchaus
+            % sinn, lediglich depth in spatial dist. term zu verwenden.
+            %
+            % dif = ((lv2-lv1).^2) .*(lv1>0).*(lv2 > 0);
+            % imshow(dif*1000)
+            % imshow(1000*(mu-lv1).^2)
+            % 
+            % t = lv(50:80, 50:80);
+            % 0.1 = std(t(:));
+            
+            % IMPORTANT: DEPTH FIELD VALUES HAVE TO BE IN METER SCALE
+            [var, ~] = computeLocalDepthVar(lv, VAR_SIGMA_S, 0.1, lv > 0);
             
             fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.txt');
             imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.png');
-            imwrite(im, imgfile);
+            var_img = var ./ max(var(:));
+            imwrite(var_img, imgfile);
             fid = fopen(fname,'w');
             if fid ~= -1
-                for t=1:size(lv,1)
-                    a_row = mat2str(lv(t,:));
+                for t=1:size(var,1)
+                    a_row = mat2str(var(t,:));
                     fprintf(fid,'%s\r\n', a_row);
                 end
             end

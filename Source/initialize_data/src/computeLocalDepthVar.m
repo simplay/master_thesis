@@ -1,10 +1,13 @@
 
-function [variances] = computeLocalDepthVar(flowfield, sig_s, sig_r, valid_regions)
+function [variances, mu] = computeLocalDepthVar(flowfield, sig_s, sig_r, valid_regions)
 %COMPUTELOCALFLOWVAR Summary of this function goes here
 %   Detailed explanation goes here
 
-    [sigmaSq, ~, ~] = localVariance( flowfield, sig_s, sig_r, true, valid_regions);
-
+    [~, mu, ~] = localVariance( flowfield, sig_s, sig_r, true, valid_regions);
+    mu = mu .* valid_regions;
+    [sigmaSq, ~, ~] = localVariance( flowfield-mu, sig_s, sig_r, true, valid_regions);
+    sigmaSq = sigmaSq .* valid_regions;
+    
     var_x = sigmaSq(:,:,1);   
     var_x(isnan(var_x)) = 0;
 
