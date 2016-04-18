@@ -8,12 +8,12 @@ METHODNAME = 'ldof';
 PREFIX_INPUT_FILENAME = 'sd_nn_1600_both';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'c_5_dc_1000';
+PART_DS_PREF = 'c_12_dc_1000';
 
 PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'kl_c_5';
+PREFIX_OUTPUT_FILENAME = 'kl_c_12';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 

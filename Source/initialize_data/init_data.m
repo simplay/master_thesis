@@ -6,7 +6,7 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'chair_3_cast';
+DATASETNAME = 'wh1';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
@@ -18,7 +18,7 @@ EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = false;
+USE_OWN_DEPTHS = true;
 DEPTH_SCALE = 0.0002;
 
 VAR_SIGMA_S = 5;

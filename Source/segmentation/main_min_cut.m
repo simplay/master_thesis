@@ -7,14 +7,13 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-
 DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d_min_cut_n_1000_reworked_foo2';
-PREFIX_INPUT_FILENAME = 'md_d_nn';
+PREFIX_OUTPUT_FILENAME = 'spec_d';
+PREFIX_INPUT_FILENAME = 'md_d_nn_1600_best';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
@@ -25,18 +24,18 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 20;
+FORCE_EW_COUNT = 8;
 
 THRESH = 0.0000;
 
 % weight of smoothness term.
 % well working smoothness weight: NU = 0.000000001
 NU = 0.000000001;
-%NU = 0.0000000001;
+% NU = 0.000000001;
 
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 8;
+CLUSTER_CENTER_COUNT = 4;
 
 %
 % RUN_MODE = 1 => vis segmentation
