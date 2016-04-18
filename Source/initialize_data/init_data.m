@@ -199,8 +199,8 @@ if EXTRACT_DEPTH_FIELDS
             % IMPORTANT: DEPTH FIELD VALUES HAVE TO BE IN METER SCALE
             [var, ~] = computeLocalDepthVar(lv, VAR_SIGMA_S, 0.1, lv > 0);
             
-            fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.txt');
-            imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_',num2str(k),'.png');
+            fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_', fileNr, '.txt');
+            imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_', fileNr, '.png');
             var_img = var ./ max(var(:));
             imwrite(var_img, imgfile);
             fid = fopen(fname,'w');
@@ -276,6 +276,7 @@ if COMPUTE_FLOW_VARIANCES
 
     % write local flow variances into mat files.
     for k=1:END_FRAME_IDX
+        disp([num2str(k), '. flow variance iteration...']);
         lv = local_flow_variances(:,:,k);
         fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
         imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');
