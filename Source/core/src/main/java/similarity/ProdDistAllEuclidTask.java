@@ -6,7 +6,7 @@ import managers.CalibrationManager;
 
 import java.util.Collection;
 
-public class SumDistAllEuclidTask extends ProdDistEuclidTask {
+public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
 
     private double scale;
 
@@ -14,7 +14,7 @@ public class SumDistAllEuclidTask extends ProdDistEuclidTask {
      * @param a
      * @param trajectories
      */
-    public SumDistAllEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
+    public ProdDistAllEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
         this.scale = 0.5d*(CalibrationManager.depth_focal_len().x() + CalibrationManager.depth_focal_len().y());
     }

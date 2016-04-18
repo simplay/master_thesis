@@ -35,7 +35,8 @@ public abstract class SimilarityTask implements Runnable {
         SD(1, SumDistTask.class, true, "Sum of Distances", SumDistEuclidTask.class),
         PD(2, ProdDistTask.class, false, "Product of Distances", ProdDistEuclidTask.class),
         PED(3, ProdDistEuclidTask.class, false, "Product of Euclidian Distances"),
-        SED(4, SumDistEuclidTask.class, true, "Sum of Euclidian Distances");
+        SED(4, SumDistEuclidTask.class, true, "Sum of Euclidian Distances"),
+        PAED(5, ProdDistAllEuclidTask.class, false, "Product of Distances all 3d");
 
         private int value;
         private Class targetClass;
