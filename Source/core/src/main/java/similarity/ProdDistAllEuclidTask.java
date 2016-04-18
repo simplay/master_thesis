@@ -5,6 +5,7 @@ import datastructures.Point3d;
 import datastructures.Trajectory;
 import managers.CalibrationManager;
 import managers.DepthManager;
+import managers.DepthVarManager;
 import managers.VarianceManager;
 
 import java.util.Collection;
@@ -57,13 +58,15 @@ public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
         // var_u = var_v since var = (var_u + var_v)/2 computed in `../initialization/init_data.m`
         double var_a = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pa);
         double var_b = VarianceManager.getInstance().getVariance(frame_idx).valueAt(pb);
-        double var_d = 0d;
+        
+        double var_d_a = DepthVarManager.getInstance().get(frame_idx).valueAt(pa.x(), pa.y());
+        double var_d_b = DepthVarManager.getInstance().get(frame_idx).valueAt(pb.x(), pb.y());
 
         double d_a = DepthManager.getInstance().get(frame_idx).valueAt(pa.x(), pa.y());
         double d_b = DepthManager.getInstance().get(frame_idx).valueAt(pb.x(), pb.y());
 
-        var_a = var3d(pa, var_a, var_d, d_a);
-        var_b = var3d(pb, var_b, var_d, d_b);
+        var_a = var3d(pa, var_a, var_d_a, d_a);
+        var_b = var3d(pb, var_b, var_d_b, d_b);
 
         return Math.min(var_a, var_b);
     }
