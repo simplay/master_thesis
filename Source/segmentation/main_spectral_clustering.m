@@ -28,7 +28,7 @@ FORCE_EW_COUNT = 20;
 THRESH = 0.0000;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 8;
+CLUSTER_CENTER_COUNT = 12;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -39,15 +39,18 @@ RUN_MODE = 1;
 SHOW_LOCAL_VAR = false;
 
 % show the segmentation figure
-SHOW_SEGMENTATION = false;
+SHOW_SEGMENTATION = true;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
 
+% filter all eigenvectors that belong to eigenvalues <= 0
+FILTER_ZERO_EIGENVALUES = true;
+
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 3;
-frame_idx = 70;
+frame_idx = 40;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT
@@ -58,4 +61,4 @@ if exist('W','var') == 0
     disp('setting initial values...')
     W = 1; U_full = 1; S_full = 1;
 end
-[W, U, S, U_full, S_full] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME);
+[W, U, S, U_full, S_full] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, FILTER_ZERO_EIGENVALUES);

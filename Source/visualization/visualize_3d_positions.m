@@ -4,7 +4,7 @@ DATASET = 'chair_3_cast';
 
 basePath = strcat('../../Data/', DATASET, '/');
 
-IMG_IDX = 10;
+IMG_IDX = 1;
 
 depthFilePath = strcat(basePath, 'depth/', num2str(IMG_IDX), '.png');
 imgFilePath = strcat(basePath, num2str(IMG_IDX), '.png');
