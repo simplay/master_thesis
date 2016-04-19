@@ -15,7 +15,7 @@ COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flo
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
-COMPUTE_DEPTH_VARIANCE = true;
+COMPUTE_DEPTH_VARIANCE = false;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
@@ -175,9 +175,21 @@ if EXTRACT_DEPTH_FIELDS
         end
         fclose(fid);
         
+        valid_depths = double(lv > 0);
+        fname = strcat('../output/tracker_data/',DATASET,'/valid_depth_region_', fileNr, '.txt');
+        imgfile = strcat('../output/tracker_data/',DATASET,'/valid_depth_region_', fileNr, '.png');
+ 
+        imwrite(mat2img(valid_depths), imgfile);
+        fid = fopen(fname,'w');
+        if fid ~= -1
+            for t=1:size(valid_depths,1)
+                a_row = mat2str(valid_depths(t,:));
+                fprintf(fid,'%s\r\n', a_row);
+            end
+        end
+        fclose(fid);
         
         % compute depth variance
-        
         if COMPUTE_DEPTH_VARIANCE
             
             % de-noising issue: wie noise sch?ten:
