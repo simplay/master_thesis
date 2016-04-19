@@ -12,10 +12,13 @@ PREFIX_OUTPUT_FILENAME = 'spec_dd';
 PREFIX_INPUT_FILENAME = 'md_d_nn_1600_best';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
+
+% should all eigenvectors that belong to eigenvalues <= 0 be filtered.
+FILTER_ZERO_EIGENVALUES = false;
 
 % iterate over all existing images in sequence
 COMPUTE_FULL_RANGE = false;
@@ -23,12 +26,12 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 20;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 12;
+CLUSTER_CENTER_COUNT = 8;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -43,9 +46,6 @@ SHOW_SEGMENTATION = true;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
-
-% filter all eigenvectors that belong to eigenvalues <= 0
-FILTER_ZERO_EIGENVALUES = true;
 
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
