@@ -1,6 +1,7 @@
 package pipeline_components;
 
 import datastructures.*;
+import managers.DepthManager;
 import managers.FlowFieldManager;
 import managers.InvalidRegionManager;
 import managers.TrajectoryManager;
@@ -55,6 +56,14 @@ public class Tracker {
         for (int idx = 0; idx < rows.length; idx++) {
             int row_idx = rows[idx];
             int col_idx = cols[idx];
+
+            // skip at invalid depth regions if we are using depth cues.
+            if (ArgParser.useDepthCues()) {
+                if (!DepthManager.getInstance().get(0).validRegionAt(row_idx, col_idx)) {
+                    continue;
+                }
+            }
+
             Point2d p = new Point2d(row_idx, col_idx);
 
             // Checks whether there is already too much activity
@@ -82,6 +91,14 @@ public class Tracker {
             if (invalidRegions.isInvalidAt(p)) {
                 tra.markClosed();
                 continue;
+            }
+
+            // skip at invalid depth regions
+            if (ArgParser.useDepthCues()) {
+                if (!DepthManager.getInstance().get(currentFrame).validRegionAt(p.x(), p.y())) {
+                    tra.markClosed();
+                    continue;
+                }
             }
 
             double du = fw_currentFrame.u_valueAt(p.u(), p.v());
