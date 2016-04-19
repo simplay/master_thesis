@@ -26,6 +26,7 @@ public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
     public ProdDistAllEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
         this.scale = 0.5d*(CalibrationManager.depth_focal_len().x() + CalibrationManager.depth_focal_len().y());
+        this.lamdba_scale *= scale*scale;
     }
 
     /**
