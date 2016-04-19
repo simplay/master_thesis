@@ -28,4 +28,8 @@ public class ProdDistEuclidTask extends ProdDistTask {
         return pa.copy().sub(pb).length();
     }
 
+    @Override
+    protected boolean exceededSpatialTol(double dist) {
+        return dist > 2d;
+    }
 }
