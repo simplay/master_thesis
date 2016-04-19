@@ -81,8 +81,9 @@ public class CalibrationManager {
         this.depth_principal_point = new Point2d(depth_principalPoint);
 
         if (hasNoIntrinsicDepthCalibrations()) {
-            this.depth_focal_len = rgb_focal_len;
-            this.depth_principal_point = rgb_principal_point;
+            // deep copy elements to avoid reference dangling effects
+            this.depth_focal_len = rgb_focal_len.copy();
+            this.depth_principal_point = rgb_principal_point.copy();
             hasNoIntrDepthCalib = true;
         }
 
@@ -97,6 +98,12 @@ public class CalibrationManager {
                 toDoubleArray(extrRow2),
                 toDoubleArray(extrRow3)
         );
+
+        // swap x,y compontents since we work with row,col coordinates instead of regular x,y components
+        rgb_focal_len.swapComponents();
+        rgb_principal_point.swapComponents();
+        depth_focal_len.swapComponents();
+        depth_principal_point.swapComponents();
     }
 
     public Point2d getRgbFocalLen() {

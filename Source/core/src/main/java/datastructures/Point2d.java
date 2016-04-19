@@ -25,6 +25,12 @@ public class Point2d {
         this.y = Double.parseDouble(xy[1]);
     }
 
+    public void swapComponents() {
+        double tmp = x;
+        x = y;
+        y = tmp;
+    }
+
     public boolean isValid() {
         return isValid;
     }
