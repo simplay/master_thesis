@@ -30,6 +30,7 @@ public class ProdDistEuclidTask extends ProdDistTask {
 
     @Override
     protected boolean exceededSpatialTol(double dist) {
-        return dist > 2d;
+        return false;
+        //return dist > 3d;
     }
 }

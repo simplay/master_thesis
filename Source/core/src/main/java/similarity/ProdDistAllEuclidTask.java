@@ -25,7 +25,7 @@ public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
      */
     public ProdDistAllEuclidTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
-        this.scale = 0.5d*(CalibrationManager.depth_focal_len().x() + CalibrationManager.depth_focal_len().y());
+        this.scale = 0.5d*(f_x + f_y);
         this.lamdba_scale *= scale*scale;
     }
 
@@ -46,7 +46,7 @@ public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
         if (!dt_a.isValid() || !dt_b.isValid()) return -1d;
 
         double dt_ab = dt_a.sub(dt_b).length_squared();///scale;
-        double sigma_t = EPS_FLOW + getVariance(frame_idx, a, b);
+        double sigma_t = 1d/(scale*scale) + getVariance(frame_idx, a, b);
 
         return dt_ab / sigma_t;
     }
@@ -69,7 +69,10 @@ public class ProdDistAllEuclidTask extends ProdDistEuclidTask {
         var_a = var3d(pa, var_a, var_d_a, d_a);
         var_b = var3d(pb, var_b, var_d_b, d_b);
 
-        return Math.min(var_a, var_b);
+        //return Math.min(var_a, var_b);
+        // var(a+b) = var(a) + var(b)
+        // see geom mittel: new Point2f(a,b).length()
+        return var_a + var_b;
     }
 
     private double var3d(Point2d p, double var_uv, double var_d, double d) {
