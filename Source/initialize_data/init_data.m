@@ -6,15 +6,15 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'chair_3_cast';
+DATASETNAME = 'alley2small';
 METHODNAME = 'ldof';
-STEP_SIZE = 8;
+STEP_SIZE = 4;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
@@ -267,6 +267,7 @@ if COMPUTE_FLOW_VARIANCES
         % store local variance data
         fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
         invalid_regions = load(fname, '-ASCII');
+        disp(['Flow Variance Iteration ', num2str(t), '...']);
         local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
         
         global_variances = [global_variances, var(fw_flow(:))];
