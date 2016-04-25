@@ -32,31 +32,33 @@ public abstract class SimilarityTask implements Runnable {
     protected final double ZERO_THRESHOLD = 1e-12;
 
     public enum Types {
-        SD(1, SumDistTask.class, true, false, "Sum of Distances", SumDistEuclidTask.class),
-        PD(2, ProdDistTask.class, false, false, "Product of Distances", ProdDistEuclidTask.class),
-        PED(3, ProdDistEuclidTask.class, false, false, "Product of Euclidian Distances"),
-        SED(4, SumDistEuclidTask.class, true, false, "Sum of Euclidian Distances"),
-        PAED(5, ProdDistAllEuclidTask.class, false, true, "Product of Distances all 3d"),
-        PAENDD(6, ProdDistAllEuclidNoDepthVarTask.class, false, false, "Product of Distances all 3d without depth variance");
+        SD(1, SumDistTask.class, true, false, false, "Sum of Distances", SumDistEuclidTask.class),
+        PD(2, ProdDistTask.class, false, false, false, "Product of Distances", ProdDistEuclidTask.class),
+        PED(3, ProdDistEuclidTask.class, false, true, false, "Product of Euclidian Distances"),
+        SED(4, SumDistEuclidTask.class, true, true, false, "Sum of Euclidian Distances"),
+        PAED(5, ProdDistAllEuclidTask.class, false, true, true, "Product of Distances all 3d"),
+        PAENDD(6, ProdDistAllEuclidNoDepthVarTask.class, false, true, false, "Product of Distances all 3d without depth variance");
 
         private int value;
         private Class targetClass;
         private boolean usesColorCues;
         private boolean usesDepthVar;
+        private boolean usesDepthCues;
         private String taskName;
         private Class alternativeTaskClass;
 
-        private Types(int value, Class targetClass, boolean usesColorCues, boolean usesDepthVar, String taskName, Class alternativTaskClass) {
+        private Types(int value, Class targetClass, boolean usesColorCues, boolean usesDepthCues, boolean usesDepthVar, String taskName, Class alternativTaskClass) {
             this.value = value;
             this.targetClass = targetClass;
             this.usesColorCues = usesColorCues;
+            this.usesDepthCues = usesDepthCues;
             this.usesDepthVar = usesDepthVar;
             this.taskName = taskName;
             this.alternativeTaskClass = alternativTaskClass;
         }
 
-        private Types(int value, Class targetClass, boolean usesColorCues, boolean usesDepthVar, String taskName) {
-            this(value, targetClass, usesColorCues, usesDepthVar, taskName, null);
+        private Types(int value, Class targetClass, boolean usesColorCues, boolean usesDepthCues, boolean usesDepthVar, String taskName) {
+            this(value, targetClass, usesColorCues, usesDepthCues, usesDepthVar, taskName, null);
         }
 
         public String getName() {
@@ -81,6 +83,15 @@ public abstract class SimilarityTask implements Runnable {
 
         public boolean usesDepthVariance() {
             return usesDepthVar;
+        }
+
+        /**
+         * Indicates whether this Similarity task makes use of depth cues or not.
+         *
+         * @return true if this task makes use of depth fields, otherwise false.
+         */
+        public boolean getUsesDepthCues() {
+            return usesDepthCues;
         }
 
         public Class getTaskClass() {

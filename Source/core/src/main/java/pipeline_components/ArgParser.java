@@ -126,11 +126,7 @@ public class ArgParser {
     }
 
     public static boolean useDepthCues() {
-        String useDepthState = getInstance().getHashValue("depth");
-        if (useDepthState == null || !useDepthState.equals("1")) {
-            return false;
-        }
-        return true;
+        return getSimTask().getUsesDepthCues();
     }
 
     public static boolean useLocalVariance() {

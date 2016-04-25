@@ -28,10 +28,6 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
  + `BOOL == 0`: Use global flow variance values for normalization.
  + `BOOL == 1`: Use local flow variance values for normalization.
  
-+ **-depth BOOL** should depth cues be used. By default no depth cues are used.
- + `BOOL == 0`: Do not use any depth cues.
- + `BOOL == 1`: Use depth field to transform tracked points to the Euclidian space to have a better measure for the average spatial distance.
- 
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
 + **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, the top N nearest neighbors will be returned.
