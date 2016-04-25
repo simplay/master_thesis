@@ -8,12 +8,12 @@ addpath('../matlab_shared');
 
 DATASETNAME = 'alley2small';
 METHODNAME = 'ldof';
-STEP_SIZE = 4;
+STEP_SIZE = 6;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
-COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
 
@@ -95,7 +95,7 @@ if COMPUTE_TRACKING_DATA
             end    
             fclose(fid);
         end
-        disp(strcat('Processed Frame', num2str(t), '...'));
+        disp(strcat('Processed Frame ', num2str(t), '...'));
     end
 end
 
