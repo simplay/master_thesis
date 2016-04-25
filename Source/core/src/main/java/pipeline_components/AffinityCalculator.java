@@ -39,7 +39,9 @@ public class AffinityCalculator {
             from_idx++;
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        int numberOfAvailableThreads = Runtime.getRuntime().availableProcessors();
+        Logger.println("=> Using " + numberOfAvailableThreads + " threads.");
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfAvailableThreads);
         for (SimilarityTask task : tasks) {
             executor.execute(task);
         }
