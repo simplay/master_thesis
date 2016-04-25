@@ -89,14 +89,14 @@ public class Main {
             if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
             if (ArgParser.useDepthCues()) {
                 new DepthFieldReader(dataset, fileNr);
-                new DepthVarReader(dataset, fileNr);
+                if (ArgParser.getSimTask().usesDepthVariance()) new DepthVarReader(dataset, fileNr);
             }
         }
         String fileNr = Integer.toString(till_index+1);
         if (ArgParser.useColorCues()) new ColorImageReader(dataset, fileNr);
         if (ArgParser.useDepthCues()) {
             new DepthFieldReader(dataset, fileNr);
-            new DepthVarReader(dataset, fileNr);
+            if (ArgParser.getSimTask().usesDepthVariance()) new DepthVarReader(dataset, fileNr);
         }
 
         // load relevant transformation data in order to transform pixel coordinates to euclid. coordinates,

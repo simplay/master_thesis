@@ -108,7 +108,7 @@ public class Tracker {
             double next_v = p.v() + dv;
 
             // skip all tracked to points that are out of the image frame
-            if (next_u < 0f || next_v < 0f || next_u > m || next_v > n) {
+            if (next_u < 0f || next_v < 0f || next_u > m-1 || next_v > n-1) {
                 tra.markClosed();
                 continue;
             }
