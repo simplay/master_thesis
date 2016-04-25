@@ -1,5 +1,6 @@
 import datastructures.FlowField;
 import managers.CalibrationManager;
+import managers.FlowFieldManager;
 import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import pipeline_components.Logger;
@@ -117,7 +118,7 @@ public class Main {
 
         long tillTrajectoriesTrackedTime = System.currentTimeMillis();
         Logger.println("Tracking took " + ((tillTrajectoriesTrackedTime-tillFileLoadedTime)/1000d)+ "s");
-
+        FlowFieldManager.release();
         Logger.println();
         Logger.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
         for (int k = 0; k <= till_index+1; k++) {

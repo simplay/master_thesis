@@ -45,4 +45,14 @@ public class FlowFieldManager {
     public FlowField getBackwardFlow(int frame_idx) {
         return backwardFlows.get(frame_idx);
     }
+
+    public void releaseFlows() {
+        forwardFlows = null;
+        backwardFlows = null;
+    }
+
+    public static void release() {
+        instance.releaseFlows();
+        instance = null;
+    }
 }
