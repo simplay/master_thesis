@@ -7,13 +7,13 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'chair_3_cast';
+DATASET = 'alley2small';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'spec_d';
-PREFIX_INPUT_FILENAME = 'md_d_nn_1600_best';
+PREFIX_OUTPUT_FILENAME = 'mc_d';
+PREFIX_INPUT_FILENAME = 'md_nn_1000_best';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
@@ -24,7 +24,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 10;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
 
@@ -35,7 +35,7 @@ NU = 0.000000001;
 
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 4;
+CLUSTER_CENTER_COUNT = 8;
 
 %
 % RUN_MODE = 1 => vis segmentation
