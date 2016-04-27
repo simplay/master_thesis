@@ -20,7 +20,7 @@ public abstract class SimilarityTask implements Runnable {
     protected final double EIGENSIMILARITY_VALUE = 0d;
 
     // minimal expected trajectory length
-    protected final int MIN_EXPECTED_TRAJ_LEN = 3;
+    protected static int MIN_EXPECTED_TRAJ_LEN = 3;
 
     // Minimal assigned flow variance value used within
     // the normalization step,
@@ -43,6 +43,10 @@ public abstract class SimilarityTask implements Runnable {
     public SimilarityTask(Trajectory a, Collection<Trajectory> trajectories) {
         this.a = a;
         this.trajectories = trajectories;
+    }
+
+    public static int minExpectedTrajectoryLength() {
+        return MIN_EXPECTED_TRAJ_LEN;
     }
 
     protected abstract double similarityBetween(Trajectory a, Trajectory b);

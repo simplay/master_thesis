@@ -158,6 +158,19 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
+     * Filter all trajectories shorter than a given min length.
+     *
+     * @param len expected minimum length
+     */
+    public void filterTrajectoriesShorterThanMinLen(int len) {
+        for (int k = 0; k < len; k++) {
+            for (Trajectory traj : allTrajectoryWithLength(k)) {
+                trajectories.remove(traj.getLabel());
+            }
+        }
+    }
+
+    /**
      * Filters every trajectory from the set of all extracted trajectory
      * that do not exhibit any similarity values, referring to those trajectories,
      * that either only include zeros or no similarity entries at all.

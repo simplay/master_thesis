@@ -5,6 +5,7 @@ import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
+import similarity.SimilarityTask;
 import writers.*;
 import java.io.*;
 
@@ -130,11 +131,15 @@ public class Main {
 
         // one pointed trajectories have a length of 0.
         Logger.println("Filtering 1-pointed trajectories...");
-
         TrajectoryManager.getInstance().filterOnePointedTrajectories();
+
         Logger.println("Filtered too short trajectories...");
         Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
+        int trajectoryLen = SimilarityTask.minExpectedTrajectoryLength();
+        Logger.println("Filtering all trajectory shorter than " + trajectoryLen);
+        TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
+        Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         if (CalibrationManager.shouldWarpDepthFields() && ArgParser.useDepthCues()) {
             Logger.println("Color and Depth Cameras do not overlap.");
