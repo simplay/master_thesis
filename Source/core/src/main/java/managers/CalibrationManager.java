@@ -13,6 +13,7 @@ public class CalibrationManager {
     private Point2d rgb_principal_point;
     private Point2d depth_focal_len;
     private Point2d depth_principal_point;
+    private boolean hasNoIntrDepthCalib;
 
     public static CalibrationManager getInstance(ArrayList<String> data) {
         if (instance == null && data != null) {
@@ -79,6 +80,13 @@ public class CalibrationManager {
         String[] depth_principalPoint = calibData.get(5).split(" ");
         this.depth_principal_point = new Point2d(depth_principalPoint);
 
+        if (hasNoIntrinsicDepthCalibrations()) {
+            // deep copy elements to avoid reference dangling effects
+            this.depth_focal_len = rgb_focal_len.copy();
+            this.depth_principal_point = rgb_principal_point.copy();
+            hasNoIntrDepthCalib = true;
+        }
+
         // The Extrinsic parameters 4x3 matrix describing:
         // the transformation from color to depth, empty line
         String[] extrRow1 = calibData.get(6).split(" ");
@@ -90,6 +98,12 @@ public class CalibrationManager {
                 toDoubleArray(extrRow2),
                 toDoubleArray(extrRow3)
         );
+
+        // swap x,y compontents since we work with row,col coordinates instead of regular x,y components
+        rgb_focal_len.swapComponents();
+        rgb_principal_point.swapComponents();
+        depth_focal_len.swapComponents();
+        depth_principal_point.swapComponents();
     }
 
     public Point2d getRgbFocalLen() {
@@ -122,12 +136,16 @@ public class CalibrationManager {
         return data;
     }
 
+    public boolean getHasNoIntrDepthCalib() {
+        return hasNoIntrDepthCalib;
+    }
+
     public boolean hasNoIntrinsicDepthCalibrations() {
         return depth_focal_len.isOneVector() && depth_principal_point.isOneVector();
     }
 
     public static boolean hasNoIntrinsicDepthProjection() {
         if (instance == null) return true;
-        return getInstance().hasNoIntrinsicDepthCalibrations();
+        return getInstance().getHasNoIntrDepthCalib();
     }
 }

@@ -7,8 +7,6 @@ import managers.CalibrationManager;
 import managers.DepthManager;
 import managers.VarianceManager;
 import pipeline_components.ArgParser;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 public abstract class SimilarityTask implements Runnable {
@@ -31,95 +29,10 @@ public abstract class SimilarityTask implements Runnable {
     // Thresholds the zero value to truncate too small affinity towards zero.
     protected final double ZERO_THRESHOLD = 1e-12;
 
-    public enum Types {
-        SD(1, SumDistTask.class, true, "Sum of Distances", SumDistEuclidTask.class),
-        PD(2, ProdDistTask.class, false, "Product of Distances", ProdDistEuclidTask.class),
-        PED(3, ProdDistEuclidTask.class, false, "Product of Euclidian Distances"),
-        SED(4, SumDistEuclidTask.class, true, "Sum of Euclidian Distances");
-
-        private int value;
-        private Class targetClass;
-        private boolean usesColorCues;
-        private String taskName;
-        private Class alternativeTaskClass;
-
-        private Types(int value, Class targetClass, boolean usesColorCues, String taskName, Class alternativTaskClass) {
-            this.value = value;
-            this.targetClass = targetClass;
-            this.usesColorCues = usesColorCues;
-            this.taskName = taskName;
-            this.alternativeTaskClass = alternativTaskClass;
-        }
-
-        private Types(int value, Class targetClass, boolean usesColorCues, String taskName) {
-            this(value, targetClass, usesColorCues, taskName, null);
-        }
-
-        public String getName() {
-            return taskName;
-        }
-
-        /**
-         * Checks whether the alternative task should be used.
-         * This is the case whenever depth cues should be used but the color and depth camera are overlapping
-         * and we are not already an alternative task.
-         *
-         * @return true if the alternative task should be used otherwise false.
-         */
-        public boolean shouldUseAlternativeTask() {
-            if (alternativeTaskClass == null) return false;
-            return CalibrationManager.hasNoIntrinsicDepthProjection() && ArgParser.useDepthCues();
-        }
-
-        public Class getAlternativeTaskClass() {
-            return alternativeTaskClass;
-        }
-
-        public Class getTaskClass() {
-            return targetClass;
-        }
-
-        public static Types TypeById(int id) {
-            for (Types t : values() ) {
-                if (t.value == id) {
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        /***
-         * Is the corresponding task required to use color cues?
-         *
-         * @return true if the tasks required color cues otherwise false.
-         */
-        public boolean usesColorCues() {
-            return usesColorCues;
-        }
-
-    }
-
-    public static SimilarityTask buildTask(Types taskType, Trajectory a, Collection<Trajectory> trajectories) {
-        SimilarityTask task = null;
-        try {
-            Class type = taskType.getTaskClass();
-            if (taskType.shouldUseAlternativeTask()) {
-                type = taskType.getAlternativeTaskClass();
-            }
-            task = (SimilarityTask) type.getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return task;
-    }
-
+    // A list of all existing trajectories
     private final Collection<Trajectory> trajectories;
+
+    // the trajectory that belongs to this current task
     protected Trajectory a;
 
     /**
@@ -160,10 +73,23 @@ public abstract class SimilarityTask implements Runnable {
         return Math.min(a.getEndFrame(), b.getEndFrame());
     }
 
+    /**
+     * Computes the number of overlapping frames, given two frame indices.
+     *
+     * @param from_idx start frame index
+     * @param to_idx end frame index
+     * @return number of overalpping frames.
+     */
     protected int overlappingFrameCount(int from_idx, int to_idx) {
         return to_idx - from_idx + 1;
     }
 
+    /**
+     * Returns the timestep size that can be used for the forward difference scheme.
+     *
+     * @param common_frame_count number of overlapping frames of two given trajectories.
+     * @return the timestep size (number of frames) that can be used for the forward difference method.
+     */
     protected int timestepSize(int common_frame_count) {
         return Math.min(common_frame_count, MIN_TIMESTEP_SIZE);
     }
@@ -230,12 +156,37 @@ public abstract class SimilarityTask implements Runnable {
         return p.div_by(dt);
     }
 
+    /**
+     * The the motion field variance value for two given trajectories at a given frame.
+     * Can either be the local or the global variance value. The actual selection depends on
+     * the provided user arguments.
+     * The flow variance is used for normalizing the motion difference value used for
+     * computing the motion distance between a trajectory pair.
+     * For further details, pleasse refer to the paper:
+     * `Segmentation of moving objects by long term video analysis` - T. Brox et al.
+     *
+     * @param frame_idx a frame index the two trajectories are overlapping.
+     * @param a first trajectory.
+     * @param b second trajectory
+     * @return flow variance value.
+     */
     protected double getVariance(int frame_idx, Trajectory a, Trajectory b) {
         return (ArgParser.useLocalVariance())
                 ? localVarAt(frame_idx, a, b)
                 : VarianceManager.getInstance().getGlobalVarianceValue(frame_idx);
     }
 
+    /**
+     * The local flow variance value at a given frame. These variance values are computed
+     * by running the script `../initialize_data/init_data.m`. This script makes use of
+     * a bilateral filter applied to the motion field. For further details read the corresponding
+     * REDME.md file and the code documentation.
+     *
+     * @param frame_idx a frame index the two trajectories are overlapping.
+     * @param a first trajectory
+     * @param b second trajectory
+     * @return local flow variance value between two trajectories at a given frame.
+     */
     private double localVarAt(int frame_idx, Trajectory a, Trajectory b) {
         Point2d pa = a.getPointAtFrame(frame_idx);
         Point2d pb = b.getPointAtFrame(frame_idx);
@@ -244,6 +195,14 @@ public abstract class SimilarityTask implements Runnable {
         return Math.min(var_a, var_b);
     }
 
+    /**
+     * Appends the average spatial distance between two trajectories. This is used to
+     * find and determine the nearest neighbors of a trajectory.
+     *
+     * @param a first trajectory
+     * @param b second trajectory
+     * @param sp_dist spatial distance value (can be either in pixel or meter units).
+     */
     protected void appendAvgSpatialDistances(Trajectory a, Trajectory b, double sp_dist) {
         a.appendAvgSpatialDist(b.getLabel(), sp_dist);
         b.appendAvgSpatialDist(a.getLabel(), sp_dist);

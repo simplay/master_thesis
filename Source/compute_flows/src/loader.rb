@@ -11,7 +11,7 @@ java_import 'java.util.concurrent.TimeUnit'
 java_import 'java.lang.Runtime'
 
 class Loader
-
+require 'pry'
   FLOW_METHODS = [
     "LDOF",
     "SRSF"
@@ -40,6 +40,7 @@ class Loader
       folder_path = dataset_path
       @subfolder_path = "#{folder_path}#{FLOW_METHODS[1].downcase}"
       Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+      genarate_normalized_images(folder_path, skip_comp)
       fnames = sorted_dataset_fnames(folder_path)
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper) unless skip_comp

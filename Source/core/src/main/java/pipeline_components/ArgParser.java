@@ -1,9 +1,7 @@
 package pipeline_components;
 
 import datastructures.NearestNeighborsHeap;
-import managers.MetaDataManager;
-import similarity.SimilarityTask;
-import writers.NearestSpatialNeighborsWriter;
+import similarity.SimilarityTaskType;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,9 +59,9 @@ public class ArgParser {
         return getInstance().getHashValue("d");
     }
 
-    public static SimilarityTask.Types getSimTask() {
+    public static SimilarityTaskType getSimTask() {
         String taskName = getInstance().getHashValue("task");
-        return SimilarityTask.Types.TypeById(Integer.parseInt(taskName));
+        return SimilarityTaskType.TypeById(Integer.parseInt(taskName));
     }
 
     public static int getNearestNeighborhoodCount() {
@@ -126,11 +124,7 @@ public class ArgParser {
     }
 
     public static boolean useDepthCues() {
-        String useDepthState = getInstance().getHashValue("depth");
-        if (useDepthState == null || !useDepthState.equals("1")) {
-            return false;
-        }
-        return true;
+        return getSimTask().getUsesDepthCues();
     }
 
     public static boolean useLocalVariance() {

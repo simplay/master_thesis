@@ -6,19 +6,20 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'wh1';
+DATASETNAME = 'alley2small';
 METHODNAME = 'ldof';
-STEP_SIZE = 8;
+STEP_SIZE = 6;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
+COMPUTE_DEPTH_VARIANCE = false;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = true;
+USE_OWN_DEPTHS = false;
 DEPTH_SCALE = 0.0002;
 
 VAR_SIGMA_S = 5;
@@ -94,7 +95,7 @@ if COMPUTE_TRACKING_DATA
             end    
             fclose(fid);
         end
-        disp(strcat('Processed Frame', num2str(t), '...'));
+        disp(strcat('Processed Frame ', num2str(t), '...'));
     end
 end
 
@@ -114,6 +115,8 @@ if fid ~= -1
 end
 fclose(fid);
 %%
+% IMPORTANT: DEPTH FIELD VALUES HAVE TO BE IN METER SCALE
+%
 % A single-channel uint16 depth image. 
 % Each pixel gives the depth in millimeters, 
 % with 0 denoting missing depth. 
@@ -144,16 +147,18 @@ if EXTRACT_DEPTH_FIELDS
     for k=1:length(imgs)
         f = listing(k);
         fpath = strcat(path, f.name);
-        lv = double(imread(fpath)) * DEPTH_SCALE; % scale factor to tranform to meters
+        lv = double(imread(fpath)); %* DEPTH_SCALE; % scale factor to tranform to meters
         
         % own extracted depths provided by code 3dDataAcquisition
         % stored depth images are 16 bit depth values, using the red and
         % blue color channel. See the method 3dDataAcquisition /
         % fileWriteTask.cpp#fileWriteTask::run()
-        % depth = 0*R + 255*G + B
+        % depth = 0*R + 255*G + B => gives depths in [mm]
+        % but we want to work in meter scales, therefore divide by 1000
         if USE_OWN_DEPTHS
-            dlv = im2double(lv)*255;
-            lv = dlv(:,:,2)*255 + dlv(:,:,3);
+            lv = (lv(:,:,2)*255 + lv(:,:,3)) / 1000;
+        else
+            lv = lv * DEPTH_SCALE; 
         end
         tillDot = strfind(f.name,'.png');
         fileNr = f.name(1:tillDot-1);
@@ -169,6 +174,58 @@ if EXTRACT_DEPTH_FIELDS
             end
         end
         fclose(fid);
+        
+        valid_depths = double(lv > 0);
+        fname = strcat('../output/tracker_data/',DATASET,'/valid_depth_region_', fileNr, '.txt');
+        imgfile = strcat('../output/tracker_data/',DATASET,'/valid_depth_region_', fileNr, '.png');
+ 
+        imwrite(mat2img(valid_depths), imgfile);
+        fid = fopen(fname,'w');
+        if fid ~= -1
+            for t=1:size(valid_depths,1)
+                a_row = mat2str(valid_depths(t,:));
+                fprintf(fid,'%s\r\n', a_row);
+            end
+        end
+        fclose(fid);
+        
+        % compute depth variance
+        if COMPUTE_DEPTH_VARIANCE
+            
+            % de-noising issue: wie noise sch?ten:
+            %
+            % mu looks almost like lv, i.e. lv is a good estiator for mu
+            % variance via bilateral filter, dann entlang von kanten
+            % problematisch, besser w?re die nutzung von 3d vektoren. dann
+            % w?rde die annahme "lokal const flow fields" sinnvoller sein.
+            % depth fields haben allerei probleme, daher macht es durchaus
+            % sinn, lediglich depth in spatial dist. term zu verwenden.
+            %
+            % dif = ((lv2-lv1).^2) .*(lv1>0).*(lv2 > 0);
+            % imshow(dif*1000)
+            % imshow(1000*(mu-lv1).^2)
+            % 
+            % t = lv(50:80, 50:80);
+            % 0.1 = std(t(:));
+            
+            % IMPORTANT: DEPTH FIELD VALUES HAVE TO BE IN METER SCALE
+            [var, ~] = computeLocalDepthVar(lv, VAR_SIGMA_S, 0.1, lv > 0);
+            
+            fname = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_', fileNr, '.txt');
+            imgfile = strcat('../output/tracker_data/',DATASET,'/local_depth_variances_', fileNr, '.png');
+            var_img = var ./ max(var(:));
+            imwrite(var_img, imgfile);
+            fid = fopen(fname,'w');
+            if fid ~= -1
+                for t=1:size(var,1)
+                    a_row = mat2str(var(t,:));
+                    fprintf(fid,'%s\r\n', a_row);
+                end
+            end
+            fclose(fid);
+            
+        end
+        
     end
 end
 
@@ -210,6 +267,7 @@ if COMPUTE_FLOW_VARIANCES
         % store local variance data
         fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
         invalid_regions = load(fname, '-ASCII');
+        disp(['Flow Variance Iteration ', num2str(t), '...']);
         local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
         
         global_variances = [global_variances, var(fw_flow(:))];
@@ -231,6 +289,7 @@ if COMPUTE_FLOW_VARIANCES
 
     % write local flow variances into mat files.
     for k=1:END_FRAME_IDX
+        disp([num2str(k), '. flow variance iteration...']);
         lv = local_flow_variances(:,:,k);
         fname = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.txt');
         imgfile = strcat('../output/tracker_data/',DATASET,'/local_variances_',num2str(k),'.png');

@@ -1,9 +1,10 @@
 package pipeline_components;
 
 import datastructures.Trajectory;
-import managers.CalibrationManager;
 import managers.TrajectoryManager;
 import similarity.SimilarityTask;
+import similarity.SimilarityTaskType;
+import similarity.TaskBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class AffinityCalculator {
         TrajectoryManager.prepareForSimilarityCompuation();
 
         // determine which task should be used for the computation
-        SimilarityTask.Types taskType = ArgParser.getSimTask();
+        SimilarityTaskType taskType = ArgParser.getSimTask();
         ArrayList<SimilarityTask> tasks = new ArrayList<>();
 
         String taskName = taskType.name();
@@ -34,12 +35,14 @@ public class AffinityCalculator {
         // assign upper triangular matrix
         for (Trajectory a : TrajectoryManager.getTrajectories()) {
             Collection<Trajectory> trajectories = TrajectoryManager.getTrajectorySubset(from_idx);
-            SimilarityTask task = SimilarityTask.buildTask(taskType, a, trajectories);
+            SimilarityTask task = TaskBuilder.buildTask(taskType, a, trajectories);
             tasks.add(task);
             from_idx++;
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        int numberOfAvailableThreads = Runtime.getRuntime().availableProcessors();
+        Logger.println("=> Using " + numberOfAvailableThreads + " threads.");
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfAvailableThreads);
         for (SimilarityTask task : tasks) {
             executor.execute(task);
         }

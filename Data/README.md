@@ -135,3 +135,20 @@ line11: 3rd row of the extrinsic 4x3 matrix
 ```
 
 By Running the a valid dataset on `./Source/init_data/init_data.m` we will generate all the required pipeline inputs. Please read the corresponding docs of the script `init_data.m`. 
+
+## Additional Info
+
+to tranform depth data to srsf compatible depth files, run a matlab script similar to this one:
+
+```matlab
+
+for k=1:101, 
+    d = imread(strcat('depth/',num2str(k),'.png')); 
+    d = uint16(double(d)*0.2); 
+    imwrite(d,strcat('depth2/',num2str(k),'.png')); 
+end
+
+```
+
+The srsf compatible depth files are then stored in the directory `depth2/`. Keep in mind to swap the directory namees of `depth` and `depth2` before running the SRSF flow computation code and afterwards changing it back.
+TODO: Do this automatically.

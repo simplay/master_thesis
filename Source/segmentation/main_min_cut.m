@@ -7,10 +7,10 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'chair_3_cast';
+DATASET = 'alley2small';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'spec_d';
-PREFIX_INPUT_FILENAME = 'md_d_nn_1600_best';
+PREFIX_OUTPUT_FILENAME = 'mc_d';
+PREFIX_INPUT_FILENAME = 'md_nn_1000_best';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = false;
@@ -24,18 +24,18 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 8;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
 
 % weight of smoothness term.
 % well working smoothness weight: NU = 0.000000001
 NU = 0.000000001;
-% NU = 0.000000001;
+NU = 0.000000001;
 
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 4;
+CLUSTER_CENTER_COUNT = 8;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -50,6 +50,9 @@ SHOW_SEGMENTATION = false;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
+
+% filter all eigenvectors that belong to eigenvalues <= 0
+FILTER_ZERO_EIGENVALUES = false;
 
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
@@ -69,4 +72,4 @@ if exist('W','var') == 0
     disp('setting initial values...')
     W = 1; U_full = 1; S_full = 1;
 end
-[W, U, S, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU);
+[W, U, S, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES);

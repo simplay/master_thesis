@@ -19,6 +19,7 @@ VM options: `-Xmx16000m`
  + `ID == 2`: Product distances (PD) similarity task.
  + `ID == 3`: Product of Euclidian distances (PED) similarity task. Uses 3d trajectory points for computing the spatial distances.
  + `ID == 4`: Sum of Euclidian distances (SED) similarity task. Uses 3d trajectory points for computing the spatial distances.
+ + `ID == 5`: Product of Distances all 3d (PAED)
  
 Whenever we want to make use of depth cues but the color and depth camera are already aligned, 
 the target similarity task is re-assign to one that used 3d trajectory points (i.e. to its alternative task).
@@ -26,10 +27,6 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
 + **-var BOOL**: Indicates whether the local flow variance values should be used for normalizing similarity values. By default, the global variance values are used.
  + `BOOL == 0`: Use global flow variance values for normalization.
  + `BOOL == 1`: Use local flow variance values for normalization.
- 
-+ **-depth BOOL** should depth cues be used. By default no depth cues are used.
- + `BOOL == 0`: Do not use any depth cues.
- + `BOOL == 1`: Use depth field to transform tracked points to the Euclidian space to have a better measure for the average spatial distance.
  
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
