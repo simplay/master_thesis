@@ -54,5 +54,6 @@ public class FlowFieldManager {
     public static void release() {
         instance.releaseFlows();
         instance = null;
+        System.gc();
     }
 }
