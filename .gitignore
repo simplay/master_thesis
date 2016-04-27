@@ -35,3 +35,4 @@ Source/compute_flows/xml_to_flo/output/
 Source/compute_flows/xml_to_flo/**/*.xml
 Source/evaluation/*.png
 Document/Results/segmentations/**/*.jpg
+labels.txt
