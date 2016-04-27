@@ -1,8 +1,5 @@
 import datastructures.FlowField;
-import managers.CalibrationManager;
-import managers.FlowFieldManager;
-import managers.MetaDataManager;
-import managers.TrajectoryManager;
+import managers.*;
 import pipeline_components.Logger;
 import readers.*;
 import pipeline_components.AffinityCalculator;
@@ -137,6 +134,16 @@ public class Main {
         TrajectoryManager.getInstance().filterOnePointedTrajectories();
         Logger.println("Filtered too short trajectories...");
         Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+
+
+        if (CalibrationManager.shouldWarpDepthFields() && ArgParser.useDepthCues()) {
+            Logger.println("Color and Depth Cameras do not overlap.");
+            Logger.println(" => Warping depth fields...");
+
+            // TODO should we also warp the depth variance values?
+            DepthManager.warpDepthFields();
+            Logger.println("Warped depth fields.");
+        }
 
         // Transform trajectory points to euclidian space
         if (ArgParser.useDepthCues()) {

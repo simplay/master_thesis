@@ -1,5 +1,7 @@
 package datastructures;
 
+import managers.DepthManager;
+
 /**
  * The depth images are scaled by a factor of 5000,
  * i.e., a pixel value of 5000 in the depth image corresponds
@@ -11,8 +13,12 @@ public class DepthField extends Interpolator {
     private final double INVALID_DEPTH_VALUE = 0.0d;
 
     private double[][] data;
+    private int m;
+    private int n;
 
     public DepthField(int m, int n) {
+        this.m = m;
+        this.n = n;
         data = new double[m][n];
     }
 
@@ -22,6 +28,26 @@ public class DepthField extends Interpolator {
 
     public double valueAt(double row_idx, double col_idx) {
         return interpolatedValueAt(data, row_idx, col_idx);
+    }
+
+    public int m() {
+        return m;
+    }
+
+    public int n() {
+        return n;
+    }
+
+    public synchronized void setAt(int i, int j, double value) {
+        data[i][j] = value;
+    }
+
+    public double[][] getData() {
+        return data;
+    }
+
+    public synchronized void setFieldData(DepthField df) {
+        data = df.getData();
     }
 
     /**

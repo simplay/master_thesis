@@ -59,6 +59,13 @@ public class Point3d {
         return this;
     }
 
+    public Point3d scaleBy(double f) {
+        x *= f;
+        y *= f;
+        z *= f;
+        return this;
+    }
+
     public double length_squared() {
         return x*x + y*y + z*z;
     }

@@ -14,7 +14,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // points that span the trajectory
     private ArrayList<Point2d> points;
 
-    private ArrayList<Point2d> transformedPoints;
+    //private ArrayList<Point2d> transformedPoints;
     private ArrayList<Point3d> euclidianPoints;
 
     // Marks whether this trajectory can be continued during the tracking step
@@ -47,6 +47,11 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     private String traOutRepresentation = null;
 
+    /**
+     * Start a ne wtrajectory at a given frame.
+     *
+     * @param startFrame frame of first tracking point of this trajectory.
+     */
     public Trajectory(int startFrame) {
         this.label = label_counter++;
         this.startFrame = startFrame;
@@ -221,11 +226,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return points.get(frame_idx-startFrame);
     }
 
-    // TODO better naming
     public Point2d getSpatialPointAtFrame(int frame_idx) {
-        if (ArgParser.useDepthCues()) {
-          return transformedPoints.get(frame_idx-startFrame);
-        }
         return points.get(frame_idx-startFrame);
     }
 
@@ -289,7 +290,6 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         }
     }
 
-    // TODO check if this method should overwrite points? Better have an additional field? Are lookups still correct?
     /**
      * Transforms tracked trajectory points into the Euclidian space
      * by making use of depth cues.
@@ -300,15 +300,12 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public void transformTrackedPoints() {
         ArrayList<Point3d> depthPoints = new ArrayList<>();
-        ArrayList<Point2d> transformedPoints = new ArrayList<>();
         int idx = startFrame;
         for (Point2d p : points) {
-            Point2d euclidianPoint = p.transformToOveralappingDepthColorCamPixelCoors(idx);
-            transformedPoints.add(euclidianPoint);
+            p.compute3dTrackedPosition(idx);
             depthPoints.add(p.getEuclidPos());
             idx++;
         }
-        this.transformedPoints = transformedPoints;
         this.euclidianPoints = depthPoints;
     }
 

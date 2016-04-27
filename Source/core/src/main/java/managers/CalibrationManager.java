@@ -136,6 +136,10 @@ public class CalibrationManager {
         return data;
     }
 
+    public static boolean shouldWarpDepthFields() {
+        return !hasNoIntrinsicDepthProjection();
+    }
+
     public boolean getHasNoIntrDepthCalib() {
         return hasNoIntrDepthCalib;
     }

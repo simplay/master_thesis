@@ -71,7 +71,7 @@ public class Point2d {
      * E*P = [xx, yy, zz]
      * (x/z * f_x^c + p_x^c, y/z * f_y^c + p_y^c)
      */
-    public Point2d transformToOveralappingDepthColorCamPixelCoors(int frame_idx) {
+    public void compute3dTrackedPosition(int frame_idx) {
         double depth = DepthManager.getInstance().get(frame_idx).valueAt(x,y);
         double _x = depth*((x - CalibrationManager.depth_principal_point().x()) / CalibrationManager.depth_focal_len().x());
         double _y = depth*((y - CalibrationManager.depth_principal_point().y()) / CalibrationManager.depth_focal_len().y());
@@ -80,10 +80,6 @@ public class Point2d {
         Point3d p3 = new Point3d(_x, _y, depth);
         p3.scaleByMat(CalibrationManager.extrinsicMat());
         this.depthPos = p3;
-        return new Point2d(
-                (p3.x()*CalibrationManager.rgb_focal_len().x() / depth) + CalibrationManager.rgb_principal_point().x(),
-                (p3.y()*CalibrationManager.rgb_focal_len().y() / depth) + CalibrationManager.rgb_principal_point().y()
-        );
     }
 
     /**
