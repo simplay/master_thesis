@@ -15,6 +15,14 @@ public class Point2d {
 
     private static Point2d ONE = new Point2d(1,1);
 
+    public static Point2d zero() {
+        return new Point2d(0d, 0d);
+    }
+
+    public static Point2d one() {
+        return new Point2d(1d, 1d);
+    }
+
     public Point2d(double x, double y) {
         this.x = x;
         this.y = y;

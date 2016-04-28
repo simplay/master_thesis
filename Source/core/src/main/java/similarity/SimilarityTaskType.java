@@ -46,7 +46,7 @@ public enum SimilarityTaskType {
      */
     public boolean shouldUseAlternativeTask() {
         if (alternativeTaskClass == null) return false;
-        return CalibrationManager.hasNoIntrinsicDepthProjection() && ArgParser.useDepthCues();
+        return CalibrationManager.hasNoDepthIntrinsics() && ArgParser.useDepthCues();
     }
 
     public Class getAlternativeTaskClass() {

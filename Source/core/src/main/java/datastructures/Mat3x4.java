@@ -32,6 +32,22 @@ public class Mat3x4 {
     }
 
     /**
+     * Retrieves the matrix
+     *
+     *  1 0 0 0
+     *  0 1 0 0
+     *  0 0 1 0
+     *
+     * @return the one 3x4 matrix
+     */
+    public static Mat3x4 one() {
+        double[] r1 = {1, 0, 0, 0};
+        double[] r2 = {0, 1, 0, 0};
+        double[] r3 = {0, 0, 1, 0};
+        return new Mat3x4(r1, r2, r3);
+    }
+
+    /**
      * Returns the i-th col.
      * Not that indices are enumerated starting at index 0.
      *

@@ -41,7 +41,7 @@ public class Point3d {
      *
      * @param mat 3x4 matrix
      */
-    public void transformBy(Mat3x4 mat) {
+    public Point3d transformBy(Mat3x4 mat) {
         Point3d col1 = mat.getCol(0);
         Point3d col2 = mat.getCol(1);
         Point3d col3 = mat.getCol(2);
@@ -50,6 +50,8 @@ public class Point3d {
         this.x = col1.x()*x + col2.x()*y + col3.x()*z + col4.x();
         this.y = col1.y()*x + col2.y()*y + col3.y*z + col4.y();
         this.z = col1.z()*x + col2.z()*y + col3.z()*z + col4.z();
+
+        return this;
     }
 
     public Point3d div_by(double f) {

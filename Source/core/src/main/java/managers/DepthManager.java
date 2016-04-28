@@ -39,7 +39,7 @@ public class DepthManager {
      * color and depth cameras do not overlap.
      *
      * TODO: describe warping mechanism
-     * 
+     *
      */
     public static void warpDepthFields() {
         Mat3x4 E = CalibrationManager.extrinsicMat();
@@ -66,13 +66,22 @@ public class DepthManager {
             for (int i = 0; i < df.m(); i++) {
                 for (int j = 0; j < df.n(); j++) {
                     double d = df.valueAt(i, j);
+
+                    // depths that are zero can be skipped since their warped
+                    // value is also zero and the warped depth map is by default
+                    // initialized by the value zero.
+                    if (d == 0d) continue;
+
                     Point3d p = new Point3d((i-p_x)/f_x, (j-p_y)/f_y, 1d);
                     p.scaleBy(d).transformBy(E);
                     double d_tilde = p.z();
 
                     // Compute lookup coordinates in warped depth map
-                    int i_tilde = (int)((p.x()*f_x_rgb) / d_tilde + p_x_rgb);
-                    int j_tilde = (int)((p.y()*f_y_rgb) / d_tilde + p_y_rgb);
+                    double i_tilde_prime = ((p.x()*f_x_rgb) / d_tilde) + p_x_rgb;
+                    double j_tilde_prime = ((p.y()*f_y_rgb) / d_tilde) + p_y_rgb;
+
+                    int i_tilde = (int) Math.round(i_tilde_prime);
+                    int j_tilde = (int) Math.round(j_tilde_prime);
 
                     // if i_tilde, j_tilde are within a valid depth field index range.
                     if (i_tilde >= 0 && i_tilde < df.m() && j_tilde >= 0 && j_tilde < df.n()) {

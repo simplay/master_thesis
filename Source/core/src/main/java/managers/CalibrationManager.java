@@ -1,23 +1,37 @@
 package managers;
 
+import datastructures.LabeledFile;
 import datastructures.Mat3x4;
 import datastructures.Point2d;
-
-import java.util.ArrayList;
 
 public class CalibrationManager {
 
     private static CalibrationManager instance = null;
-    private Mat3x4 extrinsicMat;
-    private Point2d rgb_focal_len;
-    private Point2d rgb_principal_point;
-    private Point2d depth_focal_len;
-    private Point2d depth_principal_point;
-    private boolean hasNoIntrDepthCalib;
 
-    public static CalibrationManager getInstance(ArrayList<String> data) {
-        if (instance == null && data != null) {
-            instance = new CalibrationManager(data);
+    // The extrinsic camera calibration matrix
+    private Mat3x4 extrinsicMat;
+
+    // intrinsic param: focal length of the rgb camera
+    private Point2d rgb_focal_len;
+
+    // intrinsic param: principal point of the rgb camera
+    private Point2d rgb_principal_point;
+
+    // intrinsic param: focal length of the depth camera
+    private Point2d depth_focal_len;
+
+    // intrinsic param: principal point of the depth camera
+    private Point2d depth_principal_point;
+
+    // Indicates whether any rgb camera intrinsic data loaded
+    private boolean hasColorIntrinsicDataLoaded;
+
+    // Indicates whether any depth camera intrinsic data loaded
+    private boolean hasDepthIntrinsicDataLoaded;
+
+    public static CalibrationManager getInstance(LabeledFile file) {
+        if (instance == null && file != null) {
+            instance = new CalibrationManager(file);
         }
         return instance;
     }
@@ -57,53 +71,59 @@ public class CalibrationManager {
      *
      * line 6-8: The Extrinsic parameters 4x3 matrix describing
      * the transformation from color to depth.
-     * @param calibData
+     * @param calibrationFile
      */
-    public CalibrationManager(ArrayList<String> calibData) {
+    public CalibrationManager(LabeledFile calibrationFile) {
 
-        // depth intrinsics dimension
-        // focal length
-        String[] rgb_focalLen = calibData.get(1).split(" ");
-        this.rgb_focal_len = new Point2d(rgb_focalLen);
+        // Initialize intrinsic parameters with default values:
+        // f = (1,1) and p = (0,0)
+        // since f acts as a scale factor and p as a shift parameter,
+        // thus, these default values won't have an effect when being applied
+        this.rgb_focal_len = Point2d.one();
+        this.rgb_principal_point = Point2d.zero();
 
-        // principal point
-        String[] rgb_principalPoint = calibData.get(2).split(" ");
-        this.rgb_principal_point = new Point2d(rgb_principalPoint);
+        this.depth_focal_len = Point2d.one();
+        this.depth_principal_point = Point2d.zero();
 
-        // depth intrinsics dimension
+        // Initialize the default 'one' valued extrinsic matrix.
+        this.extrinsicMat = Mat3x4.one();
 
-        // focal length
-        String[] depth_focalLen = calibData.get(4).split(" ");
-        this.depth_focal_len = new Point2d(depth_focalLen);
+        if (calibrationFile.hasDepth()) {
+            String[] depth_focalLen = calibrationFile.getLineByLabel("f_d").getContent().split(" ");
+            this.depth_focal_len = new Point2d(depth_focalLen);
 
-        // principal point
-        String[] depth_principalPoint = calibData.get(5).split(" ");
-        this.depth_principal_point = new Point2d(depth_principalPoint);
-
-        if (hasNoIntrinsicDepthCalibrations()) {
-            // deep copy elements to avoid reference dangling effects
-            this.depth_focal_len = rgb_focal_len.copy();
-            this.depth_principal_point = rgb_principal_point.copy();
-            hasNoIntrDepthCalib = true;
+            String[] depth_principalPoint = calibrationFile.getLineByLabel("p_d").getContent().split(" ");
+            this.depth_principal_point = new Point2d(depth_principalPoint);
         }
 
-        // The Extrinsic parameters 4x3 matrix describing:
-        // the transformation from color to depth, empty line
-        String[] extrRow1 = calibData.get(6).split(" ");
-        String[] extrRow2 = calibData.get(7).split(" ");
-        String[] extrRow3 = calibData.get(8).split(" ");
+        if (calibrationFile.hasRGB()) {
+            String[] rgb_focalLen = calibrationFile.getLineByLabel("f_rgb").getContent().split(" ");
+            this.rgb_focal_len = new Point2d(rgb_focalLen);
 
-        extrinsicMat = new Mat3x4(
-                toDoubleArray(extrRow1),
-                toDoubleArray(extrRow2),
-                toDoubleArray(extrRow3)
-        );
+            String[] rgb_principalPoint = calibrationFile.getLineByLabel("p_rgb").getContent().split(" ");
+            this.rgb_principal_point = new Point2d(rgb_principalPoint);
+        }
+
+        if (calibrationFile.hasHasExtrinsicMat()) {
+            String[] extrRow1 = calibrationFile.getLineByLabel("e_1").getContent().split(" ");
+            String[] extrRow2 = calibrationFile.getLineByLabel("e_2").getContent().split(" ");
+            String[] extrRow3 = calibrationFile.getLineByLabel("e_3").getContent().split(" ");
+
+            extrinsicMat = new Mat3x4(
+                    toDoubleArray(extrRow1),
+                    toDoubleArray(extrRow2),
+                    toDoubleArray(extrRow3)
+            );
+        }
 
         // swap x,y compontents since we work with row,col coordinates instead of regular x,y components
         rgb_focal_len.swapComponents();
         rgb_principal_point.swapComponents();
         depth_focal_len.swapComponents();
         depth_principal_point.swapComponents();
+
+        this.hasColorIntrinsicDataLoaded = calibrationFile.hasRGB();
+        this.hasDepthIntrinsicDataLoaded = calibrationFile.hasDepth();
     }
 
     public Point2d getRgbFocalLen() {
@@ -137,19 +157,19 @@ public class CalibrationManager {
     }
 
     public static boolean shouldWarpDepthFields() {
-        return !hasNoIntrinsicDepthProjection();
+        return (instance.hasColorIntrinsicDataLoaded() && instance.isHasDepthIntrinsicDataLoaded());
     }
 
-    public boolean getHasNoIntrDepthCalib() {
-        return hasNoIntrDepthCalib;
+    public boolean hasColorIntrinsicDataLoaded() {
+        return hasColorIntrinsicDataLoaded;
     }
 
-    public boolean hasNoIntrinsicDepthCalibrations() {
-        return depth_focal_len.isOneVector() && depth_principal_point.isOneVector();
+    public boolean isHasDepthIntrinsicDataLoaded() {
+        return hasDepthIntrinsicDataLoaded;
     }
 
-    public static boolean hasNoIntrinsicDepthProjection() {
+    public static boolean hasNoDepthIntrinsics() {
         if (instance == null) return true;
-        return getInstance().getHasNoIntrDepthCalib();
+        return !instance.isHasDepthIntrinsicDataLoaded();
     }
 }
