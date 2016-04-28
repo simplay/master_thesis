@@ -96,41 +96,36 @@ The followind additional cues can be fed into the pipeline, which enables additi
 + **Extrinsic Camera Clibration Parameters**: Put a file called `Dataset/my_dataset/meta/calib.txt`. The content of such a file looks like the following:
 
 ```
-line1: Dimensions x,y
-line2: rgb inntrinsic params: focal length x y
-line3: rgb inntrinsic params: principal point x y
-
-line4: empty line
-
-line5: Dimensions x,y
-line6: depth intrinsic params: focal length x y
-line7: depth intrinsic params: principal point x y
-
-line8: empty line
+f_d: <depth intrinsic params: focal length x y>
+p_d: <depth intrinsic params: principal point x y>
+f_rgb: <rgb inntrinsic params: focal length x y>
+p_rgb: <rgb inntrinsic params: principal point x y>
 
 # The Extrinsic parameters 4x3 matrix describing
 the transformation from color to depth
 
-line9: 1st row of the extrinsic 4x3 matrix
-line10: 2nd row of the extrinsic 4x3 matrix
-line11: 3rd row of the extrinsic 4x3 matrix
+e_1: <1st row of the extrinsic 4x3 matrix>
+e_2: <2nd row of the extrinsic 4x3 matrix>
+e_3: <3rd row of the extrinsic 4x3 matrix>
 
 ```
+
+Note that the order of the labels does not matter, the parser knows how to handle various line order.
+It only matters, that the correct separators are used.
+
+The following regex expressed the expected format: `<LABEL_ID>:(\s<NUM>){2,3}`
+So, white-spaces (`\s`) do matter and also the `:`.
 
 **Example calib.txt** file: 
 
 ```
-640 480
-504.261 503.905
-352.457 272.202
-
-640 480
-573.71 574.394
-346.471 249.031
-
-0.999749 0.00518867 0.0217975 0.0243073
--0.0051649 0.999986 -0.0011465 -0.000166518
--0.0218031 0.00103363 0.999762 0.0151706
+f_d: 504.261 503.905
+p_d: 352.457 272.202
+f_rgb: 573.71 574.394
+p_rgb: 346.471 249.031
+e_1: 0.999749 0.00518867 0.0217975 0.0243073
+e_2: -0.0051649 0.999986 -0.0011465 -0.000166518
+e_3: -0.0218031 0.00103363 0.999762 0.0151706
 
 ```
 
