@@ -141,6 +141,10 @@ public class Main {
         TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
         Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
+        /**
+         * Transform computed data
+         */
+
         if (CalibrationManager.shouldWarpDepthFields() && ArgParser.useDepthCues()) {
             Logger.println("Color and Depth Cameras do not overlap.");
             Logger.println(" => Warping depth fields...");
@@ -158,6 +162,10 @@ public class Main {
             TrajectoryManager.getInstance().filterDeletableTrajectories();
             Logger.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
         }
+
+        /**
+         * Compute Affinity Matrix and filter zero contribution trajectories
+         */
 
         Logger.println("Starts computing affinity values between remaining trajectories...");
         long beforeAffCompTime = System.currentTimeMillis();
@@ -177,7 +185,7 @@ public class Main {
          *  + the similarity matrix
          *  + the label mappings: transformation which column/row a label belongs to in the similarity matrix
          */
-
+        System.gc();
         if (ArgParser.runInDebugMode()) new TraWriter(output_base_path, dataset, till_index);
         new FramewiseActiveTraWriter(dataset, till_index);
 
