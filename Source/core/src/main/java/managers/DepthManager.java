@@ -58,7 +58,7 @@ public class DepthManager {
                 for (int j = 0; j < df.n(); j++) {
                     double d = df.valueAt(i, j);
                     Point3d p = new Point3d((i-p_x)/f_x, (j-p_y)/f_y, 1d);
-                    p.scaleBy(d).scaleByMat(E);
+                    p.scaleBy(d).applyTransformation(E);
                     double d_tilde = p.z();
                     int i_tilde = (int)((p.x()*f_x_rgb) / d_tilde + p_x_rgb);
                     int j_tilde = (int)((p.y()*f_y_rgb) / d_tilde + p_y_rgb);

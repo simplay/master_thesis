@@ -41,7 +41,7 @@ public class Point3d {
      *
      * @param mat 3x4 matrix
      */
-    public void scaleByMat(Mat3x4 mat) {
+    public void applyTransformation(Mat3x4 mat) {
         Point3d col1 = mat.getCol(0);
         Point3d col2 = mat.getCol(1);
         Point3d col3 = mat.getCol(2);

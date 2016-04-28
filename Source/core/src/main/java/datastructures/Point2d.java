@@ -78,7 +78,6 @@ public class Point2d {
 
         // 3d euclidian space point
         Point3d p3 = new Point3d(_x, _y, depth);
-        p3.scaleByMat(CalibrationManager.extrinsicMat());
         this.depthPos = p3;
     }
 
