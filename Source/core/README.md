@@ -40,7 +40,9 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
 
 + **-prefix NAME** custom prefix **NAME** appended to all generated output files. By default it is equal to the empty string.
 
-+ **-lambda FLOAT** scale factor in affinity function used for all MD tasks. By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
++ **-lambda FLOAT** scale factor in affinity function used for all MD tasks. The **smaller** the value for **lambda** gets, the **higher** the values in the `W` matrix get (W gets **brighter**). 
+More precisely, the higher the lambda, the close the affinity values become to the value 1.
+By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
 
 + **-dscale FLAT** scale of depth field values to have those values in meters.
 
