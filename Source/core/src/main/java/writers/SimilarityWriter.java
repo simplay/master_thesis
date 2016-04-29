@@ -11,7 +11,7 @@ import java.util.List;
 public class SimilarityWriter extends LargeFileWriter{
 
     public SimilarityWriter(String dataset) {
-        String outputPath = "../output/similarities/" + getOutputFilename(dataset) + "_sim.dat";
+        String outputPath = "../output/similarities/" + getOutputFilenamePrefix(dataset) + "_sim.dat";
         reportFilePath(outputPath, "Writing similarity matrix to output file:");
 
         int n = TrajectoryManager.getTrajectories().size();

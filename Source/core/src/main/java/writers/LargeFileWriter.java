@@ -115,17 +115,44 @@ public class LargeFileWriter {
     }
 
     /**
-     * Obtain the correct filename prefix for a given dataset.
-     * Changes, in case a user has provided a custom filename prefix.
+     * Obtain the filename prefix for a given dataset.
+     *
+     * In general, generated output files have the following prefix:
+     * `<DS>_<TN>_<NNT>_<N>_<P>_<SUFFIX>` where
+     *
+     * + <DS> the used dataset name
+     * + <TN> the selected similarity task
+     * + <NNT> the nearest neighbor type that is used
+     * + <N> the number of nearest neighbors  and
+     * + <P> the user given prefix, optional.
+     * + <SUFFIX> corresponds to the generated output file name.
+     *
+     * Example: When running
+     *  -d c14 -task 2 -nn 1000 -nnm top -prefix foobar
+     * the following output files are generated:
+     *  c14_md_top_1000_foobar_sim.data
+     *  c14_md_top_1000_foobar_labels.txt
+     *  c14_md_top_1000_foobar_spnn.txt
      *
      * @param dataset dataset name used during computation.
      *
      * @return filename prefix of outputted similarity files.
      */
-    protected String getOutputFilename(String dataset) {
+    protected String getOutputFilenamePrefix(String dataset) {
+        return dataset + "_" + getOutputFilenamePrefix();
+    }
+
+    protected String getOutputFilenamePrefix() {
+        String filenamePrefix = ArgParser.getSimTask().getIdName();
+        filenamePrefix += "_" + ArgParser.getNNMode().getId();
+        filenamePrefix += "_" + ArgParser.getNearestNeighborhoodCount();
+
+        // In case a user has provided a custom name infix,
+        // append it to the filename suffix.
         if (ArgParser.hasCustomFileNamePrefix()) {
-            return ArgParser.getCustomFileNamePrefix() + "_" + dataset;
+            filenamePrefix += "_" + ArgParser.getCustomFileNamePrefix();
         }
-        return dataset;
+
+        return filenamePrefix;
     }
 }
