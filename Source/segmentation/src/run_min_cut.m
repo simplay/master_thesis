@@ -51,8 +51,10 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
 
     nn_fpath = strcat('../output/similarities/',pr, DATASET, '_spnn.txt');
     disp(['Loading spnn file: ' nn_fpath]);
-    spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
-     
+    
+    if num_of_iters > 0
+        spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
+    end
     % initial assignments
     if REUSE_LABEL_ASSIGNMENT == 0
         label_assignments = zeros(length(W), 1);
