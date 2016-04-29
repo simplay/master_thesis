@@ -13,6 +13,11 @@ alley2small
 
 In the following a list what parameter setups were used for generating the datasets to offer the oportunity to re-produce all generated results.
 
+## cars
+core:
++ `-d cars -task 2 -var 1 -nn 2000 -prefix foobar_md_nn_1000_best -lambda 0.01 -nnm top`
+ + `cars_ldof_md_d_iters_20_c_3_ev_5_nu_1e-09` => error = 119.7973
+
 ## chair_3_cast
 
 Resolution: `424 x 512`
