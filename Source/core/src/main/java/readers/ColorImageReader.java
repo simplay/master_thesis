@@ -31,6 +31,7 @@ public class ColorImageReader extends FileReader {
                 Double.parseDouble(rgbValues[1]),
                 Double.parseDouble(rgbValues[2])
         );
+        p.div_by(255d);
 
         img.setElement(p, row_idx, col_idx);
     }
