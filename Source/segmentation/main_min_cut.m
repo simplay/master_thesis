@@ -27,7 +27,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 7;
+FORCE_EW_COUNT = 5;
 
 THRESH = 0.0000;
 

@@ -3,17 +3,17 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'chair_3_cast';
+DATASET = 'cars';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_nn_1600_both';
+PREFIX_INPUT_FILENAME = 'foobar_md_nn_1000_best';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'c_12_dc_1000';
+PART_DS_PREF = 'pewpew';
 
 PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'kl_c_12';
+PREFIX_OUTPUT_FILENAME = 'aaa';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 

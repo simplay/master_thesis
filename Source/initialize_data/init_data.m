@@ -6,21 +6,21 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'alley2small';
+DATASETNAME = 'wh1';
 METHODNAME = 'ldof';
-STEP_SIZE = 6;
+STEP_SIZE = 8;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
-EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
-COMPUTE_DEPTH_VARIANCE = false;
+EXTRACT_DEPTH_FIELDS = true; % add check: only if depth fields do exist
+COMPUTE_DEPTH_VARIANCE = true;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = false;
-DEPTH_SCALE = 0.0002;
+USE_OWN_DEPTHS = true;
+DEPTH_SCALE = 0.0002; % for bon data
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field

@@ -17,21 +17,21 @@ COMPUTE_EIGS = false;
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = false;
+REUSE_ASSIGNMENTS = true;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 8;
+FORCE_EW_COUNT = 5;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 5;
+CLUSTER_CENTER_COUNT = 3;
 
 %
 % RUN_MODE = 1 => vis segmentation
