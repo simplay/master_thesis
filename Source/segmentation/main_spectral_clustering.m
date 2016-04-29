@@ -6,18 +6,18 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'cars';
+DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d';
-PREFIX_INPUT_FILENAME = 'foobar_md_nn_1000_best';
+PREFIX_OUTPUT_FILENAME = 'pew';
+PREFIX_INPUT_FILENAME = 'pd_top_1200';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = true;
+REUSE_ASSIGNMENTS = false;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
 FILTER_ZERO_EIGENVALUES = true;

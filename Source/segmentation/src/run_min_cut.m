@@ -32,7 +32,7 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
     % load label vector indices mappings
     % TODO export this method to own function
 
-    label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
+    label_mappings = labelfile2mat(strcat(BASE, DATASET, '_' ,pr));
     
     [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
@@ -49,7 +49,7 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
     
     img_index = SELECTED_ENTITY_IDX;
 
-    nn_fpath = strcat('../output/similarities/',pr, DATASET, '_spnn.txt');
+    nn_fpath = strcat('../output/similarities/',DATASET, '_', pr,'spnn.txt');
     disp(['Loading spnn file: ' nn_fpath]);
     
     if num_of_iters > 0

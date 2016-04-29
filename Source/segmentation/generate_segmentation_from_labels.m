@@ -3,14 +3,14 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'cars';
+DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'foobar_md_nn_1000_best';
+PREFIX_INPUT_FILENAME = 'pd_top_1200';
 
 graph_cuts_dir = '../output/graph_part/';
 PART_DS_PREF = 'pewpew';
 
-PART_DS = strcat(PREFIX_INPUT_FILENAME, '_', DATASET, '_', PART_DS_PREF);
+PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
 PREFIX_OUTPUT_FILENAME = 'aaa';
@@ -45,7 +45,7 @@ if isempty(PREFIX_INPUT_FILENAME) == 0
     pr = strcat(PREFIX_INPUT_FILENAME, '_');
 end
 
-label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
+label_mappings = labelfile2mat(strcat(BASE, DATASET, '_', pr));
 [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 
 if USE_CUSTOM_TILL_BOUND

@@ -86,6 +86,31 @@ When running the code on a dataset called **DATASET**, the following output is g
  + these values are returned in their sorting order.
  + The index-trajectory-label mapping ins defined in the `labels.txt` file.
  + Affinity values are stored in `sim.dat` file.
+ 
+### Generated output filenames
+
+The core pipelines uses a generic and common naming scheme that consists of:
+
++ the used dataset name `<DS>`
++ the selected similarity task `<TN>`
++ the number of nearest neighbors `<N>` and what type `<NNT>` they are (_best/both_)
++ the user given prefix `<P>` which is optional.
+
+The generated files will be named as the follows: `<DS>_<TN>_<NNT>_<N>_<P>_<SUFFIX>`
+where `<SUFFIX>` is either:
+
++ `_sim.data`
++ `_labels.txt`
++ `_spnn.txt`
+
+Example: 
+
+when running: `-d c14 -task 2 -nn 1000 -nnm top -prefix foobar` the following should be generated: 
+
++ `c14_md_top_1000_foobar_sim.data`
++ `c14_md_top_1000_foobar_labels.txt`
++ `c14_md_top_1000_foobar_spnn.txt`
+
 
 ### Optional output data
 

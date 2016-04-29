@@ -1,7 +1,7 @@
 function [ label_mapping ] = labelfile2mat(PATH)
 %LABELFILE2MAT return label mapping
 %   Detailed explanation goes here
-    fname = strcat(PATH, '_labels.txt');
+    fname = strcat(PATH, 'labels.txt');
     disp(['Loading labels from: ', fname]);
     fid = fopen(fname);
     tline = fgets(fid);

@@ -38,6 +38,15 @@ public enum SimilarityTaskType {
     }
 
     /**
+     * Get the abbreviation of a particular task.
+     * Corresponds to the lower-cased Enum identifier.
+     * @return
+     */
+    public String getIdName() {
+        return name().toLowerCase();
+    }
+
+    /**
      * Checks whether the alternative task should be used.
      * This is the case whenever depth cues should be used but the color and depth camera are overlapping
      * and we are not already an alternative task.
