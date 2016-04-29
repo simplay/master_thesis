@@ -5,6 +5,7 @@ function [ label_mapping ] = labelfile2mat(PATH)
     disp(['Loading labels from: ', fname]);
     fid = fopen(fname);
     tline = fgets(fid);
+    tline = strtrim(tline);
     labels_as_cells = strsplit(tline, ' ');
     fclose(fid);
     len = length(labels_as_cells);
