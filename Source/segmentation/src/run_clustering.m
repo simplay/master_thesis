@@ -22,7 +22,7 @@ function [W, U_small, S_small, U_full, S_full, assignments] = run_clustering(DAT
     if isempty(PREFIX_INPUT_FILENAME) == 0
         pr = strcat(PREFIX_INPUT_FILENAME, '_');
     end
-
+    
     %% load appropriate data
     [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, pr, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT, FILTER_ZERO_EIGENVALUES);
     
@@ -30,7 +30,7 @@ function [W, U_small, S_small, U_full, S_full, assignments] = run_clustering(DAT
 
     % load label vector indices mappings
 
-    label_mappings = labelfile2mat(strcat(BASE, pr, DATASET));
+    label_mappings = labelfile2mat(strcat(BASE, DATASET, '_' ,pr));
     
     [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 

@@ -7,13 +7,13 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'cars';
+DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'md_d';
-PREFIX_INPUT_FILENAME = 'foobar_md_nn_1000_best';
+PREFIX_OUTPUT_FILENAME = 'pew';
+PREFIX_INPUT_FILENAME = 'pd_top_1200';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % Should the label assignment be re-used
 REUSE_LABEL_ASSIGNMENT = false;

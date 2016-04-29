@@ -5,7 +5,7 @@ function [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, 
     U_small = U_full;
     S_small = S_full;
     if COMPUTE_EIGS
-        fname = strcat(BASE, PRE, DATASET, '_sim.dat');
+        fname = strcat(BASE, DATASET, '_', PRE, 'sim.dat');
         disp(['Loading similarity file: ' fname]);
         W = load(fname);
         
