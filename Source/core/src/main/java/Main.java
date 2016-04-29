@@ -178,6 +178,11 @@ public class Main {
         Logger.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         Logger.println();
 
+        Logger.println("Filtering invalid spatial neighbors ...");
+        int filtedCount = TrajectoryManager.getInstance().filterInvalidSpatialTrajectoryNeighbors();
+        Logger.println("=> Filtered " + filtedCount + " neighbors.");
+        Logger.println();
+
         /**
          * Write output data
          *  + extracted trajectories
@@ -195,6 +200,7 @@ public class Main {
         new NearestSpatialNeighborsWriter(dataset, numberOfNNToSave);
 
         long tillFinishedTime = System.currentTimeMillis();
+        Logger.println();
         Logger.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
 
         // Write logger status file to "../output/logs/"

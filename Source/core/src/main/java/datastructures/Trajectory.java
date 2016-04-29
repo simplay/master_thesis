@@ -62,6 +62,25 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
+     * Remove all spatial neighbors that do not map to a existing similarity value.
+     * Since some trajectory similarities were filtered due to inconsistency checks,
+     * but they were added as a spatial neighbor, we also have to filter them from
+     * the neighbor list.
+     *
+     * @return reports the number of filtered neighbors
+     */
+    public int filterInvalidSpatialNeighbors() {
+        int filteredCount = 0;
+        for (int key : avgSpatialDistToNeighbors.keySet()) {
+            if (!similarities.containsKey(key)) {
+                avgSpatialDistToNeighbors.remove(key);
+                filteredCount++;
+            }
+        }
+        return filteredCount;
+    }
+
+    /**
      * Checks whether this trajectory closed.
      * note that closed means, that its end frame is correctly assigned.
      *

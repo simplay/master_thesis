@@ -215,6 +215,19 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
+     * Filters all invalid spatial nearest neighbors
+     *
+     * @return reports the total number of filtered neighbors accumulated over all existing trajectories.
+     */
+    public int filterInvalidSpatialTrajectoryNeighbors() {
+        int filteredCount = 0;
+        for (Trajectory tra : getTrajectories()) {
+            filteredCount += tra.filterInvalidSpatialNeighbors();
+        }
+        return filteredCount;
+    }
+
+    /**
      * Transforms all remaining trajectories to the Euclidian space using
      * extrinsic camera the calibration matrices and depth cues.
      */
