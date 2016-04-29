@@ -96,7 +96,11 @@ function smoothness_term = computeSmoothnessTerm(v, pa, spnn_indices, nu)
     for a=1:length(pa)
         for bi=1:length(spnn_indices(1,:))
             b = spnn_indices(a,bi);
-
+            
+            if (b == 0)
+                continue;
+            end
+            
             va = v(a,:);
             vb = v(b,:);
 

@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES)
+function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES, REUSE_LABEL_ASSIGNMENT, label_assignments)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -54,7 +54,9 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
     spnn_indices = extract_spatial_neighbors(nn_fpath, label_mappings);
      
     % initial assignments
-    label_assignments = zeros(length(W), 1);
+    if REUSE_LABEL_ASSIGNMENT == 0
+        label_assignments = zeros(length(W), 1);
+    end
     rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
     %%
     N = length(W);
@@ -64,17 +66,19 @@ function [W, U_small, S_small, U_full, S_full] = run_min_cut(DATASET, METHODNAME
         
         % define initial cluster assignment
         % label_assignments
-        ks = 1:K;
-        fK = (ks-1).*(N./K);
-        tK = ks.*(N./K);
-        for idx=1:length(fK)
-            [~,tp,~] = find(fK(idx) <= 1:N & 1:N <= tK(idx));
-            label_assignments(tp) = idx;
+        if REUSE_LABEL_ASSIGNMENT == 0
+            ks = 1:K;
+            fK = (ks-1).*(N./K);
+            tK = ks.*(N./K);
+            for idx=1:length(fK)
+                [~,tp,~] = find(fK(idx) <= 1:N & 1:N <= tK(idx));
+                label_assignments(tp) = idx;
+            end
         end
         
         % repeat until convergence, i.e. error is small
         for t=1:num_of_iters,  
-            [ centroids ] = find_cluster_centers( label_assignments, U_small );
+            [ centroids ] = find_cluster_centers(label_assignments, U_small);
             [label_assignments, energy] = min_multi_graph_cut( U_small, S_small, label_assignments, centroids, K, spnn_indices, NU);
             disp(['Iteration ', num2str(t),' Remaining energy: ',num2str(energy)]);
             
