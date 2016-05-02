@@ -99,7 +99,7 @@ public class ArgParser {
         String depthScale = getInstance().getHashValue("dscale");
         if (depthScale == null) {
             // The depth fields measured by our own camera software are scaled by a factor of 1/5000
-            return (1d/5000d);
+            return 1d;
         }
         return Double.parseDouble(depthScale);
     }
