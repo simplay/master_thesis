@@ -18,15 +18,18 @@ public class FramewiseActiveTraWriter extends LargeFileWriter {
 
         // TODO: replace this approach by a more efficient version: do not iterate and compute active tra (compute them beforehand, during thracking step)
         String fname = "";
+        String fpname = "";
         for (int idx = 0; idx <= till_index; idx++) {
-            Logger.println("+ Iteration " + (idx+1));
-            fname = outputPath + getOutputFilenamePrefix() + "_active_tra_f_" + (idx+1) + ".txt";
+            fname = getOutputFilenamePrefix() + "_active_tra_f_" + (idx+1) + ".txt";
+            fpname = outputPath + fname;
+            Logger.println("+ Saved activities of frame " + (idx+1) + " in: `./" + fname);
             String activeTra = TrajectoryManager.getInstance().toFramewiseOutputString(idx);
             try {
-                writeFile(activeTra, fname);
+                writeFile(activeTra, fpname);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        Logger.println();
     }
 }

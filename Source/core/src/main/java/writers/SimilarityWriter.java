@@ -2,8 +2,6 @@ package writers;
 
 import datastructures.Trajectory;
 import managers.TrajectoryManager;
-import pipeline_components.ArgParser;
-
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +10,9 @@ public class SimilarityWriter extends LargeFileWriter{
 
     public SimilarityWriter(String dataset) {
         String outputPath = "../output/similarities/" + getOutputFilenamePrefix(dataset) + "_sim.dat";
-        reportFilePath(outputPath, "Writing similarity matrix to output file:");
+        int traCount = TrajectoryManager.getTrajectories().size();
+        String matDim = "(" + traCount + " x " + traCount + ")";
+        reportFilePath(outputPath, "Writing " + matDim + " similarity matrix:");
 
         int n = TrajectoryManager.getTrajectories().size();
         int counter = 0;
