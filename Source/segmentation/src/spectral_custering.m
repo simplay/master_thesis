@@ -8,7 +8,7 @@ function [idx, C, sumd, D] = spectral_custering( U, cluster_count, iterationCoun
     
     if isreal(U)
         opts = statset('Display','final');
-        [idx,C,sumd,D] = kmeans(U, cluster_count, 'Replicates', iterationCount, 'Start', 'sample', 'Options', opts);
+        [idx,C,sumd,D] = kmeans(U, cluster_count, 'MaxIter', 200, 'Replicates', iterationCount, 'Start', 'sample', 'Options', opts);
         if verbose
             disp(C);
         end
