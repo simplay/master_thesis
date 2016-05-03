@@ -8,8 +8,7 @@ function [ path ] = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FIL
         end
         method_id = strcat(DATASET, '_', METHODNAME, pref_meth);
         path = strcat(path, method_id, '/');
-        mkdir(path);
-
+        
         dir_exists = exist(path,'dir');
         if dir_exists
             disp(['Target directory `', path, '` already exists.'])
@@ -18,6 +17,8 @@ function [ path ] = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FIL
             if ~(str == 'y')
                 error('Program exit');
             end
+        else
+            mkdir(path);
         end
 
 end
