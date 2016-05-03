@@ -199,13 +199,13 @@ public class ArgParser {
             Logger.println("+ Using custom prefix: " + getCustomFileNamePrefix());
         }
 
-        Logger.println("+ Running task: " + getSimTask().getName());
-        Logger.println("+ Using local variances: " + useLocalVariance());
+        Logger.println("+ Running task: " + getSimTask().getName() + " [" + getSimTask().getIdName() + "]");
+        Logger.println("+ Using local flow variances: " + useLocalVariance());
         Logger.println("+ Using depth cues: " + useDepthCues());
+        Logger.println("+ Using depth variances: " + getSimTask().usesDepthVariance());
         Logger.println("+ Using color cues: " + useColorCues());
         Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         Logger.println("+ Using NN Mode: " + getNNMode().name());
-        Logger.println("+ Program runs in debug mode: " + runInDebugMode());
         Logger.println("+ Using Lambda equals: " + getLambda());
 
         if (useDepthCues()) {
@@ -215,5 +215,7 @@ public class ArgParser {
         if (useColorCues()) {
             Logger.println("+ Using cut probability: " + getCutProbability());
         }
+
+        Logger.println("+ Program runs in debug mode: " + runInDebugMode());
     }
 }
