@@ -7,10 +7,10 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'c14';
+DATASET = 'alley2small';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'pew';
-PREFIX_INPUT_FILENAME = 'pd_top_1200';
+PREFIX_OUTPUT_FILENAME = 'ped';
+PREFIX_INPUT_FILENAME = 'ped_top_3000';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = true;
@@ -27,7 +27,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 5;
+FORCE_EW_COUNT = 12;
 
 THRESH = 0.0000;
 
@@ -38,7 +38,7 @@ NU = 0.000000001;
 
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 10;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -60,7 +60,7 @@ FILTER_ZERO_EIGENVALUES = false;
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 3;
+frame_idx = 30;
 
 % number of iterations that should be performed for computing the approx.
 num_of_iters = 5;

@@ -6,13 +6,13 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'c14';
+DATASET = 'chair_3_cast';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'pew';
-PREFIX_INPUT_FILENAME = 'pd_top_1200';
+PREFIX_OUTPUT_FILENAME = 'paed';
+PREFIX_INPUT_FILENAME = 'paed_top_3000';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
@@ -23,15 +23,15 @@ REUSE_ASSIGNMENTS = false;
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = true;
+COMPUTE_FULL_RANGE = false;
 % 
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 5;
+FORCE_EW_COUNT = 10;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 6;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -48,8 +48,8 @@ SHOW_SEGMENTATION = true;
 SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
-SELECTED_ENTITY_IDX = 3;
-frame_idx = 3;
+SELECTED_ENTITY_IDX = 6;
+frame_idx = 5;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT
