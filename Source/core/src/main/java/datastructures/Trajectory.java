@@ -17,22 +17,32 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     //private ArrayList<Point2d> transformedPoints;
     private ArrayList<Point3d> euclidianPoints;
 
-    // Marks whether this trajectory can be continued during the tracking step
+    // Indicates if this trajectory can be continued during the tracking step
+    // Only trajectories that are not yet closed can be continued.
     private boolean isClosed = false;
 
     // indicates whether this trajectory should be filtered
+    // Trajectories are deletable if they either do not have any similarity value assigned to
+    // or are too short or out of
     private boolean isDeletable = false;
 
     // all similarities between this and any other trajectory
+    // A TreeMap sorts its hash-items by their key (i.e. the trajectory label)
+    //  key = label of other trajectory,
+    //  value = similarity value between this and other trajectory
     private TreeMap<Integer, Double> similarities;
 
-    // all avg spatial pixel distances between this and any other trajectory
-    private HashMap<Integer, Double> avgSpatialDistToNeighbors;
+    // All avg spatial pixel distances between this and any other trajectory
+    // A TreeMap sorts its hash-items by their key (i.e. the trajectory label)
+    //  key = label of other trajectory,
+    //  value = avg spatial distance between this and other trajectory
+    private TreeMap<Integer, Double> avgSpatialDistToNeighbors;
 
-    // unique identifier of a trajectory
+    // Unique identifier of a trajectory
     private int label;
 
-    // shared resource among trajectories
+    // Shared resource among trajectories
+    // Assumption: The first trajectory label is equal to 1.
     private static int label_counter = 1;
 
     // frame index of first the first tracking point of this trajectory.
@@ -58,7 +68,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         points = new ArrayList<Point2d>();
         this.similarities = new TreeMap<>();
         this.endFrame = -1;
-        this.avgSpatialDistToNeighbors = new HashMap<>();
+        this.avgSpatialDistToNeighbors = new TreeMap<>();
     }
 
     /**
@@ -95,8 +105,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      * the computation of similarity values during computation.
      */
     public void initSimilarityDatastructures() {
-        int n = TrajectoryManager.getTrajectories().size();
-        this.avgSpatialDistToNeighbors = new HashMap<>(n);
+        this.avgSpatialDistToNeighbors = new TreeMap<>();
         this.similarities = new TreeMap<>();
     }
 
