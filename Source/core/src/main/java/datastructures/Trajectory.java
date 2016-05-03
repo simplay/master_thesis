@@ -24,7 +24,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     private boolean isDeletable = false;
 
     // all similarities between this and any other trajectory
-    private HashMap<Integer, Double> similarities;
+    private TreeMap<Integer, Double> similarities;
 
     // all avg spatial pixel distances between this and any other trajectory
     private HashMap<Integer, Double> avgSpatialDistToNeighbors;
@@ -56,7 +56,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         this.label = label_counter++;
         this.startFrame = startFrame;
         points = new ArrayList<Point2d>();
-        this.similarities = new HashMap<>();
+        this.similarities = new TreeMap<>();
         this.endFrame = -1;
         this.avgSpatialDistToNeighbors = new HashMap<>();
     }
@@ -97,7 +97,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     public void initSimilarityDatastructures() {
         int n = TrajectoryManager.getTrajectories().size();
         this.avgSpatialDistToNeighbors = new HashMap<>(n);
-        this.similarities = new HashMap<>(n);
+        this.similarities = new TreeMap<>();
     }
 
     /**
