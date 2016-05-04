@@ -1,8 +1,8 @@
 package com.ma;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Vertex implements Comparable<Vertex> {
 
@@ -12,9 +12,14 @@ public class Vertex implements Comparable<Vertex> {
     private int partitionSetLabel;
     private boolean is_dummy;
 
-    public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    public double[] similarities;
+    //public final List<Vertex> neighbors = new LinkedList<Vertex>();
+    private final HashSet<Vertex> neighbors = new HashSet<Vertex>(ArgParser.maxNearestNeighborCount());
 
+    // Pre-Initialize for dummy vertices, they do not have any neighbors assigned to.
+    private LinkedList<Vertex> lNeighbors = new LinkedList<>();
+
+    // TODO write a accessor method instead defining it a public member
+    public double[] similarities;
 
     // D_a = E_a - I_a
     private double dValue;
@@ -27,6 +32,26 @@ public class Vertex implements Comparable<Vertex> {
         this.is_dummy = false;
     }
 
+    /**
+     * Prepare linked list datastructure of neighborshood assignment.
+     *
+     * Skip, if we do not have any neighbors and work with the pre-initialized neighbors list.
+     */
+    public void assignNeighbors() {
+        if (neighbors.size() > 0) {
+            lNeighbors = new LinkedList(neighbors);
+        }
+    }
+
+    /**
+     * Collects all the neighbors in a list
+     *
+     * @return the nearest neighbors of this vertex.
+     */
+    public LinkedList<Vertex> getNeighbors() {
+        return lNeighbors;
+    }
+
     public Vertex(int id, int vertexCount, boolean is_dummy) {
         this.id = id;
         this.similarities = new double[vertexCount];
@@ -37,7 +62,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public ArrayList<Vertex> acitveNeighborsForLabels(int[] activeLabelList) {
         ArrayList<Vertex> activeNeighbors = new ArrayList<>();
-        for (Vertex v : neighbors) {
+        for (Vertex v : getNeighbors()) {
             for (int activeLabel : activeLabelList) {
                 if (v.getPartitionSetLabel() == activeLabel) {
                     activeNeighbors.add(v);
@@ -85,7 +110,7 @@ public class Vertex implements Comparable<Vertex> {
         double I_a = 0.0d;
         double E_a = 0.0d;
 
-        for(Vertex v : neighbors) {
+        for(Vertex v : getNeighbors()) {
             // skip vertices with no partition set label
             if (v.getPartitionSetLabel() == -1) continue;
 
@@ -140,9 +165,7 @@ public class Vertex implements Comparable<Vertex> {
      */
     public synchronized void appendNearestNeighbord(Vertex v) {
         if (v != null) {
-            if (!neighbors.contains(v)) {
-                neighbors.add(v);
-            }
+            neighbors.add(v);
         }
     }
 
@@ -177,20 +200,20 @@ public class Vertex implements Comparable<Vertex> {
 
     public String toString() {
         String neighborsNames = "[ ";
-        for (Vertex v : neighbors) {
+        for (Vertex v : getNeighbors()) {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";
         return id+ "=>" + neighborsNames + "D" + dValue + "\n";
     }
 
-	public void setSimilarities(double[] fs) {
+    public void setSimilarities(double[] fs) {
         assert(fs.length ==  similarities.length);
         int idx = 0;
         for (double sim : fs) {
             similarities[idx] = sim;
             idx++;
         }
-	}
+    }
 
 }

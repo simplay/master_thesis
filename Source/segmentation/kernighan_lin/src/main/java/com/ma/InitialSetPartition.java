@@ -34,7 +34,7 @@ public class InitialSetPartition {
     }
 
     public void initAllEmptyButOne(int dummyCount) {
-        for (Vertex v : graph.vertices) {
+        for (Vertex v : graph.getVertices()) {
             setList.get(0).add(v);
             for (int k = 1; k < setList.size(); k++) {
                 setList.get(k).add(new Vertex(-1, graph.vertexCount(), true));
@@ -45,7 +45,7 @@ public class InitialSetPartition {
 
     public void assignModN(int dummy_count) {
         int idx = 0;
-        for(Vertex v : graph.vertices) {
+        for(Vertex v : graph.getVertices()) {
             setList.get(idx % clusterCount).add(v);
             idx++;
         }
@@ -53,7 +53,7 @@ public class InitialSetPartition {
 
     private void initSetsMod2(int count) {
         int idx = 0;
-        for(Vertex v : graph.vertices) {
+        for(Vertex v : graph.getVertices()) {
             if (idx % 2 == 0) {
                 setList.get(0).add(v);
             } else {
@@ -75,7 +75,7 @@ public class InitialSetPartition {
     private void initSetsEmptyFull(int count) {
         int fullClusters = clusterCount-1;
         int idx = 0;
-        for (Vertex v : graph.vertices) {
+        for (Vertex v : graph.getVertices()) {
             setList.get((idx % fullClusters)+1).add(v);
             idx++;
         }

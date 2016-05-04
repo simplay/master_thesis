@@ -44,6 +44,11 @@ public class NeighborhoodReader extends GraphFileReader {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
 
+        // prepare appropriate ds
+        for (Vertex v : graph.getVertices()) {
+            v.assignNeighbors();
+        }
+
         Logger.println("Assigned neighborhood for " + lineCounter + " trajectories.");
     }
 

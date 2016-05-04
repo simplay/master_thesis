@@ -88,6 +88,23 @@ public class ArgParser {
     }
 
     /**
+     * Get the maximal number of used nearest neighbors.
+     * Since we have a naming convention that also
+     * encoded the number of nearest neighbors, we can parse this number.
+     *
+     * @return number of max. used nearest neighbors.
+     */
+    public static int maxNearestNeighborCount() {
+        String[] splits = getDatasetName().split("_");
+        for (String split : splits) {
+            if (split.matches("[-+]?\\d*\\.?\\d+")) {
+                return Integer.parseInt(split);
+            }
+        }
+        return 0;
+    }
+
+    /**
      * The number of maximal iteration until we skip convergence computation.
      * By default this is 1.
      *
@@ -149,6 +166,7 @@ public class ArgParser {
         Logger.println(getInstance().toString());
         Logger.println("Using the following runtime parameter setting:");
         Logger.println("+ Using dataset: " + getDatasetName());
+        Logger.println("+ Number of max. nearest neighbors: " + maxNearestNeighborCount());
         Logger.println("+ Using initial partition mode: " + getInitialPartitionMode().getName());
         Logger.println("+ Number of clusters: " + getClusterCount());
         Logger.println("+ Max Iterations per Cluster: " + getMaxIterCountPerCluster());
