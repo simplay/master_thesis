@@ -48,7 +48,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public ArrayList<Vertex> acitveNeighborsForLabels(int[] activeLabelList) {
         ArrayList<Vertex> activeNeighbors = new ArrayList<>();
-        for (Vertex v : neighbors) {
+        for (Vertex v : getNeihbors()) {
             for (int activeLabel : activeLabelList) {
                 if (v.getPartitionSetLabel() == activeLabel) {
                     activeNeighbors.add(v);
@@ -96,7 +96,7 @@ public class Vertex implements Comparable<Vertex> {
         double I_a = 0.0d;
         double E_a = 0.0d;
 
-        for(Vertex v : neighbors) {
+        for(Vertex v : getNeihbors()) {
             // skip vertices with no partition set label
             if (v.getPartitionSetLabel() == -1) continue;
 
@@ -151,9 +151,7 @@ public class Vertex implements Comparable<Vertex> {
      */
     public synchronized void appendNearestNeighbord(Vertex v) {
         if (v != null) {
-            //if (!neighbors.contains(v)) {
-                neighbors.add(v);
-            //}
+            neighbors.add(v);
         }
     }
 
@@ -188,7 +186,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public String toString() {
         String neighborsNames = "[ ";
-        for (Vertex v : neighbors) {
+        for (Vertex v : getNeihbors()) {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";
