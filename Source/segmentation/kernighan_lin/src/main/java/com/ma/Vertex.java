@@ -3,7 +3,6 @@ package com.ma;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Vertex implements Comparable<Vertex> {
 
@@ -15,7 +14,7 @@ public class Vertex implements Comparable<Vertex> {
 
     //public final List<Vertex> neighbors = new LinkedList<Vertex>();
     private final HashSet<Vertex> neighbors = new HashSet<Vertex>(3000);
-    private LinkedList<Vertex> lNeighbors;
+    private LinkedList<Vertex> lNeighbors = new LinkedList<>();
 
     public double[] similarities;
 
@@ -31,10 +30,13 @@ public class Vertex implements Comparable<Vertex> {
     }
 
     public void assignNeighbors() {
-        lNeighbors = new LinkedList(neighbors);
+        if (neighbors.size() > 0) {
+            lNeighbors = new LinkedList(neighbors);
+        }
     }
 
-    public LinkedList<Vertex> getNeihbors() {
+    public LinkedList<Vertex> getNeighbors() {
+
         return lNeighbors;
     }
 
@@ -48,7 +50,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public ArrayList<Vertex> acitveNeighborsForLabels(int[] activeLabelList) {
         ArrayList<Vertex> activeNeighbors = new ArrayList<>();
-        for (Vertex v : getNeihbors()) {
+        for (Vertex v : getNeighbors()) {
             for (int activeLabel : activeLabelList) {
                 if (v.getPartitionSetLabel() == activeLabel) {
                     activeNeighbors.add(v);
@@ -96,7 +98,7 @@ public class Vertex implements Comparable<Vertex> {
         double I_a = 0.0d;
         double E_a = 0.0d;
 
-        for(Vertex v : getNeihbors()) {
+        for(Vertex v : getNeighbors()) {
             // skip vertices with no partition set label
             if (v.getPartitionSetLabel() == -1) continue;
 
@@ -186,7 +188,7 @@ public class Vertex implements Comparable<Vertex> {
 
     public String toString() {
         String neighborsNames = "[ ";
-        for (Vertex v : getNeihbors()) {
+        for (Vertex v : getNeighbors()) {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";

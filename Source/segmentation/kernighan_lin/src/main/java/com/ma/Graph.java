@@ -45,7 +45,7 @@ public class Graph {
         //fill in only the nonzero elements in  a new matrix.
         double[][] tmp_similarity_matrix = new double[vertexCount()][vertexCount()];
         for(Vertex v : getVertices()){
-            for(Vertex w : v.getNeihbors()){
+            for(Vertex w : v.getNeighbors()){
                 tmp_similarity_matrix[v.getId()][w.getId()] = v.similarities[w.getId()];
                 tmp_similarity_matrix[w.getId()][v.getId()] = w.similarities[v.getId()];
             }
