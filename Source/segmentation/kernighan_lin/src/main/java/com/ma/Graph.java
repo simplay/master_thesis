@@ -88,7 +88,7 @@ public class Graph {
      * @param idx vertex idx
      * @param neighborIndices
      */
-    public void assignNearestNeighborsForVertex(int idx, String[] neighborIndices) {
+    public synchronized void assignNearestNeighborsForVertex(int idx, String[] neighborIndices) {
         Vertex v = vertices.get(idx);
         if (v != null) {
             for (String nnIndexIdentifiers : neighborIndices) {
