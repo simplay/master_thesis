@@ -5,10 +5,10 @@ addpath('../matlab_shared');
 
 DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'pd_top_1200';
+PREFIX_INPUT_FILENAME = 'sd_both_3000';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'pewpew';
+PART_DS_PREF = 'test';
 
 PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
