@@ -14,8 +14,8 @@ public class SumDistTask extends SimilarityTask {
     // Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts Used in formula (7)
     private final double BETA_0_TILDE = 6.0d;
     private final double BETA_0 = 2.0d;
-    private final double BETA_1 = -0.2d;
-    private final double BETA_2 = -0.4d;
+    private final double BETA_1 = -0.02d; // when running euclid -0.2 works better
+    private final double BETA_2 = -4d; // when running euclid -0.4 works better
     private final double BETA_3 = -0.02d;
 
     // cut probabilities
