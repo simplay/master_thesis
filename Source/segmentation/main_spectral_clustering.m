@@ -12,7 +12,7 @@ PREFIX_OUTPUT_FILENAME = 'paed';
 PREFIX_INPUT_FILENAME = 'paed_top_3000';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
@@ -28,10 +28,10 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 10;
+FORCE_EW_COUNT = 18;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 6;
+CLUSTER_CENTER_COUNT = 15;
 
 %
 % RUN_MODE = 1 => vis segmentation
