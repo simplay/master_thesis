@@ -45,7 +45,7 @@ public class GraphPartitioner {
 
         // The total number of vertices is the number of read
         // trajectories plus the virtual vertices (i.e. dummies).
-        vertexCount = dummyCount + graph.vertices.size();
+        vertexCount = dummyCount + graph.getVertices().size();
 
         this.clusterCount = clusterCount;
 
@@ -240,7 +240,7 @@ public class GraphPartitioner {
             BufferedWriter writer = new BufferedWriter(new FileWriter("./temp_debug.m"));
             writer.write("Vals = [");
 
-            for(Vertex v: graph.vertices){
+            for(Vertex v: graph.getVertices()){
                 writer.write("" + v.getDValue() + "\n");
             }
 

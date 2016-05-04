@@ -184,13 +184,13 @@ public class Vertex implements Comparable<Vertex> {
         return id+ "=>" + neighborsNames + "D" + dValue + "\n";
     }
 
-	public void setSimilarities(double[] fs) {
+    public void setSimilarities(double[] fs) {
         assert(fs.length ==  similarities.length);
         int idx = 0;
         for (double sim : fs) {
             similarities[idx] = sim;
             idx++;
         }
-	}
+    }
 
 }

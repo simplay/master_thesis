@@ -20,7 +20,7 @@ public class TrajectoryLabelReader extends GraphFileReader {
         String[] tokens = fline.split(" ");
         int idx = 0;
         for (String token : tokens) {
-            Vertex v = graph.vertices.get(idx);
+            Vertex v = graph.getVertex(idx);
             v.setTrajectoryId(Integer.parseInt(token));
             idx++;
         }

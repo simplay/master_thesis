@@ -10,7 +10,8 @@ public class VertexReader extends GraphFileReader {
     @Override
     protected void stepsBeforeFileProcessing() {
         for (int id = 0; id < fileLineCount; id++) {
-            graph.appendVertex(new Vertex(id, fileLineCount));
+            Vertex v = new Vertex(id, fileLineCount);
+            graph.appendVertex(id, v);
         }
     }
 
