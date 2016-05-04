@@ -13,9 +13,12 @@ public class Vertex implements Comparable<Vertex> {
     private boolean is_dummy;
 
     //public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    private final HashSet<Vertex> neighbors = new HashSet<Vertex>(3000);
+    private final HashSet<Vertex> neighbors = new HashSet<Vertex>(ArgParser.maxNearestNeighborCount());
+
+    // Pre-Initialize for dummy vertices, they do not have any neighbors assigned to.
     private LinkedList<Vertex> lNeighbors = new LinkedList<>();
 
+    // TODO write a accessor method instead defining it a public member
     public double[] similarities;
 
     // D_a = E_a - I_a
@@ -29,14 +32,23 @@ public class Vertex implements Comparable<Vertex> {
         this.is_dummy = false;
     }
 
+    /**
+     * Prepare linked list datastructure of neighborshood assignment.
+     *
+     * Skip, if we do not have any neighbors and work with the pre-initialized neighbors list.
+     */
     public void assignNeighbors() {
         if (neighbors.size() > 0) {
             lNeighbors = new LinkedList(neighbors);
         }
     }
 
+    /**
+     * Collects all the neighbors in a list
+     *
+     * @return the nearest neighbors of this vertex.
+     */
     public LinkedList<Vertex> getNeighbors() {
-
         return lNeighbors;
     }
 
