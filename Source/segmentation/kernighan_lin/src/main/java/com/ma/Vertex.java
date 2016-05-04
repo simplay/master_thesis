@@ -14,7 +14,8 @@ public class Vertex implements Comparable<Vertex> {
     private boolean is_dummy;
 
     //public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    public final HashSet<Vertex> neighbors = new HashSet<Vertex>(3000);
+    private final HashSet<Vertex> neighbors = new HashSet<Vertex>(3000);
+    private LinkedList<Vertex> lNeighbors;
 
     public double[] similarities;
 
@@ -27,6 +28,14 @@ public class Vertex implements Comparable<Vertex> {
         this.partitionLabel = -1;
         this.partitionSetLabel = -1;
         this.is_dummy = false;
+    }
+
+    public void assignNeighbors() {
+        lNeighbors = new LinkedList(neighbors);
+    }
+
+    public LinkedList<Vertex> getNeihbors() {
+        return lNeighbors;
     }
 
     public Vertex(int id, int vertexCount, boolean is_dummy) {
