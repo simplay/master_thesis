@@ -1,6 +1,7 @@
 package com.ma;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,9 +13,10 @@ public class Vertex implements Comparable<Vertex> {
     private int partitionSetLabel;
     private boolean is_dummy;
 
-    public final List<Vertex> neighbors = new LinkedList<Vertex>();
-    public double[] similarities;
+    //public final List<Vertex> neighbors = new LinkedList<Vertex>();
+    public final HashSet<Vertex> neighbors = new HashSet<Vertex>(3000);
 
+    public double[] similarities;
 
     // D_a = E_a - I_a
     private double dValue;
@@ -140,9 +142,9 @@ public class Vertex implements Comparable<Vertex> {
      */
     public synchronized void appendNearestNeighbord(Vertex v) {
         if (v != null) {
-            if (!neighbors.contains(v)) {
+            //if (!neighbors.contains(v)) {
                 neighbors.add(v);
-            }
+            //}
         }
     }
 
