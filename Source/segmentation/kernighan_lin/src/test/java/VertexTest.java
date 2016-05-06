@@ -108,6 +108,8 @@ public class VertexTest {
 
     @Test
     public void testFoo() {
+        String[] args = new String[]{"-d", "foobar", "-cc", "2", "-dc", "500", "-mic", "8", "-rc", "1", "-ipm", "ebo"};
+        ArgParser.getInstance(args);
         g = new Graph();
         int vCount = 4;
         int negEdge = 4;
@@ -176,8 +178,7 @@ public class VertexTest {
                 counter++;
             }
         }
-
-        GraphPartitioner gp = new GraphPartitioner(g,2);
+        GraphPartitioner gp = new GraphPartitioner(g, 2);
 
 
         for (Vertex v : gp.getSetA()) {

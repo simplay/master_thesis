@@ -24,6 +24,7 @@ public class MaxGainFinder {
     public void initializeThreadPool() {
         int availableThreads = Runtime.getRuntime().availableProcessors();
         Logger.println("Finding max gain by using " + availableThreads + " threads...");
+        if (availableThreads < 1) availableThreads = 1;
         executor = Executors.newFixedThreadPool(availableThreads);
     }
 
@@ -78,6 +79,6 @@ public class MaxGainFinder {
         try {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {}
-
+        instance = null;
     }
 }

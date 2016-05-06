@@ -6,7 +6,8 @@ import java.util.Map;
 
 public class ArgParser {
     private static ArgParser instance = null;
-    private HashMap<String, String> arguments;
+    private final HashMap<String, String> arguments = new HashMap<>();
+    private boolean isActive = false;
 
     public static ArgParser getInstance() {
         return getInstance(null);
@@ -20,9 +21,11 @@ public class ArgParser {
     }
 
     private ArgParser(String[] args) {
-        if (args != null) {
-            arguments = new HashMap<>();
+        if (args == null) {
+            return;
         }
+
+        isActive = true;
 
         for (int k = 0; k < args.length / 2; k++) {
             String key = args[2*k].split("-")[1];
@@ -32,6 +35,10 @@ public class ArgParser {
 
     public String getHashValue(String key) {
         return arguments.get(key);
+    }
+
+    public boolean getIsActive() {
+        return isActive;
     }
 
     /**
@@ -95,6 +102,8 @@ public class ArgParser {
      * @return number of max. used nearest neighbors.
      */
     public static int maxNearestNeighborCount() {
+        if (instance == null) return 1000;
+        if (!instance.getIsActive()) return 1000;
         String[] splits = getDatasetName().split("_");
         for (String split : splits) {
             if (split.matches("[-+]?\\d*\\.?\\d+")) {
