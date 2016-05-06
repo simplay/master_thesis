@@ -9,8 +9,12 @@ public class NeighborhoodReader extends GraphFileReader {
     private int lineCounter = 0;
     private LinkedList<NeighborAssignmentTask> tasks;
 
+    public NeighborhoodReader(String fname, Graph graph, boolean usePipelinePathAssumption) {
+        super(fname, graph, usePipelinePathAssumption);
+    }
+
     public NeighborhoodReader(String fname, Graph graph) {
-        super(fname, graph);
+        this(fname, graph, true);
     }
 
     @Override

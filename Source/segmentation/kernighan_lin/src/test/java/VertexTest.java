@@ -178,8 +178,7 @@ public class VertexTest {
                 counter++;
             }
         }
-        GraphPartitioner gp = new GraphPartitioner(g, 2);
-
+        GraphPartitioner gp = new GraphPartitioner(g, 2, ArgParser.getDummyCount(), 1);
 
         for (Vertex v : gp.getSetA()) {
             for (Vertex other : gp.getSetB()) {

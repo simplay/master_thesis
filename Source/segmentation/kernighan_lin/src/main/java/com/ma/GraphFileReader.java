@@ -7,13 +7,15 @@ public abstract class GraphFileReader {
 
     protected Graph graph;
     protected int fileLineCount;
+    protected boolean usePipelinePathAssumption;
 
     // File path where all computed trajectory similarity data is located at.
     private final String basePath = "../../output/similarities/";
 
-    public GraphFileReader(String fname, Graph graph) {
+    public GraphFileReader(String fname, Graph graph, boolean usePipelinePathAssumption) {
         this.graph = graph;
-        String baseFileName = basePath + fname;
+        this.usePipelinePathAssumption = usePipelinePathAssumption;
+        String baseFileName = getBasePath() + fname;
 
         File f = new File(baseFileName);
         Logger.println("Expecting data in Folder : " + f.getAbsolutePath());
@@ -45,6 +47,10 @@ public abstract class GraphFileReader {
         }
 
         stepsAfterFileProcessing();
+    }
+
+    private String getBasePath() {
+        return (usePipelinePathAssumption)? basePath : "";
     }
 
     private void assignNumberofLines(String fname) {

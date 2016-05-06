@@ -3,8 +3,12 @@ package com.ma;
 public class VertexReader extends GraphFileReader {
     private int processedLineCount = 0;
 
+    public VertexReader(String fname, Graph graph, boolean usePipelinePathAssumption) {
+        super(fname, graph, usePipelinePathAssumption);
+    }
+
     public VertexReader(String fname, Graph graph) {
-        super(fname, graph);
+        this(fname, graph, true);
     }
 
     @Override

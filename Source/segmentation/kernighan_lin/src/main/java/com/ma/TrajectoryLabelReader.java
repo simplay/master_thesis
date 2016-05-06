@@ -2,8 +2,12 @@ package com.ma;
 
 public class TrajectoryLabelReader extends GraphFileReader {
 
+    public TrajectoryLabelReader(String fname, Graph graph, boolean usePipelinePathAssumption) {
+        super(fname, graph, usePipelinePathAssumption);
+    }
+
     public TrajectoryLabelReader(String fname, Graph graph) {
-        super(fname, graph);
+        this(fname, graph, true);
     }
 
     @Override
