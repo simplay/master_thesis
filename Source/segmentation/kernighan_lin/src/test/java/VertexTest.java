@@ -108,7 +108,7 @@ public class VertexTest {
 
     @Test
     public void testFoo() {
-        String[] args = new String[]{"-d", "foobar", "-cc", "2", "-dc", "500", "-mic", "8", "-rc", "1", "-ipm", "ebo"};
+        String[] args = new String[]{"-d", "foobar", "-cc", "2", "-dc", "500", "-mic", "3", "-rc", "1", "-ipm", "ebo"};
         ArgParser.getInstance(args);
         g = new Graph();
         int vCount = 4;
@@ -178,7 +178,18 @@ public class VertexTest {
                 counter++;
             }
         }
-        GraphPartitioner gp = new GraphPartitioner(g, 2, ArgParser.getDummyCount(), 1);
+
+
+        for (Vertex v : g.getVertices()) {
+            v.assignNeighbors();
+        }
+
+        GraphPartitioner gp = new GraphPartitioner(
+                g,
+                ArgParser.getClusterCount(),
+                ArgParser.getDummyCount(),
+                ArgParser.getRepetitionCount()
+        );
 
         for (Vertex v : gp.getSetA()) {
             for (Vertex other : gp.getSetB()) {
@@ -192,11 +203,10 @@ public class VertexTest {
             }
         }
 
-        gp.runKernighanLin(1);
+        System.out.println("Before partitioning...");
         printGraph(M, N, vertices);
-        gp.runKernighanLin(1);
-        printGraph(M, N, vertices);
-        gp.runKernighanLin(1);
+        gp.runKernighanLin(ArgParser.getRepetitionCount());
+        System.out.println("After partitioning...");
         printGraph(M, N, vertices);
 
         for (Vertex v : g.getVertices()) {

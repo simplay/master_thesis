@@ -103,26 +103,9 @@ public class Vertex implements Comparable<Vertex> {
      * the internal cost of a is the sum of the costs of edges between a and other nodes in A
      * and the external cost of a is the sum of the costs of edges between a and nodes in B
      *
+     * @param activeLabels a list of neighbor indices that should be considered. Every other neighbor belongs to
+     *                     neither to the alpha nor to the current beta label.
      */
-    public void computeD() {
-        if (is_dummy) return;
-        // select all adjacent internal vertices.
-        double I_a = 0.0d;
-        double E_a = 0.0d;
-
-        for(Vertex v : getNeighbors()) {
-            // skip vertices with no partition set label
-            if (v.getPartitionSetLabel() == -1) continue;
-
-            if (v.getPartitionSetLabel() != getPartitionSetLabel()) {
-                E_a += v.similarities[getId()];
-            } else {
-                I_a += v.similarities[getId()];
-            }
-        }
-        this.dValue = E_a - I_a;
-    }
-
     public void computeD(int[] activeLabels) {
         if (is_dummy) return;
         // select all adjacent internal vertices.
@@ -204,7 +187,7 @@ public class Vertex implements Comparable<Vertex> {
             neighborsNames += v.getId() + " ";
         }
         neighborsNames += " ]";
-        return id+ "=>" + neighborsNames + "D" + dValue + "\n";
+        return id+ "=>" + neighborsNames + "D=" + dValue + "\n";
     }
 
     public void setSimilarities(double[] fs) {

@@ -103,7 +103,8 @@ public class GraphPartitioner {
             // iterate only over n := |V|/2:
             // if n even, then iterate till n/2 => center of the range 1..4 is the value 2
             // if n odd, then iterate till floor(n/2) + 1 => center of the range 1..3 is the value 2
-            for (int n = 0; n < Math.min(setA.size(), setB.size()); n++) {
+            int iterateTill = Math.min(setA.size(), setB.size()) / 2;
+            for (int n = 0; n < iterateTill + 1; n++) {
                 // find a from A and b from B, such that g = D[a] + D[b] - 2*E(a, b) is maximal
 
                 List<Vertex> sortedByDvalueA = setA.sortedByVertexDvalues();
