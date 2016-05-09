@@ -4,7 +4,8 @@ datasets
 
 c14
 
-+ `d c14 -task 1 -var 1 -nn 1000 -prob 0.85 -nnm both` and `-d c14_sd_both_1000 -cc 2 -dc 0 -mic 5 -rc 1 -ipm ebo -prefix test`
++ 2 segments: `d c14 -task 1 -var 1 -nn 1000 -prob 0.85 -nnm both` and `-d c14_sd_both_1000 -cc 2 -dc 0 -mic 5 -rc 1 -ipm ebo -prefix test`
++ 3 segments: `-d c14 -task 1 -var 1 -nn 1400 -lambda 0.000001 -nnm both -prob 0.875` and `-d c14_sd_both_1400 -cc 3 -dc 500 -mic 5 -rc 2 -ipm ebo -prefix test`
 
 alley2small
  + sampling every 6th pixel
