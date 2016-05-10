@@ -11,6 +11,10 @@ import java.util.List;
  * It can be loaded by using `load('affinitymatrix_name.dat')`
  * the value at position (i,j) encodes the similarity between the two trajectories i,j.
  * w.r.t a selected affinity task.
+ *
+ * File naming convention: all generated files are stored at `"../output/similarities/"`.
+ * A label file is a .dat file with the filename suffix `_sim`. It's filename prefix is determined
+ * by the function LargeFileWriter#getOutputFilenamePrefix()
  */
 public class SimilarityWriter extends LargeFileWriter {
 

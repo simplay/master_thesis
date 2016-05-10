@@ -4,12 +4,7 @@ import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
-import writers.LabelMappingWriter;
-import writers.LargeFileWriter;
 import writers.SimilarityWriter;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 

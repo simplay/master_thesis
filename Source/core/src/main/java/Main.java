@@ -39,9 +39,6 @@ public class Main {
         String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
-        // The number of spatially nearest neighbors per trajectory that should be written into an output file.
-        int numberOfNNToSave = ArgParser.getNearestNeighborhoodCount();
-
         String dataset = ArgParser.getDatasetName();
         ArgParser.reportUsedParameters();
         Logger.println();
@@ -197,7 +194,7 @@ public class Main {
         // Write clustering related files
         new SimilarityWriter(dataset);
         new LabelMappingWriter(dataset);
-        new NearestSpatialNeighborsWriter(dataset, numberOfNNToSave);
+        new NearestSpatialNeighborsWriter(dataset);
 
         long tillFinishedTime = System.currentTimeMillis();
         Logger.println();
