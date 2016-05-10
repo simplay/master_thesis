@@ -10,6 +10,11 @@ import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.List;
 
+/**
+ * Allows to write huge files (several 100 mb large) within few seconds by making use of
+ * byte streams. Offers basic file write and deletion operations and is responsible for
+ * deriving the filename.
+ */
 public class LargeFileWriter {
 
     // Indicates whether files be deleted
@@ -136,12 +141,33 @@ public class LargeFileWriter {
      *
      * @param dataset dataset name used during computation.
      *
-     * @return filename prefix of outputted similarity files.
+     * @return filename prefix used for generated files.
      */
     protected String getOutputFilenamePrefix(String dataset) {
         return dataset + "_" + getOutputFilenamePrefix();
     }
 
+    /**
+     * Obtain the filename prefix.
+     *
+     * In general, generated output files have the following prefix:
+     * `<TN>_<NNT>_<N>_<P>_<SUFFIX>` where
+     *
+     * + <TN> the selected similarity task
+     * + <NNT> the nearest neighbor type that is used
+     * + <N> the number of nearest neighbors  and
+     * + <P> the user given prefix, optional.
+     * + <SUFFIX> corresponds to the generated output file name.
+     *
+     * Example: When running
+     *  -d c14 -task 2 -nn 1000 -nnm top -prefix foobar
+     * the following output files are generated:
+     *  md_top_1000_foobar_sim.data
+     *  md_top_1000_foobar_labels.txt
+     *  md_top_1000_foobar_spnn.txt
+     *
+     * @return filename prefix used for generated files.
+     */
     protected String getOutputFilenamePrefix() {
         String filenamePrefix = ArgParser.getSimTask().getIdName();
         filenamePrefix += "_" + ArgParser.getNNMode().getId();
