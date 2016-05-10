@@ -5,7 +5,7 @@ addpath('../matlab_shared');
 
 DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_3000';
+PREFIX_INPUT_FILENAME = 'sd_both_2000';
 
 graph_cuts_dir = '../output/graph_part/';
 PART_DS_PREF = 'test';
@@ -13,7 +13,7 @@ PART_DS_PREF = 'test';
 PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'aaa';
+PREFIX_OUTPUT_FILENAME = 'ddd';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 
@@ -34,6 +34,7 @@ path = make_segmentation_dir(DATASET, METHODNAME, PREFIX_OUTPUT_FILENAME );
 %% display segmentation and its data.
 
 % load label vector indices mappings
+disp(strcat('Reading graph partitioning file: `', LABELS_FILE_PATH, '`'));
 fileID = fopen(LABELS_FILE_PATH);
 C = textscan(fileID,'%d,%d');
 label_assignments = cell2mat(C(2)) + 1;

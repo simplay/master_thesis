@@ -1,20 +1,20 @@
 package datastructures;
 
 import managers.DepthManager;
-import managers.TrajectoryManager;
-import pipeline_components.ArgParser;
-
 import java.util.*;
 
 /**
  * A Trajectory is a set of coherently tracked points of a particular feature over a set of frames.
+ * Each trajectory is uniquely identified by its label value.
+ * A trajectory knows their similarity value to other existing trajectories as well as
+ * the avg spatial distance towards other trajectories./get
  */
 public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
-    // points that span the trajectory
+    // Points that span the trajectory
     private ArrayList<Point2d> points;
 
-    //private ArrayList<Point2d> transformedPoints;
+    // Private ArrayList<Point2d> transformedPoints;
     private ArrayList<Point3d> euclidianPoints;
 
     // Indicates if this trajectory can be continued during the tracking step
@@ -55,10 +55,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // Indicates whether any similarity value were computed for this trajectory
     private boolean hasSimilarityValues = false;
 
+    // Value used by the TraWriter for generating its output.
+    // Corresponds to Trajectory#toString()
     private String traOutRepresentation = null;
 
     /**
-     * Start a ne wtrajectory at a given frame.
+     * Start a new trajectory at a given frame.
+     * Note that each trajectory gets a unique number assigned called the
+     * trajectory label.
      *
      * @param startFrame frame of first tracking point of this trajectory.
      */
@@ -69,6 +73,13 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         this.similarities = new TreeMap<>();
         this.endFrame = -1;
         this.avgSpatialDistToNeighbors = new TreeMap<>();
+    }
+
+    /**
+     * Resets the trajectory label counter
+     */
+    public static void resetLabelCounter() {
+        label_counter = 1;
     }
 
     /**
@@ -120,10 +131,26 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         this.isDeletable = true;
     }
 
+    /**
+     * Checks whether this trajectory is marked as deletable.
+     * A trajectory is deletable if either
+     *  + it has no affinity values associated with or
+     *  + if all of its tracking points are invalid
+     *
+     * Note that trajectories marked as deletable are selected by
+     * the post filtering process.
+     *
+     * @return is this trajectory deletable.
+     */
     public boolean isDeletable() {
         return isDeletable;
     }
 
+    /**
+     * Checks whether this trajectory exhibits valid similarity values.
+     *
+     * @return true if it has valid similarities associated with, otherwise false.
+     */
     public boolean hasSimilarityValues() {
         return hasSimilarityValues;
     }
@@ -211,6 +238,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return false;
     }
 
+    /**
+     * Returns the index of the last frame in which this trajectory
+     * has an active tracked point.
+     *
+     * Note that this end frame index is only set if we mark this trajectory as closed.
+     *
+     * @return frame index of the last tracking point.
+     */
     public int getEndFrame() {
         return endFrame;
     }
@@ -226,38 +261,83 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         traOutRepresentation = toOutputString();
     }
 
+    /**
+     * Get the representation used by the TraWriter.
+     *
+     * @return the to string representation of the TraWriter.
+     */
     public String getOutputString() {
         return traOutRepresentation;
     }
 
+    /**
+     * Is this trajectory not marked as closed?
+     *
+     * @return true if not closed, otherwise false.
+     */
     public boolean notClosed() {
         return !isClosed;
     }
 
+    /**
+     * The number of tracking points this trajectory carries.
+     *
+     * @return number of tracking points.
+     */
     public int length() {
         return points.size()-1;
     }
 
+    /**
+     * Append a new tracking point to this trajectory.
+     * Assumption: a new added tracking point belongs to the
+     * frame index startFrame + tra.length()
+     *
+     * @param p new point we add to this trajectory.
+     */
     public void addPoint(Point2d p) {
         points.add(p);
     }
 
+    /**
+     * Get the unique label identifier of this trajectory,
+     * i.e. the frame (index) in which its last tracked point lives in.
+     *
+     * @return trajectory label.
+     */
     public int getLabel() {
         return label;
     }
 
+    /**
+     * Get the star frame of this trajectory.
+     * I.e. the frame in which its first tracked point lives in.
+     * @return
+     */
     public int getStartFrame() {
         return startFrame;
     }
 
+    /**
+     * Get a tracked trajectory point by its frame index.
+     *
+     * @param frame_idx a frame index in which one of this
+     *                  trajectory's tracked points is active.
+     * @return
+     */
     public Point2d getPointAtFrame(int frame_idx) {
         return points.get(frame_idx-startFrame);
     }
 
-    public Point2d getSpatialPointAtFrame(int frame_idx) {
-        return points.get(frame_idx-startFrame);
-    }
-
+    /**
+     * Get the 3D point representation of a tracking point by its frame index.
+     * Note that making use of this accessor only makes sense if and only if
+     * we are using depth cues.
+     *
+     * @param frame_idx the frame index of a tracked point.
+     *
+     * @return the 3d point active in a given frame.
+     */
     public Point3d getEuclidPositionAtFrame(int frame_idx) {
         return euclidianPoints.get(frame_idx-startFrame);
     }
@@ -268,16 +348,29 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      * @example
      *  if trajectory starts at frame 0 and only has one point (the starting point)
      *  its current active frame is frame 0 (0 + 1 - 1).
-     * @return
+     *
+     *
+     * @return the current active frame which corresponds to the frame index to which
+     *  the last tracked point of this trajectory belongs to.
      */
     public int currentActiveFrame() {
         return startFrame + points.size() - 1;
     }
 
+    /**
+     * Point iterator
+     *
+     * @return Iterator of tracked points.
+     */
     public Iterator<Point2d> iterator() {
         return points.iterator();
     }
 
+    /**
+     * Obtain the debugging representation of this trajectory.
+     *
+     * @return debuggable representation of this trajectory.
+     */
     public String toString() {
         String header = "l="+label+" s="+startFrame;
         String content = "";
@@ -287,6 +380,12 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return header+ " " +content;
     }
 
+    /**
+     * Get representation used for dumping the extracted trajectories stored (optionally)
+     * in `output/trajectories/`.
+     *
+     * @return serialized trajectory represntation listing all of its points and meta information.
+     */
     public String toOutputString() {
         int out_start_frame = startFrame+1;
         String header = "### L:" + getLabel() + " S:" + out_start_frame + " C:" + length();
@@ -297,16 +396,39 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return header + "\n" + content;
     }
 
+    /**
+     * Get representation used for dumping all active trajectory points in a frame.
+     * The generated file is stored (optionally) at `output/trajectory_label_frame/<DATASET>/`.
+     *
+     * @param frame_idx index of frame where the trajectory point is supposed to live.
+     * @return
+     */
     public String toFramewiseString(int frame_idx) {
         int idx = frame_idx - startFrame;
         Point2d p = points.get(idx);
         return label + " " + p.u() + " " + p.v();
     }
 
+    /**
+     * Returns all similarity values from this trajectory to any other trajectory.
+     * This representation encodes a line of the affinity matrix.
+     * Note that the similarities are sorted according to their label identifier,
+     * therefore no additional sorting step is required.
+     *
+     * @return a row in the affinity matrix.
+     */
     public String toSimilarityString() {
         return similarities.values().toString();
     }
 
+    /**
+     * Compare two trajectories by their label to define an order among trajectories.
+     * Used for spanning the affinity matrix.
+     *
+     * @param o other trajectory
+     * @return -1 if this trajectory's label is smaller than the one from the reference trajectory,
+     *  0 if same label value and 1 in case it is larger.
+     */
     @Override
     public int compareTo(Trajectory o) {
         if (label < o.getLabel()) {

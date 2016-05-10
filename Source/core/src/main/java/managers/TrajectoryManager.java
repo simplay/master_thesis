@@ -48,6 +48,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
      */
     public static void release() {
         instance = null;
+        Trajectory.resetLabelCounter();
     }
 
     /**

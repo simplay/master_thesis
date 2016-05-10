@@ -221,8 +221,8 @@ public abstract class SimilarityTask implements Runnable {
      * @return spatial distance of overlapping trajectory points.
      */
     protected double spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
-        Point2d pa = a.getSpatialPointAtFrame(frame_idx);
-        Point2d pb = b.getSpatialPointAtFrame(frame_idx);
+        Point2d pa = a.getPointAtFrame(frame_idx);
+        Point2d pb = b.getPointAtFrame(frame_idx);
         return pa.copy().sub(pb).length();
     }
 
