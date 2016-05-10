@@ -37,7 +37,7 @@ public class LabelMappingWriter extends LargeFileWriter {
     }
 
     /**
-     * Save the labelMapping file for a selected dataset at `"../output/similarities/")`
+     * Save the labelMapping file for a selected dataset at `../output/similarities/`
      *
      * @param dataset name of the dataset we are running.
      */

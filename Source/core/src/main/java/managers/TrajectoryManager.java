@@ -40,6 +40,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
+     * Deletes state of singleton.
+     * Accessing this singleton once again, after calling this method,
+     * will result in re-initializing its internal state.
+     *
+     * The garbage collector will be able to delete the internally held trajectory references.
+     */
+    public static void release() {
+        instance = null;
+    }
+
+    /**
      * Number of trajectories this Manager contains.
      *
      * @return

@@ -11,6 +11,7 @@ public class LabelMappingWritterTest {
 
     @Before
     public void initObjects() {
+        TrajectoryManager.release();
         String[] args = {"-d", "foobar", "-task", "1"};
         ArgParser.getInstance(args);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 1), 0);
@@ -20,7 +21,7 @@ public class LabelMappingWritterTest {
     }
 
     @Test
-    public void testFoobar() {
+    public void testLabelsCorrectlyFetched() {
         String pew = new LabelMappingWriter("foobar").getSerializedTrajectoryLabels();
         assertEquals(pew, "1 2 3 4");
     }

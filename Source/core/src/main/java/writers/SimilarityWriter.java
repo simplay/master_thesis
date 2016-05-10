@@ -6,14 +6,49 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SimilarityWriter extends LargeFileWriter{
+/**
+ * Generates the trajectory affinity matrix, stored as a - by Matlab readable - .dat file.
+ * It can be loaded by using `load('affinitymatrix_name.dat')`
+ * the value at position (i,j) encodes the similarity between the two trajectories i,j.
+ * w.r.t a selected affinity task.
+ */
+public class SimilarityWriter extends LargeFileWriter {
 
-    public SimilarityWriter(String dataset) {
-        String outputPath = "../output/similarities/" + getOutputFilenamePrefix(dataset) + "_sim.dat";
+    /**
+     * Save the affinity matrix at a given location for a selected dataset.
+     * @param dataset name of the dataset we are running.
+     * @param fileStoreAtPath directory where we want to store the generated labels file.
+     */
+    public SimilarityWriter(String dataset, String fileStoreAtPath) {
+        String outputPath = fileStoreAtPath + getOutputFilenamePrefix(dataset) + "_sim.dat";
+
         int traCount = TrajectoryManager.getTrajectories().size();
         String matDim = "(" + traCount + " x " + traCount + ")";
         reportFilePath(outputPath, "Writing " + matDim + " similarity matrix:");
 
+        List<String> rows = getMatrixRows();
+
+        try {
+            writeFile(rows, outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Save the affinity matrix for a selected dataset at `../output/similarities/`
+     *
+     * @param dataset name of the dataset we are running.
+     */
+    public SimilarityWriter(String dataset) {
+        this(dataset, "../output/similarities/");
+    }
+
+    /**
+     * Returns the affinity row (in order) as a string list
+     * @return list of row strings
+     */
+    public List<String> getMatrixRows() {
         int n = TrajectoryManager.getTrajectories().size();
         int counter = 0;
         List<String> strLines = new LinkedList<>();
@@ -23,11 +58,6 @@ public class SimilarityWriter extends LargeFileWriter{
             strLines.add(tmp + ((counter < n-1)? "\n" : ""));
             counter++;
         }
-
-        try {
-            writeFile(strLines, outputPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return strLines;
     }
 }
