@@ -9,10 +9,12 @@ import static org.junit.Assert.assertEquals;
 
 public class LabelMappingWritterTest {
 
+    private String dataset = "foobar";
+
     @Before
     public void initObjects() {
         TrajectoryManager.release();
-        String[] args = {"-d", "foobar", "-task", "1"};
+        String[] args = {"-d", dataset, "-task", "1"};
         ArgParser.getInstance(args);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 1), 0);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 2), 0);
@@ -22,7 +24,8 @@ public class LabelMappingWritterTest {
 
     @Test
     public void testLabelsCorrectlyFetched() {
-        String pew = new LabelMappingWriter("foobar").getSerializedTrajectoryLabels();
-        assertEquals(pew, "1 2 3 4");
+        String labels = new LabelMappingWriter(dataset).getSerializedTrajectoryLabels();
+        assertEquals(labels, "1 2 3 4");
     }
+
 }

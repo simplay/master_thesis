@@ -1,12 +1,19 @@
 import org.junit.Test;
+import pipeline_components.ArgParser;
 import writers.LargeFileWriter;
+import writers.SimilarityWriter;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 
 public class LargeFileWriterTest {
+
+    private String dataset = "foobar";
+
     @Test
     public void testCanWriteFile() {
         LinkedList<String> list = new LinkedList<>();
@@ -18,7 +25,6 @@ public class LargeFileWriterTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         FileInputStream fstream = null;
         try {
@@ -42,6 +48,27 @@ public class LargeFileWriterTest {
         try {
             br.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFilenamePrefix() {
+        String[] args = {"-d", dataset, "-task", "1"};
+        ArgParser.getInstance(args);
+        try {
+            Method method = LargeFileWriter.class.getDeclaredMethod("getOutputFilenamePrefix");
+            method.setAccessible(true);
+            try {
+                String suffix = (String)method.invoke(new LargeFileWriter());
+                String filename = dataset + "_" + suffix;
+                assertEquals(dataset + "_sd_top_100", filename);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
