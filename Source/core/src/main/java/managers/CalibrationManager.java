@@ -156,6 +156,10 @@ public class CalibrationManager {
         return data;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     public static boolean shouldWarpDepthFields() {
         if (instance == null) return false;
         return (instance.hasColorIntrinsicDataLoaded() && instance.isHasDepthIntrinsicDataLoaded());
