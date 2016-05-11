@@ -14,6 +14,7 @@ public class LabelMappingWritterTest {
     @Before
     public void initObjects() {
         TrajectoryManager.release();
+        ArgParser.release();
         String[] args = {"-d", dataset, "-task", "1"};
         ArgParser.getInstance(args);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 1), 0);
