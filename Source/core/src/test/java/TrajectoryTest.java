@@ -449,4 +449,81 @@ public class TrajectoryTest {
         String fetchedString = tra.getOutputString();
         assertTrue(gtString.equals(fetchedString));
     }
+
+    @Test
+    public void testFilterSimilarityOfTrajectory() {
+        Trajectory tra = new Trajectory(0);
+        Trajectory o1 = new Trajectory(0);
+        Trajectory o2 = new Trajectory(0);
+        Trajectory o3 = new Trajectory(0);
+
+        tra.assignSimilarityValueTo(o1.getLabel(), 1);
+        tra.assignSimilarityValueTo(o2.getLabel(), 2);
+        tra.assignSimilarityValueTo(o3.getLabel(), 3);
+
+        String gtSimString = "[1.0, 2.0, 3.0]";
+        assertEquals(gtSimString, tra.toSimilarityString());
+        tra.filterSimilarityOfTrajectory(o2.getLabel());
+        gtSimString = "[1.0, 3.0]";
+        assertEquals(gtSimString, tra.toSimilarityString());
+    }
+
+    @Test
+    public void testFilterInvalidSpatialNeighbors() {
+        String[] args = {"-d", "foobar", "-task", "1", "-nnm", "top"};
+        ArgParser.getInstance(args);
+
+        Trajectory tra = new Trajectory(0);
+        Trajectory o1 = new Trajectory(0);
+        Trajectory o2 = new Trajectory(0);
+        Trajectory o3 = new Trajectory(0);
+
+        tra.assignSimilarityValueTo(o1.getLabel(), 1);
+        tra.assignSimilarityValueTo(o2.getLabel(), 2);
+
+        tra.appendAvgSpatialDist(o1.getLabel(), 2);
+        tra.appendAvgSpatialDist(o2.getLabel(), 2);
+        tra.appendAvgSpatialDist(o3.getLabel(), 2);
+
+        LinkedList<Trajectory> tras = new LinkedList<>();
+        tras.add(o1);
+        tras.add(o2);
+        tras.add(o3);
+
+        assertEquals(3, tra.nearestAvgSpatialNeighbors(3).size());
+        int count = 0;
+        for (int idx : tra.nearestAvgSpatialNeighbors(3)) {
+            assertEquals(tras.get(count).getLabel(), idx);
+            count++;
+        }
+        int invCount = tra.filterInvalidSpatialNeighbors();
+        assertEquals(1, invCount);
+
+        count = 0;
+        for (int idx : tra.nearestAvgSpatialNeighbors(3)) {
+            assertEquals(tras.get(count).getLabel(), idx);
+            count++;
+        }
+        assertEquals(2, tra.nearestAvgSpatialNeighbors(3).size());
+    }
+
+    @Test
+    public void testInitSimilarityDatastructures() {
+        Trajectory tra = new Trajectory(0);
+        tra.initSimilarityDatastructures();
+    }
+
+    @Test
+    public void testToString() {
+        Trajectory tra = new Trajectory(0);
+        Point2d p = new Point2d(1,2);
+        tra.addPoint(p);
+
+        String header = "l="+tra.getLabel()+" s="+tra.getStartFrame();
+        String content = "";
+        content += p.toString() + " ";
+        String gtString =  header + " " + content;
+
+        assertEquals(gtString, tra.toString());
+    }
 }

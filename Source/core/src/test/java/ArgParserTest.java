@@ -2,6 +2,7 @@ import datastructures.NearestNeighborsHeap;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
+import pipeline_components.Logger;
 import similarity.SimilarityTaskType;
 
 import static org.junit.Assert.assertEquals;
@@ -11,6 +12,7 @@ public class ArgParserTest {
     @Before
     public void initObjects() {
         ArgParser.release();
+        Logger.getInstance(true);
     }
 
     @Test

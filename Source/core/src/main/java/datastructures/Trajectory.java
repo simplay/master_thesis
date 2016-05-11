@@ -375,12 +375,12 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      * @return debuggable representation of this trajectory.
      */
     public String toString() {
-        String header = "l="+label+" s="+startFrame;
+        String header = "l=" + label + " s=" + startFrame;
         String content = "";
         for (Point2d p : points) {
             content += p.toString() + " ";
         }
-        return header+ " " +content;
+        return header + " " + content;
     }
 
     /**
