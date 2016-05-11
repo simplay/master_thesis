@@ -2,23 +2,43 @@ package pipeline_components;
 
 import datastructures.NearestNeighborsHeap;
 import similarity.SimilarityTaskType;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * The ArgParser handles the inputs given by the user when running the application.
+ *
+ * Don't forget to provide it with the assigned user arguments.
+ */
 public class ArgParser {
 
-    private boolean hasArgsAssigned = false;
+    /**
+     * A hash containing all user args, where
+     * The key corresponds to the argument identifier,
+     * and its value corresponds to the actual argument value,
+     * encoded as a String.
+     */
     private HashMap<String, String> arguments;
 
+    // Singleton instance
     private static ArgParser instance = null;
 
-
+    /**
+     * Get the singleton
+     *
+     * @return the ArgParser singleton.
+     */
     public static ArgParser getInstance() {
         return getInstance(null);
     }
 
+    /**
+     * Get the arg parser singleton and pass its arguments.
+     *
+     * @param args all provided user inputs
+     * @return the ArgParser singleton.
+     */
     public static ArgParser getInstance(String[] args) {
         if (instance == null) {
             instance = new ArgParser(args);
@@ -28,15 +48,24 @@ public class ArgParser {
 
     /**
      * Releases this singleton.
-     * Calling this method aft
+     *
+     * Calling a method of this singleton results in re-initializing
+     * the internal state of the singleton.
      */
     public static void release() {
         instance = null;
     }
 
+    /**
+     * Process the user args
+     *
+     * @param args an array containing pairs of user args of the form
+     *  -<ARG_ID> <ARG_VALUE>
+     *  where ARG_ID corresponds to a known core arguments described in the readme
+     *  and ARG_VALUE is a valid value for the corresponding argument.
+     */
     private ArgParser(String[] args) {
         if (args != null) {
-            hasArgsAssigned = true;
             arguments = new HashMap<>();
 
             if (args.length % 2 != 0) {
@@ -51,23 +80,42 @@ public class ArgParser {
     }
 
     /**
-     * Fetches hesh values by their key
-     * @param key
-     * @return
+     * Fetches a hash value by its key.
+     *
+     * @param key and argument identifier passed by the user input
+     *  without the `-`
+     * @return returns the associated argument value that belongs to the queried arg key.
      */
     public String getHashValue(String key) {
         return arguments.get(key);
     }
 
+    /**
+     * Get the name of the used dataset
+     *
+     * This name corresponds to a directory located at `./Data/`
+     *
+     * @return dataset name.
+     */
     public static String getDatasetName() {
         return getInstance().getHashValue("d");
     }
 
+    /**
+     * Get the similarity task that maps to the given user input.
+     *
+     * @return the similarity task that should be run in order to compute the affinity matrix.
+     */
     public static SimilarityTaskType getSimTask() {
         String taskName = getInstance().getHashValue("task");
         return SimilarityTaskType.TypeById(Integer.parseInt(taskName));
     }
 
+    /**
+     * Get the number of nearest neighbors per trajectory that should be dumped into a file.
+     *
+     * @return the neighbors of trajectories that should be dumped into the `_spnn.txt` file.
+     */
     public static int getNearestNeighborhoodCount() {
         String nnCount = getInstance().getHashValue("nn");
         if (nnCount == null) {
@@ -108,6 +156,12 @@ public class ArgParser {
         return Double.parseDouble(depthScale);
     }
 
+    /**
+     * Indicates whether color cues should be used within a similarity task.
+     * Note that color cues are only used for SD tasks.
+     *
+     * @return true if color cues should be used, otherwise false.
+     */
     public static boolean useColorCues() {
         return getSimTask().usesColorCues();
     }
@@ -127,10 +181,27 @@ public class ArgParser {
         return true;
     }
 
+    /**
+     * Indicates whether depth cues should be used.
+     * Depth cues can only be used if there was depth information extracted for the target dataset.
+     *
+     * Only some similarity tasks make use of depth cues.
+     *
+     * @return true if depth cures should be used, otherwise false.
+     */
     public static boolean useDepthCues() {
         return getSimTask().getUsesDepthCues();
     }
 
+    /**
+     * Indicates whether the local flow variance should
+     * be used for normalizing the motion distance when computing the similarity matrix.
+     *
+     * By default, we only normalize by the global variance.
+     *
+     * @return true, if we want to normalize the motion distances by the local flow variance,
+     *  false otherwise.
+     */
     public static boolean useLocalVariance() {
         String useVarState = getInstance().getHashValue("var");
         if (useVarState == null || !useVarState.equals("1")) {
@@ -174,7 +245,13 @@ public class ArgParser {
         return !getCustomFileNamePrefix().isEmpty();
     }
 
-
+    /**
+     * Return which nearest neighbors should be returned and dumped into the `_spnn.txt` file.
+     * Currently, we either can return the best N nearest neighbors or
+     * n/2 of the best and worst nearest neighbors per trajectory.
+     *
+     * @return the type of nearest neighbors that should be dumped.
+     */
     public static NearestNeighborsHeap.NNMode getNNMode() {
         String nnMode = getInstance().getHashValue("nnm");
         if (nnMode == null) {
@@ -183,6 +260,11 @@ public class ArgParser {
         return NearestNeighborsHeap.NNMode.getModeById(nnMode);
     }
 
+    /**
+     * Parse the user arguments in a more readable form.
+     *
+     * @return Pretty String variant of provided arguments.
+     */
     public String toString() {
         String msg = "";
         Iterator it = arguments.entrySet().iterator();
@@ -193,6 +275,9 @@ public class ArgParser {
         return msg.trim();
     }
 
+    /**
+     * Print the resulting state given a certain user input into the logger.
+     */
     public static void reportUsedParameters() {
         Logger.print("Provided runtime args: ");
         Logger.println(getInstance().toString());
