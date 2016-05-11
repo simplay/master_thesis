@@ -14,7 +14,10 @@ public class Mat3x4 {
     private final ArrayList<Point3d> cols = new ArrayList<>(4);
 
     /**
-     * Create a new matrix by its rows
+     * Create a new matrix by its rows (1 x 4)
+     *
+     * Each row is supposed to have exactly 4 elements
+     *
      * @param r1 row 1
      * @param r2 row 2
      * @param r3 row 3

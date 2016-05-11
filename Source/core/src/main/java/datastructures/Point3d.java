@@ -57,7 +57,7 @@ public class Point3d {
      *
      * This is-valid-flag is used to filter invalid 3d points (e.g. points,
      * that do not exhibit a valid depth value).
-     * 
+     *
      * @return true if this point is invalid, false otherwise (by default).
      */
     public boolean isValid() {
@@ -80,6 +80,9 @@ public class Point3d {
      *
      * The matrix we usually apply to a 3d point is the so called
      * extrinsic camera matrix.
+     *
+     * Note that the internal state of this point is modified
+     * by applying this transformation.
      *
      * @param mat 3x4 (extrinsic) matrix
      */

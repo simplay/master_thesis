@@ -526,4 +526,5 @@ public class TrajectoryTest {
 
         assertEquals(gtString, tra.toString());
     }
+
 }
