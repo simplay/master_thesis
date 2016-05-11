@@ -1,5 +1,4 @@
 import datastructures.Mat3x4;
-import datastructures.Point2d;
 import datastructures.Point3d;
 import org.junit.Test;
 

@@ -3,7 +3,7 @@ package datastructures;
 import java.util.ArrayList;
 
 /**
- * A 3 x 4 double matrix, defining the extrinsic parameters for aligning the color to the depth camera.
+ * A (3 x 4) double matrix, defining the extrinsic parameters for aligning the color to the depth camera.
  */
 public class Mat3x4 {
 
