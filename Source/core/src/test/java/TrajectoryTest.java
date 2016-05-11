@@ -425,4 +425,28 @@ public class TrajectoryTest {
         assertEquals(false, tra4.markInvalidPoints());
         assertEquals(true, tra5.markInvalidPoints());
     }
+
+    @Test
+    public void testGetOutputString() {
+        Trajectory tra = new Trajectory(0);
+
+        Point2d p1 = new Point2d(4, 1);
+        Point2d p2 = new Point2d(5, 2);
+        Point2d p3 = new Point2d(6, 3);
+        tra.addPoint(p1);
+        tra.addPoint(p2);
+        tra.addPoint(p3);
+
+        tra.markClosed();
+
+        String header = "### L:" + tra.getLabel() + " S:" + (tra.getStartFrame()+1) + " C:" + tra.length();
+        String content = "";
+        for (Point2d p : tra) {
+            content = content + p.toOutputString() + "\n";
+        }
+
+        String gtString = header + "\n" + content;
+        String fetchedString = tra.getOutputString();
+        assertTrue(gtString.equals(fetchedString));
+    }
 }

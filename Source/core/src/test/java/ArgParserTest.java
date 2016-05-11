@@ -1,9 +1,7 @@
 import datastructures.NearestNeighborsHeap;
-import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
-import similarity.SimilarityTask;
 import similarity.SimilarityTaskType;
 
 import static org.junit.Assert.assertEquals;
