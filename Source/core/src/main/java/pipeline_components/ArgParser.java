@@ -26,8 +26,12 @@ public class ArgParser {
         return instance;
     }
 
-    public static boolean hasArgs() {
-        return getInstance().hasArgsAssigned;
+    /**
+     * Releases this singleton.
+     * Calling this method aft
+     */
+    public static void release() {
+        instance = null;
     }
 
     private ArgParser(String[] args) {

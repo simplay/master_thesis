@@ -18,6 +18,10 @@ public class DepthManager {
         return instance;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     private DepthManager() {
         this.depthFields = new ArrayList<>();
     }

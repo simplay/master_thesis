@@ -103,9 +103,9 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
 
     /**
      * Checks whether this trajectory closed.
-     * note that closed means, that its end frame is correctly assigned.
+     * Note that closed means, that its end frame is correctly assigned.
      *
-     * @return
+     * @return true if we marked the trajectory as closed, false otherwise.
      */
     public boolean isClosed() {
         return isClosed;
@@ -158,8 +158,11 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     /**
      * Fast fetching of nearest N avg spatial neighbors
      *
-     * Returns an ordered list of the nearest n neighbors according to their spatial
-     * avg distance to this trajectory.
+     * Returns an ordered list of the nearest n neighbors (ordered from the top- to the worst neighbors)
+     * according to their spatial avg distance to this trajectory.
+     *
+     * The first element in the returned list corresponds to the best nearest neighbors,
+     * the last to the worst (when running the NN mode top).
      *
      * @param numberOfNeighbors number of top n neighbors that should be returned.
      * @return n top neighbors according to their average spatial distance to this trajectory
@@ -424,6 +427,10 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     /**
      * Compare two trajectories by their label to define an order among trajectories.
      * Used for spanning the affinity matrix.
+     *
+     * when sorting a list of trajectories, then trajectories with a lower label
+     * have a lower index in the sorted list. I.e the list is sorted ascending according
+     * to the trajectory label values.
      *
      * @param o other trajectory
      * @return -1 if this trajectory's label is smaller than the one from the reference trajectory,

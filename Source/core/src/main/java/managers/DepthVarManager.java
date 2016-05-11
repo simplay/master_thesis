@@ -15,6 +15,10 @@ public class DepthVarManager {
         return instance;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     private DepthVarManager() {
         this.depthVarFields = new ArrayList<>();
     }
