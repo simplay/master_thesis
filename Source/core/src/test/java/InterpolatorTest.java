@@ -1,7 +1,10 @@
 import datastructures.Interpolator;
+import datastructures.Point3d;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
@@ -70,7 +73,7 @@ public class InterpolatorTest {
     }
 
     @Test
-    public void testRandomInterpolationPoints() {
+    public void testRandomInterpolation2dPoints() {
         for (int t = 0; t < 10; t++) {
             double[][] data = new double[2][2];
             double[] row_1 = {Math.random(), Math.random()};
@@ -90,6 +93,53 @@ public class InterpolatorTest {
                 double u1 = data[1][0] + (data[1][1]-data[1][0])*idy;
                 double v = u0 + (u1-u0)*idx;
                 assertEquals(v, i.interpolatedValueAt(data, idx, idy), 0.000000001d);
+            }
+        }
+    }
+
+    @Test
+    public void testRandomInterpolation3dPoints() {
+        for (int t = 0; t < 10; t++) {
+            Point3d[][] data = new Point3d[2][2];
+            Point3d[] row_1 = {
+                    new Point3d(Math.random(), Math.random(), Math.random()),
+                    new Point3d(Math.random(), Math.random(), Math.random())
+            };
+            Point3d[] row_2 = {
+                    new Point3d(Math.random(), Math.random(), Math.random()),
+                    new Point3d(Math.random(), Math.random(), Math.random())
+            };
+            data[0] = row_1;
+            data[1] = row_2;
+
+            Interpolator i = new Interpolator();
+
+            for (int k = 0; k < 1000; k++) {
+                double idx = Math.random(); //0.6d;
+                double idy = Math.random();
+
+                // 3 times linear interpolation: f0 + [(f1-f0)/(x1-x0)]*(x-x0)
+                // here x0 = 0 and x1 = 1
+                // here: for a fixed row, we interpolated along the column, therefore use idy first.
+                LinkedList<Double> vs = new LinkedList();
+
+                double u0 = data[0][0].x() + (data[0][1].x() - data[0][0].x()) * idy;
+                double u1 = data[1][0].x() + (data[1][1].x() - data[1][0].x()) * idy;
+                vs.add(u0 + (u1 - u0) * idx);
+
+                u0 = data[0][0].y() + (data[0][1].y() - data[0][0].y()) * idy;
+                u1 = data[1][0].y() + (data[1][1].y() - data[1][0].y()) * idy;
+                vs.add(u0 + (u1 - u0) * idx);
+
+                u0 = data[0][0].z() + (data[0][1].z() - data[0][0].z()) * idy;
+                u1 = data[1][0].z() + (data[1][1].z() - data[1][0].z()) * idy;
+                vs.add(u0 + (u1 - u0) * idx);
+
+                Point3d interpolPoint = i.interpolatedValueAt(data, idx, idy);
+
+                assertEquals(vs.get(0), interpolPoint.x(), 0.000000001d);
+                assertEquals(vs.get(1), interpolPoint.y(), 0.000000001d);
+                assertEquals(vs.get(2), interpolPoint.z(), 0.000000001d);
             }
         }
     }
