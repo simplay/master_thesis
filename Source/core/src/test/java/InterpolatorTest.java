@@ -1,4 +1,5 @@
 import datastructures.Interpolator;
+import datastructures.Point2d;
 import datastructures.Point3d;
 import org.junit.Rule;
 import org.junit.Test;
@@ -95,6 +96,24 @@ public class InterpolatorTest {
                 assertEquals(v, i.interpolatedValueAt(data, idx, idy), 0.000000001d);
             }
         }
+    }
+
+    @Test
+    public void testRoundedInterpolSameAsRoundedLookup() {
+        double[][] data = new double[3][3];
+        double[] row_1 = {Math.random(), Math.random(), Math.random()};
+        double[] row_2 = {Math.random(), Math.random(), Math.random(), };
+        double[] row_3 = {Math.random(), Math.random(), Math.random(), };
+        data[0] = row_1;
+        data[1] = row_2;
+        data[2] = row_3;
+        Interpolator i = new Interpolator();
+
+        Point2d p = new Point2d(0.6 ,0.6);
+
+        double iv = i.interpolatedValueAt(data, p.rounded().x(), p.rounded().y());
+        double iiv = data[p.rounded().iU()][p.rounded().iV()];
+        assertEquals(iv, iiv, 0);
     }
 
     @Test

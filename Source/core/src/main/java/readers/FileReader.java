@@ -31,16 +31,6 @@ public abstract class FileReader {
 
     protected abstract void processLine(String line);
 
-    protected float[] parseToFloatArray(String[] items) {
-        float[] intItems = new float[items.length];
-        int idx = 0;
-        for (String item : items) {
-            intItems[idx] = Float.parseFloat(item);
-            idx++;
-        }
-        return intItems;
-    }
-
     protected double[] parseToDoubleArray(String[] items) {
         double[] intItems = new double[items.length];
         int idx = 0;
@@ -59,6 +49,22 @@ public abstract class FileReader {
             idx++;
         }
         return intItems;
+    }
+
+    /**
+     * Maps an array of (0,1) valued strings to a boolean array.
+     *
+     * @param items serialized booleans
+     * @return boolean array representation of read line.
+     */
+    protected boolean[] parseToBooleanArray(String[] items) {
+        boolean[] boolItems = new boolean[items.length];
+        int idx = 0;
+        for (String item : items) {
+            boolItems[idx] = Boolean.parseBoolean(item);
+            idx++;
+        }
+        return boolItems;
     }
 
     /**
