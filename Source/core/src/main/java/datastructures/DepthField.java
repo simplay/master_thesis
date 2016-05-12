@@ -46,10 +46,6 @@ public class DepthField extends Interpolator {
         return data;
     }
 
-    public synchronized void setFieldData(DepthField df) {
-        data = df.getData();
-    }
-
     /**
      * Checks whether a given location has a valid depth value.
      *

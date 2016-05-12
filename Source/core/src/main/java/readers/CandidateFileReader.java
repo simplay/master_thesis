@@ -11,7 +11,7 @@ public class CandidateFileReader extends FileReader{
         String baseFileName = "../output/tracker_data/" + dataset + "/candidates_"+ fileNr + ".txt";
         candidates = new LinkedList<String[]>();
         readFile(baseFileName);
-        TrackingCandidates.getInstance().addCandidate(candidates.getFirst(), candidates.getLast());
+        TrackingCandidates.getInstance().addCandidates(candidates.getFirst(), candidates.getLast());
     }
 
     @Override
