@@ -1,13 +1,13 @@
 package managers;
 
-import datastructures.VarianceMatrix;
+import datastructures.FlowVarField;
 
 import java.util.ArrayList;
 
 public class VarianceManager {
 
     private static VarianceManager instance = null;
-    private ArrayList<VarianceMatrix> localVariances;
+    private ArrayList<FlowVarField> localVariances;
     private ArrayList<Double> globalVariances;
 
     public static VarianceManager getInstance() {
@@ -22,12 +22,12 @@ public class VarianceManager {
         globalVariances = new ArrayList<>();
     }
 
-    public VarianceMatrix getVariance(int frame_idx) {
+    public FlowVarField getVariance(int frame_idx) {
         return localVariances.get(frame_idx);
     }
 
-    public void add(VarianceMatrix varianceMatrix) {
-        localVariances.add(varianceMatrix);
+    public void add(FlowVarField flowVarField) {
+        localVariances.add(flowVarField);
     }
 
     public void addGlobalVariance(double value) {

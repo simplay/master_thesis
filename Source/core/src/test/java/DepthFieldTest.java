@@ -96,12 +96,15 @@ public class DepthFieldTest {
 
         int m = 3;
         int n = 3;
-        DepthField df = new DepthField(3, 3);
+        DepthField df = new DepthField(m, n);
         LinkedList<double[]> rows = new LinkedList<>();
 
-        // assign random values to u,v - fields
+        // assign random values to depth field
         for (int idx = 0; idx < m; idx++) {
-            double[] row = {Math.random(), Math.random(), Math.random(), Math.random()};
+            double[] row = new double[n];
+            for (int k = 0; k < n; k++) {
+                row[k] = Math.random();
+            }
             rows.add(row);
             df.setRow(idx, row);
         }
@@ -123,7 +126,6 @@ public class DepthFieldTest {
             double x = Math.random()*2;
             double y = Math.random()*2;
 
-            int idx = 0;
             for (double[][] field : fields) {
                 int px_i = (int) Math.floor(x);
                 int py_i = (int) Math.floor(y);

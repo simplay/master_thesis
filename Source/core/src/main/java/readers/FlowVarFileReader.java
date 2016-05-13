@@ -1,6 +1,6 @@
 package readers;
 
-import datastructures.VarianceMatrix;
+import datastructures.FlowVarField;
 import managers.VarianceManager;
 
 import java.util.LinkedList;
@@ -15,7 +15,7 @@ public class FlowVarFileReader extends FileReader{
         int m = varianceRows.size();
         int n = varianceRows.get(0).length;
 
-        VarianceMatrix varMat = new VarianceMatrix(m, n);
+        FlowVarField varMat = new FlowVarField(m, n);
 
         for (int k = 0; k < m; k++) {
             varMat.setRow(k, varianceRows.get(k));
