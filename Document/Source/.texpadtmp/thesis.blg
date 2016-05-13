@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: /Users/simplay/repos/ma_my_pipeline/Document/Source/.texpadtmp/thesis.aux
+A level-1 auxiliary file: Chapters/chapter1.aux
+A level-1 auxiliary file: Chapters/appendix.aux
+The style file: alphadin.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: ../thesis.bib
+You've used 1 entry,
+            4793 wiz_defined-function locations,
+            897 strings with 6468 characters,
+and the built_in function-call counts, 540 in all, are:
+= -- 48
+> -- 8
+< -- 8
++ -- 7
+- -- 2
+* -- 34
+:= -- 96
+add.period$ -- 1
+call.type$ -- 1
+change.case$ -- 4
+chr.to.int$ -- 1
+cite$ -- 1
+duplicate$ -- 18
+empty$ -- 50
+format.name$ -- 6
+if$ -- 109
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 4
+newline$ -- 16
+num.names$ -- 3
+pop$ -- 7
+preamble$ -- 1
+purify$ -- 6
+quote$ -- 0
+skip$ -- 22
+stack$ -- 0
+substring$ -- 47
+swap$ -- 3
+text.length$ -- 3
+text.prefix$ -- 1
+top$ -- 0
+type$ -- 6
+warning$ -- 0
+while$ -- 4
+width$ -- 2
+write$ -- 20

@@ -1,0 +1,87 @@
+\documentclass[a4paper]{report}
+
+\usepackage{natbib}
+\bibpunct{[}{]}{,}{a}{}{;}
+\usepackage{fancyheadings}
+\usepackage{iamdip}
+\usepackage[pdftex]{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\usepackage{pdfpages}
+
+
+\headrulewidth 0.5pt \addtolength{\headheight}{5pt}
+
+\lhead[\fancyplain{}{\rm\thepage}]{\fancyplain{}{\rightmark}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{}{\rm\thepage}}
+\cfoot{}
+
+\graphicspath{{../Figures/}}
+
+\begin{document}
+
+\pagestyle{fancyplain} \thispagestyle{empty}
+
+\title{Flow and Motion Segmentation on RGB-D Sequences}
+\author{Michael Single}
+\betreuer{Peter Bertholet}
+\ort{Bern}
+\datum{2016}
+
+\pagenumbering{roman} \setcounter{page}{1}
+\maketitle
+
+\newpage
+\thispagestyle{empty}
+\vspace{8cm}
+\noindent
+{\centerline {\bf \large Abstract}}
+\vspace{1cm}
+
+
+\noindent
+
+%abstract
+
+
+
+\pagenumbering{roman} \setcounter{page}{1}
+\tableofcontents
+
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+% Hauptdokument
+\pagenumbering{arabic} \setcounter{page}{1}
+\pagestyle{fancy}
+
+\include{Chapters/chapter1}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+
+\begin{appendix}
+\include{Chapters/appendix}
+\newpage{\pagestyle{empty} \cleardoublepage}
+\end{appendix}
+
+\addcontentsline{toc}{chapter}{\numberline{}List of Tables}
+\listoftables
+
+\addcontentsline{toc}{chapter}{\numberline{}List of Figures}
+\listoffigures
+
+\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+\bibliographystyle{alphadin}
+\nocite{*}
+\bibliography{thesis}
+
+% This is required since 2012!!
+\includepdf{Erklaerung.pdf}
+
+\end{document}
