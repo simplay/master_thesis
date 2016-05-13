@@ -12,12 +12,7 @@ public class VarianceMatrix extends Interpolator {
         return interpolatedValueAt(matrix, p.x(), p.y());
     }
 
-    public double valueAt(double row_idx, double col_idx) {
-        return interpolatedValueAt(matrix, row_idx, col_idx);
-    }
-
     public void setRow(int row_idx, double[] row) {
         matrix[row_idx] = row;
     }
-
 }
