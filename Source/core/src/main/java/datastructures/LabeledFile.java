@@ -83,7 +83,7 @@ public class LabeledFile {
 
     /**
      * Checks whether there was any rgb information read-in.
-     * 
+     *
      * @return true, if rgb information was read, false otherwise.
      */
     public boolean hasRGB() {
