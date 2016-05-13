@@ -42,3 +42,4 @@ labels.txt
 *.log
 *.gz
 *.pdf
+Document/Source/.texpadtmp/

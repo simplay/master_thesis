@@ -1,6 +1,0 @@
-\contentsline {chapter}{\numberline {1}Chapter 1}{1}{chapter.1}
-\contentsline {chapter}{\numberline {A}ap1}{2}{appendix.A}
-\contentsline {section}{\numberline {A.1}apsec1}{2}{section.A.1}
-\contentsline {chapter}{\hbox to\@tempdima {\hfil }List of Tables}{3}{section.A.1}
-\contentsline {chapter}{\hbox to\@tempdima {\hfil }List of Figures}{3}{appendix*.2}
-\contentsline {chapter}{\hbox to\@tempdima {\hfil }Bibliography}{4}{appendix*.3}
