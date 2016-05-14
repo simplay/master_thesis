@@ -1,3 +1,4 @@
+import datastructures.NearestNeighborMode;
 import datastructures.NearestNeighborsHeap;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class ArgParserTest {
         assertEquals(0.5, ArgParser.getCutProbability(), 0);
         assertEquals("", ArgParser.getCustomFileNamePrefix());
         assertEquals(false, ArgParser.hasCustomFileNamePrefix());
-        assertEquals(NearestNeighborsHeap.NNMode.TOP_N, ArgParser.getNNMode());
+        assertEquals(NearestNeighborMode.ALL, ArgParser.getNNMode());
     }
 
     @Test
@@ -96,7 +97,7 @@ public class ArgParserTest {
         assertEquals(0.93, ArgParser.getCutProbability(), 0);
         assertEquals("foobar", ArgParser.getCustomFileNamePrefix());
         assertEquals(true, ArgParser.hasCustomFileNamePrefix());
-        assertEquals(NearestNeighborsHeap.NNMode.TOP_AND_WORST_N, ArgParser.getNNMode());
+        assertEquals(NearestNeighborMode.TOP_AND_WORST_N, ArgParser.getNNMode());
     }
 
     @Test

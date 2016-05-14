@@ -136,6 +136,33 @@ public class TrajectoryTest {
     }
 
     @Test
+    public void testAllNeighborsBothMode() {
+        String[] args = {"-d", "foobar", "-task", "1", "-nnm", "all"};
+        ArgParser.getInstance(args);
+        Trajectory tra = new Trajectory(0);
+
+        Trajectory other1 = new Trajectory(0);
+        Trajectory other2 = new Trajectory(0);
+        Trajectory other3 = new Trajectory(0);
+        Trajectory other4 = new Trajectory(0);
+        Trajectory other5 = new Trajectory(0);
+
+
+        tra.appendAvgSpatialDist(other1.getLabel(), 2);
+        tra.appendAvgSpatialDist(other2.getLabel(), 1);
+        tra.appendAvgSpatialDist(other3.getLabel(), 1.5);
+        tra.appendAvgSpatialDist(other4.getLabel(), 0.5);
+        tra.appendAvgSpatialDist(other5.getLabel(), 1.6);
+
+        assertEquals(5, tra.allNearestNeighbors().size());
+        assertTrue(tra.allNearestNeighbors().contains(other1.getLabel()));
+        assertTrue(tra.allNearestNeighbors().contains(other2.getLabel()));
+        assertTrue(tra.allNearestNeighbors().contains(other3.getLabel()));
+        assertTrue(tra.allNearestNeighbors().contains(other4.getLabel()));
+        assertTrue(tra.allNearestNeighbors().contains(other5.getLabel()));
+    }
+
+    @Test
     public void testAssignSimilarityValueTo() {
         Trajectory tra = new Trajectory(0);
         Trajectory o1 = new Trajectory(0);

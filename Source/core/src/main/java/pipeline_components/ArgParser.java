@@ -1,5 +1,6 @@
 package pipeline_components;
 
+import datastructures.NearestNeighborMode;
 import datastructures.NearestNeighborsHeap;
 import similarity.SimilarityTaskType;
 import java.util.HashMap;
@@ -250,14 +251,16 @@ public class ArgParser {
      * Currently, we either can return the best N nearest neighbors or
      * n/2 of the best and worst nearest neighbors per trajectory.
      *
+     * by default all nearest neighbors are returned.
+     *
      * @return the type of nearest neighbors that should be dumped.
      */
-    public static NearestNeighborsHeap.NNMode getNNMode() {
+    public static NearestNeighborMode getNNMode() {
         String nnMode = getInstance().getHashValue("nnm");
         if (nnMode == null) {
-            return NearestNeighborsHeap.NNMode.TOP_N;
+            return NearestNeighborMode.ALL;
         }
-        return NearestNeighborsHeap.NNMode.getModeById(nnMode);
+        return NearestNeighborMode.getModeById(nnMode);
     }
 
     /**

@@ -1,5 +1,6 @@
 package writers;
 
+import datastructures.NearestNeighborMode;
 import datastructures.Trajectory;
 import managers.TrajectoryManager;
 import pipeline_components.ArgParser;
@@ -61,7 +62,14 @@ public class NearestSpatialNeighborsWriter extends LargeFileWriter {
         int counter = 0;
         List<String> strLines = new LinkedList<>();
         for (Trajectory tra : TrajectoryManager.getTrajectories()) {
-            List<Integer> nn = tra.nearestAvgSpatialNeighbors(nn_count);
+            List<Integer> nn;
+
+            if (ArgParser.getNNMode() == NearestNeighborMode.ALL) {
+                nn = tra.allNearestNeighbors();
+            } else {
+                nn = tra.nearestAvgSpatialNeighbors(nn_count);
+            }
+
             String nn_as_string = nn.toString().split("\\[|\\]")[1].trim();
             strLines.add(nn_as_string + ((counter < n-1)? "\n" : ""));
             counter++;

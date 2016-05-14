@@ -4,6 +4,8 @@ import pipeline_components.ArgParser;
 
 import java.util.*;
 
+import static datastructures.NearestNeighborMode.*;
+
 /**
  * This datastructure is used to determine (rather) fast the nearest N eighbors
  * according to their avg spatial distance.
@@ -14,45 +16,6 @@ public class NearestNeighborsHeap {
     private double min = Double.MAX_VALUE;
     private int count = 0;
     private int size;
-
-    /**
-     * Defines which nearest neighbors should be returned
-     */
-    public enum NNMode {
-
-        TOP_N("top"),
-        TOP_AND_WORST_N("both");
-
-        private String id;
-
-        private NNMode(String id) {
-            this.id = id;
-        }
-
-        /**
-         * Get a mode's unique identifier.
-         *
-         * @return mode id name
-         */
-        public String getId() {
-            return id;
-        }
-
-        /**
-         * Find a Mode by its id
-         *
-         * @param id mode identifier
-         * @return the mode that maps to the given id.
-         */
-        public static NNMode getModeById(String id) {
-            for (NNMode t : values() ) {
-                if (t.getId().equals(id)) {
-                    return t;
-                }
-            }
-            return null;
-        }
-    }
 
     /**
      * Build a priority heap-like data-structure containing the spatial neighbors of a trajectory.

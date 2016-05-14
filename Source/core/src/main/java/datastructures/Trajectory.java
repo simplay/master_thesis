@@ -181,6 +181,15 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
+     * Get all nearest neighbors for this trajectory
+     *
+     * @return a list of nearest neighbors.
+     */
+    public List<Integer> allNearestNeighbors() {
+        return new LinkedList<>(avgSpatialDistToNeighbors.keySet());
+    }
+
+    /**
      * Filter the similarity and spatial avg distance value of
      * an now invalid neighboring trajectory.
      *

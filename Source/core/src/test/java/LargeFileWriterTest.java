@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
 import writers.LargeFileWriter;
@@ -13,6 +14,11 @@ import static org.junit.Assert.assertEquals;
 public class LargeFileWriterTest {
 
     private String dataset = "foobar";
+
+    @Before
+    public void prepareObject() {
+        ArgParser.release();
+    }
 
     @Test
     public void testCanWriteFile() {
@@ -53,8 +59,8 @@ public class LargeFileWriterTest {
     }
 
     @Test
-    public void testFilenamePrefix() {
-        String[] args = {"-d", dataset, "-task", "1"};
+    public void testFilenamePrefixTopNNM() {
+        String[] args = {"-d", dataset, "-task", "1", "-nnm", "top"};
         ArgParser.getInstance(args);
         try {
             Method method = LargeFileWriter.class.getDeclaredMethod("getOutputFilenamePrefix");
@@ -63,6 +69,48 @@ public class LargeFileWriterTest {
                 String suffix = (String)method.invoke(new LargeFileWriter());
                 String filename = dataset + "_" + suffix;
                 assertEquals(dataset + "_sd_top_100", filename);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFilenamePrefixBothNNM() {
+        String[] args = {"-d", dataset, "-task", "1", "-nnm", "both"};
+        ArgParser.getInstance(args);
+        try {
+            Method method = LargeFileWriter.class.getDeclaredMethod("getOutputFilenamePrefix");
+            method.setAccessible(true);
+            try {
+                String suffix = (String)method.invoke(new LargeFileWriter());
+                String filename = dataset + "_" + suffix;
+                assertEquals(dataset + "_sd_both_100", filename);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFilenamePrefixAllNMM() {
+        String[] args = {"-d", dataset, "-task", "1", "-nnm", "all"};
+        ArgParser.getInstance(args);
+        try {
+            Method method = LargeFileWriter.class.getDeclaredMethod("getOutputFilenamePrefix");
+            method.setAccessible(true);
+            try {
+                String suffix = (String)method.invoke(new LargeFileWriter());
+                String filename = dataset + "_" + suffix;
+                assertEquals(dataset + "_sd_all_100", filename);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {

@@ -30,9 +30,10 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
  
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
-+ **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, the top N nearest neighbors will be returned.
++ **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, all nearest neighbors will be returned.
  + `STRING == top`: Return the top N neighbors
  + `STRING == both`: Return the top N/2 and worst N/2 neighbors
+ + `STRING == all`: Return the complete neighborhood of every trajectory (default mode).
 
 + **-debug BOOL**:  should the program run in the debug mode. If so, it will dumb intermediate calculated data. By default, the debug mode is disabled.
 
