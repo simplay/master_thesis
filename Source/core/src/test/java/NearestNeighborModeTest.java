@@ -1,4 +1,5 @@
 import datastructures.NearestNeighborMode;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -18,5 +19,12 @@ public class NearestNeighborModeTest {
         assertEquals("top", NearestNeighborMode.TOP_N.getId());
         assertEquals("both", NearestNeighborMode.TOP_AND_WORST_N.getId());
         assertEquals("all", NearestNeighborMode.ALL.getId());
+    }
+
+    @Test
+    public void testShouldIgnoreNNCount() {
+        assertEquals(false, NearestNeighborMode.TOP_N.getShouldIgnoreNNCount());
+        assertEquals(false, NearestNeighborMode.TOP_AND_WORST_N.getShouldIgnoreNNCount());
+        assertEquals(true, NearestNeighborMode.ALL.getShouldIgnoreNNCount());
     }
 }
