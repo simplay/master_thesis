@@ -48,6 +48,23 @@ public class ArgParserTest {
     }
 
     @Test
+    public void testShouldSkipNNCount() {
+        String[] args = {"-d", "foobar", "-task", "2", "-nnm", "top"};
+        ArgParser.getInstance(args);
+        assertEquals(false, ArgParser.shouldSkipNNCount());
+
+        ArgParser.release();
+        String[] args2 = {"-d", "foobar", "-task", "2", "-nnm", "both"};
+        ArgParser.getInstance(args2);
+        assertEquals(false, ArgParser.shouldSkipNNCount());
+
+        ArgParser.release();
+        String[] args3 = {"-d", "foobar", "-task", "2", "-nnm", "all"};
+        ArgParser.getInstance(args3);
+        assertEquals(true, ArgParser.shouldSkipNNCount());
+    }
+
+    @Test
     public void testRelease() {
         String dataset = "foobar";
         String[] args = {"-d", dataset, "-task", "2"};

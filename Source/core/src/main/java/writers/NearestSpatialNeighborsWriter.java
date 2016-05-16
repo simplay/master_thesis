@@ -4,6 +4,8 @@ import datastructures.NearestNeighborMode;
 import datastructures.Trajectory;
 import managers.TrajectoryManager;
 import pipeline_components.ArgParser;
+import pipeline_components.Logger;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -28,7 +30,14 @@ public class NearestSpatialNeighborsWriter extends LargeFileWriter {
      * @param fileStoreAtPath directory where we want to store the generated labels file.
      */
     public NearestSpatialNeighborsWriter(String dataset, String fileStoreAtPath) {
+
+        // determine amount of nearest neighbors
         int nn_count = ArgParser.getNearestNeighborhoodCount();
+        if (ArgParser.shouldSkipNNCount()) {
+            Logger.println(" => Info: Extracting the complete neighborhood.");
+            nn_count = TrajectoryManager.getInstance().trajectoryCount();
+        }
+
         String outputPath = fileStoreAtPath + getOutputFilenamePrefix(dataset) + "_spnn.txt";
         reportFilePath(outputPath, "Writing the " + nn_count + " nearest avg spatial dist neighbors to output file:");
 

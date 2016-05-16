@@ -126,6 +126,15 @@ public class ArgParser {
     }
 
     /**
+     * Should the assigned nearest neighborcount be skipped.
+     *
+     * @return true if we do not want to use the given nn count otherwise false.
+     */
+    public static boolean shouldSkipNNCount() {
+        return getNNMode().getShouldIgnoreNNCount();
+    }
+
+    /**
      * Affinity scaling factor used for MD sim tasks,
      * acts as a sensitivity parameter and is different when using depth cues.
      *
@@ -288,7 +297,7 @@ public class ArgParser {
         Logger.println("+ Using dataset: " + getDatasetName());
 
         if (hasCustomFileNamePrefix()) {
-            Logger.println("+ Using custom prefix: " + getCustomFileNamePrefix());
+            Logger.println("+ Prepending custom prefix: " + getCustomFileNamePrefix());
         }
 
         Logger.println("+ Running task: " + getSimTask().getName() + " [" + getSimTask().getIdName() + "]");
@@ -298,6 +307,11 @@ public class ArgParser {
         Logger.println("+ Using color cues: " + useColorCues());
         Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         Logger.println("+ Using NN Mode: " + getNNMode().name());
+
+        if (shouldSkipNNCount()) {
+            Logger.println("  => Ignoring the Nearest Neighbor Count and returning the complete neighborhood instead.");
+        }
+
         Logger.println("+ Using Lambda equals: " + getLambda());
 
         if (useDepthCues()) {

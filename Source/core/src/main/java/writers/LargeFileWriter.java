@@ -1,5 +1,6 @@
 package writers;
 
+import managers.TrajectoryManager;
 import pipeline_components.ArgParser;
 import pipeline_components.Logger;
 
@@ -171,7 +172,7 @@ public class LargeFileWriter {
     protected String getOutputFilenamePrefix() {
         String filenamePrefix = ArgParser.getSimTask().getIdName();
         filenamePrefix += "_" + ArgParser.getNNMode().getId();
-        filenamePrefix += "_" + ArgParser.getNearestNeighborhoodCount();
+        filenamePrefix += "_" + getNNPrefixCount();
 
         // In case a user has provided a custom name infix,
         // append it to the filename suffix.
@@ -180,5 +181,19 @@ public class LargeFileWriter {
         }
 
         return filenamePrefix;
+    }
+
+    /**
+     * Get the nearest neighborhood count that should be used for the filename prefix.
+     *
+     * Is equal to the total amount of trajectories if we want to return the complete neighborhood.
+     * Otherwise it is equal to the pre-specified neighborhood size (given by the user args).
+     *
+     * @return nearest neighborhood count used by in the filename prefix.
+     */
+    protected int getNNPrefixCount() {
+        return (ArgParser.shouldSkipNNCount()) ?
+                TrajectoryManager.getInstance().trajectoryCount() :
+                ArgParser.getNearestNeighborhoodCount();
     }
 }
