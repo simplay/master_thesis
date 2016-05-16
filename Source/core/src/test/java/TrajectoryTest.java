@@ -303,9 +303,9 @@ public class TrajectoryTest {
             double depth = ds.get(idx);
             for (int k = 0; k < K; k++) {
                 Point3d p3 = tras.get(idx).getEuclidPositionAtFrame(k);
-                assertEquals(depth*((y-p_x)/f_x), p3.y(), idx);
-                assertEquals(depth*((x-p_y)/f_y), p3.x(), idx);
-                assertEquals(depth, p3.z(), idx);
+                assertEquals(depth*((y-p_x)/f_x), p3.y(), 0);
+                assertEquals(depth*((x-p_y)/f_y), p3.x(), 0);
+                assertEquals(depth, p3.z(), 0);
             }
         }
 

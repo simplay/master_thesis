@@ -175,11 +175,6 @@ public class Main {
         Logger.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         Logger.println();
 
-        Logger.println("Filtering invalid spatial neighbors ...");
-        int filtedCount = TrajectoryManager.getInstance().filterInvalidSpatialTrajectoryNeighbors();
-        Logger.println("=> Filtered " + filtedCount + " neighbors.");
-        Logger.println();
-
         /**
          * Write output data
          *  + extracted trajectories

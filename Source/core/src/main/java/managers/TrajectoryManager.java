@@ -5,16 +5,26 @@ import datastructures.Trajectory;
 import java.util.*;
 
 /**
- * Singleton containing and managing all existing trajectories.
+ * TrajectoryManager is a singleton used for accessing, creating/continuing and filtering/transforming trajectories.
+ *
+ * It keeps internally a collection of all existing trajectories, sorted by the trajectory label.
+ *
  */
 public class TrajectoryManager implements Iterable<Trajectory>{
 
     // A hash containing all the trajectories, with the trajectory label as key.
+    // Note that a hash map automatically sorts its values by its keys (ascending).
+    // Thus, trajectories are always sorted by their label id.
     private HashMap<Integer, Trajectory> trajectories;
 
     // Singleton state
     private static TrajectoryManager instance = null;
 
+    /**
+     * Get the trajectory manager singleton
+     *
+     * @return singleton instance
+     */
     public static TrajectoryManager getInstance() {
         if (instance == null) {
             instance = new TrajectoryManager();
@@ -22,6 +32,9 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return instance;
     }
 
+    /**
+     * Create a new trajectory manager singleton
+     */
     private TrajectoryManager() {
         trajectories = new HashMap<Integer, Trajectory>();
     }
@@ -104,6 +117,8 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     /**
      * Select all Trajectories that are currently active in a given frame.
      *
+     * Note that the first frame index corresponds to the value 0.
+     *
      * @param frame_idx active frame index
      * @return selected active trajectories.
      */
@@ -129,8 +144,13 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     /**
      * Select all trajectories that have a given length value.
      *
+     * Note that the length of a trajectory corresponds to
+     * its number of tracking points minus one.
+     *
+     * I.e. trajectories of length 0 correspond to 'one-pointed' trajectories.
+     *
      * @param length expected trajectory length value.
-     * @return Collection of trajectories all having an expected length value.
+     * @return Collection of trajectories all having the expected length value.
      */
     public LinkedList<Trajectory> allTrajectoryWithLength(int length) {
         LinkedList<Trajectory> actives = new LinkedList<Trajectory>();
@@ -145,6 +165,8 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     /**
      * Select all trajectories that start at a given frame.
      *
+     * Note that the first frame starts at index 0.
+     *
      * @param frame_idx index of frame the trajectories should start.
      * @return a collection of trajectories all starting at a given frame.
      */
@@ -158,7 +180,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return actives;
     }
     /**
-     * Select all trajectories that start at a given frame.
+     * Select all trajectories that live in a series of frames starting at a given frame index..
      *
      * @param frame_idx index of frame the trajectories should start.
      * @return a collection of trajectories all starting at a given frame.
@@ -184,7 +206,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
-     * Filter all trajectories shorter than a given min length.
+     * Filters all trajectories shorter than a given min length.
      *
      * @param len expected minimum length
      */
@@ -229,28 +251,25 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         }
     }
 
+    /**
+     * Generate the output string of the frame-wise active trajectories.
+     *
+     * Note that the first frame has the index value 0.
+     *
+     * @param frame_idx current active frame.
+     * @return dump of trajectories active in a given frame.
+     */
     public String toFramewiseOutputString(int frame_idx) {
         String content = "";
         LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesActiveInGivenFrame(frame_idx);
+
+        // TODO: check, whether this sort statement is still necessary
         Collections.sort(allTrajectoriesStartingAt(frame_idx));
 
         for (Trajectory tra : trajectoriesAtGivenFrame) {
             content = content + tra.toFramewiseString(frame_idx) + "\n";
         }
         return content.trim();
-    }
-
-    /**
-     * Filters all invalid spatial nearest neighbors
-     *
-     * @return reports the total number of filtered neighbors accumulated over all existing trajectories.
-     */
-    public int filterInvalidSpatialTrajectoryNeighbors() {
-        int filteredCount = 0;
-        for (Trajectory tra : getTrajectories()) {
-            filteredCount += tra.filterInvalidSpatialNeighbors();
-        }
-        return filteredCount;
     }
 
     /**
