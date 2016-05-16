@@ -7,38 +7,38 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'alley2small';
+DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'ped';
-PREFIX_INPUT_FILENAME = 'ped_top_3000';
+PREFIX_OUTPUT_FILENAME = 'all_pd';
+PREFIX_INPUT_FILENAME = 'pd_all_2057';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % Should the label assignment be re-used
-REUSE_LABEL_ASSIGNMENT = false;
+REUSE_LABEL_ASSIGNMENT = true;
 
 % should the numerical fast eigs method be used
 USE_EIGS = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 12;
+FORCE_EW_COUNT = 4;
 
 THRESH = 0.0000;
 
 % weight of smoothness term.
 % well working smoothness weight: NU = 0.000000001
 NU = 0.000000001;
-NU = 0.000000001;
+NU = 0.0000000001;
 
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 10;
+CLUSTER_CENTER_COUNT = 4;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -60,10 +60,10 @@ FILTER_ZERO_EIGENVALUES = false;
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 30;
+frame_idx = 1;
 
 % number of iterations that should be performed for computing the approx.
-num_of_iters = 5;
+num_of_iters = 0;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_iters_', num2str(num_of_iters), '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT
