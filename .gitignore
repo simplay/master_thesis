@@ -43,3 +43,4 @@ labels.txt
 *.gz
 *.pdf
 Document/Source/.texpadtmp/
+Source/core/testdata/
