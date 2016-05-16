@@ -29,14 +29,14 @@ public class LargeFileWriterTest {
         list.add("0.0, 1.0");
 
         try {
-            new LargeFileWriter().writeFile(list, "../output/similarities/dummy.dat");
+            new LargeFileWriter().writeFile(list, "./testdata/dummy.dat");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         FileInputStream fstream = null;
         try {
-            fstream = new FileInputStream("../output/similarities/dummy.dat");
+            fstream = new FileInputStream("./testdata/dummy.dat");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

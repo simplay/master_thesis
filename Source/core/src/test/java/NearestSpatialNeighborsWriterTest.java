@@ -46,7 +46,7 @@ public class NearestSpatialNeighborsWriterTest {
 
     @Test
     public void testFetchesCorrectNearestNeighbors() {
-        List<String> neighbors = new NearestSpatialNeighborsWriter(dataset).getSerializedTrajectoryNeighbors();
+        List<String> neighbors = new NearestSpatialNeighborsWriter(dataset, "./testdata/").getSerializedTrajectoryNeighbors();
 
         String gt = t2.getLabel() + ", " + t3.getLabel();
         assertEquals(gt, neighbors.get(0).trim());

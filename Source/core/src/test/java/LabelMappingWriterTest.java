@@ -7,7 +7,7 @@ import writers.LabelMappingWriter;
 
 import static org.junit.Assert.assertEquals;
 
-public class LabelMappingWritterTest {
+public class LabelMappingWriterTest {
 
     private String dataset = "foobar";
 
@@ -25,7 +25,7 @@ public class LabelMappingWritterTest {
 
     @Test
     public void testLabelsCorrectlyFetched() {
-        String labels = new LabelMappingWriter(dataset).getSerializedTrajectoryLabels();
+        String labels = new LabelMappingWriter(dataset, "./testdata/").getSerializedTrajectoryLabels();
         assertEquals(labels, "1 2 3 4");
     }
 

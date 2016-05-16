@@ -35,7 +35,7 @@ public class SimilarityWriterTest {
 
     @Test
     public void testRowsCorrectlyFetched() {
-        List<String> rows = new SimilarityWriter(dataset).getMatrixRows();
+        List<String> rows = new SimilarityWriter(dataset, "./testdata/").getMatrixRows();
         assertEquals("-1.1, 2.2", rows.get(0).trim());
         assertEquals("-3.3, 4.4", rows.get(1).trim());
     }
