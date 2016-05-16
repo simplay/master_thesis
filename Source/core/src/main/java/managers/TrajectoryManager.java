@@ -30,10 +30,27 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return instance.trajectories.values();
     }
 
-    public static List<Trajectory> getTrajectorySubset(int from_idx) {
+    /**
+     * Get k last trajectories.
+     *
+     * That are all ordered trajectories (by their label value)
+     * in the collection of trajectories from the k-th till the last trajectory.
+     *
+     * The first k value is n, the last is n-1, where n is the number of trajectories.
+     *
+     * example: given trajectories [t1, t2, t3, t4], then
+     *  getTrajectorySubset(0) #=> [t1, t2, t3, t4]
+     *  getTrajectorySubset(1) #=> [t2, t3, t4]
+     *  getTrajectorySubset(2) #=> [t3, t4]
+     *  getTrajectorySubset(3) #=> [t4]
+     *
+     * @param k start index from which we collect all trajectories.
+     * @return subset of trajectories containing the k last trajectories.
+     */
+    public static List<Trajectory> getTrajectorySubset(int k) {
         int n = getTrajectories().size();
         ArrayList<Trajectory> collection = new ArrayList<>(getTrajectories());
-        return collection.subList(from_idx, n-1);
+        return collection.subList(k, n);
     }
 
     /**

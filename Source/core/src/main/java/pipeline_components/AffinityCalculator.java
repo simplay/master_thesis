@@ -33,6 +33,7 @@ public class AffinityCalculator {
 
         int from_idx = 0;
         // assign upper triangular matrix
+        // fetch all triangular matrix rows and build a similarity task
         for (Trajectory a : TrajectoryManager.getTrajectories()) {
             Collection<Trajectory> trajectories = TrajectoryManager.getTrajectorySubset(from_idx);
             SimilarityTask task = TaskBuilder.buildTask(taskType, a, trajectories);
