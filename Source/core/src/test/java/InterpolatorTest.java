@@ -61,10 +61,23 @@ public class InterpolatorTest {
     }
 
     @Test
-    public void testOutOfBoundaryThrowsException() {
+    public void testPoint2dCaseOutOfBoundaryThrowsException() {
         double[][] data = new double[2][3];
         double[] row_1 = {1d, 2d, 3d};
         double[] row_2 = {4d, 5d, 6d};
+        data[0] = row_1;
+        data[1] = row_2;
+        Interpolator i = new Interpolator();
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("Dimensions (m,n)=(2,3) but accessing (x,y)=(1.5,2.0)");
+        i.interpolatedValueAt(data, 1.5, 2);
+    }
+
+    @Test
+    public void testPoint3dCaseOutOfBoundaryThrowsException() {
+        Point3d[][] data = new Point3d[2][3];
+        Point3d[] row_1 = {new Point3d(1d, 2d, 3d), new Point3d(4d, 5d, 6d), new Point3d(7d, 8d, 9d)};
+        Point3d[] row_2 = {new Point3d(1d, 2d, 3d), new Point3d(4d, 5d, 6d), new Point3d(7d, 8d, 9d)};
         data[0] = row_1;
         data[1] = row_2;
         Interpolator i = new Interpolator();
@@ -161,5 +174,27 @@ public class InterpolatorTest {
                 assertEquals(vs.get(2), interpolPoint.z(), 0.000000001d);
             }
         }
+    }
+
+    @Test
+    public void testSaveGetAt3dPointReturnZeroForInvalidLookup() {
+        Point3d[][] data = new Point3d[2][2];
+        Point3d[] row_1 = {
+                new Point3d(Math.random(), Math.random(), Math.random()),
+                new Point3d(Math.random(), Math.random(), Math.random())
+        };
+        Point3d[] row_2 = {
+                new Point3d(Math.random(), Math.random(), Math.random()),
+                new Point3d(Math.random(), Math.random(), Math.random())
+        };
+        data[0] = row_1;
+        data[1] = row_2;
+
+        Interpolator i = new Interpolator();
+        Point3d ip = i.interpolatedValueAt(data, 1, 1);
+
+        assertEquals(data[1][1].x(), ip.x(), 0);
+        assertEquals(data[1][1].y(), ip.y(), 0);
+        assertEquals(data[1][1].z(), ip.z(), 0);
     }
 }
