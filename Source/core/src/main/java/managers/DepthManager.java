@@ -142,6 +142,9 @@ public class DepthManager {
                     p.scaleBy(d).transformBy(E);
                     double d_tilde = p.z();
 
+                    // If the projected depth is invalid
+                    if (d_tilde <= 0) continue;
+
                     // Compute lookup coordinates in warped depth map
                     double i_tilde_prime = ((p.x()*f_x_rgb) / d_tilde) + p_x_rgb;
                     double j_tilde_prime = ((p.y()*f_y_rgb) / d_tilde) + p_y_rgb;
@@ -153,9 +156,21 @@ public class DepthManager {
                     if (i_tilde >= 0 && i_tilde < df.m() && j_tilde >= 0 && j_tilde < df.n()) {
 
                         // takes the front most depth values of the warped depth field
-                        if (warpedDf.valueAt(i_tilde, j_tilde) > d_tilde && d_tilde > 0) {
+                        double frontmostDepth = warpedDf.valueAt(i_tilde, j_tilde);
+
+                        // If there is already a valid front most depth value set
+                        // then overwrite it only if and only if the new depth
+                        // value is smaller than the previously assigned depth.
+                        // This corresponds to having the closest object front most.
+                        if (frontmostDepth > 0 && d_tilde < frontmostDepth) {
+                            warpedDf.setAt(i_tilde, j_tilde, d_tilde);
+
+                        // if there has no valid depth value set yet, set the currently
+                        // computed depth as the new front most depth
+                        } else if(frontmostDepth == 0) {
                             warpedDf.setAt(i_tilde, j_tilde, d_tilde);
                         }
+
                     }
                 }
             }
