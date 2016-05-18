@@ -3,14 +3,21 @@ package managers;
 import datastructures.DepthField;
 import datastructures.Mat3x4;
 import datastructures.Point3d;
-
 import java.util.ArrayList;
 
 public class DepthManager {
 
+    // The depeth field singleton instance.
     private static DepthManager instance = null;
+
+    // An ordered list of all depth field.
     private ArrayList<DepthField> depthFields;
 
+    /**
+     * Get the depth field singleton instance.
+     *
+     * @return singleton
+     */
     public static DepthManager getInstance() {
         if (instance == null) {
             instance = new DepthManager();
@@ -18,22 +25,49 @@ public class DepthManager {
         return instance;
     }
 
+    /**
+     * Releases the singleton and its references.
+     */
     public static void release() {
         instance = null;
     }
 
+    /**
+     * Creates a new singleton.
+     */
     private DepthManager() {
         this.depthFields = new ArrayList<>();
     }
 
+    /**
+     * Append a depth field to the list of loaded depth field.
+     *
+     * Assumption: The position in the depth field list corresponds to
+     * the frame index the depth field is associated with.
+     *
+     * @param depthField depth field to append.
+     */
     public void add(DepthField depthField) {
         depthFields.add(depthField);
     }
 
+    /**
+     * Get the number of stored depth fields.
+     *
+     * @return depth field count.
+     */
     public int length() {
         return depthFields.size();
     }
 
+    /**
+     * Get a depth field by its frame index.
+     *
+     * Remember that frame indices start counting at 0.
+     *
+     * @param frame_idx target frame index the depth field of interest belongs to.
+     * @return depth field that is associated with the given frame index.
+     */
     public DepthField get(int frame_idx) {
         return depthFields.get(frame_idx);
     }
@@ -42,7 +76,7 @@ public class DepthManager {
      * Warps the existing depth fields in in case the
      * color and depth cameras do not overlap.
      *
-     * TODO: describe warping mechanism
+     * TODO: describe in detail: warping mechanism
      *
      */
     public static void warpDepthFields() {
@@ -67,6 +101,8 @@ public class DepthManager {
             // is marked as invalid (i.e. each lookup position is equal to zero).
             DepthField warpedDf = new DepthField(df.m(), df.n());
 
+            // foreach element in the depth field, compute its warped depth
+            // and store it at the appropriate warped depth field position.
             for (int i = 0; i < df.m(); i++) {
                 for (int j = 0; j < df.n(); j++) {
                     double d = df.valueAt(i, j);
