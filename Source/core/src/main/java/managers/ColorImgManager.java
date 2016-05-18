@@ -16,6 +16,10 @@ public class ColorImgManager {
         return instance;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     private ColorImgManager() {
         this.images = new ArrayList<>();
     }

@@ -52,7 +52,7 @@ public class FlowFieldManager {
     }
 
     public static void release() {
-        instance.releaseFlows();
+        if (instance != null) instance.releaseFlows();
         instance = null;
         System.gc();
     }
