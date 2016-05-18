@@ -52,6 +52,16 @@ public class DepthManager {
     }
 
     /**
+     * Sets a depth field for a given frame index.
+     *
+     * @param depthField depth field to be set.
+     * @param frame_index target frame index we want to overwrite.
+     */
+    public void setAt(DepthField depthField, int frame_index) {
+        depthFields.set(frame_index, depthField);
+    }
+
+    /**
      * Get the number of stored depth fields.
      *
      * @return depth field count.
@@ -76,8 +86,24 @@ public class DepthManager {
      * Warps the existing depth fields in in case the
      * color and depth cameras do not overlap.
      *
-     * TODO: describe in detail: warping mechanism
+     * Lookup intrinsic and extrinsic camera calibration data
      *
+     * for each dm : depth map
+     *  for each d : dm
+     *
+     *    Perform index lookup
+     *    i,j = indices(d)
+     *
+     *    Compute depth projected onto the color camera space:
+     *    p = E * [(i - p_x) / f_x, (j - p_y) / f_y, 1]
+     *    z = p.z
+     *
+     *    Compute its lookup coordinates
+     *    i = (p.x * f_x_rgb / z) + p_x_rgb
+     *    j = (p.y * f_y_rgb / z) + p_y_rgb
+     *
+     *    Assing warped depth field with front-most warped depth.
+     *    if z > w_d[i][j] then w_d[i][j] = z;
      */
     public static void warpDepthFields() {
         Mat3x4 E = CalibrationManager.extrinsicMat();
@@ -133,6 +159,9 @@ public class DepthManager {
                     }
                 }
             }
+
+            // overwrite previous depth field with warped depth field
+            getInstance().setAt(warpedDf, k);
         }
     }
 
