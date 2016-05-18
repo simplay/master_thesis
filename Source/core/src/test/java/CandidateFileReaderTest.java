@@ -1,5 +1,4 @@
 import datastructures.TrackingCandidates;
-import managers.CalibrationManager;
 import org.junit.Before;
 import org.junit.Test;
 import readers.CandidateFileReader;

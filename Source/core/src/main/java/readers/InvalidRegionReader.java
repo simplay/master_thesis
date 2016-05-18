@@ -8,6 +8,12 @@ import java.util.ArrayList;
 /**
  * Read the consistency matrix extracted via the `init_data.m` script.
  *
+ * Such consistency files are located at `../output/tracker_data/DATASET/`
+ * and aee named like the following `/flow_consistency_NUM.mat`.
+ *
+ * Such a .mat file contains white space separated float values,
+ * where each file line models a matrix row.
+ *
  * This matrix encodes the invalid tracking location for given frame.
  *
  * Before continuing a tracking, we first have to check whether its starting
@@ -21,10 +27,18 @@ import java.util.ArrayList;
  */
 public class InvalidRegionReader extends FileReader{
 
+    // Read file lines
     private ArrayList<double[]> rows;
 
-    public InvalidRegionReader(String dataset, String fileNr) {
-        String baseFileName = "../output/tracker_data/" + dataset + "/flow_consistency_"+ fileNr + ".mat";
+    /**
+     * Reads an invalid region file for a given dataset using an arbitrary base file path.
+     *
+     * @param dataset dataset we are running.
+     * @param basePath base file path where the target file is located.
+     * @param fileNr frame index the target file belongs to.
+     */
+    public InvalidRegionReader(String dataset, String fileNr, String basePath) {
+        String baseFileName = basePath + dataset + "/flow_consistency_"+ fileNr + ".mat";
         rows = new ArrayList<double[]>();
 
         readFile(baseFileName);
@@ -41,10 +55,24 @@ public class InvalidRegionReader extends FileReader{
         InvalidRegionManager.getInstance().addMagFlow(ff);
     }
 
+    /**
+     * Reads an invalid region file for a given dataset using the pipeline path convention.
+     *
+     * @param dataset dataset we are running.
+     * @param fileNr frame index the target file belongs to.
+     */
+    public InvalidRegionReader(String dataset, String fileNr) {
+        this(dataset, fileNr, "../output/tracker_data/");
+    }
+
+    /**
+     * Line ttems are whitespace separated.
+     *
+     * @param line a matrix line.
+     */
     @Override
     protected void processLine(String line) {
         String[] row = line.split(" ");
-        //rows.add(parseToBooleanArray(row));
         rows.add(parseToDoubleArray(row));
     }
 

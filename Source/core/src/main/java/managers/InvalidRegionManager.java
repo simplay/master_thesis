@@ -17,6 +17,10 @@ public class InvalidRegionManager {
         return instance;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     private InvalidRegionManager() {
         magnitudes = new ArrayList<InvalidRegionsMask>();
     }
