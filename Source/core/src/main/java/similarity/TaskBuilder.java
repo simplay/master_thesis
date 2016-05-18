@@ -23,9 +23,6 @@ public class TaskBuilder {
         SimilarityTask task = null;
         try {
             Class type = taskType.getTaskClass();
-            if (taskType.shouldUseAlternativeTask()) {
-                type = taskType.getAlternativeTaskClass();
-            }
             task = (SimilarityTask) type.getConstructor(Trajectory.class, Collection.class).newInstance(a, trajectories);
         } catch (InstantiationException e) {
             e.printStackTrace();

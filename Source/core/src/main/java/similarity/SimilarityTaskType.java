@@ -1,38 +1,61 @@
 package similarity;
 
-import managers.CalibrationManager;
-import pipeline_components.ArgParser;
-
+/**
+ * SimilarityTaskType models the properties and internal state of similarity tasks
+ * used for computing affinities between trajectories.
+ *
+ */
 public enum SimilarityTaskType {
-    SD(1, SumDistTask.class, true, false, false, "Sum of Distances", SumDistEuclidTask.class),
-    PD(2, ProdDistTask.class, false, false, false, "Product of Distances", ProdDistEuclidTask.class),
+
+    SD(1, SumDistTask.class, true, false, false, "Sum of Distances"),
+    PD(2, ProdDistTask.class, false, false, false, "Product of Distances"),
     PED(3, ProdDistEuclidTask.class, false, true, false, "Product of Euclidian Distances"),
     SED(4, SumDistEuclidTask.class, true, true, false, "Sum of Euclidian Distances"),
     PAED(5, ProdDistAllEuclidTask.class, false, true, true, "Product of Distances all 3d"),
     PAENDD(6, ProdDistAllEuclidNoDepthVarTask.class, false, true, false, "Product of Distances all 3d without depth variance");
 
-    private int value;
-    private Class targetClass;
-    private boolean usesColorCues;
-    private boolean usesDepthVar;
-    private boolean usesDepthCues;
-    private String taskName;
-    private Class alternativeTaskClass;
+    // Unique numeric identifier of a SimilarityTaskType
+    private int id;
 
-    private SimilarityTaskType(int value, Class targetClass, boolean usesColorCues, boolean usesDepthCues, boolean usesDepthVar, String taskName, Class alternativTaskClass) {
-        this.value = value;
-        this.targetClass = targetClass;
+    // Similarity class that should be used for affinity computation
+    private Class similarityTaskClass;
+
+    // Indicates whether this similarity requires color cues.
+    private boolean usesColorCues;
+
+    // Indicates whether this similarity requires depth variance fields.
+    private boolean usesDepthVar;
+
+    // Indicates whether this similarity requires depth cues.
+    private boolean usesDepthCues;
+
+    // Pretty string name of this task that can be used for naming dumped output files.
+    private String taskName;
+
+    /**
+     * Constructor of a similarity task type.
+     *
+     * @param id unique numeric identifier of every similarity task type.
+     * @param similarityTaskClass the class of a SimiarityTask descendant class used for computing the affinities.
+     * @param usesColorCues does this task require color cues.
+     * @param usesDepthCues does this task require depth cues.
+     * @param usesDepthVar does this taks make use of depth variance.
+     * @param taskName the logger representation of the task name.
+     */
+    private SimilarityTaskType(int id, Class similarityTaskClass, boolean usesColorCues, boolean usesDepthCues, boolean usesDepthVar, String taskName) {
+        this.id = id;
+        this.similarityTaskClass = similarityTaskClass;
         this.usesColorCues = usesColorCues;
         this.usesDepthCues = usesDepthCues;
         this.usesDepthVar = usesDepthVar;
         this.taskName = taskName;
-        this.alternativeTaskClass = alternativTaskClass;
     }
 
-    private SimilarityTaskType(int value, Class targetClass, boolean usesColorCues, boolean usesDepthCues, boolean usesDepthVar, String taskName) {
-        this(value, targetClass, usesColorCues, usesDepthCues, usesDepthVar, taskName, null);
-    }
-
+    /**
+     * Get the task name for logging purposes
+     *
+     * @return logger representation of task name.
+     */
     public String getName() {
         return taskName;
     }
@@ -40,28 +63,20 @@ public enum SimilarityTaskType {
     /**
      * Get the abbreviation of a particular task.
      * Corresponds to the lower-cased Enum identifier.
-     * @return
+     *
+     * Is used for naming generated output files.
+     *
+     * @return pretty string representation of the name of the used similarity task.
      */
     public String getIdName() {
         return name().toLowerCase();
     }
 
     /**
-     * Checks whether the alternative task should be used.
-     * This is the case whenever depth cues should be used but the color and depth camera are overlapping
-     * and we are not already an alternative task.
+     * Indicates whether this SimilarityTaskType makes use of depth variances
      *
-     * @return true if the alternative task should be used otherwise false.
+     * @return true if the task uses depth variances, false otherwise.
      */
-    public boolean shouldUseAlternativeTask() {
-        if (alternativeTaskClass == null) return false;
-        return CalibrationManager.hasNoDepthIntrinsics() && ArgParser.useDepthCues();
-    }
-
-    public Class getAlternativeTaskClass() {
-        return alternativeTaskClass;
-    }
-
     public boolean usesDepthVariance() {
         return usesDepthVar;
     }
@@ -75,13 +90,29 @@ public enum SimilarityTaskType {
         return usesDepthCues;
     }
 
+    /**
+     * Get the class of the similarity task that should be used for
+     * computing affinity values.
+     *
+     * Note that there is no default task assigned.
+     *
+     * @return the class of a SimiarityTask descendant class.
+     */
     public Class getTaskClass() {
-        return targetClass;
+        return similarityTaskClass;
     }
 
+    /**
+     * Find a similarity task by its unique identifier.
+     *
+     * Null is returned, if no task for a given id was found.
+     *
+     * @param id unique similarity task type identifier.
+     * @return the SimilarityTaskType that maps to the given id.
+     */
     public static SimilarityTaskType TypeById(int id) {
         for (SimilarityTaskType t : values() ) {
-            if (t.value == id) {
+            if (t.id == id) {
                 return t;
             }
         }
