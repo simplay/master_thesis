@@ -2,8 +2,20 @@ package readers;
 
 import java.io.*;
 
+/**
+ * FileReader implements the basic functionality in order to read a file.
+ * Files are processes line by line. The line processing behaviour has to
+ * be implemented by the extending file reader class.
+ */
 public abstract class FileReader {
 
+    /**
+     * Reads the file that maps to a provided file path name.
+     *
+     * The file is read line by line.
+     *
+     * @param fileNamePath the file path name we want to read
+     */
     protected void readFile(String fileNamePath) {
         FileInputStream fstream = null;
         try {
@@ -29,8 +41,19 @@ public abstract class FileReader {
         }
     }
 
+    /**
+     * Defines the logic of how a file line should be processes.
+     *
+     * @param line a read file line.
+     */
     protected abstract void processLine(String line);
 
+    /**
+     * Maps a given array of strings to an array of doubles.
+     *
+     * @param items string items that should be mapped to doubles.
+     * @return double array containing the double version of the initially given string items.
+     */
     protected double[] parseToDoubleArray(String[] items) {
         double[] intItems = new double[items.length];
         int idx = 0;
@@ -41,6 +64,13 @@ public abstract class FileReader {
         return intItems;
     }
 
+    /**
+     * Maps a given array of strings to an array of doubles.
+     * The values are scaled by a given factor.
+     *
+     * @param items string items that should be mapped to doubles.
+     * @return double array containing the double version of the initially given string items.
+     */
     protected double[] parseToDoubleArray(String[] items, double scaleF) {
         double[] intItems = new double[items.length];
         int idx = 0;
@@ -49,22 +79,6 @@ public abstract class FileReader {
             idx++;
         }
         return intItems;
-    }
-
-    /**
-     * Maps an array of (0,1) valued strings to a boolean array.
-     *
-     * @param items serialized booleans
-     * @return boolean array representation of read line.
-     */
-    protected boolean[] parseToBooleanArray(String[] items) {
-        boolean[] boolItems = new boolean[items.length];
-        int idx = 0;
-        for (String item : items) {
-            boolItems[idx] = Boolean.parseBoolean(item);
-            idx++;
-        }
-        return boolItems;
     }
 
     /**
