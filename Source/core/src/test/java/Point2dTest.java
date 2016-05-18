@@ -1,13 +1,23 @@
 import datastructures.*;
 import managers.CalibrationManager;
 import managers.DepthManager;
+import org.junit.Before;
 import org.junit.Test;
+import pipeline_components.ArgParser;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
 public class Point2dTest {
+
+    @Before
+    public void initObjects() {
+        DepthManager.release();
+        ArgParser.release();
+        String[] args = {"-d", "foobar", "-task", "2"};
+        ArgParser.getInstance(args);
+    }
 
     @Test
     public void testConstructorSetsValues() {

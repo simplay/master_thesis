@@ -3,24 +3,46 @@ package readers;
 import datastructures.DepthField;
 import managers.DepthManager;
 import pipeline_components.ArgParser;
-
 import java.util.LinkedList;
 
 /**
- * The depth images are scaled by a factor of 5000,
- * i.e., a pixel value of 5000 in the depth image corresponds
- * to a distance of 1 meter from the camera, 10000 to 2 meter distance,
- * etc. A pixel value of 0 means missing value/no data.
+ * DepthFieldReader reads the depth values that belong to a dataset frame.
+ * Depth values are supposed to be in meter units, where
+ * the value indicates an invalid depth measurement.
  *
- * This is why we have to divide all read values by a factor 5000 to obtain meter values.
+ * Depth values are used for computing spacial 3d distances between trajectories,
+ * used within similarity tasks.
+ *
+ * Depth images are located at `../output/tracker_data/"`
+ * and are named like `depth_NUM.txt`
+ *
+ * Each file line is enclosed by `[]`, the depth values
+ * are float values separated by white spaces within their enclosures.
+ *
+ * Example
+ *  ...
+ *  [... 2.34 3.4 ...]
+ *  [... 0.23 0.3 ...]
+ *  ...
+ *
  */
 public class DepthFieldReader extends FileReader {
 
+    // Read depth file lines.
     private LinkedList<double[]> rows;
+
+    // Depth scale value in case we want to re-weight depth values.
     private double scale;
 
-    public DepthFieldReader(String dataset, String fileNr) {
-        String baseFileName = "../output/tracker_data/" + dataset + "/depth_"+ fileNr + ".txt";
+    /**
+     * Reads an depth file for a given dataset using an arbitrary base file path.
+     *
+     * @param dataset dataset we are running.
+     * @param basePath base file path where the target file is located.
+     * @param fileNr frame index the target file belongs to.
+     */
+    public DepthFieldReader(String dataset, String fileNr, String basePath) {
+        String baseFileName = basePath + dataset + "/depth_"+ fileNr + ".txt";
         scale = ArgParser.getDepthFieldScale();
 
         rows = new LinkedList<>();
@@ -39,6 +61,23 @@ public class DepthFieldReader extends FileReader {
         DepthManager.getInstance().add(df);
     }
 
+    /**
+     * Reads an depth file for a given dataset using the pipeline path convention.
+     *
+     * @param dataset dataset we are running.
+     * @param fileNr frame index the target file belongs to.
+     */
+    public DepthFieldReader(String dataset, String fileNr) {
+        this(dataset, fileNr, "../output/tracker_data/");
+    }
+
+    /**
+     * Extract the line items of a depth file
+     *
+     * Lines are enclosed by [] and their items are separated by white spaces.
+     *
+     * @param line a line of a depth file.
+     */
     @Override
     protected void processLine(String line) {
         String[] depth_matrix_row = line.split("\\[|\\]")[1].split(" ");
