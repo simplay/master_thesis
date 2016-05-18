@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * Depth variance values are used for normalizing 3d motion distances between trajectories,
  * used within a SAED/PAED similarity tasks.
  *
- * Depth Variance fields are located at `../output/tracker_data/"`
+ * Depth Variance fields are located at `../output/tracker_data/DATASET/"`
  * and are named like `local_depth_variances_NUM.txt`
  *
  * Each file line is enclosed by `[]`, the depth values

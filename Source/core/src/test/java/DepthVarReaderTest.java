@@ -8,7 +8,7 @@ import readers.DepthVarReader;
 import static org.junit.Assert.assertEquals;
 
 public class DepthVarReaderTest {
-    
+
     @Before
     public void initObjects() {
         DepthVarManager.release();
