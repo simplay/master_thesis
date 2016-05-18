@@ -44,6 +44,13 @@ public class TrackingCandidates {
     }
 
     /**
+     * Releases held row-and column references.
+     */
+    public static void release() {
+        instance = null;
+    }
+
+    /**
      * Constructor of singleton.
      */
     private TrackingCandidates() {
