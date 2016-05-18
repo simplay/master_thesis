@@ -12,7 +12,7 @@ import managers.FlowFieldManager;
  *
  * The read color data is used as a cue for computing SD similarity values.
  *
- * Color files are located at `../output/tracker_data/"`
+ * Color files are located at `../output/tracker_data/DATASET/"`
  * and are named like the following `color_lab_NUM.txt`.
  *
  * A file line of such a color file is formatted like the following:
