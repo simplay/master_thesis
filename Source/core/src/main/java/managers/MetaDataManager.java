@@ -5,6 +5,7 @@ import pipeline_components.Logger;
 import java.util.ArrayList;
 
 public class MetaDataManager {
+
     private static MetaDataManager instance = null;
     private int m;
     private int n;
@@ -31,6 +32,13 @@ public class MetaDataManager {
 
     public static int n() {
         return getInstance().getWidth();
+    }
+
+    /**
+     * Releases internally held references and their states.
+     */
+    public static void release() {
+        instance = null;
     }
 
     /**

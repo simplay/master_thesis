@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 /**
  * CalibrationsReader reads the content of a `calib.txt` file.
+ *
+ * The calibration file contains intrinsic- and extrinsic camera calibration data
+ * required to align the depth- and rgb camera and to compute Euclidean distances between
+ * tracking points (depth data is required).
+ *
  * Such files are located at `./Data/DATASET/meta/`.
  *
  * The valid format is described in the README.md located at `./Data/`
@@ -20,10 +25,10 @@ public class CalibrationsReader extends FileReader {
     public ArrayList<LabeledFileLine> fLines;
 
     /**
-     * General constructor
+     * Reads a calibration file for a given dataset using an arbitrary base file path.
      *
      * @param dataset dataset we are running.
-     * @param basePath base file path where files are located.
+     * @param basePath base file path where the target file is located.
      */
     public CalibrationsReader(String dataset, String basePath) {
         String baseFileName = basePath + dataset + "/meta/calib.txt";
@@ -48,6 +53,8 @@ public class CalibrationsReader extends FileReader {
 
     /**
      * Parse a file line according to the specified format of a calib.txt file.
+     *
+     * Format of a valid file line: /<IDENTIFIER>:(\s)<ID_VALUE>/
      *
      * @param line a line of the calib.txt file
      */
