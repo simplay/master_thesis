@@ -17,6 +17,10 @@ public class VarianceManager {
         return instance;
     }
 
+    public static void release() {
+        instance = null;
+    }
+
     private VarianceManager() {
         localVariances = new ArrayList<>();
         globalVariances = new ArrayList<>();
