@@ -46,8 +46,10 @@ sampling every 6th pixel
 
 ### Core
 
-ID | Task | NN Variant | Lmabda | Prob
---- | --- | --- | --- | ---
+ID  | Task | NN Variant | Lmabda | Prob
+--- | ---- | ---------- | ------ | ---
+1   | 2    | top 1400   | 0.1    | -
+2   | 6    | top 1400   | 0.01   | -
 
 ### Segmentation
 
