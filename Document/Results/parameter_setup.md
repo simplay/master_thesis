@@ -34,16 +34,6 @@ Used ID | Dir Name |
 
 sampling every 6th pixel
 
-+ `alley2small_ldof_md_dd_c_15_ev_18`
- + core: `-d alley2small -task 6 -var 1 -nn 1000 -depth 1 -prob 0.8 -prefix md_nn_1000_best -lambda 0.1 -dscale 1 -nnm top`
-
-+ `alley2small_ldof_md_c_15_ev_18`
- + core: `-d alley2small -task 2 -var 1 -nn 1000 -depth 0 -prob 0.8 -prefix md_nn_1000_best -lambda 0.1 -dscale 1 -nnm top`
-
-
-+ `-d alley2small -task 3 -var 1 -nn 3000 -lambda 0.1 -nnm top`
- + `alley2small_ldof_ped_c_7_ev_9`
-
 ### Core
 
 ID  | Task | NN Variant | Lmabda | Prob
@@ -51,9 +41,9 @@ ID  | Task | NN Variant | Lmabda | Prob
 1   | 2    | top 1400   | 0.1    | -
 2   | 6    | top 1400   | 0.1    | -
 3   | 3    | top 1400   | 0.1    | -
+4   | 3    | top 1400   | 0.8    | -
 
 ### Segmentation
-
 
 ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
 --- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---
@@ -61,14 +51,23 @@ ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
 2   | SC     | 1       | 16            | 16  | 18  | -   | -         | -   | - 
 3   | SC     | 2       | 16            | 16  | 20  | -   | -         | -   | - 
 4   | SC     | 3       | 16            | 16  | 20  | -   | -         | -   | - 
+5   | SC     | 4       | 9             | 9   | 9   | -   | -         | -   | - 
+6   | SC     | 4       | 12            | 12  | 12  | -   | -         | -   | - 
+7   | SC     | 4       | 14            | 14  | 14  | -   | -         | -   | - 
+8   | SC     | 4       | 16            | 16  | 16  | -   | -         | -   | - 
 
 ### Results from Segmentations
 
 Used ID | Dir Name | 
---- | ---
-
-
-
+------- | ---------
+1       | `alley2small_ldof_pd_c_3_ev_3`
+2       | `alley2small_ldof_foobar_c_16_ev_18`
+3       | `alley2small_ldof_paendd_top_c_16_ev_20`
+4       | `alley2small_ldof_ped_top_c_16_ev_20`
+5       | `alley2small_ldof_ped_top_c_9_ev_9`
+6       | `alley2small_ldof_ped_top_c_12_ev_12`
+7       | `alley2small_ldof_ped_top_c_14_ev_14`
+8       | `alley2small_ldof_ped_top_c_16_ev_16`
 
 
 In the following a list what parameter setups were used for generating the datasets to offer the oportunity to re-produce all generated results.
