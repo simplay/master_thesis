@@ -33,6 +33,30 @@ public class TrajectoryTest {
     }
 
     @Test
+    public void testTrajectoriesAreWellEnumerated() {
+        int N = 10;
+        for (int n = 1; n <= N; n++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(Point2d.one(), 0);
+            assertEquals(n, ((Trajectory)TrajectoryManager.getTrajectories().toArray()[n-1]).getLabel());
+        }
+    }
+
+    @Test
+    public void testFirstLabelValueIsEqualsOne() {
+        TrajectoryManager.getInstance().startNewTrajectoryAt(Point2d.one(), 0);
+        assertEquals(1, ((Trajectory)TrajectoryManager.getTrajectories().toArray()[0]).getLabel());
+    }
+
+    @Test
+    public void testReleaseResetsTrajectoryLabelEnumeration() {
+        TrajectoryManager.getInstance().startNewTrajectoryAt(Point2d.one(), 0);
+        assertEquals(1, ((Trajectory)TrajectoryManager.getTrajectories().toArray()[0]).getLabel());
+        TrajectoryManager.release();
+        TrajectoryManager.getInstance().startNewTrajectoryAt(Point2d.one(), 0);
+        assertEquals(1, ((Trajectory)TrajectoryManager.getTrajectories().toArray()[0]).getLabel());
+    }
+
+    @Test
     public void testClosable() {
         Trajectory tra = new Trajectory(0);
         assertEquals(false, tra.isClosed());
