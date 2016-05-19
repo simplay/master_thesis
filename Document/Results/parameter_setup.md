@@ -18,11 +18,11 @@ ID  | Task | NN Variant | Lmabda | Prob
 
 ### Segmentation
 
-ID  | Method | Used ID | Cluster Found | CC  | DC  | MIC/Iters | RC  | IPM
---- | ------ | ------- | ------------- | --- | --- | --------- | --- | ---
-1   | MC     | 3       | 3             | 4   | -   | 8         | -   | - 
-2   | KL     | 1       | 2             | 2   | 0   | 5         | 1   | ebo
-3   | KL     | 2       | 3             | 3   | 500 | 5         | 2   | ebo 
+ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
+--- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---
+1   | MC     | 3       | 3             | 4   | -   | -   | 8         | -   | - 
+2   | KL     | 1       | 2             | 2   | -   | 0   | 5         | 1   | ebo
+3   | KL     | 2       | 3             | 3   | -   | 500 | 5         | 2   | ebo 
 
 ### Results from Segmentations
 
@@ -49,12 +49,18 @@ sampling every 6th pixel
 ID  | Task | NN Variant | Lmabda | Prob
 --- | ---- | ---------- | ------ | ---
 1   | 2    | top 1400   | 0.1    | -
-2   | 6    | top 1400   | 0.01   | -
+2   | 6    | top 1400   | 0.1    | -
+3   | 3    | top 1400   | 0.1    | -
 
 ### Segmentation
 
-ID | Method | Used ID | Cluster Found | CC | DC | MIC/Iters | RC | IPM
---- | --- | --- | --- | --- | --- | --- | --- | ---
+
+ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
+--- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---
+1   | SC     | 1       | 3             | 3   | 3   | -   | -         | -   | - 
+2   | SC     | 1       | 16            | 16  | 18  | -   | -         | -   | - 
+3   | SC     | 2       | 16            | 16  | 20  | -   | -         | -   | - 
+4   | SC     | 3       | 16            | 16  | 20  | -   | -         | -   | - 
 
 ### Results from Segmentations
 

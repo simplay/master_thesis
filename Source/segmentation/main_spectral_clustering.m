@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'c14';
+DATASET = 'alley2small';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'all_pd';
-PREFIX_INPUT_FILENAME = 'pd_all_2057';
+PREFIX_OUTPUT_FILENAME = 'ped_top';
+PREFIX_INPUT_FILENAME = 'ped_top_1400';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = false;
@@ -28,16 +28,16 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 3;
+FORCE_EW_COUNT = 8;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 13;
 
 %
 % RUN_MODE = 1 => vis segmentation
 % RUN_MODE = 2 => vis affinities
 % RUN_MODE = 3 => vis eigenvector
-RUN_MODE = 1;
+RUN_MODE = 2;
 
 SHOW_LOCAL_VAR = false;
 
@@ -47,9 +47,9 @@ SHOW_SEGMENTATION = true;
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
 
-SELECT_AFFINITY_IDX = false;
+SELECT_AFFINITY_IDX = true;
 SELECTED_ENTITY_IDX = 6;
-frame_idx = 5;
+frame_idx = 22;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

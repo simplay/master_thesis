@@ -5,7 +5,7 @@ addpath('../matlab_shared');
 
 DATASET = 'c14';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_2000';
+PREFIX_INPUT_FILENAME = 'sd_both_1400';
 
 graph_cuts_dir = '../output/graph_part/';
 PART_DS_PREF = 'test';
