@@ -55,7 +55,7 @@ function [W, U_small, S_small, U_full, S_full, assignments] = run_clustering(DAT
         [x, y] = ginput(1);
         close(t);
 
-        frame = frames{1};
+        frame = frames{frame_idx};
         row_ids = frame.ax;
         col_ids = frame.ay;
 
