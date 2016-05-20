@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +31,26 @@ public class TrajectoryTest {
             Trajectory tra = new Trajectory(startFrame);
             assertEquals(tra.getLabel(), k+1);
             assertEquals(tra.getStartFrame(), startFrame);
+        }
+    }
+
+    /**
+     * Helper method to set manually the trajectory manager trajectories.
+     *
+     * @param trajectories trajectories to be assigned to the TrajectoryManager singleton.
+     */
+    private void setTrajectoryManagerTrajectories(HashMap<Integer, Trajectory> trajectories ) {
+        Field field = null;
+        try {
+            field = TrajectoryManager.class.getDeclaredField("trajectories");
+            field.setAccessible(true);
+            try {
+                field.set(TrajectoryManager.getInstance(), trajectories);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,7 +155,8 @@ public class TrajectoryTest {
 
     @Test
     public void testNearestAvgSpatialNeighborsBothMode() {
-        String[] args = {"-d", "foobar", "-task", "1", "-nnm", "both"};
+        ArgParser.release();
+        String[] args = {"-d", "foobar", "-task", "1", "-nnm", "both", "-nn", "5"};
         ArgParser.getInstance(args);
         Trajectory tra = new Trajectory(0);
 
@@ -142,6 +165,18 @@ public class TrajectoryTest {
         Trajectory other3 = new Trajectory(0);
         Trajectory other4 = new Trajectory(0);
         Trajectory other5 = new Trajectory(0);
+
+
+        HashMap<Integer, Trajectory> trajectories = new HashMap<>();
+        trajectories.put(tra.getLabel(), tra);
+        trajectories.put(other1.getLabel(), other1);
+        trajectories.put(other2.getLabel(), other2);
+        trajectories.put(other3.getLabel(), other3);
+        trajectories.put(other4.getLabel(), other4);
+        trajectories.put(other5.getLabel(), other5);
+
+        // Manually assign the trajectories in the TrajectoryManager
+        setTrajectoryManagerTrajectories(trajectories);
 
         tra.appendAvgSpatialDist(other1.getLabel(), 2);
         tra.appendAvgSpatialDist(other2.getLabel(), 1);

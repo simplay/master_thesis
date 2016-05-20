@@ -20,6 +20,12 @@ import java.util.List;
  * File naming convention: all generated files are stored at `"../output/similarities/"`.
  * A label file is a .txt file with the filename suffix `_spnn`. It's filename prefix is determined
  * by the function LargeFileWriter#getOutputFilenamePrefix()
+ *
+ * The nn mode `all` (i.e. `-nnm all`) returns the sorted trajectory labels (ascending)
+ * for every trajectory.
+ *
+ * Note that the self assignment of a trajectory (as being its closest neighbor)
+ * in the neighborhood is excluded, since we skip the eigen-case within every similarity task.
  */
 public class NearestSpatialNeighborsWriter extends LargeFileWriter {
 
@@ -62,6 +68,9 @@ public class NearestSpatialNeighborsWriter extends LargeFileWriter {
     /**
      * Returns a list (ordered w.r.t. to trajectory labels)
      * indices of all nearest neighbors for every trajectory.
+     *
+     * The nn mode `all` returns the sorted trajectory labels (ascending)
+     * for every trajectory
      *
      * @return list of all trajectory nearest neighbors.
      */

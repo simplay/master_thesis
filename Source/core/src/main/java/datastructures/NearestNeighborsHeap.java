@@ -1,5 +1,6 @@
 package datastructures;
 
+import managers.TrajectoryManager;
 import pipeline_components.ArgParser;
 
 import java.util.*;
@@ -71,6 +72,11 @@ public class NearestNeighborsHeap {
             case TOP_N:
                 return toTopNInList(n);
             case TOP_AND_WORST_N:
+
+                // Return the complete neighborhood if neighborhood count is larger
+                // than the total number of neighbors.
+                if (n > size) return toTopNInList(n);
+
                 List<Integer> tops = toTopNInList(n / 2);
                 List<Integer> worsts = toWorstNIntList(n/2);
                 tops.addAll(worsts);
