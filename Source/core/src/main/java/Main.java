@@ -9,7 +9,6 @@ import similarity.SimilarityTask;
 import writers.*;
 import java.io.*;
 
-// TODO allow to define which nearest neighbors should be chosen: top N, top N + worst N/2, top N/2 + distinct(rand(N/2))
 /**
  * Runs the core pipeline:
  *
