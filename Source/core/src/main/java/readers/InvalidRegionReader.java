@@ -52,7 +52,7 @@ public class InvalidRegionReader extends FileReader{
             ff.setRow(k, rows.get(k));
         }
 
-        InvalidRegionManager.getInstance().addMagFlow(ff);
+        InvalidRegionManager.getInstance().addInvalidRegion(ff);
     }
 
     /**

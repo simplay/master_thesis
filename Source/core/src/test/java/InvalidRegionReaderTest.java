@@ -18,7 +18,7 @@ public class InvalidRegionReaderTest {
     public void testReadingAFileWorks() {
         new InvalidRegionReader("foobar", "1", "./testdata/");
 
-        InvalidRegionsMask irf0 = InvalidRegionManager.getInstance().getMagFlow(0);
+        InvalidRegionsMask irf0 = InvalidRegionManager.getInstance().getInvalidRegionAt(0);
         assertEquals(true, irf0.isInvalidAt(new Point2d(0,0)));
         assertEquals(true, irf0.isInvalidAt(new Point2d(0,1)));
         assertEquals(false, irf0.isInvalidAt(new Point2d(1,0)));

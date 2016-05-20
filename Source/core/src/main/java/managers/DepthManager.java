@@ -5,6 +5,17 @@ import datastructures.Mat3x4;
 import datastructures.Point3d;
 import java.util.ArrayList;
 
+/**
+ * DepthManager allow to access depth fields that belong to a dataset frame.
+ *
+ * Depth values in a depth field are in meter units.
+ *
+ * In case the depth- and the color camera do not overlap, this manager
+ * can perform a warping of its depth field.
+ *
+ * Assumption: The index in the internal list of images corresponds to the frame index
+ * the image belongs to.
+ */
 public class DepthManager {
 
     // The depeth field singleton instance.

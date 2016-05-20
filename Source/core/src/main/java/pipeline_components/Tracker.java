@@ -82,7 +82,7 @@ public class Tracker {
      */
     private void continueTrackToNextFrame(int currentFrame) {
         FlowField fw_currentFrame = FlowFieldManager.getInstance().getForwardFlow(currentFrame);
-        InvalidRegionsMask invalidRegions = InvalidRegionManager.getInstance().getMagFlow(currentFrame);
+        InvalidRegionsMask invalidRegions = InvalidRegionManager.getInstance().getInvalidRegionAt(currentFrame);
 
         for (Trajectory tra : TrajectoryManager.getInstance().getActivesForFrame(currentFrame)) {
             Point2d p = tra.getPointAtFrame(currentFrame);
