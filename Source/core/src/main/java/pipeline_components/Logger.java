@@ -52,6 +52,13 @@ public class Logger extends LargeFileWriter {
     }
 
     /**
+     * Releases the logger singleton and its references/state.
+     */
+    public static void release() {
+        instance = null;
+    }
+
+    /**
      * Write log file via singleton access.
      */
     public static void writeLog() {

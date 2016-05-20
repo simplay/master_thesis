@@ -4,6 +4,7 @@ import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
+import pipeline_components.Logger;
 import writers.SimilarityWriter;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class SimilarityWriterTest {
         t1.assignSimilarityValueTo(t2.getLabel(), 2.2d);
         t2.assignSimilarityValueTo(t1.getLabel(), -3.3d);
         t2.assignSimilarityValueTo(t2.getLabel(), 4.4d);
+        Logger.getInstance(true);
     }
 
     @Test
