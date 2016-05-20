@@ -2,7 +2,6 @@ package pipeline_components;
 
 import com.sun.jmx.snmp.Timestamp;
 import writers.LargeFileWriter;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
@@ -14,6 +13,7 @@ import java.util.LinkedList;
  */
 public class Logger extends LargeFileWriter {
 
+    // The logger singleton
     private static Logger instance = null;
 
     // Unique identifier used for the status filename.
