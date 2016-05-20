@@ -8,6 +8,8 @@ import managers.TrajectoryManager;
 
 import java.util.LinkedList;
 
+// TODO: describe what input is required
+// TODO: describe tracking algorithm in detail, also mention occlusion case.
 public class Tracker {
 
     private float m;
