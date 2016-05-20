@@ -609,10 +609,21 @@ public class TrajectoryManagerTest {
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(2, 3), 0);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(4, 5), 1);
 
-        TrajectoryManager.getInstance().toFramewiseOutputString(0);
-
         assertEquals("1 0.0 1.0\n2 2.0 3.0", TrajectoryManager.getInstance().toFramewiseOutputString(0));
         assertEquals("3 4.0 5.0", TrajectoryManager.getInstance().toFramewiseOutputString(1));
+    }
+
+    @Test
+    public void testToFramewiseOutputStringIsOrderedAccordingtoTrajectoryLabel() {
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 2), 1);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(3, 4), 1);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(5, 6), 0);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(7, 8), 1);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(9, 10), 0);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(11, 12), 0);
+
+        assertEquals("3 5.0 6.0\n5 9.0 10.0\n6 11.0 12.0", TrajectoryManager.getInstance().toFramewiseOutputString(0));
+        assertEquals("1 1.0 2.0\n2 3.0 4.0\n4 7.0 8.0", TrajectoryManager.getInstance().toFramewiseOutputString(1));
     }
 
 }

@@ -165,6 +165,7 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     /**
      * Select all trajectories that start at a given frame.
      *
+     * Note that the collected trajectories are sorted by their label value (ascending).
      * Note that the first frame starts at index 0.
      *
      * @param frame_idx index of frame the trajectories should start.
@@ -180,7 +181,9 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         return actives;
     }
     /**
-     * Select all trajectories that live in a series of frames starting at a given frame index..
+     * Select all trajectories that live in a series of frames starting at a given frame index.
+     *
+     * Note that the collected trajectories are sorted by their label value (ascending).
      *
      * @param frame_idx index of frame the trajectories should start.
      * @return a collection of trajectories all starting at a given frame.
@@ -254,6 +257,20 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     /**
      * Generate the output string of the frame-wise active trajectories.
      *
+     * Format:
+     * /(L_ID ROW_POS COL_POS(\n))*(L_ID ROW_POS COL_POS)/
+     *
+     * where L_ID is the label id value of the trajectory currently considered
+     * and active in the queried frame, ROW_POS and COL_POS are the row and coloumn
+     * position of tracking point in the trajectory with the given label, active in the
+     * queried frame.
+     *
+     * Example
+     * "3 5.0 6.0\n5 9.0 10.0\n6 11.0 12.0"
+     *
+     * Please note that trajectories are separated by new lines
+     * and ordered according to their label value (ascending).
+     *
      * Note that the first frame has the index value 0.
      *
      * @param frame_idx current active frame.
@@ -262,9 +279,6 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     public String toFramewiseOutputString(int frame_idx) {
         String content = "";
         LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesActiveInGivenFrame(frame_idx);
-
-        // TODO: check, whether this sort statement is still necessary
-        Collections.sort(allTrajectoriesStartingAt(frame_idx));
 
         for (Trajectory tra : trajectoriesAtGivenFrame) {
             content = content + tra.toFramewiseString(frame_idx) + "\n";
