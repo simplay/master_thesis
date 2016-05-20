@@ -36,7 +36,6 @@ import java.io.*;
 public class Main {
     public static void main(String[] argv) {
         long startTime = System.currentTimeMillis();
-        String output_base_path = "../output/trajectories/";
         ArgParser.getInstance(argv);
 
         String dataset = ArgParser.getDatasetName();
@@ -183,7 +182,7 @@ public class Main {
          *  + the label mappings: transformation which column/row a label belongs to in the similarity matrix
          */
         System.gc();
-        if (ArgParser.runInDebugMode()) new TraWriter(output_base_path, dataset, till_index);
+        if (ArgParser.runInDebugMode()) new TrajectoryWriter(dataset, till_index);
         new FramewiseActiveTraWriter(dataset, till_index);
 
         // Write clustering related files

@@ -55,7 +55,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // Indicates whether any similarity value were computed for this trajectory
     private boolean hasSimilarityValues = false;
 
-    // Value used by the TraWriter for generating its output.
+    // Value used by the TrajectoryWriter for generating its output.
     // Corresponds to Trajectory#toString()
     private String traOutRepresentation = null;
 
@@ -274,9 +274,11 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
-     * Get the representation used by the TraWriter.
+     * Get the representation used by the TrajectoryWriter.
      *
-     * @return the to string representation of the TraWriter.
+     * Requires the trajectories marked as closed in order to have a valid output representation.
+     *
+     * @return the to string representation of the TrajectoryWriter.
      */
     public String getOutputString() {
         return traOutRepresentation;

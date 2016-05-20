@@ -20,6 +20,7 @@ public class SimilarityWriter extends LargeFileWriter {
 
     /**
      * Save the affinity matrix at a given location for a selected dataset.
+     *
      * @param dataset name of the dataset we are running.
      * @param fileStoreAtPath directory where we want to store the generated labels file.
      */
