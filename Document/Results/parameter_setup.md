@@ -97,6 +97,28 @@ Used ID | Dir Name |
 2       | `cars_ldof_pd_iters_20_c_3_ev_5_nu_1e-09`
 3       | `cars_ldof`
 
+## chair_3_cast
+
+### Core
+
+ID  | Task | NN Variant | Lmabda | Prob
+--- | ---- | ---------- | ------ | ---
+1   | 2    | top 3000   | 0.1    | -
+
+### Segmentation
+
+ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
+--- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---
+1   | SC     | 1       | 20            | 20  | 25  | -   | -         | -   | - 
+2   | SC     | 1       | 18            | 18  | 40  | -   | -         | -   | - 
+
+### Results from Segmentations
+
+Used ID | Dir Name | 
+------- | ---------
+1       | `chair_3_cast_ldof_pd_top_c_20_ev_25`
+2       | `chair_3_cast_ldof_pd_top_c_18_ev_40`
+
 ## wh1
 
 core:
