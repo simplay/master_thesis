@@ -501,9 +501,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
+     * Try to prepend a given number of points to this trajectory by subtracting
+     * continuously the average trajectory direction of the first 5 frames.
      *
-     * @param addCount
-     * @return
+     * Not that points are only prepended, if the start frame does not
+     * underun the frame index 0.
+     *
+     * @param addCount number of points we want to add at most.
+     * @return the list of points to be prepended.
      */
     public ArrayList<Point2d> getLeftPointContinuation(int addCount) {
         ArrayList<Point2d> additions = new ArrayList<>();
@@ -532,6 +537,16 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return additions;
     }
 
+    /**
+     * Try to append a given number of points to this trajectory by adding
+     * continuously the average trajectory direction of the last 5 frames.
+     *
+     * Not that points are only appended, if the end frame index does
+     * not exceed the total number of frames.
+     *
+     * @param addCount number of points we want to add at most.
+     * @return the list of points to be appended.
+     */
     public ArrayList<Point2d> getRightContinuation(int addCount) {
         ArrayList<Point2d> additions = new ArrayList<>();
         int fc = MetaDataManager.frameCount();
@@ -561,8 +576,21 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         return additions;
     }
 
-    // TODO check for max allow frame index
-    // TODO Get not smaller than min index and not larger than max index
+    /**
+     * Continues this trajectory by trying to append and prepend 3
+     * additional points.
+     * We use the term 'tries' here, since we only can prepend as many
+     * points to the trajectory as long as the minimal frame index was not underun.
+     * Analogously, we can append points to the trajectory,
+     * as long as the total number of frames was not exceeded.
+     *
+     * The idea of extending trajectories is to overlap, previously not-overlapping
+     * trajectories.
+     *
+     * Important fact: Apply a post-filtering stage before dumping the frame-wise active
+     * trajectories. Otherwise we will render many weird, not-actually tracked (by using optical flow cues)
+     * fake tracking points.
+     */
     public void extendPointTracking() {
         int additionCount = 3;
         ArrayList<Point2d> rightAddtions = getRightContinuation(additionCount);
