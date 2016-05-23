@@ -1,6 +1,8 @@
 package datastructures;
 
 import managers.DepthManager;
+import managers.MetaDataManager;
+
 import java.util.*;
 
 /**
@@ -496,6 +498,79 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
             idx++;
         }
         return count == invCounter;
+    }
+
+    /**
+     *
+     * @param addCount
+     * @return
+     */
+    public ArrayList<Point2d> getLeftPointContinuation(int addCount) {
+        ArrayList<Point2d> additions = new ArrayList<>();
+        int allowedAddCount = ((startFrame ) - addCount >= 0) ? addCount : startFrame;
+        int allowedDistCount = ((startFrame + 1) - 5 >= 0) ? 5 : startFrame;
+        if (allowedAddCount == 0) return additions;
+        Point2d startP = points.get(0);
+
+        int count = 0;
+        Point2d startPointExtension = new Point2d(0, 0);
+        for (int n = 0; n < allowedDistCount; n++) {
+            startPointExtension.add(points.get(n).copy().sub(points.get(n+1)));
+            count++;
+        }
+        startPointExtension.div_by(count);
+
+        for (int n = 0; n < allowedAddCount; n++) {
+            startP = startP.copy().add(startPointExtension);
+            startP.markAsBelongsToAddition();
+            additions.add(startP);
+        }
+        Collections.reverse(additions);
+
+        startFrame -= allowedAddCount;
+
+        return additions;
+    }
+
+    public ArrayList<Point2d> getRightContinuation(int addCount) {
+        ArrayList<Point2d> additions = new ArrayList<>();
+        int fc = MetaDataManager.frameCount();
+
+        int diff = fc - endFrame;
+        if (diff == 0) return additions;
+        int allowedAddCount = (diff >= addCount) ? addCount : diff;
+        int allowedDistCount = ((startFrame + 1) - 5 >= 0) ? 5 : startFrame;
+
+        int pointCount = points.size();
+        int fromIndex = (pointCount - allowedDistCount) - 1;
+        Point2d endPointExtension = new Point2d(0, 0);
+        int count = 0;
+        for (int n = fromIndex; n < pointCount - 1; n++) {
+            endPointExtension.add(points.get(n + 1).copy().sub(points.get(n)));
+            count++;
+        }
+        endPointExtension.div_by(count);
+
+        Point2d p = points.get(points.size() - 1);
+        for (int n = 0; n < allowedAddCount; n++) {
+            p = p.copy().add(endPointExtension);
+            p.markAsBelongsToAddition();
+            additions.add(p);
+        }
+
+        return additions;
+    }
+
+    // TODO check for max allow frame index
+    // TODO Get not smaller than min index and not larger than max index
+    public void extendPointTracking() {
+        int additionCount = 3;
+        ArrayList<Point2d> rightAddtions = getRightContinuation(additionCount);
+        ArrayList<Point2d> leftAddtions = getLeftPointContinuation(additionCount);
+        leftAddtions.addAll(points);
+        leftAddtions.addAll(rightAddtions);
+        points = leftAddtions;
+        markClosed();
     }
 
 }

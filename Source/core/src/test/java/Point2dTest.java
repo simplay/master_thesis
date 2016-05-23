@@ -97,6 +97,29 @@ public class Point2dTest {
     }
 
     @Test
+    public void testAdd() {
+        double x1 = Math.random();
+        double y1 = Math.random();
+        double x2 = Math.random();
+        double y2 = Math.random();
+
+        Point2d p1 = new Point2d(x1, y1);
+        Point2d p2 = new Point2d(x2, y2);
+
+        assertEquals(x1, p1.x(), 0);
+        assertEquals(y1, p1.y(), 0);
+        assertEquals(x2, p2.x(), 0);
+        assertEquals(y2, p2.y(), 0);
+
+        p1.add(p2);
+
+        assertEquals(x1+x2, p1.x(), 0);
+        assertEquals(y1+y2, p1.y(), 0);
+        assertEquals(x2, p2.x(), 0);
+        assertEquals(y2, p2.y(), 0);
+    }
+
+    @Test
     public void testDivBy() {
         double x = Math.random();
         double y = Math.random();

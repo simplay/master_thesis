@@ -21,6 +21,9 @@ public class Point2d {
     // Is this tracked point valid.
     private boolean isValid = true;
 
+    // Was this point added by an addition (left or right).
+    private boolean belongsToAddition = false;
+
     // Euclidian position is space.
     private Point3d depthPos;
 
@@ -84,10 +87,29 @@ public class Point2d {
     }
 
     /**
+     * Checks whether this is an addition Point.
+     *
+     * @return true if it was added in a postprocessing step, false otherwise.
+     */
+    public boolean isAddition() {
+        return belongsToAddition;
+    }
+
+    /**
      * Marks this point as invalid.
      */
     public void markAsInvalid() {
         this.isValid = false;
+    }
+
+    /**
+     * Mars this point as an addition point
+     *
+     * Addition points are filtered before returning the frame-wise
+     * activities.
+     */
+    public void markAsBelongsToAddition() {
+        this.belongsToAddition = true;
     }
 
     /**
@@ -112,6 +134,18 @@ public class Point2d {
         return this;
     }
 
+    /**
+     * Adds another point from this one.
+     * This modifies the components of this point.
+     *
+     * @param other the point we add to this point.
+     * @return this point after being modified.
+     */
+    public Point2d add(Point2d other) {
+        x += other.x();
+        y += other.y();
+        return this;
+    }
 
     /**
      * Divides this point by a given scale.

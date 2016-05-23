@@ -57,6 +57,10 @@ public class Main {
                 counter++;
             }
         }
+
+        // Minus one, since the first frame index maps to the index value 0
+        MetaDataManager.getInstance().setFrameCount(counter - 1);
+
         Logger.println("Loading input data...");
         Logger.println();
 
@@ -114,7 +118,7 @@ public class Main {
         FlowFieldManager.release();
         Logger.println();
         Logger.println("Number of extracted trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
-        for (int k = 0; k <= till_index+1; k++) {
+        for (int k = 0; k <= till_index + 1; k++) {
             int trajectoryCount = TrajectoryManager.getInstance().allTrajectoryWithLength(k).size();
             Logger.println("#Trajectories with len=" + k + ": " + trajectoryCount);
         }
@@ -135,6 +139,11 @@ public class Main {
         Logger.println("Filtering all trajectory shorter than " + trajectoryLen);
         TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
         Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+
+        /**
+         * Extend trajectories
+         */
+        // TODO extend the trajectories.
 
         /**
          * Transform computed data

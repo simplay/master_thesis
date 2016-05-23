@@ -1,6 +1,7 @@
 import datastructures.*;
 import managers.CalibrationManager;
 import managers.DepthManager;
+import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,12 @@ public class TrajectoryTest {
     public void initObjects() {
         TrajectoryManager.release();
         ArgParser.release();
+        MetaDataManager.release();
+        ArrayList<String> metaData = new ArrayList<String>();
+        metaData.add("10");
+        metaData.add("10");
+        metaData.add("1");
+        MetaDataManager.getInstance(metaData);
     }
 
     @Test
@@ -637,6 +644,88 @@ public class TrajectoryTest {
         String gtString =  header + " " + content;
 
         assertEquals(gtString, tra.toString());
+    }
+
+    @Test
+    public void testExtendPointTrackingAppendLeftAndRightFull() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        Point2d avg = new Point2d(step, step);
+
+        tra.extendPointTracking();
+        System.out.println();
+
+        Point2d lastP = points.getLast();
+        for (int n = 0; n < 3; n++) {
+            Point2d gtP = lastP.copy().add(avg);
+            int idx = points.size() + n + 3;
+            Point2d fetchedP = tra.getPointAtFrame(idx);
+            assertEquals(gtP.x(), fetchedP.x(), 0);
+            assertEquals(gtP.y(), fetchedP.y(), 0);
+            lastP = gtP;
+        }
+
+        double esp = 1.e-9;
+        for (int n = 1; n <= 3; n++) {
+            assertEquals(points.get(0).x() - n * 0.1, tra.getPointAtFrame(3-n).x(), esp);
+            assertEquals(points.get(0).y() - n * 0.1, tra.getPointAtFrame(3-n).y(), esp);
+        }
+    }
+
+    @Test
+    public void testExtendPointTrackingAppendOnlyRight() {
+        int startFrame = 3;
+
+        Trajectory tra = new Trajectory(startFrame);
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = 0.91;
+        double ySeed = 0.86;
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+        }
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        tra.extendPointTracking();
+
+        int N = 3;
+        double eps = 1.e-9;
+        for (int k = 0; k < N; k++) {
+            assertEquals(tra.getPointAtFrame(k).x(), points.get(0).x() - (N-k)*step, eps);
+            assertEquals(tra.getPointAtFrame(k).y(), points.get(0).y() - (N-k)*step, eps);
+
+            assertEquals(tra.getPointAtFrame(k+points.size() + 3).x(), points.get(points.size() - 1).x() + (k+1)*step, eps);
+            assertEquals(tra.getPointAtFrame(k+points.size() + 3).y(), points.get(points.size() - 1).y() + (k+1)*step, eps);
+        }
+
     }
 
 }

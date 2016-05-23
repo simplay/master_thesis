@@ -24,6 +24,9 @@ public class MetaDataManager {
     // Sample every samplingRate-th pixel
     private int samplingRate;
 
+    // The number of dataset frames
+    private int frameCount;
+
     /**
      * Obtain and set the state of the metadata singleton.
      *
@@ -75,6 +78,16 @@ public class MetaDataManager {
         return getInstance().getWidth();
     }
 
+
+    /**
+     * Get the number of available dataset frames for the used dataset.
+     *
+     * @return frame count of target dataset.
+     */
+    public static int frameCount() {
+        return getInstance().getFrameCount();
+    }
+
     /**
      * Releases internally held references and their states.
      */
@@ -121,6 +134,24 @@ public class MetaDataManager {
      */
     public int getWidth() {
         return n;
+    }
+
+    /**
+     * Get the number of available dataset frames for the used dataset.
+     *
+     * @return frame count of target dataset.
+     */
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    /**
+     * Assign the number of available dataset frames.
+     *
+     * @param frameCount dataset frame count.
+     */
+    public void setFrameCount(int frameCount) {
+        this.frameCount = frameCount;
     }
 
     /**
