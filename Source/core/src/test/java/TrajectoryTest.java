@@ -647,6 +647,217 @@ public class TrajectoryTest {
     }
 
     @Test
+    public void testGetRightPointContinuationNIs3() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(3);
+        int N = 3;
+        double eps = 1.e-9;
+        for (int k = 0; k < N; k++) {
+            assertEquals(leftAdds.get(k).x(), points.get(points.size() - 1).x() + (k+1)*step, eps);
+            assertEquals(leftAdds.get(k).y(), points.get(points.size() - 1).y() + (k+1)*step, eps);
+        }
+    }
+
+    @Test
+    public void testGetRightPointContinuationNIs2() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(2);
+        int N = 2;
+        double eps = 1.e-9;
+        for (int k = 0; k < N; k++) {
+            assertEquals(leftAdds.get(k).x(), points.get(points.size() - 1).x() + (k+1)*step, eps);
+            assertEquals(leftAdds.get(k).y(), points.get(points.size() - 1).y() + (k+1)*step, eps);
+        }
+    }
+
+    @Test
+    public void testGetRightPointContinuationNIs1() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(1);
+        int N = 1;
+        double eps = 1.e-9;
+        for (int k = 0; k < N; k++) {
+            assertEquals(leftAdds.get(k).x(), points.get(points.size() - 1).x() + (k+1)*step, eps);
+            assertEquals(leftAdds.get(k).y(), points.get(points.size() - 1).y() + (k+1)*step, eps);
+        }
+    }
+
+    @Test
+    public void testGetRightPointContinuationNIs0() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(0);
+        assertTrue(leftAdds.isEmpty());
+    }
+
+    @Test
+    public void testGetRightPointContinuationCanOnlyAppend2() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 2;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(3);
+        assertEquals(2, leftAdds.size());
+    }
+
+    @Test
+    public void testGetRightPointContinuationCanOnlyAppendOne() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 1;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(3);
+        assertEquals(1, leftAdds.size());
+    }
+
+    @Test
+    public void testGetRightPointContinuationCannotAppend() {
+        int startFrame = 3;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size();
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getRightPointContinuation(3);
+        assertEquals(0, leftAdds.size());
+    }
+
+    @Test
     public void testGetLeftPointContinuationNIs3() {
         int startFrame = 3;
         Trajectory tra = new Trajectory(startFrame);
@@ -805,12 +1016,91 @@ public class TrajectoryTest {
         MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
 
         ArrayList<Point2d> leftAdds = tra.getLeftPointContinuation(0);
-        int N = 0;
-        double eps = 1.e-9;
-        for (int k = 0; k < N; k++) {
-            assertEquals(leftAdds.get(k).x(), points.get(0).x() - (N - k) * step, eps);
-            assertEquals(leftAdds.get(k).y(), points.get(0).y() - (N - k) * step, eps);
+        assertTrue(leftAdds.isEmpty());
+    }
+
+    @Test
+    public void testGetLeftPointContinuationCanOnlyPrepend2() {
+        int startFrame = 2;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
         }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getLeftPointContinuation(3);
+        assertEquals(2, leftAdds.size());
+    }
+
+    @Test
+    public void testGetLeftPointContinuationCanOnlyPrepend1() {
+        int startFrame = 1;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getLeftPointContinuation(3);
+        assertEquals(1, leftAdds.size());
+    }
+
+    @Test
+    public void testGetLeftPointContinuationCanNotPrepend() {
+        int startFrame = 0;
+        Trajectory tra = new Trajectory(startFrame);
+
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = Math.random();
+        double ySeed = Math.random();
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+
+        }
+
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        ArrayList<Point2d> leftAdds = tra.getLeftPointContinuation(3);
+        assertEquals(0, leftAdds.size());
     }
 
     @Test

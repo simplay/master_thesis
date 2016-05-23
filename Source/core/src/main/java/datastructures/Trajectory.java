@@ -547,7 +547,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      * @param addCount number of points we want to add at most.
      * @return the list of points to be appended.
      */
-    public ArrayList<Point2d> getRightContinuation(int addCount) {
+    public ArrayList<Point2d> getRightPointContinuation(int addCount) {
         ArrayList<Point2d> additions = new ArrayList<>();
         int fc = MetaDataManager.frameCount();
 
@@ -593,12 +593,13 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public void extendPointTracking() {
         int additionCount = 3;
-        ArrayList<Point2d> rightAddtions = getRightContinuation(additionCount);
+        ArrayList<Point2d> rightAddtions = getRightPointContinuation(additionCount);
         ArrayList<Point2d> leftAddtions = getLeftPointContinuation(additionCount);
         leftAddtions.addAll(points);
         leftAddtions.addAll(rightAddtions);
         points = leftAddtions;
         markClosed();
     }
+
 
 }
