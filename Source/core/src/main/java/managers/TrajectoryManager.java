@@ -303,4 +303,17 @@ public class TrajectoryManager implements Iterable<Trajectory>{
             tra.transformTrackedPoints();
         }
     }
+
+    /**
+     * Extends trajectory tracking by trying to append and prepend
+     * additional points. The points are computed by applying the average trajectory directory
+     * to the boundary tracking points.
+     *
+     * Only call this method after running the filtering of too short trajectories.
+     */
+    public void continueTrajectories() {
+        for (Trajectory tra : getTrajectories()) {
+            tra.extendPointTracking();
+        }
+    }
 }

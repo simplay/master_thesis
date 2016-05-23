@@ -23,7 +23,7 @@ REUSE_ASSIGNMENTS = true;
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = true;
+COMPUTE_FULL_RANGE = false;
 % 
 
 % use a prespecified number of eigenvectors
@@ -42,14 +42,14 @@ RUN_MODE = 1;
 SHOW_LOCAL_VAR = false;
 
 % show the segmentation figure
-SHOW_SEGMENTATION = false;
+SHOW_SEGMENTATION = true;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 6;
-frame_idx = 100;
+frame_idx = 94;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

@@ -489,6 +489,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         int idx = startFrame;
         int count = points.size();
         int invCounter = 0;
+
         for (Point2d p : points) {
             DepthField depthField = DepthManager.getInstance().get(idx);
             if (!depthField.validRegionAt(p.x(), p.y())) {
@@ -513,13 +514,18 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     public ArrayList<Point2d> getLeftPointContinuation(int addCount) {
         ArrayList<Point2d> additions = new ArrayList<>();
         int allowedAddCount = ((startFrame ) - addCount >= 0) ? addCount : startFrame;
-        int allowedDistCount = ((startFrame + 1) - 5 >= 0) ? 5 : startFrame;
-        if (allowedAddCount == 0) return additions;
+
+
+        //int allowedDistCount = ((startFrame + 1) - 5 > 0) ? 5 : startFrame;
+        int allowedDistCount = (points.size() - 5 >= 0) ? 5 : points.size();
+
+
+        if (allowedAddCount == 0 || allowedDistCount == 0) return additions;
         Point2d startP = points.get(0);
 
         int count = 0;
         Point2d startPointExtension = new Point2d(0, 0);
-        for (int n = 0; n < allowedDistCount; n++) {
+        for (int n = 0; n < allowedDistCount - 1; n++) {
             startPointExtension.add(points.get(n).copy().sub(points.get(n+1)));
             count++;
         }
@@ -554,10 +560,14 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         int diff = fc - endFrame;
         if (diff == 0) return additions;
         int allowedAddCount = (diff >= addCount) ? addCount : diff;
-        int allowedDistCount = ((startFrame + 1) - 5 >= 0) ? 5 : startFrame;
+
+
+        int allowedDistCount = (points.size() - 5 >= 0) ? 5 : points.size();
+
+        if (allowedDistCount == 0) return additions;
 
         int pointCount = points.size();
-        int fromIndex = (pointCount - allowedDistCount) - 1;
+        int fromIndex = (pointCount - allowedDistCount);
         Point2d endPointExtension = new Point2d(0, 0);
         int count = 0;
         for (int n = fromIndex; n < pointCount - 1; n++) {
@@ -593,12 +603,38 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      */
     public void extendPointTracking() {
         int additionCount = 3;
+
         ArrayList<Point2d> rightAddtions = getRightPointContinuation(additionCount);
+        rightAddtions = selectInRange(rightAddtions);
+
         ArrayList<Point2d> leftAddtions = getLeftPointContinuation(additionCount);
+        leftAddtions = selectInRange(leftAddtions);
+
         leftAddtions.addAll(points);
         leftAddtions.addAll(rightAddtions);
         points = leftAddtions;
         markClosed();
+    }
+
+    /**
+     * Select all points from a given point extension series that are within the valid image indices range.
+     *
+     * Note that when a particular point was determined that either exceeds or underuns the valid lookup range
+     * then, all successor points are skipped too.
+     *
+     * @param additions points used for extending a trajectory.
+     * @return subset of extending points, all lying in valid lookup ranges.
+     */
+    public ArrayList<Point2d> selectInRange(ArrayList<Point2d> additions) {
+        ArrayList<Point2d> adds = new ArrayList<Point2d>();
+        for (Point2d p : additions) {
+            if (p.x() >= MetaDataManager.m()-1 || p.x() < 0 || p.y() >= MetaDataManager.n()-1 || p.y() < 0) {
+                break;
+            } else {
+                adds.add(p);
+            }
+        }
+        return adds;
     }
 
 

@@ -144,6 +144,7 @@ public class Main {
          * Extend trajectories
          */
         // TODO extend the trajectories.
+        TrajectoryManager.getInstance().continueTrajectories();
 
         /**
          * Transform computed data

@@ -1133,16 +1133,16 @@ public class TrajectoryTest {
         System.out.println();
 
         Point2d lastP = points.getLast();
+        double esp = 1.e-9;
         for (int n = 0; n < 3; n++) {
             Point2d gtP = lastP.copy().add(avg);
             int idx = points.size() + n + 3;
             Point2d fetchedP = tra.getPointAtFrame(idx);
-            assertEquals(gtP.x(), fetchedP.x(), 0);
-            assertEquals(gtP.y(), fetchedP.y(), 0);
+            assertEquals(gtP.x(), fetchedP.x(), esp);
+            assertEquals(gtP.y(), fetchedP.y(), esp);
             lastP = gtP;
         }
 
-        double esp = 1.e-9;
         for (int n = 1; n <= 3; n++) {
             assertEquals(points.get(0).x() - n * 0.1, tra.getPointAtFrame(3-n).x(), esp);
             assertEquals(points.get(0).y() - n * 0.1, tra.getPointAtFrame(3-n).y(), esp);
