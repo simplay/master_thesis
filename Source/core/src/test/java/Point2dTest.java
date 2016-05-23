@@ -8,6 +8,8 @@ import pipeline_components.ArgParser;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Point2dTest {
 
@@ -218,6 +220,18 @@ public class Point2dTest {
 
         assertEquals(serializedPoint, p.toOutputString());
         assertEquals(debugRepresentationPoint, p.toString());
+    }
+
+    @Test
+    public void testIsAdditionIsByDefaultFalse() {
+        assertFalse((new Point2d(0, 0).isAddition()));
+    }
+
+    @Test
+    public void testCanMarkAsIsAddition() {
+        Point2d p = new Point2d(0, 0);
+        p.markAsBelongsToAddition();
+        assertTrue(p.isAddition());
     }
 
 }
