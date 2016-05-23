@@ -3,9 +3,9 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'c14';
+DATASET = 'cars';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_1400';
+PREFIX_INPUT_FILENAME = 'sd_both_3000';
 
 graph_cuts_dir = '../output/graph_part/';
 PART_DS_PREF = 'test';
@@ -13,7 +13,7 @@ PART_DS_PREF = 'test';
 PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME, '_', PART_DS_PREF);
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'ddd';
+PREFIX_OUTPUT_FILENAME = 'eee';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 
