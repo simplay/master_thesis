@@ -614,6 +614,19 @@ public class TrajectoryManagerTest {
     }
 
     @Test
+    public void testToFramewiseOutputStringDummyPointIsFiltered() {
+        Point2d p = new Point2d(2, 3);
+        p.markAsBelongsToAddition();
+
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 1), 0);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(p, 0);
+        TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(4, 5), 1);
+
+        assertEquals("1 0.0 1.0", TrajectoryManager.getInstance().toFramewiseOutputString(0));
+        assertEquals("3 4.0 5.0", TrajectoryManager.getInstance().toFramewiseOutputString(1));
+    }
+
+    @Test
     public void testToFramewiseOutputStringIsOrderedAccordingtoTrajectoryLabel() {
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(1, 2), 1);
         TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(3, 4), 1);

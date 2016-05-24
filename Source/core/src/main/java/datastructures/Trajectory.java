@@ -5,6 +5,7 @@ import managers.MetaDataManager;
 
 import java.util.*;
 
+
 /**
  * A Trajectory is a set of coherently tracked points of a particular feature over a set of frames.
  * Each trajectory is uniquely identified by its label value.
