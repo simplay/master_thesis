@@ -135,6 +135,21 @@ public class ArgParser {
     }
 
     /**
+     * This user specified flags allows to enable trajectory continuation.
+     * Trajectories are appended and prepended by addition points, if possible.
+     *
+     * is only true if a user explicitly sets this flag equals 1.
+     *
+     * @return true if we want to continue the trajectories, otherwise false.
+     */
+    public static boolean shouldContinueTrajectories() {
+        String ct = getInstance().getHashValue("ct");
+        if (ct == null) {
+            return false;
+        }
+        return (Integer.parseInt(ct) == 1);
+    }
+    /**
      * Affinity scaling factor used for MD sim tasks,
      * acts as a sensitivity parameter and is different when using depth cues.
      *

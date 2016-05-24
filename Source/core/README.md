@@ -28,6 +28,11 @@ the target similarity task is re-assign to one that used 3d trajectory points (i
  + `BOOL == 0`: Use global flow variance values for normalization.
  + `BOOL == 1`: Use local flow variance values for normalization.
  
++ **-ct BOOL**: Indicates whether we want to apply a continuation of the extracted trajectories. This allows to compare
+trajectory sequences that are not overlapping. By default this mode is disabled.
+ + `BOOL == 0`: Do not apply trajectory continuation.
+ + `BOOL == 1`: Apply trajectory continuation. Allows to compare short-gap trajectories.
+ 
 + **-nn NUM**: The number NUM of spatial nearest neighbors that should be exported as output. By default the 200 nearest neighbors are exported.
 
 + **-nnm STRING**: An identifier specifying which nearest neighbors should be returned. By default, all nearest neighbors will be returned.

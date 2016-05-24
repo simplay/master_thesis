@@ -143,8 +143,12 @@ public class Main {
         /**
          * Extend trajectories
          */
-        // TODO extend the trajectories.
-        TrajectoryManager.getInstance().continueTrajectories();
+
+        if (ArgParser.shouldContinueTrajectories()) {
+            Logger.println("Applying continuation of extracted trajectories...");
+            TrajectoryManager.getInstance().continueTrajectories();
+            Logger.println(" => Trajectories have been extended.");
+        }
 
         /**
          * Transform computed data

@@ -45,6 +45,7 @@ public class ArgParserTest {
         assertEquals("", ArgParser.getCustomFileNamePrefix());
         assertEquals(false, ArgParser.hasCustomFileNamePrefix());
         assertEquals(NearestNeighborMode.ALL, ArgParser.getNNMode());
+        assertEquals(false, ArgParser.shouldContinueTrajectories());
     }
 
     @Test
@@ -98,7 +99,8 @@ public class ArgParserTest {
                 "-nnm", "both",
                 "-prob", "0.93",
                 "-debug", "1",
-                "-dscale", "12"
+                "-dscale", "12",
+                "-ct", "1"
         };
         ArgParser.getInstance(args);
 
@@ -115,6 +117,7 @@ public class ArgParserTest {
         assertEquals("foobar", ArgParser.getCustomFileNamePrefix());
         assertEquals(true, ArgParser.hasCustomFileNamePrefix());
         assertEquals(NearestNeighborMode.TOP_AND_WORST_N, ArgParser.getNNMode());
+        assertEquals(true, ArgParser.shouldContinueTrajectories());
     }
 
     @Test
