@@ -52,13 +52,14 @@ public abstract class SimilarityTask implements Runnable {
     protected abstract double similarityBetween(Trajectory a, Trajectory b);
 
     /**
-     * Get the start frame index of a trajectory pair,
+     * Get index of the first frame where the tracking points of two trajectories start overlapping,
+     *
      * i.e. Get the upper frame index, where a trajectory starts, between two given trajectories.
      * This gives the start frame index of a potential overlapping pair.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a trajectory
+     * @param b trajectory
+     * @return frame index the two given trajectory could overlap for the first time.
      */
     protected int getLowerFrameIndexBetween(Trajectory a, Trajectory b) {
         return Math.max(a.getStartFrame(), b.getStartFrame());
@@ -105,7 +106,7 @@ public abstract class SimilarityTask implements Runnable {
      * @return
      */
     protected boolean isTooShortOverlapping(int overlappingFrameCount) {
-        return overlappingFrameCount-1 < MIN_EXPECTED_TRAJ_LEN;
+        return (overlappingFrameCount - 1) < MIN_EXPECTED_TRAJ_LEN;
     }
 
     /**
