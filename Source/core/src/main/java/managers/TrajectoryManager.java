@@ -281,6 +281,9 @@ public class TrajectoryManager implements Iterable<Trajectory>{
         LinkedList<Trajectory> trajectoriesAtGivenFrame = allTrajectoriesActiveInGivenFrame(frame_idx);
 
         for (Trajectory tra : trajectoriesAtGivenFrame) {
+
+            // skip if current frame point is an auxiliary point
+            if (tra.getPointAtFrame(frame_idx).isAddition()) continue;
             content = content + tra.toFramewiseString(frame_idx) + "\n";
         }
         return content.trim();

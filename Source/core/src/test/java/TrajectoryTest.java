@@ -1184,4 +1184,63 @@ public class TrajectoryTest {
         }
     }
 
+    @Test
+    public void testSelectInRangeAllValidReturnsSameList() {
+        ArrayList<Point2d> additions = new ArrayList<>();
+
+        int N = 8;
+        for (int n = 0; n < N; n++) {
+            double x = Math.random() * 9;
+            double y = Math.random() * 9;
+            additions.add(new Point2d(x, y));
+        }
+
+        Trajectory tra = new Trajectory(0);
+
+        int idx = 0;
+        for (Point2d p : tra.selectInRange(additions)) {
+            assertEquals(additions.get(idx).x(), p.x(), 0);
+            assertEquals(additions.get(idx).y(), p.y(), 0);
+            idx++;
+        }
+    }
+
+    @Test
+    public void testSelectInRangeFromINvalidOnTheyAreFiltered() {
+        ArrayList<Point2d> additions = new ArrayList<>();
+
+        int N = 8;
+        for (int n = 0; n < N; n++) {
+            double x = Math.random() * 9;
+            double y = Math.random() * 9;
+            additions.add(new Point2d(x, y));
+        }
+        additions.add(new Point2d(-1, 5));
+        for (int n = 0; n < N; n++) {
+            double x = Math.random() * 9;
+            double y = Math.random() * 9;
+            additions.add(new Point2d(x, y));
+        }
+        assertEquals(17, additions.size());
+        Trajectory tra = new Trajectory(0);
+
+        int idx = 0;
+        ArrayList<Point2d> pointsInRange = tra.selectInRange(additions);
+
+        for (int k = 0; k < N; k++) {
+            assertEquals(additions.get(k).x(), pointsInRange.get(k).x(), 0);
+            assertEquals(additions.get(k).y(), pointsInRange.get(k).y(), 0);
+        }
+
+        for (int k = N; k < 2*N + 1; k++) {
+            assertFalse(pointsInRange.contains(additions.get(k)));
+        }
+
+        for (Point2d p : tra.selectInRange(additions)) {
+            assertEquals(additions.get(idx).x(), p.x(), 0);
+            assertEquals(additions.get(idx).y(), p.y(), 0);
+            idx++;
+        }
+    }
+
 }
