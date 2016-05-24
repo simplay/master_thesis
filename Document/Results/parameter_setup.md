@@ -155,7 +155,27 @@ Used ID | Dir Name |
 
 ## wh1
 
-core:
+### Core
 
-+ `-d wh1 -task 2 -var 1 -nn 1200 -lambda 0.01 -nnm top`
- + `wh1_ldof_pd_c_8_ev_10`
+ID  | Task | NN Variant | Lmabda | Prob
+--- | ---- | ---------- | ------ | ---
+1   | 2    | top 3000   | 0.01   | -
+2   | 3    | top 3000   | 100    | -
+3   | 3    | top 3000   | 10     | -
+
+### Segmentation
+
+ID  | Method | Used ID | Cluster Found  | CC   | EV   | DC   | MIC/Iters | RC  | IPM
+--- | ------ | ------- | -------------- | ---- | ---- | ---- | --------- | --- | ---
+1   | MC     | 1       | 10             | 10   | 10   | 10   | -         | -   | - 
+2   | MC     | 2       | 10             | 10   | 25   | 10   | -         | -   | - 
+3   | MC     | 3       | 10             | 10   | 10   | 10   | -         | -   | - 
+
+### Results from Segmentations
+
+Used ID | Dir Name | 
+------- | ---
+1       | `wh1_ldof_pd_top_c_10_ev_10`
+2       | `wh1_ldof_ped_top_lambda_100_c_25_ev_10`
+3       | `wh1_ldof_ped_top_lambda_10_c_10_ev_10`
+
