@@ -74,7 +74,7 @@ Used ID | Dir Name |
 ## cars
 
 ### Core
--d cars -task 2 -var 1 -nn 1400 -nnm top -lambda 0.01
+
 ID  | Task | NN Variant | Lmabda | Prob
 --- | ---- | ---------- | ------ | ---
 1   | 2    | best 1400  | 0.01   | -
