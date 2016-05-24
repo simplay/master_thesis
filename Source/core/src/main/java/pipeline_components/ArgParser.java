@@ -322,6 +322,7 @@ public class ArgParser {
         Logger.println("+ Using color cues: " + useColorCues());
         Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         Logger.println("+ Using NN Mode: " + getNNMode().name());
+        Logger.println("+ Applying trajectory continuation: " + shouldContinueTrajectories());
 
         if (shouldSkipNNCount()) {
             Logger.println("  => Ignoring the Nearest Neighbor Count and returning the complete neighborhood instead.");
