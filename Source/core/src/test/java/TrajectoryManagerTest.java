@@ -1,11 +1,13 @@
 import datastructures.*;
 import managers.CalibrationManager;
 import managers.DepthManager;
+import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -16,6 +18,27 @@ public class TrajectoryManagerTest {
     @Before
     public void initObjects() {
         TrajectoryManager.release();
+        MetaDataManager.release();
+    }
+
+    /**
+     * Helper method to set manually the trajectory manager trajectories.
+     *
+     * @param trajectories trajectories to be assigned to the TrajectoryManager singleton.
+     */
+    private void setTrajectoryManagerTrajectories(HashMap<Integer, Trajectory> trajectories ) {
+        Field field = null;
+        try {
+            field = TrajectoryManager.class.getDeclaredField("trajectories");
+            field.setAccessible(true);
+            try {
+                field.set(TrajectoryManager.getInstance(), trajectories);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -637,6 +660,53 @@ public class TrajectoryManagerTest {
 
         assertEquals("3 5.0 6.0\n5 9.0 10.0\n6 11.0 12.0", TrajectoryManager.getInstance().toFramewiseOutputString(0));
         assertEquals("1 1.0 2.0\n2 3.0 4.0\n4 7.0 8.0", TrajectoryManager.getInstance().toFramewiseOutputString(1));
+    }
+
+    @Test
+    public void testContinueTrajectories() {
+        ArrayList<String> metaData = new ArrayList<String>();
+        metaData.add("10");
+        metaData.add("10");
+        metaData.add("1");
+        MetaDataManager.getInstance(metaData);
+        
+        int startFrame = 3;
+
+        Trajectory tra = new Trajectory(startFrame);
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = 0.91;
+        double ySeed = 0.86;
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+        }
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        HashMap<Integer, Trajectory> trajectories = new HashMap<>();
+        trajectories.put(tra.getLabel(), tra);
+        setTrajectoryManagerTrajectories(trajectories);
+
+
+        TrajectoryManager.getInstance().continueTrajectories();
+        tra = (Trajectory)TrajectoryManager.getTrajectories().toArray()[0];
+
+        int N = 3;
+        double eps = 1.e-9;
+        for (int k = 0; k < N; k++) {
+            Assert.assertEquals(tra.getPointAtFrame(k).x(), points.get(0).x() - (N-k)*step, eps);
+            Assert.assertEquals(tra.getPointAtFrame(k).y(), points.get(0).y() - (N-k)*step, eps);
+
+            Assert.assertEquals(tra.getPointAtFrame(k+points.size() + 3).x(), points.get(points.size() - 1).x() + (k+1)*step, eps);
+            Assert.assertEquals(tra.getPointAtFrame(k+points.size() + 3).y(), points.get(points.size() - 1).y() + (k+1)*step, eps);
+        }
     }
 
 }
