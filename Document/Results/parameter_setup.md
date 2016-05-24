@@ -122,6 +122,8 @@ ID  | Task | NN Variant | Lmabda  | Prob  | CT
 4   | 3    | top 3000   | 10      | -     | 1
 5   | 4    | top 3000   | 0.00001 | -     | 0
 6   | 4    | top 3000   | 0.00001 | -     | 1
+7   | 4    | top 3000   | 0.0001  | -     | 0
+8   | 4    | top 3000   | 0.001   | -     | 0
 
 ### Segmentation
 
@@ -134,6 +136,8 @@ ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
 5   | SC     | 4       | 25            | 25  | 35  | -   | -         | -   | - 
 6   | SC     | 5       | 20            | 20  | 40  | -   | -         | -   | - 
 7   | SC     | 6       | 20            | 20  | 40  | -   | -         | -   | - 
+8   | SC     | 7       | 20            | 20  | 40  | -   | -         | -   | - 
+9   | SC     | 8       | 20            | 20  | 40  | -   | -         | -   | - 
 
 ### Results from Segmentations
 
@@ -146,6 +150,8 @@ Used ID | Dir Name |
 5       | `chair_3_cast_ldof_ped_top_cont_c_25_ev_35`
 6       | `chair_3_cast_ldof_paed_top_c_20_ev_40`
 7       | `chair_3_cast_ldof_paed_top_cont_c_20_ev_40`
+8       | `chair_3_cast_ldof_paed_top_lambda_0_0001_c_20_ev_40`
+9       | `chair_3_cast_ldof_paed_top_lambda_0_001_c_20_ev_40`
 
 ## wh1
 
