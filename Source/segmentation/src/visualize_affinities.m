@@ -22,6 +22,7 @@ function visualize_affinities(W, label_idx, frames, imgs, label_mappings, img_in
     end
     
     row_idx = find(frame.labels == label_idx);
+    disp([' => Selected label: ', num2str(label_idx)]);
     plot(frame.ay(row_idx), frame.ax(row_idx),'Color',[1,0,0],'Marker','O');
     hold on
     colorbar;
