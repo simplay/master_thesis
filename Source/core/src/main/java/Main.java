@@ -145,8 +145,9 @@ public class Main {
          */
 
         if (ArgParser.shouldContinueTrajectories()) {
-            Logger.println("Applying continuation of extracted trajectories...");
-            TrajectoryManager.getInstance().continueTrajectories();
+            int trajContMinLen = 8;
+            Logger.println("Applying continuation to all extracted trajectories having length equals " + trajContMinLen + "...");
+            TrajectoryManager.getInstance().continueTrajectories(trajContMinLen);
             Logger.println(" => Trajectories have been extended.");
         }
 

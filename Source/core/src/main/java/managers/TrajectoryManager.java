@@ -312,10 +312,15 @@ public class TrajectoryManager implements Iterable<Trajectory>{
      * additional points. The points are computed by applying the average trajectory directory
      * to the boundary tracking points.
      *
+     * Only trajectories having a certain, given minimal length are continued.
+     *
      * Only call this method after running the filtering of too short trajectories.
+     *
+     * @param minExpectedLen minimal expected length in order to get continued.
      */
-    public void continueTrajectories() {
+    public void continueTrajectories(int minExpectedLen) {
         for (Trajectory tra : getTrajectories()) {
+            if (tra.length() < minExpectedLen) continue;
             tra.extendPointTracking();
         }
     }

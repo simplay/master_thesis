@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'chair_3_cast';
+DATASET = 'cars';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'ped_top';
-PREFIX_INPUT_FILENAME = 'ped_top_3000';
+PREFIX_OUTPUT_FILENAME = 'pd_top_cont';
+PREFIX_INPUT_FILENAME = 'pd_top_3000';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = false;
@@ -17,7 +17,7 @@ COMPUTE_EIGS = false;
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = true;
+REUSE_ASSIGNMENTS = false;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
 FILTER_ZERO_EIGENVALUES = true;
@@ -28,10 +28,10 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 35;
+FORCE_EW_COUNT = 5;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 25;
+CLUSTER_CENTER_COUNT = 4;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -49,7 +49,7 @@ SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 6;
-frame_idx = 50;
+frame_idx = 10;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

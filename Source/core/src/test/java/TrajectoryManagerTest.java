@@ -695,7 +695,7 @@ public class TrajectoryManagerTest {
         setTrajectoryManagerTrajectories(trajectories);
 
 
-        TrajectoryManager.getInstance().continueTrajectories();
+        TrajectoryManager.getInstance().continueTrajectories(0);
         tra = (Trajectory)TrajectoryManager.getTrajectories().toArray()[0];
 
         int N = 3;
