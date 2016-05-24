@@ -1,5 +1,13 @@
 # Parameter Setup
 
+DATASET       | FRAME COUNT | RESOLUTION | AVAILABLE FLOWS | HAS DEPTH | DEPTH COLOR CAMS ALIGN
+------------- | ----------- | ---------- | --------------- | --------- | ----------------------
+c14           | 5           | 480 x 640  | ldof            | false     | -
+cars          | 19          | 480 x 640  | ldof            | false     | -
+alley2small   | 50          | 512 x 218  | ldof            | true      | true
+chair_3_cast  | 101         | 512 x 424  | ldof            | true      | true
+wh1           | 104         | 480 x 640  | ldof            | true      | false
+
 + Spectral clustering **SC**
 + Min-Cut **MC**
 + Kernighan-Lin **KL**
@@ -101,12 +109,14 @@ Used ID | Dir Name |
 
 ### Core
 
-ID  | Task | NN Variant | Lmabda | Prob  | CT
---- | ---- | ---------- | ------ | ----- | ---
-1   | 2    | top 3000   | 0.1    | -     | 0
-2   | 3    | top 3000   | 100    | -     | 0
-3   | 3    | top 3000   | 10     | -     | 0
-4   | 3    | top 3000   | 10     | -     | 1
+ID  | Task | NN Variant | Lmabda  | Prob  | CT
+--- | ---- | ---------- | ------- | ----- | ---
+1   | 2    | top 3000   | 0.1     | -     | 0
+2   | 3    | top 3000   | 100     | -     | 0
+3   | 3    | top 3000   | 10      | -     | 0
+4   | 3    | top 3000   | 10      | -     | 1
+5   | 4    | top 3000   | 0.00001 | -     | 0
+6   | 4    | top 3000   | 0.00001 | -     | 1
 
 ### Segmentation
 
@@ -117,6 +127,8 @@ ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
 3   | SC     | 2       | 25            | 25  | 35  | -   | -         | -   | - 
 4   | SC     | 3       | 25            | 25  | 35  | -   | -         | -   | - 
 5   | SC     | 4       | 25            | 25  | 35  | -   | -         | -   | - 
+6   | SC     | 5       | 20            | 20  | 40  | -   | -         | -   | - 
+7   | SC     | 6       | 20            | 20  | 40  | -   | -         | -   | - 
 
 ### Results from Segmentations
 
@@ -127,6 +139,8 @@ Used ID | Dir Name |
 3       | `chair_3_cast_ldof_ped_top_c_25_ev_35`
 4       | `chair_3_cast_ldof_ped_top_lambda_10_c_25_ev_35`
 5       | `chair_3_cast_ldof_ped_top_cont_c_25_ev_35`
+6       | `chair_3_cast_ldof_paed_top_c_20_ev_40`
+7       | `chair_3_cast_ldof_paed_top_cont_c_20_ev_40`
 
 ## wh1
 
