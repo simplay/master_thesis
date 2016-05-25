@@ -62,7 +62,10 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // Corresponds to Trajectory#toString()
     private String traOutRepresentation = null;
 
+    // Number of tracking points that were prepended after the trajectory was continued
     private int leftAdditions = 0;
+
+    // Number of tracking points that were appended after the trajectory was continued
     private int rightAdditions = 0;
 
     /**

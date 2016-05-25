@@ -35,10 +35,6 @@ public class ProdDistTask extends SimilarityTask {
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
-
-
-
-
         if (isTooShortOverlapping(commonFrameCount)) {
             return 0;
         }
