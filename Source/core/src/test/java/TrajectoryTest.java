@@ -730,6 +730,44 @@ public class TrajectoryTest {
     }
 
     @Test
+    public void testExtendPointTrackingDoesNotChangeOriginalTrackedPoints() {
+        int startFrame = 3;
+
+        Trajectory tra = new Trajectory(startFrame);
+        LinkedList<Point2d> points = new LinkedList<>();
+        double xSeed = 0.91;
+        double ySeed = 0.86;
+        double step = 0.1;
+        double del = 0.0;
+        for (int n = 0; n < 5; n++) {
+            points.add(new Point2d(xSeed + del, ySeed + del));
+            del += step;
+        }
+        for (Point2d p : points) {
+            tra.addPoint(p);
+        }
+        tra.markClosed();
+
+        int totalNumOfFrames = startFrame + points.size() + 3;
+        MetaDataManager.getInstance().setFrameCount(totalNumOfFrames - 1);
+
+        // Make sure that we have exact value copies of original point values.
+        LinkedList<Point2d> copiedPoints = new LinkedList<>();
+        for (Point2d p : points) {
+            copiedPoints.add(p.copy());
+        }
+
+        tra.extendPointTracking();
+
+        // ensure that original tracking point values were not modified
+        // by the point extension
+        for (int n = 0; n < copiedPoints.size(); n++) {
+            assertEquals(copiedPoints.get(n).x(), tra.getPointAtFrame(startFrame + n).x(), 0);
+            assertEquals(copiedPoints.get(n).y(), tra.getPointAtFrame(startFrame + n).y(), 0);
+        }
+    }
+
+    @Test
     public void testSelectInRangeAllValidReturnsSameList() {
         ArrayList<Point2d> additions = new ArrayList<>();
 
