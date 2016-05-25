@@ -62,6 +62,9 @@ public abstract class SimilarityTask implements Runnable {
      * @return frame index the two given trajectory could overlap for the first time.
      */
     protected int getLowerFrameIndexBetween(Trajectory a, Trajectory b) {
+        if (!ArgParser.shouldContinueTrajectories()) {
+            return Math.max(a.getStartFrame(), b.getStartFrame());
+        }
         return a.getOverlappingStartFrameIndexBetween(b);
     }
 
@@ -75,6 +78,9 @@ public abstract class SimilarityTask implements Runnable {
      * @return
      */
     protected int getUpperFrameIndexBetween(Trajectory a, Trajectory b) {
+        if (!ArgParser.shouldContinueTrajectories()) {
+            return Math.min(a.getEndFrame(), b.getEndFrame());
+        }
         return a.getOverlappingEndFrameIndexBetween(b);
     }
 

@@ -5,6 +5,7 @@ import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
+import pipeline_components.ArgParser;
 import similarity.SimilarityTask;
 
 import java.lang.reflect.Field;
@@ -80,9 +81,14 @@ public class SimilarityTaskTest {
 
     @Before
     public void prepare() {
+        ArgParser.release();
         TrajectoryManager.release();
-        nullHelper = new SimilarityTaskHelper(null, null);
         MetaDataManager.release();
+
+        String[] args = {"-ct", "1"};
+        ArgParser.getInstance(args);
+
+        nullHelper = new SimilarityTaskHelper(null, null);
         ArrayList<String> metaData = new ArrayList<String>();
         metaData.add("100");
         metaData.add("100");
@@ -135,6 +141,40 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testGetLowerFrameIndexBetweenAdditionsWithoutSettingCT() {
+        ArgParser.release();
+        String[] args = {"-ct", "0"};
+        ArgParser.getInstance(args);
+
+        MetaDataManager.getInstance().setFrameCount(8);
+
+        Trajectory a = new Trajectory(3);
+        Trajectory b = new Trajectory(7);
+
+        a.addPoint(new Point2d(0.0, 10.1));
+        a.addPoint(new Point2d(0.0, 10.2));
+        a.addPoint(new Point2d(0.0, 10.2));
+
+        b.addPoint(new Point2d(0.0, 20.1));
+        b.addPoint(new Point2d(0.0, 20.2));
+        b.addPoint(new Point2d(0.0, 20.2));
+
+        a.markClosed();
+        b.markClosed();
+
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        assertEquals(4, nullHelper.p_getLowerFrameIndexBetween(a, b));
+        assertEquals(4, b.getOverlappingStartFrameIndexBetween(a));
+        assertEquals(4, a.getOverlappingStartFrameIndexBetween(b));
+        assertEquals(0, a.getStartFrame());
+        assertEquals(4, b.getStartFrame());
+        assertEquals(3, a.startFrameWithoutLeftAdditions());
+        assertEquals(7, b.startFrameWithoutLeftAdditions());
+    }
+
+    @Test
     public void testGetUpperFrameIndexBetween() {
         int N = 10;
         for (int n = 0; n < N; n++) {
@@ -154,6 +194,42 @@ public class SimilarityTaskTest {
 
     @Test
     public void testGetUpperFrameIndexBetweenAdditions() {
+        MetaDataManager.getInstance().setFrameCount(12);
+
+        Trajectory a = new Trajectory(3);
+        Trajectory b = new Trajectory(6);
+
+        a.addPoint(new Point2d(0.0, 10.1));
+        a.addPoint(new Point2d(0.0, 10.2));
+        a.addPoint(new Point2d(0.0, 10.2));
+
+        // only two additions, since 12 - (6 + 5 - 1) = 2
+        b.addPoint(new Point2d(0.0, 20.1));
+        b.addPoint(new Point2d(0.0, 20.2));
+        b.addPoint(new Point2d(0.0, 20.2));
+        b.addPoint(new Point2d(0.0, 20.2));
+        b.addPoint(new Point2d(0.0, 20.2));
+
+        a.markClosed();
+        b.markClosed();
+
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        assertEquals(8, nullHelper.p_getUpperFrameIndexBetween(a, b));
+        assertEquals(8, a.getOverlappingEndFrameIndexBetween(b));
+        assertEquals(8, b.getOverlappingEndFrameIndexBetween(a));
+        assertEquals(8, a.getEndFrame());
+        assertEquals(12, b.getEndFrame());
+        assertEquals(5, a.endFrameWithoutRightAdditions());
+        assertEquals(10, b.endFrameWithoutRightAdditions());
+    }
+
+    @Test
+    public void testGetUpperFrameIndexBetweenAdditionsWithoutSettingCT() {
+        ArgParser.release();
+        String[] args = {"-ct", "0"};
+        ArgParser.getInstance(args);
         MetaDataManager.getInstance().setFrameCount(12);
 
         Trajectory a = new Trajectory(3);
