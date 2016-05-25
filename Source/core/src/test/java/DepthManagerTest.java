@@ -1,4 +1,5 @@
 import datastructures.DepthField;
+import datastructures.DepthVarField;
 import datastructures.Mat3x4;
 import datastructures.Point3d;
 import managers.CalibrationManager;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import pipeline_components.ArgParser;
 import readers.CalibrationsReader;
 import readers.DepthFieldReader;
+import readers.DepthVarReader;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,12 +20,14 @@ public class DepthManagerTest {
     public void initObjects() {
         CalibrationManager.release();
         DepthManager.release();
+        DepthVarManager.release();
         ArgParser.release();
 
         String[] args = {"-d", "foobar", "-task", "1"};
         ArgParser.getInstance(args);
 
         new DepthFieldReader("foobar", "1", "./testdata/");
+        new DepthVarReader("foobar", "1", "./testdata/");
         new CalibrationsReader("foobar", "./testdata/");
     }
 
@@ -96,6 +100,7 @@ public class DepthManagerTest {
     @Test
     public void testWarpDepthFields() {
         DepthManager.release();
+        DepthVarManager.release();
 
         // Build a random depth map
         DepthField df = new DepthField(1000, 1000);
@@ -105,6 +110,14 @@ public class DepthManagerTest {
             }
         }
         DepthManager.getInstance().add(df);
+
+        DepthVarField dvf = new DepthVarField(1000, 1000);
+        for (int k = 0; k < dvf.getData().length; k++) {
+            for (int l = 0; l < dvf.getData()[0].length; l++) {
+                dvf.setAt(k,l, Math.random() + 0.1);
+            }
+        }
+        DepthVarManager.getInstance().add(dvf);
 
         // warp random depth field and fetch warped depth maps
         DepthManager.warpDepthFields();

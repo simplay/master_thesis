@@ -29,6 +29,15 @@ public class DepthVarField extends Interpolator {
     }
 
     /**
+     * Get the depth variance values of this depth field.
+     *
+     * @return the computed depth variance values.
+     */
+    public double[][] getData() {
+        return matrix;
+    }
+
+    /**
      * Sets a row in the depth variance matrix.
      *
      * @param row_idx target row index.
@@ -36,6 +45,20 @@ public class DepthVarField extends Interpolator {
      */
     public void setRow(int row_idx, double[] row) {
         matrix[row_idx] = row;
+    }
+
+    /**
+     * Set a value at a given depth variance field position.
+     *
+     * This method is used when computing the warped depth var field.
+     * In case the color and depth camera do not align.
+     *
+     * @param i row index
+     * @param j column index
+     * @param value depth variance value to be set at given depth field location.
+     */
+    public synchronized void setAt(int i, int j, double value) {
+        matrix[i][j] = value;
     }
 
     /**

@@ -1,6 +1,7 @@
 package managers;
 
 import datastructures.DepthField;
+import datastructures.DepthVarField;
 import datastructures.Mat3x4;
 import datastructures.Point3d;
 import java.util.ArrayList;
@@ -97,6 +98,15 @@ public class DepthManager {
      * Warps the existing depth fields in in case the
      * color and depth cameras do not overlap.
      *
+     * In addition, also the depth variance fields are warped.
+     * Keep in mind, that only their lookup positions are warped
+     * but not their values. This can be considered as a hack,
+     * to speed the computation up (Computing depth variances
+     * requires applying a 2-pass bilateral filter on a depth image).
+     * However, this hack is not that bad, since the depth and color
+     * cameras are not very far off from each other, and thus, this
+     * assumption, of reusing the same value is viable.
+     *
      * Lookup intrinsic and extrinsic camera calibration data
      *
      * for each dm : depth map
@@ -133,10 +143,14 @@ public class DepthManager {
         // Iterate over all loaded depth maps
         for(int k = 0; k < instance.length(); k++) {
             DepthField df = instance.get(k);
+            DepthVarField dvf = DepthVarManager.getInstance().get(k);
 
             // initialized the warped depth map in which initially each location
             // is marked as invalid (i.e. each lookup position is equal to zero).
             DepthField warpedDf = new DepthField(df.m(), df.n());
+
+            // The warped depth variance values
+            DepthVarField warpedDVarF = new DepthVarField(df.m(), df.n());
 
             // foreach element in the depth field, compute its warped depth
             // and store it at the appropriate warped depth field position.
@@ -180,14 +194,18 @@ public class DepthManager {
                         // computed depth as the new front most depth
                         } else if(frontmostDepth == 0) {
                             warpedDf.setAt(i_tilde, j_tilde, d_tilde);
+
+                            // set warped depth var according to front-most depth value.
+                            warpedDVarF.setAt(i_tilde, j_tilde, dvf.valueAt(i, j));
                         }
 
                     }
                 }
             }
 
-            // overwrite previous depth field with warped depth field
+            // overwrite previous depth field and depth var field with their warped fields
             getInstance().setAt(warpedDf, k);
+            DepthVarManager.getInstance().setAt(dvf, k);
         }
     }
 

@@ -62,6 +62,16 @@ public class DepthVarManager {
     }
 
     /**
+     * Sets a depth variance field for a given frame index.
+     *
+     * @param depthVarField depth field to be set.
+     * @param frame_index target frame index we want to overwrite.
+     */
+    public void setAt(DepthVarField depthVarField, int frame_index) {
+        depthVarFields.set(frame_index, depthVarField);
+    }
+
+    /**
      * Get the depth variance field that maps to a given dataset frame.
      *
      * Assumption: The index in the internal list of flow variances corresponds to the frame index
