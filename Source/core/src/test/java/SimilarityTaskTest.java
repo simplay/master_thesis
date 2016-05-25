@@ -281,6 +281,82 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testOverlappingCountIncreasesForNoneOverlappingTrajectoriesWhenExtendingThemCenterCase() {
+        MetaDataManager.getInstance().setFrameCount(12);
+
+        // active in frames: 5 6 7
+        Trajectory a = new Trajectory(5);
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.markClosed();
+
+        // active in frames: 8 9 10
+        Trajectory b = new Trajectory(8);
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+
+        int from_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        int to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+
+        int overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
+        if (overlapCount <= 0) overlapCount = 0;
+
+        assertEquals(0, overlapCount);
+
+        // active in frames: 2 3 4 ,5 6 7, 8 9 10
+        a.extendPointTracking();
+
+        // active in frames: 5 6 7 ,8 9 10, 11 12 (no 13, since limited to 12)
+        b.extendPointTracking();
+
+        from_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+        overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
+
+        assertEquals(6, overlapCount);
+    }
+
+    @Test
+    public void testOverlappingCountIncreasesForNoneOverlappingTrajectoriesWhenExtendingThem() {
+        MetaDataManager.getInstance().setFrameCount(12);
+
+        // active in frames: 0 1 2
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.markClosed();
+
+        // active in frames: 8 9 10
+        Trajectory b = new Trajectory(7);
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+
+        int from_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        int to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+
+        int overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
+        if (overlapCount <= 0) overlapCount = 0;
+
+        assertEquals(0, overlapCount);
+
+        // active in frames: 0 1 2, 3 4 5
+        a.extendPointTracking();
+
+        // active in frames: 4 5 6, 7 8 9, 10 11 12 (no 13, since limited to 12)
+        b.extendPointTracking();
+
+        from_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+        overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
+
+        assertEquals(2, overlapCount);
+    }
+
+    @Test
     public void testTimestepSize() {
         // defined as final member in SimilarityTask
         int minTimestep = 4;
