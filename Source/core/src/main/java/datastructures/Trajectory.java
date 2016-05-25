@@ -62,6 +62,9 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     // Corresponds to Trajectory#toString()
     private String traOutRepresentation = null;
 
+    private int leftAdditions = 0;
+    private int rightAdditions = 0;
+
     /**
      * Start a new trajectory at a given frame.
      * Note that each trajectory gets a unique number assigned called the
@@ -531,6 +534,9 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
         // update start frame
         startFrame -= leftAddtions.size();
 
+        this.leftAdditions = leftAddtions.size();
+        this.rightAdditions = rightAddtions.size();
+
         // update internal points list
         leftAddtions.addAll(points);
         leftAddtions.addAll(rightAddtions);
@@ -559,6 +565,99 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
             }
         }
         return adds;
+    }
+
+    /**
+     * Get index of the first frame where the tracking points of two trajectories start overlapping,
+     *
+     * i.e. Get the upper frame index, where a trajectory starts, between two given trajectories.
+     * This gives the start frame index of a potential overlapping pair.
+     *
+     * If two trajectories have no common frames (i.e. are not overlapping),
+     * test if they have overlapping parts if we also make use of added points to determine
+     * the first overlapping index
+     *
+     * @param other other trajectory
+     * @return index of first element of overlapping trajectory parts.
+     */
+    public int getOverlappingStartFrameIndexBetween(Trajectory other) {
+
+        // are trajectories overlapping at all?
+        int oldStartA = startFrameWithoutLeftAdditions();
+        int oldStartB = other.startFrameWithoutLeftAdditions();
+
+        int oldEndA = endFrameWithoutRightAdditions();
+        int oldEndB = other.endFrameWithoutRightAdditions();
+
+        int startOverlappingIndex = Math.max(oldStartA, oldStartB);
+        int endOverlappingIndex = Math.min(oldEndA, oldEndB);
+
+        int commonFrameCountWithoutAdd = (endOverlappingIndex - startOverlappingIndex) + 1;
+
+
+        if (commonFrameCountWithoutAdd <= 0) {
+            return Math.max(getStartFrame(), other.getStartFrame());
+        }
+        return startOverlappingIndex;
+    }
+
+    /**
+     * Get the last index of the overlapping parts of two given trajectories.
+     * i.e. the lower frame index, where a trajectory ends, between two given trajectories.
+     * This gives the end frame index of a potential overlapping pair.
+     *
+     * If two trajectories have no common frames (i.e. are not overlapping),
+     * test if they have overlapping parts if we also make use of added points.
+     *
+     * @param other other trajectory
+     * @return index of last element of overlapping trajectory parts
+     */
+    public int getOverlappingEndFrameIndexBetween(Trajectory other) {
+
+        // are trajectories overlapping at all?
+        int oldStartA = startFrameWithoutLeftAdditions();
+        int oldStartB = other.startFrameWithoutLeftAdditions();
+
+        int oldEndA = endFrameWithoutRightAdditions();
+        int oldEndB = other.endFrameWithoutRightAdditions();
+
+        int startOverlappingIndex = Math.max(oldStartA, oldStartB);
+        int endOverlappingIndex = Math.min(oldEndA, oldEndB);
+
+        int commonFrameCountWithoutAdd = (endOverlappingIndex - startOverlappingIndex) + 1;
+
+        if (commonFrameCountWithoutAdd <= 0) {
+            return Math.min(getEndFrame(), other.getEndFrame());
+        }
+        return endOverlappingIndex;
+    }
+
+    /**
+     * Get the frame index of the first tracking point, not
+     * added by continuing the trajectory.
+     *
+     * Note that if there were no points prepended, then
+     * the returned index corresponds to the one yield
+     * by Trajectory#startFrame()
+     *
+     * @return index of first tracking point that was not prepended.
+     */
+    public int startFrameWithoutLeftAdditions() {
+        return  startFrame + leftAdditions;
+    }
+
+    /**
+     * Get the frame index of the last tracking point, not
+     * added by continuing the trajectory.
+     *
+     * Note that if there were no points appended, then
+     * the returned index corresponds to the one yield
+     * by Trajectory#endFrame()
+     *
+     * @return index of last tracking point that was not appended.
+     */
+    public int endFrameWithoutRightAdditions() {
+        return endFrame - rightAdditions;
     }
 
 

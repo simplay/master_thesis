@@ -27,14 +27,18 @@ public class ProdDistTask extends SimilarityTask {
             return EIGENSIMILARITY_VALUE;
         }
 
-        int from_idx = getLowerFrameIndexBetween(a,b);
-        int to_idx = getUpperFrameIndexBetween(a,b);
+        int from_idx = getLowerFrameIndexBetween(a, b);
+        int to_idx = getUpperFrameIndexBetween(a, b);
 
         return spatioTemporalDistances(a, b, from_idx, to_idx);
     }
 
     protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
+
+
+
+
         if (isTooShortOverlapping(commonFrameCount)) {
             return 0;
         }

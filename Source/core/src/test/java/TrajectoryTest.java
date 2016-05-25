@@ -25,10 +25,11 @@ public class TrajectoryTest {
         ArgParser.release();
         MetaDataManager.release();
         ArrayList<String> metaData = new ArrayList<String>();
-        metaData.add("10");
-        metaData.add("10");
+        metaData.add("100");
+        metaData.add("100");
         metaData.add("1");
         MetaDataManager.getInstance(metaData);
+        MetaDataManager.getInstance().setFrameCount(100);
     }
 
     @Test
@@ -823,6 +824,249 @@ public class TrajectoryTest {
             assertEquals(additions.get(idx).x(), p.x(), 0);
             assertEquals(additions.get(idx).y(), p.y(), 0);
             idx++;
+        }
+    }
+
+    @Test
+    public void testStartFrameWithoutLeftAdditionsNoPointTrackingExtend() {
+        int N = 10;
+        int start = (int)(Math.random()*10) + 3;
+        Trajectory tra = new Trajectory(start);
+        for (int n = 0; n < N; n++) {
+            tra.addPoint(Point2d.one());
+        }
+        tra.markClosed();
+        assertEquals(start, tra.startFrameWithoutLeftAdditions());
+        assertEquals(start, tra.getStartFrame());
+    }
+
+    @Test
+    public void testEndFrameWithoutLeftAdditionsNoPointTrackingExtend() {
+        int N = 10;
+        int start = (int)(Math.random()*10) + 3;
+        Trajectory tra = new Trajectory(start);
+        for (int n = 0; n < N; n++) {
+            tra.addPoint(Point2d.one());
+        }
+        tra.markClosed();
+        assertEquals(start + N - 1, tra.endFrameWithoutRightAdditions());
+        assertEquals(start + N - 1, tra.getEndFrame());
+    }
+
+    @Test
+    public void testStartFrameWithoutLeftAdditionsWithPointTrackingExtend() {
+        int N = 10;
+        int start = (int)(Math.random()*10) + 3;
+        Trajectory tra = new Trajectory(start);
+        Point2d startP = new Point2d(Math.random() + 10, Math.random() + 10);
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            tra.addPoint(startP.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        tra.markClosed();
+        tra.extendPointTracking();
+
+        int startWithAdditions = (start - 3 >= 0) ? (start - 3) : 0;
+
+        tra.startFrameWithoutLeftAdditions();
+        assertEquals(start, tra.startFrameWithoutLeftAdditions());
+        assertEquals(startWithAdditions, tra.getStartFrame());
+    }
+
+    @Test
+    public void testEndFrameWithoutLeftAdditionsWithPointTrackingExtend() {
+        int N = 10;
+        MetaDataManager.getInstance().setFrameCount(100);
+        int start = (int)(Math.random() * 10) + 3;
+        Trajectory tra = new Trajectory(start);
+        Point2d startP = new Point2d(Math.random(), Math.random());
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            tra.addPoint(startP.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        tra.markClosed();
+        tra.extendPointTracking();
+
+        int endWithAdditions = (start + N - 1) + 3;
+
+        assertEquals(start + N - 1, tra.endFrameWithoutRightAdditions());
+        assertEquals(endWithAdditions, tra.getEndFrame());
+    }
+
+    @Test
+    public void testGetOverlappingStartFrameIndexBetweenWithoutPointTrackingExtend() {
+        int N = 10;
+        int startA = (int)(Math.random() * 10) + 3;
+        Trajectory a = new Trajectory(startA);
+        Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        a.markClosed();
+
+        int startB = (int)(Math.random() * 10) + 3;
+        Trajectory b = new Trajectory(startB);
+        Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+        for (int n = 0; n < N; n++) {
+            b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        b.markClosed();
+
+        int gtStartIdx = Math.max(startA, startB);
+        assertEquals(gtStartIdx, a.getOverlappingStartFrameIndexBetween(b));
+    }
+
+    @Test
+    public void testGetOverlappingEndFrameIndexBetweenWithoutPointTrackingExtend() {
+        int N = 10;
+        int startA = (int)(Math.random() * 10) + 3;
+        Trajectory a = new Trajectory(startA);
+        Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        a.markClosed();
+
+        int startB = (int)(Math.random() * 10) + 3;
+        Trajectory b = new Trajectory(startB);
+        Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+        for (int n = 0; n < N; n++) {
+            b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        b.markClosed();
+
+        int gtEndIdx = Math.min(startA, startB) + N - 1;
+        assertEquals(gtEndIdx, a.getOverlappingEndFrameIndexBetween(b));
+    }
+
+    @Test
+    public void testGetOverlappingStartFrameIndexBetweenWithPointTrackingExtendNotOverlapping() {
+        int N = 10;
+        int startA = (int)(Math.random() * 10) + 3;
+        Trajectory a = new Trajectory(startA);
+        Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        a.markClosed();
+
+        int startB = (int)(Math.random() * 10) + 3 + startA + N;
+        Trajectory b = new Trajectory(startB);
+        Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+        for (int n = 0; n < N; n++) {
+            b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        b.markClosed();
+
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        int gtStartA = (startA - 3 >= 0) ? (startA - 3) : 0;
+        int gtStartB = (startB - 3 >= 0) ? (startB - 3) : 0;
+        int gtStartIdx = Math.max(gtStartA, gtStartB);
+
+        a.getOverlappingStartFrameIndexBetween(b);
+        assertEquals(gtStartIdx, a.getOverlappingStartFrameIndexBetween(b));
+    }
+
+    @Test
+    public void testGetOverlappingStartFrameIndexBetweenWithPointTrackingExtendOverlapping() {
+        int N = 10;
+        int startA = (int)(Math.random() * 10) + 3;
+        Trajectory a = new Trajectory(startA);
+        Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+        double scale = 0.1d;
+        for (int n = 0; n < N; n++) {
+            a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        a.markClosed();
+
+        int startB = (int)(Math.random() * 10) + 3;
+        Trajectory b = new Trajectory(startB);
+        Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+        for (int n = 0; n < N; n++) {
+            b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+        }
+        b.markClosed();
+
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        int gtStartA = (startA - 3 >= 0) ? startA : 0;
+        int gtStartB = (startB - 3 >= 0) ? startB : 0;
+        int gtStartIdx = Math.max(gtStartA, gtStartB);
+
+        a.getOverlappingStartFrameIndexBetween(b);
+        assertEquals(gtStartIdx, a.getOverlappingStartFrameIndexBetween(b));
+    }
+
+    @Test
+    public void testGetOverlappingEndFrameIndexBetweenWithPointTrackingExtendNotOverlapping() {
+        int T = 10;
+        for (int t = 0; t < T; t++) {
+            int N = 10;
+            int startA = (int) (Math.random() * 10) + 3;
+            Trajectory a = new Trajectory(startA);
+            Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+            double scale = 0.1d;
+            for (int n = 0; n < N; n++) {
+                a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+            }
+            a.markClosed();
+
+            int startB = (int) (Math.random() * 10) + 3 + startA + N;
+            Trajectory b = new Trajectory(startB);
+            Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+            for (int n = 0; n < N; n++) {
+                b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+            }
+            b.markClosed();
+
+            a.extendPointTracking();
+            b.extendPointTracking();
+
+            int endWithAdditionsA = (startA + N - 1) + 3;
+            int endWithAdditionsB = (startB + N - 1) + 3;
+            int gtEndIdx = Math.min(endWithAdditionsA, endWithAdditionsB);
+            a.getOverlappingEndFrameIndexBetween(b);
+            assertEquals(gtEndIdx, a.getOverlappingEndFrameIndexBetween(b));
+        }
+    }
+
+    @Test
+    public void testGetOverlappingEndFrameIndexBetweenWithPointTrackingExtendOverlapping() {
+        int T = 10;
+        for (int t = 0; t < T; t++) {
+            int N = 10;
+            int startA = (int) (Math.random() * 10) + 3;
+            Trajectory a = new Trajectory(startA);
+            Point2d startPA = new Point2d(Math.random() + 10, Math.random() + 10);
+            double scale = 0.1d;
+            for (int n = 0; n < N; n++) {
+                a.addPoint(startPA.copy().add(new Point2d(scale * n, scale * n)));
+            }
+            a.markClosed();
+
+            int startB = (int) (Math.random() * 10) + 3;
+            Trajectory b = new Trajectory(startB);
+            Point2d startPB = new Point2d(Math.random() + 10, Math.random() + 10);
+            for (int n = 0; n < N; n++) {
+                b.addPoint(startPB.copy().add(new Point2d(scale * n, scale * n)));
+            }
+            b.markClosed();
+
+            a.extendPointTracking();
+            b.extendPointTracking();
+
+            int endWithAdditionsA = (startA + N - 1);
+            int endWithAdditionsB = (startB + N - 1);
+            int gtEndIdx = Math.min(endWithAdditionsA, endWithAdditionsB);
+
+            a.getOverlappingEndFrameIndexBetween(b);
+            assertEquals(gtEndIdx, a.getOverlappingEndFrameIndexBetween(b));
         }
     }
 
