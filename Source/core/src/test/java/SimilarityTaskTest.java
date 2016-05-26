@@ -2,15 +2,14 @@ import datastructures.Point2d;
 import datastructures.Point3d;
 import datastructures.Trajectory;
 import junit.framework.Assert;
-import managers.CalibrationManager;
-import managers.DepthManager;
-import managers.MetaDataManager;
-import managers.TrajectoryManager;
+import managers.*;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
 import readers.CalibrationsReader;
 import readers.DepthFieldReader;
+import readers.FlowVarFileReader;
+import readers.GlobalVarFileReader;
 import similarity.SimilarityTask;
 
 import java.lang.reflect.Field;
@@ -128,6 +127,10 @@ public class SimilarityTaskTest {
         public Point3d p_forward_difference3d(Trajectory tra, int dt, int frame_idx) {
             return forward_difference3d(tra, dt, frame_idx);
         }
+
+        public double p_getVariance(int frame_idx, Trajectory a, Trajectory b) {
+            return getVariance(frame_idx, a, b);
+        }
     }
 
     @Before
@@ -137,6 +140,7 @@ public class SimilarityTaskTest {
         MetaDataManager.release();
         CalibrationManager.release();
         DepthManager.release();
+        VarianceManager.release();
 
         String[] args = {"-ct", "1"};
         ArgParser.getInstance(args);
@@ -829,6 +833,46 @@ public class SimilarityTaskTest {
         assertEquals(gt_d.x(), d.x(), 0);
         assertEquals(gt_d.y(), d.y(), 0);
         assertEquals(gt_d.z(), d.z(), 0);
+    }
+
+    @Test
+    public void testGetVariance() {
+        new FlowVarFileReader("foobar", "1", "./testdata/");
+        ArgParser.release();
+        String[] args = {"-var", "1"};
+        ArgParser.getInstance(args);
+
+        Trajectory a = new Trajectory(0);
+        Trajectory b = new Trajectory(0);
+
+        a.addPoint(new Point2d(0, 0));
+        b.addPoint(new Point2d(0, 0));
+
+        a.markClosed();
+        b.markClosed();
+        double gtVar = VarianceManager.getInstance().getVariance(0).valueAt(new Point2d(0, 0));
+        double lookupVar = nullHelper.p_getVariance(0, a, b);
+        assertEquals(gtVar, lookupVar, 0);
+    }
+
+    @Test
+    public void testGetGlobalVariance() {
+        new GlobalVarFileReader("foobar", "./testdata/");
+        ArgParser.release();
+        String[] args = {"-var", "0"};
+        ArgParser.getInstance(args);
+
+        Trajectory a = new Trajectory(0);
+        Trajectory b = new Trajectory(0);
+
+        a.addPoint(new Point2d(0, 0));
+        b.addPoint(new Point2d(0, 0));
+
+        a.markClosed();
+        b.markClosed();
+        double gtVar = VarianceManager.getInstance().getGlobalVarianceValue(0);
+        double lookupVar = nullHelper.p_getVariance(0, a, b);
+        assertEquals(gtVar, lookupVar, 0);
     }
 
     @Test
