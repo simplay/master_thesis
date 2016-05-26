@@ -248,6 +248,9 @@ public abstract class SimilarityTask implements Runnable {
     /**
      * Computes the tangent in the Euclidean space on a trajectory using a certain time step.
      *
+     * The tangent is computed by calculating the forward difference between two 3D points,
+     * being a certain step-size apart from each other.
+     *
      * Is used to compute 3D flow in metric space used by `PAED` or `SAED` similarity tasks.
      *
      * @param tra
