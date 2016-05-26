@@ -185,8 +185,18 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     /**
-     * Checks whether a given pair of trajectories does not overlap,
+     * Checks whether a given pair of trajectories overlap,
      * when not using their continuation tracking points.
+     *
+     * When not setting `ct = 1` then, this behaves like an ordinary
+     * overlapping check. Otherwise, it checks if there already was an
+     * overlap between two trajectories without considering their continuation.
+     *
+     * This is used to filter overlaps, that only exists due to trajectory expansions.
+     * In this case we do not want to apply the isTooShortOverlapping check.
+     *
+     * Do not attempt to directly use this method within a similarity task,
+     * rather use the isTooShortOverlapping check, which actually makes use of this method.
      *
      * @param a trajectory
      * @param b trajectory
@@ -212,6 +222,7 @@ public abstract class SimilarityTask implements Runnable {
 
     /**
      * Compute the value of the tangent of a given trajectory at a given location.
+     *
      * Given a time-step h, then any function f can be approximated by the Taylor series
      * f(x+h) = f(x) + h*f'(x) + O(h^2)
      * => [f(x+h) - f(x)] / h = f'(x)
@@ -331,6 +342,7 @@ public abstract class SimilarityTask implements Runnable {
     /**
      * Checks whether a given pair of comparison points is valid.
      * Valid means that they have valid depth information assigned.
+     *
      * @param pa
      * @param pb
      * @return true if they are invalid, false otherwise.

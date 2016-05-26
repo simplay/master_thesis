@@ -87,6 +87,10 @@ public class SimilarityTaskTest {
         public boolean p_isTooShortOverlapping(int overlappingFrameCount) {
             return isTooShortOverlapping(overlappingFrameCount);
         }
+
+        public boolean p_hasOverlapWithoutContinuation(Trajectory a, Trajectory b) {
+            return hasOverlapWithoutContinuation(a, b);
+        }
     }
 
     @Before
@@ -543,6 +547,51 @@ public class SimilarityTaskTest {
         // shouldn't be too short, since it has a overlap,
         // which is longer than the min. expected overlap length.
         assertTrue(nullHelper.p_isTooShortOverlapping(a, b, overlapCount));
+    }
+
+    @Test
+    public void testHasOverlapWithoutContinuationNoExpWithOverlap() {
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.markClosed();
+        Trajectory b = new Trajectory(1);
+        b.addPoint(Point2d.one());
+        b.markClosed();
+        nullHelper.p_hasOverlapWithoutContinuation(a, b);
+        assertTrue(nullHelper.p_hasOverlapWithoutContinuation(a, b));
+    }
+
+    @Test
+    public void testHasOverlapWithoutContinuationNoExpWithoutOverlap() {
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.markClosed();
+        Trajectory b = new Trajectory(1);
+        b.addPoint(Point2d.one());
+        b.markClosed();
+        nullHelper.p_hasOverlapWithoutContinuation(a, b);
+        assertFalse(nullHelper.p_hasOverlapWithoutContinuation(a, b));
+    }
+
+    @Test
+    public void testHasOverlapWithoutContinuationExpWithoutInitialOverlap() {
+        MetaDataManager.getInstance().setFrameCount(20);
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.markClosed();
+        Trajectory b = new Trajectory(1);
+        b.addPoint(Point2d.one());
+        b.markClosed();
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        nullHelper.p_hasOverlapWithoutContinuation(a, b);
+        assertFalse(nullHelper.p_hasOverlapWithoutContinuation(a, b));
+        int from_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        int to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+        int overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
+        assertTrue(overlapCount > 0);
     }
 
     @Test
