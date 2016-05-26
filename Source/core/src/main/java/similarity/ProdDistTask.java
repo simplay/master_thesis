@@ -30,12 +30,13 @@ public class ProdDistTask extends SimilarityTask {
         int from_idx = getLowerFrameIndexBetween(a, b);
         int to_idx = getUpperFrameIndexBetween(a, b);
 
-        return spatioTemporalDistances(a, b, from_idx, to_idx);
+        return spatialTemporalDistances(a, b, from_idx, to_idx);
     }
 
-    protected double spatioTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+    protected double spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
-        if (isTooShortOverlapping(commonFrameCount)) {
+
+        if (isTooShortOverlapping(a, b, commonFrameCount)) {
             return 0;
         }
 

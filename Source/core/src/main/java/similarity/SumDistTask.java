@@ -43,7 +43,7 @@ public class SumDistTask extends SimilarityTask {
         int to_idx = getUpperFrameIndexBetween(a,b);
 
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
-        if (isTooShortOverlapping(commonFrameCount)) {
+        if (isTooShortOverlapping(a, b, commonFrameCount)) {
             return 0;
         }
 

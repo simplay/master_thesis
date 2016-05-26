@@ -139,16 +139,19 @@ public class Main {
         Logger.println("Filtering all trajectory shorter than " + trajectoryLen);
         TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
         Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println();
 
         /**
          * Extend trajectories
          */
 
         if (ArgParser.shouldContinueTrajectories()) {
-            int trajContMinLen = 8;
+            // TODO: should this be a user tune-able factor?
+            int trajContMinLen = 6;
             Logger.println("Applying continuation to all extracted trajectories having length equals " + trajContMinLen + "...");
             TrajectoryManager.getInstance().continueTrajectories(trajContMinLen);
             Logger.println(" => Trajectories have been extended.");
+            Logger.println();
         }
 
         /**

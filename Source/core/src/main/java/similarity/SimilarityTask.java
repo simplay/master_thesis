@@ -106,13 +106,57 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     /**
-     * The number of frames - 1 gives us the length of a trajectory
+     * Checks whether the overlapping trajectory parts, given their overlapping frame count,
+     * is too short according to the minimum expected trajectory length.
+     *
+     * This method is used to skip the affinity computation for too short overlapping segments.
+     *
+     * Note: The number of frames - 1 gives us the length of a trajectory
      *
      * @param overlappingFrameCount
      * @return
      */
+    // has no overlap without cont but common frames, then
+    // has only overlap in cont. case.
+    // used to skipt too short case for overlapping continuations
+    // when not running ct = 1, then has
     protected boolean isTooShortOverlapping(int overlappingFrameCount) {
         return (overlappingFrameCount - 1) < MIN_EXPECTED_TRAJ_LEN;
+    }
+
+    // has no overlap without cont but common frames, then
+    // has only overlap in cont. case.
+    // used to skipt too short case for overlapping continuations
+    // when not running ct = 1, then has
+    protected boolean isTooShortOverlapping(Trajectory a, Trajectory b, int overlappingFrameCount) {
+        boolean hasOnlyOverlapInCont = !hasOverlapWithoutContinuation(a, b) && overlappingFrameCount > 0;
+        return isTooShortOverlapping(overlappingFrameCount) && !hasOnlyOverlapInCont;
+    }
+
+    /**
+     * Checks whether a given pair of trajectories does not overlap,
+     * when not using their continuation tracking points.
+     *
+     * @param a trajectory
+     * @param b trajectory
+     * @return true, if trajectory does not overlap, given the tracking points
+     *  without their continuations.
+     */
+    protected boolean hasOverlapWithoutContinuation(Trajectory a, Trajectory b) {
+        int noContStartA = a.startFrameWithoutLeftAdditions();
+        int noContStartB = b.startFrameWithoutLeftAdditions();
+
+        int noContEndA = a.endFrameWithoutRightAdditions();
+        int noContEndB = b.endFrameWithoutRightAdditions();
+
+        int noContStartIdx = Math.max(noContStartA, noContStartB);
+        int noContEndIdx = Math.min(noContEndA, noContEndB);
+
+        int commonFrameCountWithoutAdd = (noContEndIdx - noContStartIdx) + 1;
+        if (commonFrameCountWithoutAdd <= 0) {
+            return false;
+        }
+        return true;
     }
 
     /**

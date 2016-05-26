@@ -12,7 +12,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
@@ -76,6 +78,14 @@ public class SimilarityTaskTest {
 
         public int p_timestepSize(int common_frame_count) {
             return timestepSize(common_frame_count);
+        }
+
+        public boolean p_isTooShortOverlapping(Trajectory a, Trajectory b, int overlappingFrameCount) {
+            return isTooShortOverlapping(a, b, overlappingFrameCount);
+        }
+
+        public boolean p_isTooShortOverlapping(int overlappingFrameCount) {
+            return isTooShortOverlapping(overlappingFrameCount);
         }
     }
 
@@ -367,6 +377,77 @@ public class SimilarityTaskTest {
         int N = 5;
         for (int n = minTimestep + 1; n < minTimestep + 1 + N; n++) {
             assertEquals(minTimestep, nullHelper.p_timestepSize(n));
+        }
+    }
+
+    @Test
+    public void testIsTooShortOverlappingOnlyFrameCount() {
+        int minTraLen = nullHelper.minExpectedTrajectoryLength();
+
+        for (int n = 1; n <= minTraLen; n++) {
+            assertTrue(nullHelper.p_isTooShortOverlapping(n));
+        }
+
+        for (int n = minTraLen + 1; n < minTraLen + 10; n++) {
+            assertFalse(nullHelper.p_isTooShortOverlapping(n));
+        }
+    }
+
+    @Test
+    public void testIsTooShortOverlappingIsOverlappingWithoutCont() {
+        LinkedList<String[]> argsList = new LinkedList<>();
+        String[] args1 = {"-ct", "1"};
+        String[] args2 = {"-ct", "2"};
+        argsList.add(args1);
+        argsList.add(args2);
+
+        // Too short logic works when enabling or disabling the ct flag
+        for (String[] args : argsList) {
+            ArgParser.release();
+            ArgParser.getInstance(args);
+
+            // Tra a, not continued, living in frame indices:
+            // 0 1 ,2 3 4 5 6
+            Trajectory a = new Trajectory(0);
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.addPoint(Point2d.one());
+            a.markClosed();
+
+            // Tra b, not continued, living in frame indices:
+            // 2 3 4 5 6, 7 8
+            Trajectory b = new Trajectory(2);
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.addPoint(Point2d.one());
+            b.markClosed();
+
+            // lower index is the one of the later starting trajectory
+            int lower_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+            assertEquals(2, lower_idx);
+
+            // upper index is the one of the earlier ending trajectory
+            int upper_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+            assertEquals(6, upper_idx);
+
+            // The overlap count is as long as expected
+            int overlapCount = nullHelper.p_overlappingFrameCount(lower_idx, upper_idx);
+            assertEquals(5, overlapCount);
+
+            // The overlap is as long as minimally expected
+            assertTrue(overlapCount >= nullHelper.minExpectedTrajectoryLength());
+
+            // shouldn't be too short, since it has a overlap,
+            // which is longer than the min. expected overlap length.
+            assertFalse(nullHelper.p_isTooShortOverlapping(a, b, overlapCount));
         }
     }
 
