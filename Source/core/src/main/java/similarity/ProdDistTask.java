@@ -9,7 +9,7 @@ import java.util.Collection;
 public class ProdDistTask extends SimilarityTask {
 
     // Affinity scaling factor, acts as a sensivity parameter
-    protected double lamdba_scale;
+    protected double lambda_scale;
 
     /**
      * @param a
@@ -17,7 +17,7 @@ public class ProdDistTask extends SimilarityTask {
      */
     public ProdDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
-        this.lamdba_scale = ArgParser.getLambda();
+        this.lambda_scale = ArgParser.getLambda();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ProdDistTask extends SimilarityTask {
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
         double dist_st_a_b = avgSpatialDist*maxDistance;
-        double w_ab = Math.exp(-lamdba_scale*dist_st_a_b);
+        double w_ab = Math.exp(-lambda_scale*dist_st_a_b);
         if (exceededSpatialTol(avgSpatialDist)) return 0d;
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
