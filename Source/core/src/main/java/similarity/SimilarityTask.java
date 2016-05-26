@@ -234,7 +234,7 @@ public abstract class SimilarityTask implements Runnable {
      *
      * @param tra trajectory
      * @param dt time step size
-     * @param frame_idx point the tangent is orthogonal to.
+     * @param frame_idx index of tracking point the tangent is orthogonal to.
      * @return forward difference of the trajectory active at the target
      *  frame when using the given step size.
      */
@@ -251,16 +251,16 @@ public abstract class SimilarityTask implements Runnable {
      * The tangent is computed by calculating the forward difference between two 3D points,
      * being a certain step-size apart from each other.
      *
-     * Is used to compute 3D flow in metric space used by `PAED` or `SAED` similarity tasks.
+     * Is used to compute 3D motion distance, used by `PAED` or `SAED` similarity tasks.
      *
-     * @param tra
-     * @param dt
-     * @param frame_idx
-     * @return
+     * @param tra trajectory
+     * @param dt time step size
+     * @param frame_idx index of tracking point the tangent is orthogonal to.
+     * @return 3D tangent on a trajectory.
      */
     protected Point3d forward_difference3d(Trajectory tra, int dt, int frame_idx) {
         Point3d p1 = tra.getEuclidPositionAtFrame(frame_idx);
-        Point3d p2 = tra.getEuclidPositionAtFrame(frame_idx+dt);
+        Point3d p2 = tra.getEuclidPositionAtFrame(frame_idx + dt);
         Point3d p = p2.copy().sub(p1);
 
         // check for invalid depth values

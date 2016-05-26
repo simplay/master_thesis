@@ -1,11 +1,16 @@
 import datastructures.Point2d;
+import datastructures.Point3d;
 import datastructures.Trajectory;
 import junit.framework.Assert;
+import managers.CalibrationManager;
+import managers.DepthManager;
 import managers.MetaDataManager;
 import managers.TrajectoryManager;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
+import readers.CalibrationsReader;
+import readers.DepthFieldReader;
 import similarity.SimilarityTask;
 
 import java.lang.reflect.Field;
@@ -119,6 +124,10 @@ public class SimilarityTaskTest {
         public void p_appendAvgSpatialDistances(Trajectory a, Trajectory b, double sp_dist) {
             appendAvgSpatialDistances(a, b, sp_dist);
         }
+
+        public Point3d p_forward_difference3d(Trajectory tra, int dt, int frame_idx) {
+            return forward_difference3d(tra, dt, frame_idx);
+        }
     }
 
     @Before
@@ -126,6 +135,8 @@ public class SimilarityTaskTest {
         ArgParser.release();
         TrajectoryManager.release();
         MetaDataManager.release();
+        CalibrationManager.release();
+        DepthManager.release();
 
         String[] args = {"-ct", "1"};
         ArgParser.getInstance(args);
@@ -789,6 +800,35 @@ public class SimilarityTaskTest {
         assertEquals(a.getLabel(), neighborsC.keySet().toArray()[0]);
         assertEquals(b.getLabel(), neighborsC.keySet().toArray()[1]);
 
+    }
+
+    @Test
+    public void testForward_difference3d() {
+        new CalibrationsReader("foobar", "./testdata/");
+        new DepthFieldReader("foobar", "1", "./testdata/");
+        new DepthFieldReader("foobar", "2", "./testdata/");
+
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(0, 0));
+        a.addPoint(new Point2d(0.1, 0.1));
+        a.markClosed();
+
+        HashMap<Integer, Trajectory> trajectories = new HashMap<>();
+        trajectories.put(a.getLabel(), a);
+        setTrajectoryManagerTrajectories(trajectories);
+
+        TrajectoryManager.getInstance().transformTrajectoryPointsToEuclidianSpace();
+
+        Point3d d = nullHelper.p_forward_difference3d(a, 1, 0);
+
+        Point3d p0 = a.getEuclidPositionAtFrame(0);
+        Point3d p1 = a.getEuclidPositionAtFrame(1);
+
+        Point3d gt_d = p1.copy().sub(p0);
+
+        assertEquals(gt_d.x(), d.x(), 0);
+        assertEquals(gt_d.y(), d.y(), 0);
+        assertEquals(gt_d.z(), d.z(), 0);
     }
 
     @Test
