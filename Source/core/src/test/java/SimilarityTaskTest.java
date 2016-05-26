@@ -9,10 +9,7 @@ import pipeline_components.ArgParser;
 import similarity.SimilarityTask;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertEquals;
@@ -40,6 +37,21 @@ public class SimilarityTaskTest {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+    }
+    private TreeMap<Integer, Double> getNeighborsHashFor(Trajectory tra) {
+        Field field = null;
+        try {
+            field = Trajectory.class.getDeclaredField("avgSpatialDistToNeighbors");
+            field.setAccessible(true);
+            try {
+                return (TreeMap<Integer, Double>)field.get(tra);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -102,6 +114,10 @@ public class SimilarityTaskTest {
 
         public boolean p_trajectoryPointsInvalid(Point2d pa, Point2d pb) {
             return trajectoryPointsInvalid(pa, pb);
+        }
+
+        public void p_appendAvgSpatialDistances(Trajectory a, Trajectory b, double sp_dist) {
+            appendAvgSpatialDistances(a, b, sp_dist);
         }
     }
 
@@ -733,6 +749,46 @@ public class SimilarityTaskTest {
         assertTrue(nullHelper.p_trajectoryPointsInvalid(pa0, pb1));
         assertTrue(nullHelper.p_trajectoryPointsInvalid(pa1, pb0));
         assertFalse(nullHelper.p_trajectoryPointsInvalid(pa1, pb1));
+    }
+
+    @Test
+    public void testAppendAvgSpatialDistances() {
+        Trajectory a = new Trajectory(0);
+        Trajectory b = new Trajectory(0);
+        Trajectory c = new Trajectory(0);
+
+        a.markClosed();
+        b.markClosed();
+
+        nullHelper.p_appendAvgSpatialDistances(a, b, 3.14);
+        nullHelper.p_appendAvgSpatialDistances(a, c, 2.14);
+        nullHelper.p_appendAvgSpatialDistances(b, c, 1.14);
+
+        TreeMap<Integer, Double> neighborsA = getNeighborsHashFor(a);
+        TreeMap<Integer, Double> neighborsB = getNeighborsHashFor(b);
+        TreeMap<Integer, Double> neighborsC = getNeighborsHashFor(c);
+
+        // check assignments of nearest avg spatial neighbor value assignments
+        // also considers the correct order of assignment
+        assertEquals(3.14, neighborsA.values().toArray()[0]);
+        assertEquals(2.14, neighborsA.values().toArray()[1]);
+
+        assertEquals(3.14, neighborsB.values().toArray()[0]);
+        assertEquals(1.14, neighborsB.values().toArray()[1]);
+
+        assertEquals(2.14, neighborsC.values().toArray()[0]);
+        assertEquals(1.14, neighborsC.values().toArray()[1]);
+
+        // Test order of key assignments
+        assertEquals(b.getLabel(), neighborsA.keySet().toArray()[0]);
+        assertEquals(c.getLabel(), neighborsA.keySet().toArray()[1]);
+
+        assertEquals(a.getLabel(), neighborsB.keySet().toArray()[0]);
+        assertEquals(c.getLabel(), neighborsB.keySet().toArray()[1]);
+
+        assertEquals(a.getLabel(), neighborsC.keySet().toArray()[0]);
+        assertEquals(b.getLabel(), neighborsC.keySet().toArray()[1]);
+
     }
 
     @Test
