@@ -246,7 +246,9 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     /**
-     * Compute 3d flow in metric space.
+     * Computes the tangent in the Euclidean space on a trajectory using a certain time step.
+     *
+     * Is used to compute 3D flow in metric space used by `PAED` or `SAED` similarity tasks.
      *
      * @param tra
      * @param dt
@@ -254,27 +256,14 @@ public abstract class SimilarityTask implements Runnable {
      * @return
      */
     protected Point3d forward_difference3d(Trajectory tra, int dt, int frame_idx) {
-        Point2d p_i = tra.getPointAtFrame(frame_idx);
-        Point2d p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
-        double d_i = DepthManager.getInstance().get(frame_idx).valueAt(p_i.x(), p_i.y());
-        double d_i_pl_t = DepthManager.getInstance().get(frame_idx+dt).valueAt(p_i_pl_t.x(), p_i_pl_t.y());
-
-        double _x1 = d_i*((p_i.x() - CalibrationManager.depth_principal_point().x()) / CalibrationManager.depth_focal_len().x());
-        double _y1 = d_i*((p_i.y() - CalibrationManager.depth_principal_point().y()) / CalibrationManager.depth_focal_len().y());
-
-        double _x2 = d_i_pl_t*((p_i_pl_t.x() - CalibrationManager.depth_principal_point().x()) / CalibrationManager.depth_focal_len().x());
-        double _y2 = d_i_pl_t*((p_i_pl_t.y() - CalibrationManager.depth_principal_point().y()) / CalibrationManager.depth_focal_len().y());
-
-        Point3d p1 = new Point3d(_x1, _y1, d_i);
-        Point3d p2 = new Point3d(_x2, _y2, d_i_pl_t);
-
-        Point3d p = p1.sub(p2);
+        Point3d p1 = tra.getEuclidPositionAtFrame(frame_idx);
+        Point3d p2 = tra.getEuclidPositionAtFrame(frame_idx+dt);
+        Point3d p = p2.copy().sub(p1);
 
         // check for invalid depth values
-        if (d_i == 0d || d_i_pl_t == 0d) {
+        if (p1.z() == 0d || p2.z() == 0d) {
             p.markInvalid();
         }
-
         return p.div_by(dt);
     }
 
