@@ -91,6 +91,10 @@ public class SimilarityTaskTest {
         public boolean p_hasOverlapWithoutContinuation(Trajectory a, Trajectory b) {
             return hasOverlapWithoutContinuation(a, b);
         }
+
+        public Point2d p_forward_difference(Trajectory tra, int dt, int frame_idx) {
+            return forward_difference(tra, dt, frame_idx);
+        }
     }
 
     @Before
@@ -592,6 +596,82 @@ public class SimilarityTaskTest {
         int to_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
         int overlapCount = nullHelper.p_overlappingFrameCount(from_idx, to_idx);
         assertTrue(overlapCount > 0);
+    }
+
+    @Test
+    public void testForward_differenceDtOneSimpleCase() {
+        double eps = 1e-9;
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(2, 1));
+        a.addPoint(new Point2d(0.5, 2));
+        a.addPoint(new Point2d(3.5, 2.3));
+        a.addPoint(new Point2d(4.5, 1.3));
+
+        Point2d d = nullHelper.p_forward_difference(a, 1, 0);
+        assertEquals(-1.5, d.x(), eps);
+        assertEquals(1, d.y(), eps);
+
+        d = nullHelper.p_forward_difference(a, 1, 1);
+        assertEquals(3, d.x(), eps);
+        assertEquals(0.3, d.y(), eps);
+
+        d = nullHelper.p_forward_difference(a, 1, 2);
+        assertEquals(1, d.x(), eps);
+        assertEquals(-1, d.y(), eps);
+    }
+
+    @Test
+    public void testForward_differenceDtTwoSimpleCase() {
+        double eps = 1e-9;
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(2, 1));
+        a.addPoint(new Point2d(0.5, 2));
+        a.addPoint(new Point2d(3.5, 2.3));
+        a.addPoint(new Point2d(4.5, 1.3));
+
+        // (0.75, 0.65) = [(3.5,2.3)-(2,1)] / 2
+        Point2d d = nullHelper.p_forward_difference(a, 2, 0);
+        assertEquals(0.75, d.x(), eps);
+        assertEquals(0.65, d.y(), eps);
+
+        // (2, -0.35) = [(4.5,1.3)-(0.5,2)] / 2
+        d = nullHelper.p_forward_difference(a, 2, 1);
+        assertEquals(2, d.x(), eps);
+        assertEquals(-0.35, d.y(), eps);
+    }
+
+    @Test
+    public void testForward_differenceDtThreeSimpleCase() {
+        double eps = 1e-9;
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(2, 1));
+        a.addPoint(new Point2d(0.5, 2));
+        a.addPoint(new Point2d(3.5, 2.3));
+        a.addPoint(new Point2d(4.5, 1.3));
+
+        // [4.5,1.3)-(2,1)] / 3
+        Point2d d = nullHelper.p_forward_difference(a, 3, 0);
+        assertEquals(2.5/3, d.x(), eps);
+        assertEquals(0.3/3, d.y(), eps);
+    }
+
+    @Test
+    public void testForward_differenceDtOneRandomCase() {
+        int N = 10;
+        double eps = 1e-9;
+        for (int n = 0; n < N; n++) {
+            Trajectory a = new Trajectory(0);
+            double x0 = Math.random();
+            double y0 = Math.random();
+            a.addPoint(new Point2d(x0, y0));
+
+            double x1 = Math.random();
+            double y1 = Math.random();
+            a.addPoint(new Point2d(x1, y1));
+            Point2d d = nullHelper.p_forward_difference(a, 1, 0);
+            assertEquals(x1 - x0, d.x(), eps);
+            assertEquals(y1 - y0, d.y(), eps);
+        }
     }
 
     @Test

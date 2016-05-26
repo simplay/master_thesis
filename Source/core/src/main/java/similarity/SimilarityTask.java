@@ -221,21 +221,26 @@ public abstract class SimilarityTask implements Runnable {
     }
 
     /**
-     * Compute the value of the tangent of a given trajectory at a given location.
+     * Computes the tangent at a given trajectory point, using a certain time-step.
+     *
+     * To compute the tangent, we make use of a forward difference scheme,
+     * allowing arbitrary time-steps. The
      *
      * Given a time-step h, then any function f can be approximated by the Taylor series
      * f(x+h) = f(x) + h*f'(x) + O(h^2)
      * => [f(x+h) - f(x)] / h = f'(x)
      *
+     * This method is used to compute motion distances between trajectories.
+     *
      * @param tra trajectory
      * @param dt time step size
-     * @param frame_idx active frame
-     * @return forward difference value of the trajectory active at the target
+     * @param frame_idx point the tangent is orthogonal to.
+     * @return forward difference of the trajectory active at the target
      *  frame when using the given step size.
      */
     protected Point2d forward_difference(Trajectory tra, int dt, int frame_idx) {
         Point2d p_i = tra.getPointAtFrame(frame_idx);
-        Point2d p_i_pl_t = tra.getPointAtFrame(frame_idx+dt);
+        Point2d p_i_pl_t = tra.getPointAtFrame(frame_idx + dt);
         Point2d p = p_i_pl_t.copy().sub(p_i);
         return p.div_by(dt);
     }
