@@ -452,6 +452,100 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testIsTooShortOverlappingIsOverlappingAfterExtendingIt() {
+        // Tra a, not continued, living in frame indices:
+        // 0 1 2 3 4 ,5] 6 7 8
+        MetaDataManager.getInstance().setFrameCount(20);
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.markClosed();
+
+        // Tra b, not continued, living in frame indices:
+        // 5 6 7 [8, 10 11 12 13 14] 15 16 17
+        Trajectory b = new Trajectory(8);
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.markClosed();
+
+        a.extendPointTracking();
+        b.extendPointTracking();
+
+        // lower index is the one of the later starting trajectory
+        int lower_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        assertEquals(5, lower_idx);
+
+        // upper index is the one of the earlier ending trajectory
+        int upper_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+        assertEquals(8, upper_idx);
+
+        // The overlap count is as long as expected: overlap in frames 5,6,7,8
+        int overlapCount = nullHelper.p_overlappingFrameCount(lower_idx, upper_idx);
+        assertEquals(4, overlapCount);
+
+        // The overlap is as long as minimally expected
+        assertTrue(overlapCount >= nullHelper.minExpectedTrajectoryLength());
+
+        // shouldn't be too short, since it has a overlap,
+        // which is longer than the min. expected overlap length.
+        assertFalse(nullHelper.p_isTooShortOverlapping(a, b, overlapCount));
+    }
+
+    @Test
+    public void testIsTooShortOverlappingIsNotOverlapping() {
+        // Tra a, not continued, living in frame indices:
+        // 0 1 2 3 4 5
+        Trajectory a = new Trajectory(0);
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.addPoint(Point2d.one());
+        a.markClosed();
+
+        // Tra b, not continued, living in frame indices:
+        // 8, 10 11 12 13 14
+        Trajectory b = new Trajectory(8);
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.addPoint(Point2d.one());
+        b.markClosed();
+
+        // lower index is the one of the later starting trajectory
+        int lower_idx = nullHelper.p_getLowerFrameIndexBetween(a, b);
+        assertEquals(8, lower_idx);
+
+        // upper index is the one of the earlier ending trajectory
+        int upper_idx = nullHelper.p_getUpperFrameIndexBetween(a, b);
+        assertEquals(5, upper_idx);
+
+        // The overlap count is as long as expected
+        int overlapCount = nullHelper.p_overlappingFrameCount(lower_idx, upper_idx);
+        assertEquals(-2, overlapCount);
+
+        // The overlap is as long as minimally expected
+        assertFalse(overlapCount >= nullHelper.minExpectedTrajectoryLength());
+
+        // shouldn't be too short, since it has a overlap,
+        // which is longer than the min. expected overlap length.
+        assertTrue(nullHelper.p_isTooShortOverlapping(a, b, overlapCount));
+    }
+
+    @Test
     public void testRun() {
         Trajectory a = new Trajectory(0);
         a.addPoint(Point2d.one());

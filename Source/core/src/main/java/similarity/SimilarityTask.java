@@ -113,21 +113,72 @@ public abstract class SimilarityTask implements Runnable {
      *
      * Note: The number of frames - 1 gives us the length of a trajectory
      *
-     * @param overlappingFrameCount
-     * @return
+     * Never use this method directly within a similarity task
+     *
+     * @param overlappingFrameCount the number of overlapping trajectory frames.
+     * @return true, if the overlap length is too short, false otherwise.
      */
-    // has no overlap without cont but common frames, then
-    // has only overlap in cont. case.
-    // used to skipt too short case for overlapping continuations
-    // when not running ct = 1, then has
     protected boolean isTooShortOverlapping(int overlappingFrameCount) {
         return (overlappingFrameCount - 1) < MIN_EXPECTED_TRAJ_LEN;
     }
 
-    // has no overlap without cont but common frames, then
-    // has only overlap in cont. case.
-    // used to skipt too short case for overlapping continuations
-    // when not running ct = 1, then has
+    /**
+     * Checks whether the overlapping trajectory parts are too short.
+     *
+     * An overlap is either too short if it has no overlap at all,
+     * is overlapping (without continuation), but the the overlap length
+     * or is smaller than the expected minimum overlap length.
+     *
+     * In case we we consider a overlapping which only exists because of a
+     * continuation of the trajectories (i.e. the trajectories would not have an
+     * overlap, if they were not continued), then we consider them never as being too short.
+     *
+     * Too short trajectory overlaps result in assigning a similarity value equals zero
+     * between their involved trajectories.
+     *
+     * Note that the given overlapping frame count refers to
+     * the number of overlapping frames without considering a continuation (if ct = 0)
+     * the number of overlapping frames, including continued tracking points (if ct = 1).
+     *
+     * In the following a list of all possible use-cases:
+     *
+     * ct = 0, no overlap
+     * then overlappingFrameCount == 0 && hasOnlyOverlapInCont == false, hence
+     * only the check whether the min expected overlap length is fulfilled is performed.
+     * Since no overlap given, isTooShortOverlapping(overlappingFrameCount) yields true
+     *
+     * ct = 0, has overlap
+     * then hasOverlapWithoutContinuation is true, hence hasOnlyOverlapInCont is false, hence
+     * only the check isTooShortOverlapping(overlappingFrameCount() is performed
+     *
+     * ct = 1, no overlap (with cont)
+     * then overlappingFrameCount > 0 is false and since no overlap in cont, we also have
+     * hasOverlapWithoutContinuation(a, b) equals false (if not in cont. overlap, then also
+     * no overlap without cont) => !hasOverlapWithoutContinuation(a, b) is true. This results
+     * in hasOnlyOverlapInCont is false. Since !hasOnlyOverlapInCont is therefore true,
+     * we only consider isTooShortOverlapping(overlappingFrameCount)
+     * which is true (since no overlap, thus too short)
+     *
+     * ct = 1, overlap (with cont)
+     * overlappingFrameCount > 0 => true
+     * if hasOverlapWithoutContinuation(a, b) == true
+     * then hasOnlyOverlapInCont == false
+     * therefore we perform the isTooShortOverlapping(overlappingFrameCount) check
+     *
+     * if hasOverlapWithoutContinuation(a, b) == false
+     * (there is only an overlap in the cont. case),
+     * then !hasOverlapWithoutContinuation(a, b) == true and
+     * hence hasOnlyOverlapInCont is true.
+     * Since we use !hasOnlyOverlapInCont and perform an AND operation,
+     * the check is too short overlapping returns false.
+     * (Desired behaviour, when there is only an overlap due to expanding, then skip the
+     * the too short check).
+     *
+     * @param a trajectory
+     * @param b trajectory
+     * @param overlappingFrameCount the overlapping frame count.
+     * @return true if the given trajectory overlap is too short, false otherwise.
+     */
     protected boolean isTooShortOverlapping(Trajectory a, Trajectory b, int overlappingFrameCount) {
         boolean hasOnlyOverlapInCont = !hasOverlapWithoutContinuation(a, b) && overlappingFrameCount > 0;
         return isTooShortOverlapping(overlappingFrameCount) && !hasOnlyOverlapInCont;
