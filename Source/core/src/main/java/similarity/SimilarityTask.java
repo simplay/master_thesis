@@ -333,6 +333,10 @@ public abstract class SimilarityTask implements Runnable {
     /**
      * Compute the spatial distance between two trajectory points overlapping at a certain given frame.
      *
+     * This measures gives a value for the distance between two tracking points living in the same frame.
+     *
+     * By default, the spatial distance is in pixel units.
+     *
      * @param a Trajectory
      * @param b Trajectory
      * @param frame_idx frame index where trajectory frames are overlapping.

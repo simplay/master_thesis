@@ -95,6 +95,10 @@ public class SimilarityTaskTest {
         public Point2d p_forward_difference(Trajectory tra, int dt, int frame_idx) {
             return forward_difference(tra, dt, frame_idx);
         }
+
+        public double p_spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
+            return spatialDistBetween(a, b, frame_idx);
+        }
     }
 
     @Before
@@ -671,6 +675,43 @@ public class SimilarityTaskTest {
             Point2d d = nullHelper.p_forward_difference(a, 1, 0);
             assertEquals(x1 - x0, d.x(), eps);
             assertEquals(y1 - y0, d.y(), eps);
+        }
+    }
+
+    @Test
+    public void testSpatialDistBetween() {
+        double eps = 1e-9;
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(6, 4));
+        a.addPoint(new Point2d(1, 3));
+
+        Trajectory b = new Trajectory(0);
+        b.addPoint(new Point2d(3, 8));
+        b.addPoint(new Point2d(1, 6));
+
+        // sqrt((3-6)^2 + (8-4)^2) = 5
+        assertEquals(5, nullHelper.p_spatialDistBetween(a, b, 0), eps);
+        assertEquals(3, nullHelper.p_spatialDistBetween(a, b, 1), eps);
+    }
+
+    @Test
+    public void testSpatialDistBetweenRandomCase() {
+        double eps = 1e-9;
+        int N = 10;
+        for (int n = 0; n < N; n++) {
+
+            Trajectory a = new Trajectory(0);
+            double x0 = Math.random();
+            double y0 = Math.random();
+            a.addPoint(new Point2d(x0, y0));
+
+            Trajectory b = new Trajectory(0);
+            double x1 = Math.random();
+            double y1 = Math.random();
+            b.addPoint(new Point2d(x1, y1));
+
+            double d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+            assertEquals(d, nullHelper.p_spatialDistBetween(a, b, 0), eps);
         }
     }
 
