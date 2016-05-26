@@ -99,6 +99,10 @@ public class SimilarityTaskTest {
         public double p_spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
             return spatialDistBetween(a, b, frame_idx);
         }
+
+        public boolean p_trajectoryPointsInvalid(Point2d pa, Point2d pb) {
+            return trajectoryPointsInvalid(pa, pb);
+        }
     }
 
     @Before
@@ -713,6 +717,22 @@ public class SimilarityTaskTest {
             double d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
             assertEquals(d, nullHelper.p_spatialDistBetween(a, b, 0), eps);
         }
+    }
+
+    @Test
+    public void testTrajectoryPointsInvalid() {
+        Point2d pa1 = new Point2d(1, 1);
+        Point2d pa0 = new Point2d(1, 1);
+        Point2d pb1 = new Point2d(1, 1);
+        Point2d pb0 = new Point2d(1, 1);
+
+        pa0.markAsInvalid();
+        pb0.markAsInvalid();
+
+        assertTrue(nullHelper.p_trajectoryPointsInvalid(pa0, pb0));
+        assertTrue(nullHelper.p_trajectoryPointsInvalid(pa0, pb1));
+        assertTrue(nullHelper.p_trajectoryPointsInvalid(pa1, pb0));
+        assertFalse(nullHelper.p_trajectoryPointsInvalid(pa1, pb1));
     }
 
     @Test
