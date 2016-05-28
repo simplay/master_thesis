@@ -1,7 +1,6 @@
 import datastructures.Point2d;
 import datastructures.Point3d;
 import datastructures.Trajectory;
-import junit.framework.Assert;
 import managers.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +41,22 @@ public class SimilarityTaskTest {
             e.printStackTrace();
         }
     }
+
+    private void setTrajectoriesEuclidianPoints(Trajectory tra, ArrayList<Point3d> points) {
+        Field field = null;
+        try {
+            field = Trajectory.class.getDeclaredField("euclidianPoints");
+            field.setAccessible(true);
+            try {
+                field.set(tra, points);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     private TreeMap<Integer, Double> getNeighborsHashFor(Trajectory tra) {
         Field field = null;
         try {
@@ -833,6 +848,39 @@ public class SimilarityTaskTest {
         assertEquals(gt_d.x(), d.x(), 0);
         assertEquals(gt_d.y(), d.y(), 0);
         assertEquals(gt_d.z(), d.z(), 0);
+
+        assertTrue(d.isValid());
+    }
+
+    @Test
+    public void testForward_difference3dInvalidCase() {
+        new CalibrationsReader("foobar", "./testdata/");
+
+        Trajectory a = new Trajectory(0);
+        a.addPoint(new Point2d(0, 0));
+        a.addPoint(new Point2d(0.0, 0.0));
+        a.markClosed();
+
+        HashMap<Integer, Trajectory> trajectories = new HashMap<>();
+        trajectories.put(a.getLabel(), a);
+        setTrajectoryManagerTrajectories(trajectories);
+
+        ArrayList<Point3d> points = new ArrayList<>();
+        points.add(new Point3d(0, 0, 0));
+        points.add(new Point3d(0, 0, 0));
+        setTrajectoriesEuclidianPoints(a, points);
+
+        Point3d d = nullHelper.p_forward_difference3d(a, 1, 0);
+
+        Point3d p0 = a.getEuclidPositionAtFrame(0);
+        Point3d p1 = a.getEuclidPositionAtFrame(1);
+
+        Point3d gt_d = p1.copy().sub(p0);
+
+        assertEquals(gt_d.x(), d.x(), 0);
+        assertEquals(gt_d.y(), d.y(), 0);
+        assertEquals(gt_d.z(), d.z(), 0);
+        assertFalse(d.isValid());
     }
 
     @Test
