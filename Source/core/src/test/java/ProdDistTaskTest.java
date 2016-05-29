@@ -6,6 +6,7 @@ import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
 import similarity.ProdDistTask;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -101,17 +102,25 @@ public class ProdDistTaskTest {
             VarianceManager.getInstance().add(fvf);
         }
 
-        // Generate N - 3 Tracking candidates
+        // Generate N - 3 Tracking candidates: Only use candidates that have a valid flow
         for (int i = 0; i < N - 3; i++) {
-            String rows[] = new String[N * N];
-            String columns[] = new String[N * N];
-            int count = 0;
+            LinkedList<String> tmpRows = new LinkedList<>();
+            LinkedList<String> tmpCols = new LinkedList<>();
+            FlowField fwf = FlowFieldManager.getInstance().getForwardFlow(i);
             for (int k = 0; k < N; k++) {
                 for (int l = 0; l < N; l++) {
-                    rows[count] = String.valueOf(k + 1);
-                    columns[count] = String.valueOf(l + 1);
-                    count++;
+                    if (fwf.v_valueAt(k, l) > 0d) {
+                        tmpRows.add(String.valueOf(k + 1));
+                        tmpCols.add(String.valueOf(l + 1));
+                    }
                 }
+            }
+
+            String rows[] = new String[tmpRows.size()];
+            String columns[] = new String[tmpCols.size()];
+            for (int k = 0; k < tmpCols.size(); k++) {
+                rows[k] = tmpRows.get(k);
+                columns[k] = tmpCols.get(k);
             }
             TrackingCandidates.getInstance().addCandidates(rows, columns);
         }
