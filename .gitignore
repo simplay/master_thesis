@@ -45,3 +45,4 @@ labels.txt
 *.pdf
 Document/Source/.texpadtmp/
 Source/core/testdata/
+Source/executables/
