@@ -19,13 +19,13 @@ function label_assignments = run_spectral_clustering(W, U_small, S_small, RUN_MO
         
         disp(['Processing frame ',num2str(img_index), '...']);
         
-        fpname = strcat(path, 'seg_f_', num2str(img_index), '.jpg');
+        fpname = strcat(path, 'seg_f_', num2str(img_index), '.png');
 
         if RUN_MODE == 1
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
             
             if SAVE_FIGURES
-                saveas(fig, fpname);
+                save_segmentation(fig, fpname, imgs);
             end
             if SHOW_SEGMENTATION == 0
                 close(fig);
