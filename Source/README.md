@@ -91,15 +91,16 @@ The example dataset is located at `./Data/example`.
  ```
  + **d)** The generated segmentations are stored in `./Source/output/clustering/example_ldof_pd_top_30_c_3_ev_2/`
  
- ### Pipeline statge details
+ ### Pipeline stage details
 
-+ Define a dataset as described [here](https://github.com/simplay/master_thesis/blob/master/Data/README.md).
-+ Generate flow field data as described [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/README.md).
-+ Extract important pipeline data by running the scripts located at `./initialize_data/`. Please read its [Readme](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Source/initialize_data).
-+ Extract trajectories and compute their similarity matrix by running the code located at `./core/`. Please Read its [README](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/core/README.md) beforehand.
++ The definition of a custom dataset is described [here](https://github.com/simplay/master_thesis/blob/master/Data/README.md).
++ More details about how to generate flow fields can be found [here](https://github.com/simplay/master_thesis/blob/master/Source/compute_flows/README.md).
++ More information about extracting core data by running the `./initialize_data/` scripts can be found [here](https://github.com/simplay/master_thesis/blob/master/Source/initialize_data/README.md).
++ All relevant information how to run the pipeline `./core/` can be found [here](https://github.com/simplay/master_thesis/blob/master/Source/core/README.md).
 + Compute the motion segmentations by applying either:
- + The **Spectral clustering** or **Min Cut** method. Their scripts are located at `./segmentation/`. or
- + The **Kernighan Lin** method, located at `./segmentation/kernighan_lin/`. Please read the provided README files beforehand to obtain further information about the usages and the generated output.
+ + The **Spectral clustering** or **Min Cut** method. 
+ + Their scripts are located at `./segmentation/`. For further information read [this README](https://github.com/simplay/master_thesis/blob/master/Source/segmentation/README.md).
+ + The **Kernighan Lin** method, located at `./segmentation/kernighan_lin/`. Please read the provided [README](https://github.com/simplay/master_thesis/blob/master/Source/segmentation/kernighan_lin/README.md)
  + Run the evaluation of the generated dataset by running the scripts located at `./eval/`.
  
 In general, please all provided README files carefully before running any code.
