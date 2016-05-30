@@ -3,9 +3,9 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'cars';
+DATASET = 'example';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_3000';
+PREFIX_INPUT_FILENAME = 'sd_all_115';
 
 graph_cuts_dir = '../output/graph_part/';
 PART_DS_PREF = 'test';
@@ -74,7 +74,7 @@ for img_index = range
     visualize_segmentation(frames, imgs, label_assignments, ...
                            label_mappings, img_index, rgb_values);
     if SAVE_FIGURES
-        saveas(fig, fpname);
+        save_segmentation(fig, fpname, imgs);
     end
     
     if SHOW_SEGMENTATION == 0
