@@ -99,7 +99,7 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
             visualize_segmentation(frames, imgs, label_assignments, label_mappings, img_index, rgb_values);
             
             if SAVE_FIGURES
-                saveas(fig, fpname);
+                save_segmentation(fig, fpname, imgs);
             end
             if SHOW_SEGMENTATION == 0
                 close(fig);
