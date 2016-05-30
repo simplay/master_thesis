@@ -5,7 +5,6 @@
 **Goal**: Segment all objects that have a certain velocity such that objects moving equally are in the same segment. In oder to do so, perform the following steps:
 
 1. Compute their Optical (foreward and backward) Flow.
- + The methods that are used can be found [here](https://github.com/simplay/ma_pipeline)
 2. Track sparsely appropriate moveable points.
 3. Extract corresponding trajectories
 4. compute similarites between all determined trajectoires.
