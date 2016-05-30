@@ -6,20 +6,54 @@ import pipeline_components.ArgParser;
 
 import java.util.Collection;
 
+/**
+ * ProdDistTask is a SimilarityTask to makes use of the motion- and spatial distances between trajectories.
+ * Only overlapping trajectory parts (their associated tracking points) are considered.
+ *
+ * The actual affinity value between two trajectories is computed by
+ * calculating the product of the two distance values and then taking a negative weighted exponential
+ * of this resulting product.
+ *
+ * The motion distance is the max. motion distance between the overlapping trajectory parts, whereas
+ * the motion distance is the difference of the two flow forward differences.
+ *
+ * The spatial distance is the average spatial distance between the overlapping trajectory parts.
+ *
+ * Given trajectories a, b
+ * Foreach frame : overlapping_frames(a, b)
+ *  pa = a.getPointAt(frame.index)
+ *  pb = b.getPointAt(frame.index)
+ *  d_sp += sp_dist(pa, pb)
+ *  d_motion = max d(1/sigma_t(k) * ||d_t(pa) - d_t(pb)||^2)
+ * exp(-LAMBDA * d_sp * d_motion)
+ */
 public class ProdDistTask extends SimilarityTask {
 
-    // Affinity scaling factor, acts as a sensivity parameter
+    // Affinity scaling factor:
+    // The higher lambda gets, the smaller the affinities become (and vice-versa)
+    // Acts as a threshold-ing affinity value equalizer.
     protected double lambda_scale;
 
     /**
-     * @param a
-     * @param trajectories
+     * Construct a new product distance similarity task.
+     *
+     * @param a reference trajectory
+     * @param trajectories collection of all extracted trajectories.
      */
     public ProdDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
         this.lambda_scale = ArgParser.getLambda();
     }
 
+    /**
+     * Compute the similarity value between two trajectories using product distances.
+     *
+     * Info: Eigen-similarities yield a zero affinity.
+     *
+     * @param a trajectory
+     * @param b trajectory
+     * @return computed similarity value
+     */
     @Override
     protected double similarityBetween(Trajectory a, Trajectory b) {
 
@@ -54,11 +88,13 @@ public class ProdDistTask extends SimilarityTask {
      * upper possible index while computing the forward difference (because this method
      * makes use of the assigned step size).
      *
+     * This method also assigns the spatial avg dist. value to the involved trajectories.
+     *
      * @param a trajectory
      * @param b trajectory
      * @param from_idx lower overlapping index
      * @param to_idx upper overlapping index
-     * @return
+     * @return computed affinity value between the two given trajectories.
      */
     protected double spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
 
@@ -136,6 +172,12 @@ public class ProdDistTask extends SimilarityTask {
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 
+    /**
+     * Check to determine whether the computed distance value can be considered as invalid
+     *
+     *  @param dist calculated avg spatial distance
+     * @return true if invalid, false otherwise.
+     */
     protected boolean exceededSpatialTol(double dist) {
         return false;
     }
