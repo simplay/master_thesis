@@ -165,21 +165,8 @@ public class ProdDistTask extends SimilarityTask {
         double dist_st_a_b = avgSpatialDist * maxMotionDistance;
         double w_ab = Math.exp(-lambda_scale * dist_st_a_b);
 
-        // Return the zero similarity, in case the spatial tol. has been reached.
-        if (exceededSpatialTol(avgSpatialDist)) return 0d;
-
         // If the similarity is sufficiently small, return zero.
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
-    }
-
-    /**
-     * Check to determine whether the computed distance value can be considered as invalid
-     *
-     *  @param dist calculated avg spatial distance
-     * @return true if invalid, false otherwise.
-     */
-    protected boolean exceededSpatialTol(double dist) {
-        return false;
     }
 
     /**
