@@ -11,7 +11,7 @@
 4. compute similarites between all determined trajectoires.
 5. compute the segmentation using a special variant of spectral clustering using the trajectory similarities as a cue.
 
-A detailed explanation of the whole pipeline can be found [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/pipeline.md).
+A detailed explanation of the whole pipeline can be found [here](https://github.com/simplay/master_thesis/blob/master/Source/pipeline.md).
 
 ## Requirements
 + Java >= 7
@@ -47,7 +47,53 @@ First, install a recent Matlab version. Next, open your terminal of choice and e
 
 ## Usage
 
-+ Define a dataset as described [here](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Data).
+### Run the example Dataset
+
+The example dataset is located at `./Data/example`.
+
+1. Generate the flow fields
+ 1. Go to `./Source/compute_flows/`
+ 2. Run `./run.sh -guided`
+ 3. Follow the instructions given by the guided mode.
+ 4. The generatated flows will be loacted at `./Data/example/ldof/`
+2. Extract core data
+ + **a)** Go to `./Source/initialize_data/`
+ + **b)** Open the matlab script `init_data.m`
+ + **c)** Change set the following parameters as described: 
+ ```
+  DATASETNAME = 'example'
+  COMPUTE_TRACKING_DATA = true;
+  COMPUTE_FLOW_VARIANCES = true;
+  COMPUTE_CIE_LAB = true; 
+  EXTRACT_DEPTH_FIELDS = false;
+  COMPUTE_DEPTH_VARIANCE = false;
+ ```
+ + **d)** Run this matlab script
+ + **e)** The extracted data is dumped to `.Source/output/tracking_data/example`
+3. Generate the affinity matrix by running the pipeline core
+ 1. Open `Source/core/` with an Java IDE (either Intellij or Eclipse)
+ 2. Run the Main class.
+ 3. Provide the following runtime arguments `-d example -task 2 -var 1 -nn 30 -nnm top -lambda 0.01` before executing `main.java`.
+ 4. The generated output is dumped to `.Source/output/similarity/`
+4. Run a segmentation method (in this example, we use the spectral clustering method)
+ + **a)** Go to `./Source/segmentation/`
+ + **b)** Open the matlab script `main_spectral_clustering.m`
+ + **c)** Set the following parameters:
+ ```
+  DATASET = 'example';
+  PREFIX_OUTPUT_FILENAME = 'pd_top';
+  PREFIX_INPUT_FILENAME = 'pd_top_30';
+  COMPUTE_EIGS = true;
+  REUSE_ASSIGNMENTS = false;
+  COMPUTE_FULL_RANGE = true;
+  FORCE_EW_COUNT = 2;
+  CLUSTER_CENTER_COUNT = 3;
+ ```
+ + **d)** The generated segmentations are stored in `./Source/output/clustering/example_ldof_pd_top_30_c_3_ev_2/`
+ 
+ ### Pipeline statge details
+
++ Define a dataset as described [here](https://github.com/simplay/master_thesis/blob/master/Data/README.md).
 + Generate flow field data as described [here](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/compute_flows/README.md).
 + Extract important pipeline data by running the scripts located at `./initialize_data/`. Please read its [Readme](https://github.com/simplay/master_thesis/tree/reworking-precomp-flow/Source/initialize_data).
 + Extract trajectories and compute their similarity matrix by running the code located at `./core/`. Please Read its [README](https://github.com/simplay/master_thesis/blob/reworking-precomp-flow/Source/core/README.md) beforehand.
