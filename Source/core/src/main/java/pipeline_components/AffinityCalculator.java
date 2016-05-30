@@ -12,8 +12,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * AffinityCalculator prepares the similarity workers and their tasks and then runs them
+ * which results in computing the affinity matrix.
+ *
+ * Note that the whole pipeline is blocking, until the last job has been
+ * successfully processed by a worker.
+ */
 public class AffinityCalculator {
 
+    /**
+     * Generate the affinity matrix. Is invoked in the Main class.
+     */
     public AffinityCalculator() {
 
         // performance improvement: pre-allocate all involved datastructures.
