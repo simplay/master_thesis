@@ -22,11 +22,13 @@ public class ProdDistTask extends SimilarityTask {
 
     @Override
     protected double similarityBetween(Trajectory a, Trajectory b) {
-        // handle eigen-similarity case
+
+        // handle eigen-similarity case: similarity value between itself is 0
         if (a == b) {
             return EIGENSIMILARITY_VALUE;
         }
 
+        // Compute overlapping frame indices
         int from_idx = getLowerFrameIndexBetween(a, b);
         int to_idx = getUpperFrameIndexBetween(a, b);
 
@@ -34,7 +36,23 @@ public class ProdDistTask extends SimilarityTask {
     }
 
     /**
-     * Compute the similarity between two trajectories using the product distances.
+     * Computes the similarity between two given trajectories.
+     *
+     * The similarity value is computed by taking a weighted,
+     * negative exponential (using the lambda value) of the trajectory distance.
+     *
+     * The trajectory distance is equal to the product of
+     * the avg. spatial distance and the max. motion distance
+     * between the overlapping tracking points of the two given trajectories.
+     *
+     * In case the the from_idx and to_index do not overlap,
+     * or too few points overlap, then the similarity value zero is returned.
+     *
+     * Note that the step size influences the actual number of used overlapping parts.
+     * Given a step size of dt and an upper index u, then, we only iterate till and with
+     * the index value (u-dt). The reason for this is because we otherwise exceed the
+     * upper possible index while computing the forward difference (because this method
+     * makes use of the assigned step size).
      *
      * @param a trajectory
      * @param b trajectory
@@ -43,40 +61,58 @@ public class ProdDistTask extends SimilarityTask {
      * @return
      */
     protected double spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+
+        // the number of overlapping frames.
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
 
+        // Checks if the number of the overlapping segments is long enough:
+        // This is true if we either have more common frames than the assigned
+        // min. expected overlapping frames count or the trajectories are only
+        // overlapping due to a continuation (can only occur when setting ct = 1).
         if (isTooShortOverlapping(a, b, commonFrameCount)) {
             return 0;
         }
 
-        // is <= MIN_TIMESTEP_SIZE
+        // Compute the time step that will be for computing the forward differences between tracking points.
+        // Info: The time step value is at most equal to MIN_TIMESTEP_SIZE
         int timestep = timestepSize(commonFrameCount);
-        int u = to_idx-timestep;
+
+        // The allowed upper frame index is affected by the time-step dt size,
+        // The reason for this is that we compute forward differences, and therefore need
+        // to access the frame t and t+dt. Therefore such a index shift, by dt, is necessary.
+        int maxAllowedUpperFrameIdx = to_idx - timestep;
 
         // guard: in case there is no overlapping segment, skip computations
-        if (u < from_idx || timestep == 0) {
+        if (maxAllowedUpperFrameIdx < from_idx || timestep == 0) {
             return 0;
         }
 
-        double maxDistance = 0;
+        double maxMotionDistance = 0;
         double avgSpatialDist = 0;
-        double len = u - from_idx + 1;
+        double len = maxAllowedUpperFrameIdx - from_idx + 1;
 
-        for (int l = from_idx; l <= u; l++) {
+        // Iterate over all overlapping frames
+        for (int frameIdx = from_idx; frameIdx <= maxAllowedUpperFrameIdx; frameIdx++) {
 
-            Point2d pa = a.getPointAtFrame(l);
-            Point2d pb = b.getPointAtFrame(l);
+            // Fetch the tracking point living in the current frame.
+            Point2d pa = a.getPointAtFrame(frameIdx);
+            Point2d pb = b.getPointAtFrame(frameIdx);
 
+            // Points are invalid if they have not valid depth data associated
+            // This can only happen, when making use of depth cues, such as in
+            // the PED or the PEAD task.
             if (trajectoryPointsInvalid(pa, pb)) {
                 len--;
                 continue;
             }
 
-            avgSpatialDist += spatialDistBetween(a, b, l);
+            // update spatial distance
+            avgSpatialDist += spatialDistBetween(a, b, frameIdx);
 
-            double dist = d_motion(a, b, timestep, l);
-            if (dist > maxDistance) {
-                maxDistance = dist;
+            // update max. motion distance
+            double dist = d_motion(a, b, timestep, frameIdx);
+            if (dist > maxMotionDistance) {
+                maxMotionDistance = dist;
             }
         }
 
@@ -85,11 +121,18 @@ public class ProdDistTask extends SimilarityTask {
         // resulting in len == 0, which would result in a NaN similarity assignment.
         if (len == 0) return 0d;
 
+        // Normalize distance by length and assign the value to the trajectories.
         avgSpatialDist = avgSpatialDist / len;
         appendAvgSpatialDistances(a, b, avgSpatialDist);
-        double dist_st_a_b = avgSpatialDist*maxDistance;
-        double w_ab = Math.exp(-lambda_scale*dist_st_a_b);
+
+        // Compute the affinity value
+        double dist_st_a_b = avgSpatialDist * maxMotionDistance;
+        double w_ab = Math.exp(-lambda_scale * dist_st_a_b);
+
+        // Return the zero similarity, in case the spatial tol. has been reached.
         if (exceededSpatialTol(avgSpatialDist)) return 0d;
+
+        // If the similarity is sufficiently small, return zero.
         return (w_ab < ZERO_THRESHOLD) ? 0d : w_ab;
     }
 
@@ -99,6 +142,9 @@ public class ProdDistTask extends SimilarityTask {
 
     /**
      * Compute the normalized motion distance between two trajectory points having a certain frame distance.
+     *
+     * Computes the motion difference between to given trajectories at a given frame.
+     * This difference is then normalized by the motion variance.
      *
      * @param a trajectory
      * @param b trajectory

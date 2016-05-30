@@ -1,4 +1,5 @@
 import datastructures.*;
+import junit.framework.Assert;
 import managers.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,14 @@ public class ProdDistTaskTest {
 
         public double p_spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
             return spatialDistBetween(a, b, frame_idx);
+        }
+
+        public int p_getLowerFrameIndexBetween(Trajectory a, Trajectory b) {
+            return getLowerFrameIndexBetween(a, b);
+        }
+
+        public int p_getUpperFrameIndexBetween(Trajectory a, Trajectory b) {
+            return getUpperFrameIndexBetween(a, b);
         }
 
         public double p_spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
@@ -297,8 +306,72 @@ public class ProdDistTaskTest {
         double maxMotion = Math.max(Math.max(Math.max(d_motion_f3, d_motion_f4), d_motion_f5), d_motion_f6);
 
         double gtSimilarity = Math.exp(-(avgSpatialDist * maxMotion) * lambda);
+
+        // by exploring the trajectories we know that the lower overlapping index is 3, the upper is 7.
+        assertEquals(3, nullProdDistTask.p_getLowerFrameIndexBetween(b, c));
+        assertEquals(7, nullProdDistTask.p_getUpperFrameIndexBetween(b, c));
+
         double calculatedSimilarity = nullProdDistTask.p_spatialTemporalDistances(b, c, 3, 7);
         assertEquals(gtSimilarity, calculatedSimilarity, eps);
     }
 
+    @Test
+    public void testSpatialTemporalDistancesIsSymmetric() {
+        setTimestep(1);
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        Trajectory b = (Trajectory) trajectories.toArray()[1];
+        Trajectory c = (Trajectory) trajectories.toArray()[18];
+
+        // computed in motion distance tests
+        double d_sp_f3 = Math.sqrt(5);
+        double d_sp_f4 = Math.sqrt(2.5);
+        double d_sp_f5 = Math.sqrt(3.03125);
+        double d_sp_f6 = Math.sqrt(2.791137695312500);
+
+        // computed in spatial distance tests
+        double d_motion_f3 = 0.4;
+        double d_motion_f4 = 0.025d;
+        double d_motion_f5 = 0.00478515625d;
+        double d_motion_f6 = 7.746234536170959E-4;
+
+        // find the avg dist
+        double avgSpatialDist = (d_sp_f3 + d_sp_f4 + d_sp_f5 + d_sp_f6) / 4;
+
+        // find max motion
+        double maxMotion = Math.max(Math.max(Math.max(d_motion_f3, d_motion_f4), d_motion_f5), d_motion_f6);
+        double gtSimilarity = Math.exp(-(avgSpatialDist * maxMotion) * lambda);
+
+        double calculatedSimilarityBC = nullProdDistTask.p_spatialTemporalDistances(b, c, 3, 7);
+        assertEquals(gtSimilarity, calculatedSimilarityBC, eps);
+
+        double calculatedSimilarityCB = nullProdDistTask.p_spatialTemporalDistances(c, b, 3, 7);
+        assertEquals(gtSimilarity, calculatedSimilarityCB, eps);
+    }
+
+    @Test
+    public void testSpatialTemporalDistancesTooLargeStepSizeYieldsZeroAffinity() {
+        setTimestep(5);
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        Trajectory b = (Trajectory) trajectories.toArray()[1];
+        Trajectory c = (Trajectory) trajectories.toArray()[18];
+
+        // Note that the default step size is equal to 4
+        double gtSimilarity = 0;
+        double calculatedSimilarity = nullProdDistTask.p_spatialTemporalDistances(b, c, 3, 7);
+        assertEquals(gtSimilarity, calculatedSimilarity, eps);
+    }
+
+    @Test
+    public void testSpatialTemporalDistancesNotOverlapping() {
+        setTimestep(1);
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        Trajectory a = (Trajectory) trajectories.toArray()[0];
+        Trajectory b = (Trajectory) trajectories.toArray()[30];
+
+        double gtSimilarity = 0;
+        int from_idx = nullProdDistTask.p_getLowerFrameIndexBetween(a, b);
+        int to_idx = nullProdDistTask.p_getUpperFrameIndexBetween(a, b);
+        double calculatedSimilarity = nullProdDistTask.p_spatialTemporalDistances(a, b, from_idx, to_idx);
+        assertEquals(gtSimilarity, calculatedSimilarity, eps);
+    }
 }
