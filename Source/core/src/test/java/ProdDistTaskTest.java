@@ -78,6 +78,8 @@ public class ProdDistTaskTest {
         InvalidRegionManager.release();
         TrackingCandidates.release();
         TrajectoryManager.release();
+        VarianceManager.release();
+        MetaDataManager.release();
 
         int N = 10;
         double[][] blur = new double[3][3];

@@ -33,6 +33,7 @@ import java.io.*;
  *
  */
 public class Main {
+
     public static void main(String[] argv) {
         long startTime = System.currentTimeMillis();
         ArgParser.getInstance(argv);
