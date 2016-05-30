@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class InvalidRegionsMaskTest {
 
@@ -88,5 +90,24 @@ public class InvalidRegionsMaskTest {
         assertEquals(false, mask.isInvalidAt(new Point2d(1.51, 1.5)));
         assertEquals(true, mask.isInvalidAt(new Point2d(1.5, 1.6)));
         assertEquals(true, mask.isInvalidAt(new Point2d(1.5, 1.4)));
+    }
+
+    @Test
+    public void testSetAt() {
+        int N = 20;
+        for (int u = 0; u < N; u++) {
+            int randX = (int) (Math.random() * 3);
+            int randY = (int) (Math.random() * 3);
+            int m = 3;
+            int n = 3;
+            InvalidRegionsMask mask = new InvalidRegionsMask(m, n);
+            for (int k = 0; k < m; k++) {
+                for (int l = 0; l < n; l++) {
+                    assertFalse(mask.isInvalidAt(new Point2d(k, l)));
+                }
+            }
+            mask.setAt(randX, randY, 1);
+            assertTrue(mask.isInvalidAt(new Point2d(randX, randY)));
+        }
     }
 }

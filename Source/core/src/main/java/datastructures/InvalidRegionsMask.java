@@ -42,6 +42,17 @@ public class InvalidRegionsMask extends Interpolator {
     }
 
     /**
+     * Set a value at a given mask position.
+     *
+     * @param i row index
+     * @param j column index
+     * @param value mask state to be set at a given location.
+     */
+    public synchronized void setAt(int i, int j, double value) {
+        state[i][j] = value;
+    }
+
+    /**
      * Checks whether a given tracked position is within an invalid region.
      * Such invalid regions cause to end a trajectory (i.e. it will be discontinued).
      *

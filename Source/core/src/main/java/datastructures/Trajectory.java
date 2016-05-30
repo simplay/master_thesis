@@ -555,6 +555,7 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
      * Note that when a particular point was determined that either exceeds or underuns the valid lookup range
      * then, all successor points are skipped too.
      *
+     *
      * @param additions points used for extending a trajectory.
      * @return subset of extending points, all lying in valid lookup ranges.
      */
