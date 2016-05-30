@@ -49,6 +49,10 @@ public class ProdDistTaskTest {
         public double p_spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
             return spatialTemporalDistances(a, b, from_idx, to_idx);
         }
+
+        public double p_similarityBetween(Trajectory a, Trajectory b) {
+            return similarityBetween(a, b);
+        }
     }
 
     private void setTimestep(int stepsize) {
@@ -373,5 +377,35 @@ public class ProdDistTaskTest {
         int to_idx = nullProdDistTask.p_getUpperFrameIndexBetween(a, b);
         double calculatedSimilarity = nullProdDistTask.p_spatialTemporalDistances(a, b, from_idx, to_idx);
         assertEquals(gtSimilarity, calculatedSimilarity, eps);
+    }
+
+    @Test
+    public void testSimilarityBetween() {
+        setTimestep(1);
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        Trajectory a = (Trajectory) trajectories.toArray()[1];
+        Trajectory b = (Trajectory) trajectories.toArray()[18];
+
+        // computed in motion distance tests
+        double d_sp_f3 = Math.sqrt(5);
+        double d_sp_f4 = Math.sqrt(2.5);
+        double d_sp_f5 = Math.sqrt(3.03125);
+        double d_sp_f6 = Math.sqrt(2.791137695312500);
+
+        // computed in spatial distance tests
+        double d_motion_f3 = 0.4;
+        double d_motion_f4 = 0.025d;
+        double d_motion_f5 = 0.00478515625d;
+        double d_motion_f6 = 7.746234536170959E-4;
+
+        // find the avg dist
+        double avgSpatialDist = (d_sp_f3 + d_sp_f4 + d_sp_f5 + d_sp_f6) / 4;
+
+        // find max motion
+        double maxMotion = Math.max(Math.max(Math.max(d_motion_f3, d_motion_f4), d_motion_f5), d_motion_f6);
+        double gtSimilarity = Math.exp(-(avgSpatialDist * maxMotion) * lambda);
+
+        double calculatedSimilarityBC = nullProdDistTask.p_similarityBetween(a, b);
+        assertEquals(gtSimilarity, calculatedSimilarityBC, eps);
     }
 }
