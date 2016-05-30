@@ -5,6 +5,12 @@
 + **Advisor**: Mr. Peter Bertholet
 + **Contact**: silent.simplay@gmail.com
 
+
+| | | | |         
+| :---: |:---:| :---:| :---:|
+| ![alt tag](https://github.com/simplay/master_thesis/blob/master/Document/Results/segmentations/example/seg_f_1.png) | ![alt tag](https://github.com/simplay/master_thesis/blob/master/Document/Results/segmentations/example/seg_f_2.png) | ![alt tag](https://github.com/simplay/master_thesis/blob/master/Document/Results/segmentations/example/seg_f_3.png) | ![alt tag](https://github.com/simplay/master_thesis/blob/master/Document/Results/segmentations/example/seg_f_4.png)
+| **Frame 1** | **Frame 2** | **Frame 3** | **Frame 4**
+
 ## Abstract
 
 ## Project Structure
