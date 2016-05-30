@@ -2,11 +2,30 @@ package datastructures;
 
 /**
  * This class implements bilinear interpolation methods for 3d points and scalars.
+ *
+ * f(x,y) = f(0,0)(1-x)*(1-y) + f(1,0)*(1-x)*y + f(0,1)*x*(1-y) + f(1,1)*x*y
+ * f(x,y) = [1-x, x] * [f(0,0) f(0,1); f(1,0) f(1,1)] * [1-y, y]'
+ *
+ * Reason of why do we multiply f0 by 1-x (instead of x): Given
+ *   o--------o---o
+ *  f0        x  f1
+ *
+ *  then, the interpolated value of f(x) is
+ *  f0*(1-x) + f1.
+ *  Reason: the point x is further away from f0 than from f1,
+ *  Thus, the weight f0 has less impact on the result than the weight f1.
+ *  It's influence is in fact distance between the weights minus its location.
+ *  Which is for the normalized case 1-x.
+ *  This is why we apply (1-x) to f0.
+ *
  */
 public class Interpolator {
 
     /**
-     * Compute bilinear interpolation of a given flow position
+     * Compute bilinear interpolated value in a scalar field for a given query position.
+     *
+     * f(x,y) = f00*(1-dx)*(1-dy) + f10*(1-dx)*y + f01*x*(1-dy) + f11*dx*dy
+     * where dx = x - floor(x) and dy = y - floor(y)
      *
      * @param data target flow direction values
      * @param x corresponds to row index
@@ -16,24 +35,31 @@ public class Interpolator {
     public double interpolatedValueAt(double[][] data, double x, double y) {
         int m = data.length;
         int n = data[0].length;
+
+        // check for overflows
         if (x > m-1 || y > n-1) {
             throw new ArrayIndexOutOfBoundsException("Dimensions (m,n)=("+m+","+n+") but accessing (x,y)=("+x+","+y+")" );
         }
 
+        // assign lower interpolation value lookup coordinates
         int px_i = (int) Math.floor(x);
         int py_i = (int) Math.floor(y);
 
+        // assign upper interpolation value lookup coordinates
         int px_i2 = px_i + 1;
         int py_i2 = py_i + 1;
 
+        // compute interpolation weights
         double dx = x - px_i;
         double dy = y - py_i;
 
+        // get interpolation values.
         double f_00 = data[px_i][py_i];
         double f_01 = saveGetAt(data, px_i, py_i2); // data[px_i][py_i2];
         double f_10 = saveGetAt(data, px_i2, py_i); // data[px_i2][py_i];
         double f_11 = saveGetAt(data, px_i2, py_i2); // data[px_i2][py_i2];
 
+        // compute bilinear interpolated value
         double sum = 0d;
         sum += f_00*(1.0d-dx)*(1.0d-dy);
         sum += f_01*(1.0d-dx)*dy;
