@@ -46,3 +46,4 @@ labels.txt
 Document/Source/.texpadtmp/
 Source/core/testdata/
 Source/executables/
+Source/segmentation/kernighan_lin/out/
