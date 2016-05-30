@@ -61,6 +61,42 @@ public class InterpolatorTest {
     }
 
     @Test
+    public void testInterpolation() {
+        double[][] data = new double[3][3];
+        double[] row_1 = {0.25, 0.5, 0.25};
+        double[] row_2 = {0.5, 1, 0.5};
+        double[] row_3 = {0.25, 0.5, 0.25};
+        data[0] = row_1;
+        data[1] = row_2;
+        data[2] = row_3;
+        Interpolator i = new Interpolator();
+
+        // (0.25 + 0.5) / 2
+        double gtInterpolValue = 0.375;
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 0, 1.5), 0);
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 0, 0.5), 0);
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 1.5, 0), 0);
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 0.5, 0), 0);
+
+        // 0.5 => i = 0, i+1 = 1
+        // dx = 0.5, dy = 0.5
+        // 1/4 * (0.25 + 0.5 + 0.5 + 1);
+        gtInterpolValue = 0.5625;
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 0.5, 0.5), 0);
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 1.5, 1.5), 0);
+
+        // i = 0.6, j = 1.3
+        // p_i1 = 0, p_i2 = 1 => dx = 0.6
+        // p_j1 = 1, p_j2 = 2 => dy = 0.3
+        // f00 = (1-dx)*(1-dy)*f(0,1)
+        // f10 = dx*(1-dy)*0.5*f(1,1)
+        // f01 = (1-dx)*dy*0.5*f(0,2)
+        // f11 = dx * dy * 1*f(1,2)
+        gtInterpolValue = 0.4*0.7*0.5 + 0.6*0.7*1 + 0.4*0.3*0.25 + 0.6*0.3*0.5;
+        assertEquals(gtInterpolValue, i.interpolatedValueAt(data, 0.6, 1.3), 0);
+    }
+
+    @Test
     public void testPoint2dCaseOutOfBoundaryThrowsException() {
         double[][] data = new double[2][3];
         double[] row_1 = {1d, 2d, 3d};

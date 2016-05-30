@@ -169,6 +169,13 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testGetLowerFrameIndexBetweenSimpleCase() {
+        Trajectory a = new Trajectory(2);
+        Trajectory b = new Trajectory(5);
+        assertEquals(5, nullHelper.p_getLowerFrameIndexBetween(a, b));
+    }
+
+    @Test
     public void testGetLowerFrameIndexBetween() {
         int N = 10;
         for (int n = 0; n < N; n++) {
@@ -179,6 +186,20 @@ public class SimilarityTaskTest {
             Trajectory a = new Trajectory(startA);
             Trajectory b = new Trajectory(startB);
             assertEquals(max, nullHelper.p_getLowerFrameIndexBetween(a, b));
+        }
+    }
+
+    @Test
+    public void testGetLowerFrameIndexBetweenIsSymmetric() {
+        int N = 10;
+        for (int n = 0; n < N; n++) {
+            TrajectoryManager.release();
+            int startA = (int)((Math.random() * 50));
+            int startB = (int)((Math.random() * 50));
+            int max = Math.max(startA, startB);
+            Trajectory a = new Trajectory(startA);
+            Trajectory b = new Trajectory(startB);
+            assertEquals(nullHelper.p_getLowerFrameIndexBetween(a, b), nullHelper.p_getLowerFrameIndexBetween(a, b));
         }
     }
 
@@ -247,6 +268,17 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testGetUpperFrameIndexBetweenSimpleCase() {
+        Trajectory a = new Trajectory(6);
+        a.addPoint(Point2d.one());
+        Trajectory b = new Trajectory(10);
+        b.addPoint(Point2d.one());
+        a.markClosed();
+        b.markClosed();
+        assertEquals(6, nullHelper.p_getUpperFrameIndexBetween(a, b));
+    }
+
+    @Test
     public void testGetUpperFrameIndexBetween() {
         int N = 10;
         for (int n = 0; n < N; n++) {
@@ -261,6 +293,24 @@ public class SimilarityTaskTest {
             a.markClosed();
             b.markClosed();
             assertEquals(min, nullHelper.p_getUpperFrameIndexBetween(a, b));
+        }
+    }
+
+    @Test
+    public void testGetUpperFrameIndexBetweenIsSymmetric() {
+        int N = 10;
+        for (int n = 0; n < N; n++) {
+            TrajectoryManager.release();
+            int startA = (int)((Math.random() * 50));
+            int startB = (int)((Math.random() * 50));
+            int min = Math.min(startA, startB);
+            Trajectory a = new Trajectory(startA);
+            a.addPoint(Point2d.one());
+            Trajectory b = new Trajectory(startB);
+            b.addPoint(Point2d.one());
+            a.markClosed();
+            b.markClosed();
+            assertEquals(nullHelper.p_getUpperFrameIndexBetween(b, a), nullHelper.p_getUpperFrameIndexBetween(a, b));
         }
     }
 
@@ -510,6 +560,9 @@ public class SimilarityTaskTest {
             // shouldn't be too short, since it has a overlap,
             // which is longer than the min. expected overlap length.
             assertFalse(nullHelper.p_isTooShortOverlapping(a, b, overlapCount));
+
+            // Is symmetric
+            assertFalse(nullHelper.p_isTooShortOverlapping(b, a, overlapCount));
         }
     }
 
@@ -766,6 +819,25 @@ public class SimilarityTaskTest {
     }
 
     @Test
+    public void testSpatialDistBetweenRandomCaseIsSymmetric() {
+        double eps = 1e-9;
+        int N = 10;
+        for (int n = 0; n < N; n++) {
+
+            Trajectory a = new Trajectory(0);
+            double x0 = Math.random();
+            double y0 = Math.random();
+            a.addPoint(new Point2d(x0, y0));
+
+            Trajectory b = new Trajectory(0);
+            double x1 = Math.random();
+            double y1 = Math.random();
+            b.addPoint(new Point2d(x1, y1));
+            assertEquals(nullHelper.p_spatialDistBetween(b, a, 0), nullHelper.p_spatialDistBetween(a, b, 0), eps);
+        }
+    }
+
+    @Test
     public void testTrajectoryPointsInvalid() {
         Point2d pa1 = new Point2d(1, 1);
         Point2d pa0 = new Point2d(1, 1);
@@ -901,6 +973,26 @@ public class SimilarityTaskTest {
         double gtVar = VarianceManager.getInstance().getVariance(0).valueAt(new Point2d(0, 0));
         double lookupVar = nullHelper.p_getVariance(0, a, b);
         assertEquals(gtVar, lookupVar, 0);
+    }
+
+    @Test
+    public void testGetVarianceIsSymmetric() {
+        new FlowVarFileReader("foobar", "1", "./testdata/");
+        ArgParser.release();
+        String[] args = {"-var", "1"};
+        ArgParser.getInstance(args);
+
+        Trajectory a = new Trajectory(0);
+        Trajectory b = new Trajectory(0);
+
+        a.addPoint(new Point2d(0, 0));
+        b.addPoint(new Point2d(0, 0));
+
+        a.markClosed();
+        b.markClosed();
+        double lookupVarAB = nullHelper.p_getVariance(0, a, b);
+        double lookupVarBA = nullHelper.p_getVariance(0, b, a);
+        assertEquals(lookupVarAB, lookupVarBA, 0);
     }
 
     @Test
