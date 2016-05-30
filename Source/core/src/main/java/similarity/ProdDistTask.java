@@ -33,6 +33,15 @@ public class ProdDistTask extends SimilarityTask {
         return spatialTemporalDistances(a, b, from_idx, to_idx);
     }
 
+    /**
+     * Compute the similarity between two trajectories using the product distances.
+     *
+     * @param a trajectory
+     * @param b trajectory
+     * @param from_idx lower overlapping index
+     * @param to_idx upper overlapping index
+     * @return
+     */
     protected double spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
         int commonFrameCount = overlappingFrameCount(from_idx, to_idx);
 

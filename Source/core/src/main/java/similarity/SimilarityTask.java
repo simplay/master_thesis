@@ -13,7 +13,7 @@ public abstract class SimilarityTask implements Runnable {
 
     // minimal expected timestep size
     // trajectory overlaps shorter than that value will be ignored
-    protected final int MIN_TIMESTEP_SIZE = 4;
+    protected int MIN_TIMESTEP_SIZE = 4;
 
     // The similarity value when comparing the trajectory with itself.
     // Setting this to 0 makes cluster consisting of 1 pixel vanish.

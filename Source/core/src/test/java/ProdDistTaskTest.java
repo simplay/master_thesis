@@ -5,6 +5,9 @@ import org.junit.Test;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
 import similarity.ProdDistTask;
+import similarity.SimilarityTask;
+
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -14,6 +17,7 @@ public class ProdDistTaskTest {
 
     private ProdDistTaskHelper nullProdDistTask;
     private final double eps = 1e-9;
+    private double lambda = 1.1;
 
     class ProdDistTaskHelper extends ProdDistTask {
 
@@ -27,6 +31,29 @@ public class ProdDistTaskTest {
 
         public double p_d_motion(Trajectory a, Trajectory b, int timestep, int frame_idx) {
             return d_motion(a, b, timestep, frame_idx);
+        }
+
+        public double p_spatialDistBetween(Trajectory a, Trajectory b, int frame_idx) {
+            return spatialDistBetween(a, b, frame_idx);
+        }
+
+        public double p_spatialTemporalDistances(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+            return spatialTemporalDistances(a, b, from_idx, to_idx);
+        }
+    }
+
+    private void setTimestep(int stepsize) {
+        Field field = null;
+        try {
+            field = SimilarityTask.class.getDeclaredField("MIN_TIMESTEP_SIZE");
+            field.setAccessible(true);
+            try {
+                field.set(nullProdDistTask, stepsize);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
     }
 
@@ -145,7 +172,7 @@ public class ProdDistTaskTest {
             InvalidRegionManager.getInstance().addInvalidRegion(mask);
         }
 
-        String[] args = {"-d", "foobar", "-task", "2", "-var", "1"};
+        String[] args = {"-d", "foobar", "-task", "2", "-var", "1", "-lambda", String.valueOf(lambda)};
         ArgParser.getInstance(args);
 
         new Tracker(7, 1);
@@ -205,6 +232,73 @@ public class ProdDistTaskTest {
 
         double gt_d_motion_bc_s_1_f_6 = 7.746234536170959E-4;
         assertEquals(gt_d_motion_bc_s_1_f_6, nullProdDistTask.p_d_motion(b, c, 1, 6), eps);
+    }
+
+    @Test
+    public void testSpatialDistBetween() {
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        // s = 0, l = 2
+        //        0        1       2       3       4       5       6      7
+        // b = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8)]
+        Trajectory b = (Trajectory) trajectories.toArray()[1];
+
+        // s = 3, l = 19
+        //        3         4             5                  6                                7
+        // c = [(5, 5), (5.5, 5.5), (6.625, 6.625), (7.5703125, 7.5703125), (8.592315673828125, 8.592315673828125)]
+        Trajectory c = (Trajectory) trajectories.toArray()[18];
+
+        // sqrt((5-3)^2 + (5-4)^2) = sqrt(5)
+        double dist_ab_f3 = Math.sqrt(5);
+        assertEquals(dist_ab_f3, nullProdDistTask.p_spatialDistBetween(b, c, 3), eps);
+
+        // sqrt((5.5-4)^2 + (5.5-5)^2)
+        double dist_ab_f4 = Math.sqrt(2.5);
+        assertEquals(dist_ab_f4, nullProdDistTask.p_spatialDistBetween(b, c, 4), eps);
+
+        // sqrt[(6.625-6)^2 + (6.625-5)^2] = sqrt(3.0312)
+        double dist_ab_f5 = Math.sqrt(3.03125);
+        assertEquals(dist_ab_f5, nullProdDistTask.p_spatialDistBetween(b, c, 5), eps);
+
+        // sqrt[(7.5703125-7)^2 + (7.5703125-6)^2] = sqrt(3.0312)
+        double dist_ab_f6 = Math.sqrt(2.791137695312500);
+        assertEquals(dist_ab_f6, nullProdDistTask.p_spatialDistBetween(b, c, 6), eps);
+    }
+
+    @Test
+    public void testSpatialTemporalDistances() {
+        setTimestep(1);
+        Collection<Trajectory> trajectories = TrajectoryManager.getTrajectories();
+        // s = 0, l = 2
+        //        0        1       2       3       4       5       6      7
+        // b = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8)]
+        Trajectory b = (Trajectory) trajectories.toArray()[1];
+
+        // s = 3, l = 19
+        //        3         4             5                  6                                7
+        // c = [(5, 5), (5.5, 5.5), (6.625, 6.625), (7.5703125, 7.5703125), (8.592315673828125, 8.592315673828125)]
+        Trajectory c = (Trajectory) trajectories.toArray()[18];
+
+        // computed in motion distance tests
+        double d_sp_f3 = Math.sqrt(5);
+        double d_sp_f4 = Math.sqrt(2.5);
+        double d_sp_f5 = Math.sqrt(3.03125);
+        double d_sp_f6 = Math.sqrt(2.791137695312500);
+
+        // computed in spatial distance tests
+        double d_motion_f3 = 0.4;
+        double d_motion_f4 = 0.025d;
+        double d_motion_f5 = 0.00478515625d;
+        double d_motion_f6 = 7.746234536170959E-4;
+
+        // find the avg dist
+        double avgSpatialDist = (d_sp_f3 + d_sp_f4 + d_sp_f5 + d_sp_f6) / 4;
+
+        // find max motion
+        double maxMotion = Math.max(Math.max(Math.max(d_motion_f3, d_motion_f4), d_motion_f5), d_motion_f6);
+
+        double gtSimilarity = Math.exp(-(avgSpatialDist * maxMotion) * lambda);
+        double calculatedSimilarity = nullProdDistTask.p_spatialTemporalDistances(b, c, 3, 7);
+        assertEquals(gtSimilarity, calculatedSimilarity, eps);
     }
 
 }
