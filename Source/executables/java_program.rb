@@ -8,7 +8,7 @@ class JavaProgram
   def execute(arg_container)
     args = serialize_args(arg_container)
     run_matlab = <<-SCRIPT
-      java -jar #{@script_name} #{args}
+      java -jar -Xmx16000m #{@script_name} #{args}
     SCRIPT
     system("cd #{@path_to_script} && " + run_matlab.lstrip)
   end
