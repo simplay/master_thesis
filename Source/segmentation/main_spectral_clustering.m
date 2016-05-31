@@ -12,12 +12,12 @@ PREFIX_OUTPUT_FILENAME = 'pd_top';
 PREFIX_INPUT_FILENAME = 'pd_top_30';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = true;
+REUSE_ASSIGNMENTS = false;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
 FILTER_ZERO_EIGENVALUES = true;
@@ -37,17 +37,17 @@ CLUSTER_CENTER_COUNT = 3;
 % RUN_MODE = 1 => vis segmentation
 % RUN_MODE = 2 => vis affinities
 % RUN_MODE = 3 => vis eigenvector
-RUN_MODE = 2;
+RUN_MODE = 1;
 
 SHOW_LOCAL_VAR = true;
 
 % show the segmentation figure
-SHOW_SEGMENTATION = true;
+SHOW_SEGMENTATION = false;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
 
-SELECT_AFFINITY_IDX = true;
+SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 6;
 frame_idx = 1;
 
