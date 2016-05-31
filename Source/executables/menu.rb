@@ -1,13 +1,17 @@
 require_relative 'matlab_script.rb'
 require_relative 'script_arg'
 require_relative 'java_program'
+require_relative 'ruby_script'
+
 class Menu
 
-  CORE = "1"
-  SC = "2"
+  FLOW = "1"
+  CORE = "2"
+  SC = "3"
   EXIT = "-1"
 
   MODES = {
+    FLOW => "Generating motion flow fields...",
     CORE => "Generating similarity matrix...",
     SC => "Running Spectral clustering...",
     EXIT => "Exiting Program..."
@@ -24,6 +28,13 @@ class Menu
       selection = gets.chomp
       system("clear")
       case selection
+      when FLOW
+        puts MODES[selection]
+        flow = RubyScript.new("../compute_flows/", "run.rb")
+        args = [
+          PlainStrArg.new("-guided")
+        ]
+        flow.execute(args)
       when CORE
         puts MODES[selection]
         core = JavaProgram.new("./", "core.jar")
