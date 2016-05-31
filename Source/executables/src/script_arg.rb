@@ -17,7 +17,7 @@ end
 
 class IntArg < ScriptArg
 
-  def initialize(value) 
+  def initialize(value)
     super(:integer, value)
   end
 

@@ -1,12 +1,3 @@
-require_relative 'matlab_script.rb'
-require_relative 'script_arg'
-require_relative 'java_program'
-require_relative 'ruby_script'
-require_relative 'file_list'
-require_relative 'init_job'
-require_relative 'core_job'
-require_relative 'sc_job'
-
 class Menu
 
   FLOW = "1"

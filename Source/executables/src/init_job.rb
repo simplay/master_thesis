@@ -1,4 +1,3 @@
-require_relative 'job_node'
 class InitJob
   def initialize
     list = FileList.new("../../Data/").collect
