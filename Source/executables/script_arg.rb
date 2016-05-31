@@ -41,3 +41,13 @@ class StrArg < ScriptArg
   end
 end
 
+class PlainStrArg < StrArg
+  def initialize(value)
+    super(value)
+  end
+
+  def to_arg
+    "#{@value}"
+  end
+end
+
