@@ -2,6 +2,9 @@ require_relative 'matlab_script.rb'
 require_relative 'script_arg'
 require_relative 'java_program'
 require_relative 'ruby_script'
+require_relative 'file_list'
+require_relative 'init_job'
+require_relative 'core_job'
 
 class Menu
 
@@ -40,27 +43,13 @@ class Menu
       when INIT
         puts MODES[selection]
         init_data = MatlabScript.new("../initialize_data/", "run_init_data")
-        args = [
-          StrArg.new("example"),
-          IntArg.new(8),
-          IntArg.new(1),
-          IntArg.new(1),
-          IntArg.new(1),
-          IntArg.new(0),
-          IntArg.new(0)
-        ]
+        args = InitJob.new.args
+        binding.pry
         init_data.execute(args)
       when CORE
         puts MODES[selection]
         core = JavaProgram.new("./", "core.jar")
-        args = [
-          PlainStrArg.new("-d example"),
-          PlainStrArg.new("-task 2"),
-          PlainStrArg.new("-var 1"),
-          PlainStrArg.new("-nn 30"),
-          PlainStrArg.new("-nnm top"),
-          PlainStrArg.new("-lambda 0.1")
-        ]
+        args = CoreJob.new.args
         core.execute(args)
 
       when SC
