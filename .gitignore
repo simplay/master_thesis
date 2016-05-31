@@ -45,5 +45,5 @@ labels.txt
 *.pdf
 Document/Source/.texpadtmp/
 Source/core/testdata/
-Source/executables/
+Source/executables/*.jar
 Source/segmentation/kernighan_lin/out/

@@ -14,7 +14,13 @@ function label_assignments = run_spectral_clustering(W, U_small, S_small, RUN_MO
     for img_index = range
        
         if SAVE_FIGURES
-            fig = figure('name', strcat('Frame ', num2str(img_index)));
+            
+            if SHOW_SEGMENTATION == 1
+              fig = figure('name', strcat('Frame ', num2str(img_index)));
+            else
+              fig = figure('name', strcat('Frame ', num2str(img_index)), 'visible','off');  
+            end
+            
         end
         
         disp(['Processing frame ',num2str(img_index), '...']);
