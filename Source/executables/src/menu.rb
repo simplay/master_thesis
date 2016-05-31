@@ -45,7 +45,6 @@ class Menu
         puts MODES[selection]
         init_data = MatlabScript.new("../initialize_data/", "run_init_data")
         args = InitJob.new.args
-        binding.pry
         init_data.execute(args)
       when CORE
         puts MODES[selection]
