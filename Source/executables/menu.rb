@@ -5,6 +5,7 @@ require_relative 'ruby_script'
 require_relative 'file_list'
 require_relative 'init_job'
 require_relative 'core_job'
+require_relative 'sc_job'
 
 class Menu
 
@@ -55,7 +56,8 @@ class Menu
       when SC
         puts MODES[selection]
         sc = MatlabScript.new("../segmentation/", "run_sc")
-        args = [
+        args = ScJob.new.args
+        args2 = [
           StrArg.new("example"),
           StrArg.new("pd_top_30"),
           IntArg.new(2),
