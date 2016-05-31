@@ -1,9 +1,17 @@
 class LabeledJobNode
-  def initialize(klass, label, query, collection = nil)
+  def initialize(klass, label, query, collection = nil, use_index_value = false)
     @klass = klass
     @label = label
     @query = query
-    @collection = collection
+    @uses_hash = false
+    if collection.is_a? Hash
+      @uses_hash = true
+      @collection = collection.values
+      @keys = collection.keys
+    else
+      @collection = collection
+    end
+    @use_index_value = use_index_value
   end
 
   def build
@@ -16,8 +24,18 @@ class LabeledJobNode
     print "Selection: "
     selection = gets.chomp
     unless @collection.nil?
-      selection = @collection[selection.to_i]
+      sel_idx = selection.to_i
+      selection = options[sel_idx]
+      selection = (sel_idx + 1) if use_index?
     end
     @klass.new("#{@label} #{selection}")
+  end
+
+  def options
+    (@uses_hash) ? @keys : @collection
+  end
+
+  def use_index?
+    @use_index_value
   end
 end

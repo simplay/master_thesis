@@ -8,13 +8,15 @@ class CoreJob
   # PlainStrArg.new("-lambda 0.1")
   def initialize
     datasets = FileList.new("../output/tracker_data/").collect
-    tasks = [1, 2, 3, 4, 5]
+    tasks = ["SD", "PD", "PED", "SED", "PAED"]
+    nn_modes = ["top", "both", "all"]
+    use_variance = {0 => "no", 1 => "yes"}
     jobs = [
       LabeledJobNode.new(PlainStrArg, "-d", "Select a dataset:", datasets),
-      LabeledJobNode.new(PlainStrArg, "-task", "Which task should be run:", tasks),
-      LabeledJobNode.new(PlainStrArg, "-var", "Should the local variance used: "),
+      LabeledJobNode.new(PlainStrArg, "-task", "Which task should be run:", tasks, true),
+      LabeledJobNode.new(PlainStrArg, "-var", "Should the local variance used:", use_variance),
       LabeledJobNode.new(PlainStrArg, "-nn", "Number of nearest neighbors"),
-      LabeledJobNode.new(PlainStrArg, "-nnm", "NN mode:"),
+      LabeledJobNode.new(PlainStrArg, "-nnm", "NN mode:", nn_modes),
       LabeledJobNode.new(PlainStrArg, "-lambda", "lambda value:")
     ]
     @nodes = jobs.map(&:build)
