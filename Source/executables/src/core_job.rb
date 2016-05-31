@@ -13,11 +13,12 @@ class CoreJob
     use_variance = {0 => "no", 1 => "yes"}
     jobs = [
       LabeledJobNode.new(PlainStrArg, "-d", "Select a dataset:", datasets),
-      LabeledJobNode.new(PlainStrArg, "-task", "Which task should be run:", tasks, true),
+      LabeledJobNode.new(PlainStrArg, "-task", "Which similarity task should be run:", tasks, true),
       LabeledJobNode.new(PlainStrArg, "-var", "Should the local variance used:", use_variance),
-      LabeledJobNode.new(PlainStrArg, "-nn", "Number of nearest neighbors"),
+      LabeledJobNode.new(PlainStrArg, "-nn", "Number of nearest neighbors to return:"),
       LabeledJobNode.new(PlainStrArg, "-nnm", "NN mode:", nn_modes),
-      LabeledJobNode.new(PlainStrArg, "-lambda", "lambda value:")
+      LabeledJobNode.new(PlainStrArg, "-lambda", "Which lambda value:"),
+      LabeledJobNode.new(PlainStrArg, "-prob", "Cut Probability value in [0, 1]:")
     ]
     @nodes = jobs.map(&:build)
   end
