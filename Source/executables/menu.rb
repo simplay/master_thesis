@@ -6,12 +6,14 @@ require_relative 'ruby_script'
 class Menu
 
   FLOW = "1"
-  CORE = "2"
-  SC = "3"
+  INIT = "2"
+  CORE = "3"
+  SC = "4"
   EXIT = "-1"
 
   MODES = {
     FLOW => "Generating motion flow fields...",
+    INIT => "Extracting relevant core data...",
     CORE => "Generating similarity matrix...",
     SC => "Running Spectral clustering...",
     EXIT => "Exiting Program..."
@@ -35,6 +37,19 @@ class Menu
           PlainStrArg.new("-guided")
         ]
         flow.execute(args)
+      when INIT
+        puts MODES[selection]
+        init_data = MatlabScript.new("../initialize_data/", "run_init_data")
+        args = [
+          StrArg.new("example"),
+          IntArg.new(8),
+          IntArg.new(1),
+          IntArg.new(1),
+          IntArg.new(1),
+          IntArg.new(0),
+          IntArg.new(0)
+        ]
+        init_data.execute(args)
       when CORE
         puts MODES[selection]
         core = JavaProgram.new("./", "core.jar")

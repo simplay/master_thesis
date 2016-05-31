@@ -47,3 +47,4 @@ Document/Source/.texpadtmp/
 Source/core/testdata/
 Source/executables/*.jar
 Source/segmentation/kernighan_lin/out/
+Source/output/tracker_data/**/*.png*
