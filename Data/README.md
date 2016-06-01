@@ -32,9 +32,9 @@ for v in range(depth_image.height):
 ```
 
 
-| Dataset              | Depth Scale | f_depth | p_depth  | f_rgb | p_rgb
-| -------------------- | ----------- | --------| -------- | ----- | -----  
-| Bonn chair           |             |         |          |       |
+| Dataset              | Depth Div. Scale to Meters | f_depth            | p_depth     | f_rgb  | p_rgb
+| -------------------- | -------------------------- | ------------------ | ----------- | ------ | -----  
+| Bonn chair           |  5000                      | (525.0, 525.0) | (319.5,  239.5) |  -     | -
  
 ## Quick Start
 
