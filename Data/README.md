@@ -2,6 +2,40 @@
 
 This README describes the expected structure of any dataset such that it can be used by the pipeline.
 
+## Calibration Data Per Dataset
+
+Bonn-Dataset:
+
++ The color images are stored as 640×480 8-bit RGB images in PNG format.
++ The depth maps are stored as 640×480 16-bit monochrome images in PNG format.
++ The color and depth images are already pre-registered using the OpenNI driver from PrimeSense, i.e., the pixels in the color and depth images correspond already 1:1.
++ The depth images are scaled by a factor of 5000, i.e., a pixel value of 5000 in the depth image corresponds to a distance of 1 meter from the camera, 10000 to 2 meter distance, etc. A pixel value of 0 means missing value/no data.
+
++ Sources:
+ + http://www.ais.uni-bonn.de/download/rigidmultibody/
+ + http://vision.in.tum.de/data/datasets/rgbd-dataset/file_formats
++ Intrinsic Camera Calibration of the Kinect
+```
+fx = 525.0  # focal length x
+fy = 525.0  # focal length y
+cx = 319.5  # optical center x
+cy = 239.5  # optical center y
+
+factor = 5000 # for the 16-bit PNG files
+# OR: factor = 1 # for the 32-bit float images in the ROS bag files
+
+for v in range(depth_image.height):
+  for u in range(depth_image.width):
+    Z = depth_image[v,u] / factor;
+    X = (u - cx) * Z / fx;
+    Y = (v - cy) * Z / fy;
+```
+
+
+| Dataset              | Depth Div. Scale to Meters | f_depth            | p_depth     | f_rgb  | p_rgb
+| -------------------- | -------------------------- | ------------------ | ----------- | ------ | -----  
+| Bonn chair           |  5000                      | (525.0, 525.0) | (319.5,  239.5) |  -     | -
+ 
 ## Quick Start
 
 + Complete valid dataset structure (see below)
