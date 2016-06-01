@@ -61,7 +61,10 @@ class SrsfFlowTask < FlowTask
     idx1 = @i1.split("/").last.split(".").first
     idx2 = @i2.split("/").last.split(".").first
     dataset_path = "../" + @path.split("srsf/").first
-    cmd = "cd srsf/ && ./semirigSF #{dataset_path} #{idx1} #{idx2} 1"
+
+    # Apply a rigid and non-rigid motion estimation
+    # skip all depths cues further apart than 240 cm
+    cmd = "cd srsf/ && ./semirigSF #{dataset_path} #{idx1} #{idx2} 2 2 3 1 2 1 240 10"
     puts cmd
     cmd
   end
