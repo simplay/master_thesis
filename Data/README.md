@@ -4,6 +4,18 @@ This README describes the expected structure of any dataset such that it can be 
 
 ## Calibration Data Per Dataset
 
+Bonn-Dataset:
+
++ The color images are stored as 640×480 8-bit RGB images in PNG format.
++ The depth maps are stored as 640×480 16-bit monochrome images in PNG format.
++ The color and depth images are already pre-registered using the OpenNI driver from PrimeSense, i.e., the pixels in the color and depth images correspond already 1:1.
++ The depth images are scaled by a factor of 5000, i.e., a pixel value of 5000 in the depth image corresponds to a distance of 1 meter from the camera, 10000 to 2 meter distance, etc. A pixel value of 0 means missing value/no data.
+
++ Sources:
+ + http://www.ais.uni-bonn.de/download/rigidmultibody/
+ + http://vision.in.tum.de/data/datasets/rgbd-dataset/file_formats
+
+
 | Dataset              | Depth Scale | f_depth | p_depth  | f_rgb | p_rgb
 | -------------------- | ----------- | --------| -------- | ----- | -----  
 | Bonn chair           |             |         |          |       |
