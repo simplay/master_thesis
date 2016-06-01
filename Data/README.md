@@ -2,6 +2,12 @@
 
 This README describes the expected structure of any dataset such that it can be used by the pipeline.
 
+## Calibration Data Per Dataset
+
+| Dataset              | Depth Scale | f_depth | p_depth  | f_rgb | p_rgb
+| -------------------- | ----------- | --------| -------- | ----- | -----  
+| Bonn chair           |             |         |          |       |
+ 
 ## Quick Start
 
 + Complete valid dataset structure (see below)
