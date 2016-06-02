@@ -17,8 +17,8 @@ require 'pry'
     "SRSF"
   ]
 
-  MAX_POOL_THREADS = 16
-  $core_pool_threads = Runtime.getRuntime.availableProcessors
+  MAX_POOL_THREADS = 8
+  $core_pool_threads = 1 #Runtime.getRuntime.availableProcessors
 
   def initialize(dataset_path, variant, from_idx, to_idx, skip_comp)
     dataset = dataset_path.split(/\//).last

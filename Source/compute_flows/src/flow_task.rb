@@ -1,6 +1,8 @@
 require 'java'
 require 'thread'
 require_relative 'system_information'
+require_relative 'script_arg.rb'
+require_relative 'matlab_script'
 
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
@@ -33,7 +35,17 @@ class FlowTask
       if idx+1 < total
         @i1 = dataset_fnames[idx]
         @i2 = dataset_fnames[idx+1]
-        system("#{flow_method(is_fwf)}")
+          if true #SystemInformation.running_on_windows?
+            init_data = flow_method(is_fwf)
+            args = [
+              StrArg.new("../" + @i1),
+              StrArg.new("../" + @i2)
+            ]
+            init_data.execute(args)
+            binding.pry
+          else
+            system("#{flow_method(is_fwf)}")
+          end
       end
     end
   end
@@ -45,13 +57,18 @@ class FlowTask
 end
 
 class LdofFlowTask < FlowTask
-
   def flow_method(is_fwf)
     f_name = @i1.split(".ppm").first + "LDOF.flo"
     prefix = (is_fwf) ? "fwf_" : "bwf_"
     elements = f_name.split("/")
     ren_cmd = "mv #{f_name} #{@path + prefix + elements.last}"
     puts "#{ren_cmd}"
+
+    if true #SystemInformation.running_on_windows?
+      init_data = MatlabScript.new("./ldof/", "ldof_windows")
+      return init_data
+    end
+
     "./ldof/#{ldof_binary} #{@i1} #{@i2} && #{ren_cmd}"
   end
 
