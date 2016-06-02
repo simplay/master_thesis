@@ -9,8 +9,8 @@ function generate_flow(in_path, fname, out_path)
     N = xml_flow_file.Mask.cols;
     
     parsed_flowX = parsed_xml_member(xml_flow_file.SFx);
-    parsed_flowY = parsed_xml_member(xml_flow_file.SFx);
-    parsed_flowZ = parsed_xml_member(xml_flow_file.SFx);
+    parsed_flowY = parsed_xml_member(xml_flow_file.SFy);
+    parsed_flowZ = parsed_xml_member(xml_flow_file.SFz);
     parsed_flow_ofx = parsed_xml_member(xml_flow_file.OFx);
     parsed_flow_ofy = parsed_xml_member(xml_flow_file.OFy);
     
