@@ -39,6 +39,26 @@ function generate_flow(in_path, fname, out_path)
     img = mat2img(OFx, OFy);
     out_fname = strcat(out_path, char(identifier(1)), '.flo');
     writeFlowFile(img(:,:,1:2), out_fname);
+    
+    % write scene flows if existent
+    if strfind(out_path, '/srsf/') > 0
+        base_path = strsplit(out_path, '/srsf/');
+        base_path = base_path(1);
+        
+        scene_flow_path = strcat(base_path, '/', 'scene_flows/');
+        if ~exist(scene_flow_path, 'dir')
+            mkdir(scene_flow_path);
+        end
+        
+        x_name = strcat(scene_flow_path, fname, '_x_sf.mat');
+        y_name = strcat(scene_flow_path, fname, '_y_sf.mat');
+        z_name = strcat(scene_flow_path, fname, '_z_sf.mat');
+        
+        dlmwrite(x_name, flowX, 'delimiter', ' ', 'precision', 12);
+        dlmwrite(y_name, flowY, 'delimiter', ' ', 'precision', 12);
+        dlmwrite(z_name, flowZ, 'delimiter', ' ', 'precision', 12);
+    end
+    
 end
 
 function parse = parsed_xml_member(member)
