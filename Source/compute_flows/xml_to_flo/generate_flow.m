@@ -44,6 +44,7 @@ function generate_flow(in_path, fname, out_path)
     if strfind(out_path, '/srsf/') > 0
         base_path = strsplit(out_path, '/srsf/');
         base_path = base_path(1);
+        base_path = base_path{1};
         
         scene_flow_path = strcat(base_path, '/', 'scene_flows/');
         if ~exist(scene_flow_path, 'dir')
