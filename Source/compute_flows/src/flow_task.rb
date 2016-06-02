@@ -1,5 +1,6 @@
 require 'java'
 require 'thread'
+require_relative 'system_information'
 
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
@@ -51,7 +52,15 @@ class LdofFlowTask < FlowTask
     elements = f_name.split("/")
     ren_cmd = "mv #{f_name} #{@path + prefix + elements.last}"
     puts "#{ren_cmd}"
-    "./ldof/ldof #{@i1} #{@i2} && #{ren_cmd}"
+    "./ldof/#{ldof_binary} #{@i1} #{@i2} && #{ren_cmd}"
+  end
+
+  def ldof_binary
+    if SystemInformation.running_on_mac?
+      'ldof'
+    elsif SystemInformation.running_on_linux?
+      'ldof_linux'
+    end
   end
 
 end
