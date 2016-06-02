@@ -67,7 +67,7 @@ require 'pry'
       file.puts "#imgs"
 
       imgs = Dir["#{folder_path}*.ppm"].reject do |fname|
-        fname.include?("LDOF") or fname.include?("Flow")
+        fname.include?("LDOF") or fname.include?("Flow") or fname.include?("flow")
       end
 
       len = imgs.count
