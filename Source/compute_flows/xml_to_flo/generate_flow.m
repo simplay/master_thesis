@@ -1,6 +1,18 @@
 function generate_flow(in_path, fname, out_path)
 %GENERATE_FLOW Summary of this function goes here
 %   Detailed explanation goes here
+% example usage:
+% path = '/Users/simplay/Results/bonn_chair/srsf_mode_2/';
+% files = dir(path);
+% dirFlags = [files.isdir]
+% subFolders = files(dirFlags)
+% for k = 1 : length(subFolders),
+% generate_flow(strcat(path, subFolders(k).name, '/'), 'SFlow.xml', strcat(path, subFolders(k).name, '/'))
+% disp(['Iter: ', num2str(k)]);
+% end
+    addpath('util');
+    addpath('../../libs/flow-code-matlab');
+    addpath('../../matlab_shared');
     
     identifier = strsplit(fname, '.xml');
     xml_flow_file = xml_read(strcat(in_path,fname));
