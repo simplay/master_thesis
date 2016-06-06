@@ -1,1 +1,35 @@
 \chapter{Theoretical Background}
+
+\section{Optical Flow}
+
+Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck
+
+Is the distribution of apparent velocities of movement of brightness patterns in an image.
+Can arise from relative motion of objects and the viewer.
+Can give information about the spatial arrangement of the viewed objects and the rate of change in that arrangement.
+Discontinuities in the optical flow can help to perform segmentation tasks.
+
+the optical flow cannot be computed a point in the image independently of neighboring points without introducing additional constraints
+
+reason: the velocity field any image point has two components while its change in image brightness due to motion yields only one constraint.
+
+their example: consider a patch of a pattern where brightness varies as a function of one image coordinate, but not the other. Movement of the pattern in one direction alters the brightness at a particular point, but motion in the other direction yields no change. Thus components of movement in the latter direction cannot be determined locally.
+
+their problem statement:
+they initially assume that 
+
+1. the surface is flat to avoid brightness variations due to shading effects.
+2. the incident illumination is uniform across the surface. Then, the brightness at a point in the image is proportional to the reflectance of the surface at the corresponding point on the object.
+3. reflectance varies smoothly and has no spatial discontinuities. Having no discontinuities assures that the image brightness is differentiable.
+4. Situations where objects occlude one another are excluded.
+
+derive equation that relates the change in image brightness at a point to the motion of the brightness pattern.
+
+point $p(x,y)$, time $t$, brightness at p in the image plane at t $E(x,y,t)$.
+When the pattern moves, the brightness of a particular point in the pattern is constant. 
+$\frac{d E}{dt} = 0 <=> \frac{\partial E}{\partial x} \frac{x}{dt} + \frac{\partial E}{\partial y} \frac{y}{dt} + \frac{\partial E}{\partial t} = 0 <=> E_{x} u + E_{y} v + E_{t} = 0$.
+
+where $u = \frac{dx}{dt}$ and $v = \frac{dy}{dt}$. Hence, we have a single linear equation with two unknowns $u$ and $v$.
+
+solution: introduce a smoothness constraint.
+
