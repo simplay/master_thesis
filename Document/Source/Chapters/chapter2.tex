@@ -1,8 +1,33 @@
 \chapter{Theoretical Background}
 
 \section{Optical Flow}
+\begin{itemize}
+  \item What is Optical Flow
+  \subitem Example
+  \subitem Definition
+  \item Original Approach to Compute it.
+\end{itemize}
 
-Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck
+
+visual phenomenon that describes the perception of motion.
+
+apparent visual motion a moving viewer experiences.
+assume: given a moving viewer, looking at an object, then, 
+
+objects passing by appear moving backwards
+distant objects seem to move very slowly and close objects appear to move fast.
+relationship between the optical flow and the viewed object. The magnitude of the optical flow is doubles if either
+
+the speed of the traveling viewer is doubled or the distance to the observed object is halved.
+
+the optical flow varies depending on the angle between the viewing direction and and the direction of movement of the observed object.
+
+suppose the viewer travels forward, then, the optical flow is fastest if either the object is moving orthogonally towards the viewer's direction or it is moving directly above, below to the 
+
+an object directly in front of a viewer will not have any optical flow and thus appear to stand still. However, since not the whole silhouette of the object is in front of the viewer, its edges will appear to move and thus the objects appears to get larger. 
+ 
+
+\subsection{Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck}
 
 Is the distribution of apparent velocities of movement of brightness patterns in an image.
 Can arise from relative motion of objects and the viewer.
