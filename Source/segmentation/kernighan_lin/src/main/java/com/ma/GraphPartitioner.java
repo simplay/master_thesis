@@ -9,7 +9,48 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Solving the graph partitioning problem using the Kernighan–Lin algorithm is a heuristic algorithm.
+ * GraphPartitioner runs the Kernighan-Lin (KL) algorithm on the affinity graph and computes
+ * a graph partitioning.
+ *
+ * Note: The Affinity Graph is constructed from a similarity matrix and its neighborhood.
+ * The Vertices are the the affinities between the trajectories, the edges are spanned
+ * between the spatially nearest trajectory neighbors.
+ *
+ * KL is a heuristic algorithm and has a complexity of O(N^2 log N)
+ * where N denotes the number of vertices.
+ *
+ * Let G = (V, E)
+ * KL attempts to find a partition of V into two disjoint subsets A and B of equal size
+ * such that the sum T of the weights of the edges between nodes in A and B is minimized.
+ *
+ * Let I_a be the internal cost of a, that is, the sum of the costs of edges between a and
+ * other nodes in A and let E_a be the external cost of a, that is the sum of the costs of edges
+ * between a and nodes in B. Furthermore, let D_a := E_a - I_a be the difference between
+ * the external and internal cost of a. If a and b are interchanged, then the reduction in
+ * cost is T_old - T_new = D_a + D_b - 2 * c_a_b, where c_a_b is the cost of the possible
+ * edges between a and b.
+ *
+ * The algorithm attempts to find an optimal series of interchangeable operations between elements
+ * of A and B which maximizes T_old - T_new and then executes the operations, producing a partition
+ * of the graph to A and B.
+ *
+ * PSEUDO-CODE:
+ * 
+ * Determine balanced initial partition of nodes into sets A and B
+ * DO
+ *  compute D values for a in A and b in B
+ *  et gv, av, bv empty lists
+ *  FOR n = 1 TO |V| / 2
+ *      find a from A and b from B, such that g = D[a] + D[b] - 2 * E(a,b) is maximal
+ *      remove a and b from further consideration in this pass
+ *      add g to gv, a to av, and b to bv
+ *      update D values for the elements of A = A \ a and B = B \ b
+ *  END
+ *  find k which maximizes g_max, the sum of gv[1],...,gv[k]
+ *  IF (g_max > 0)
+ *      Exchange av[1],av[2],...,av[k] with bv[1],bv[2],...,bv[k
+ *  UNTIL (g_max <= 0)
+ *
  */
 public class GraphPartitioner {
 
