@@ -1,6 +1,5 @@
 package com.ma;
 
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -8,11 +7,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * Graph encodes the trajectory-neighborhood and their affinity values:
+ * Every vertex maps to an trajectory label. An edge between two vertices means
+ * that these two trajectories are spatial closest neighbors. Their actual affinity value
+ * can be looked up by accessing the corresponding vertex' similarity getter.
+ */
 public class Graph {
 
-    // public final List<Vertex> vertices = new ArrayList<Vertex>();
+    // List of all vertices: vertices correspond to trajectory labels
     private final TreeMap<Integer, Vertex> vertices = new TreeMap<>();
 
+    // Construct a new affinity graph
     public Graph() {}
 
     public List<Vertex> activeVerticesForLabels(int[] activeLabelList) {
