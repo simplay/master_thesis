@@ -35,7 +35,7 @@ import java.util.List;
  * of the graph to A and B.
  *
  * PSEUDO-CODE:
- * 
+ *
  * Determine balanced initial partition of nodes into sets A and B
  * DO
  *  compute D values for a in A and b in B
@@ -54,32 +54,67 @@ import java.util.List;
  */
 public class GraphPartitioner {
 
+    // The graph we want to segment in multiple clusters
     private Graph graph;
+
+    // The gain list
     private final List<Double> gv = new ArrayList<>();
+
+    // List of removed optimal vertices contained in set A
     private final List<Vertex> av = new ArrayList<>();
+
+    // List of removed optimal vertices contained in set B
     private final List<Vertex> bv = new ArrayList<>();
+
+    // The list of all available sets, corresponds to the cluster vertices.
     private final ArrayList<PartitionSet> setList = new ArrayList<>();
+
+    // The number of clusters we want to segment the given graph.
     private int clusterCount;
+
+    // The total number of repetitions.
     private int REPS;
+
+    // The total number of vertices (real vertices + dummies)
     private int vertexCount;
 
-
+    /**
+     * Get the label set A
+     *
+     * @return label set A
+     */
     public PartitionSet getSetA() {
         return getSet(0);
     }
 
+    /**
+     * Get the label set B
+     *
+     * @return label set B
+     */
     public PartitionSet getSetB() {
         return getSet(1);
     }
 
+    /**
+     * Get a label set by an id.
+     *
+     * @param idx id of label set.
+     * @return label set that maps to a given id.
+     */
     public PartitionSet getSet(int idx) {
         return setList.get(idx);
     }
 
-    public GraphPartitioner(Graph graph, int clusterCount) {
-        this(graph, clusterCount, 500, 1);
-    }
-
+    /**
+     * Constructor of KL solver to solve the multi-cut problem.
+     *
+     * @param graph graph to be segmented.
+     * @param clusterCount number of clusters we want the graph to segment.
+     * @param dummyCount number of dummy vertices, determining the max. cluster size.
+     * @param REPS number of repetition, in the next repetition, the current solution is used
+     *             as the initial balanced set.
+     */
     public GraphPartitioner(Graph graph, int clusterCount, int dummyCount, int REPS) {
 
         this.graph = graph;
@@ -103,6 +138,16 @@ public class GraphPartitioner {
         Logger.println();
     }
 
+    /**
+     * Runs the Kernighan-Lin algorithm to perform the segmentation task
+     * using a fixed number of segments by performing alpha-beta swaps.
+     *
+     * Note that we solve the multi-cut problem by making use of the alpha-beta swap heuristic.
+     * Since this is a greedy approach, we have to repeat the same procedure several times,
+     * in order to have a stable solution.
+     *
+     * @param MAXITER maximal number of repetition of the whole alpha-beta swaps.
+     */
     public void runKernighanLin(int MAXITER) {
         // iterate over all pairs: #cluster low 2
         for (int repet=0; repet < REPS; repet++) {
@@ -118,6 +163,13 @@ public class GraphPartitioner {
         MaxGainFinder.close();
     }
 
+    /**
+     * Runs the KL heuristic for two chosen label sets.
+     *
+     * @param setA set A
+     * @param setB set B
+     * @param MAXITER max. number of iterations
+     */
     private void _runKernighanLin(PartitionSet setA, PartitionSet setB, int MAXITER) {
         double max_gv = 0.0f;
         int iter = 0;
@@ -272,6 +324,11 @@ public class GraphPartitioner {
 
     }
 
+    /**
+     * Dump the histogram in a matlab readable format.
+     *
+     * @param g the graph
+     */
     private void dumpDValueHistogram(Graph g){
         if (!Main.DUMP_DATA) return;
 
