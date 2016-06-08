@@ -21,6 +21,7 @@ public class SumDistTask extends SimilarityTask {
     // cut probabilities
     private double P_BAR;
     private final double P = 0.5d;
+    private double prior_probability;
 
     /**
      * @param a
@@ -29,6 +30,7 @@ public class SumDistTask extends SimilarityTask {
     public SumDistTask(Trajectory a, Collection<Trajectory> trajectories) {
         super(a, trajectories);
         P_BAR = ArgParser.getCutProbability();
+        prior_probability = prior_probability();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class SumDistTask extends SimilarityTask {
         appendAvgSpatialDistances(a, b, d_spatial);
 
         double z_ab = z_ab(d_motion, d_spatial, d_color);
-        return z_ab - prior_probability();
+        return z_ab - prior_probability;
     }
 
     protected double motion_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
