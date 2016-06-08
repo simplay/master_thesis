@@ -7,7 +7,9 @@ import pipeline_components.ArgParser;
 import java.util.Collection;
 
 /**
- * ProdDistTask is a SimilarityTask to makes use of the motion- and spatial distances between trajectories.
+ * ProdDistTask is a SimilarityTask that computes affinities by making
+ * use of the motion- and spatial distances between trajectories.
+ *
  * Only overlapping trajectory parts (their associated tracking points) are considered.
  *
  * The actual affinity value between two trajectories is computed by
@@ -26,6 +28,9 @@ import java.util.Collection;
  *  d_sp += sp_dist(pa, pb)
  *  d_motion = max d(1/sigma_t(k) * ||d_t(pa) - d_t(pb)||^2)
  * exp(-LAMBDA * d_sp * d_motion)
+ *
+ * For further information, please have a look into the following paper:
+ * `Segmentation of moving objects by long term video analysis - T. Brox et. al`
  */
 public class ProdDistTask extends SimilarityTask {
 

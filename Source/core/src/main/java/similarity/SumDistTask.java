@@ -6,9 +6,27 @@ import datastructures.Point3d;
 import datastructures.Trajectory;
 import managers.ColorImgManager;
 import pipeline_components.ArgParser;
-
 import java.util.Collection;
 
+/**
+ * SumDistTask is a SimilarityTask that computes affinities by making
+ * use of the motion- color- and spatial distances between trajectories.
+ *
+ * Only overlapping trajectory parts (their associated tracking points) are considered.
+ *
+ * The actual affinity value between two trajectories is computed by
+ * calculating the a weighted sum of all the mentioned distances.
+ *
+ * The motion distance is the max. motion distance between the overlapping trajectory parts, whereas
+ * the motion distance is the difference of the two flow forward differences.
+ *
+ * The color distance is the average l2 norm between the color values at the overlapping trajectory parts.
+ *
+ * The spatial distance is the average spatial distance between the overlapping trajectory parts.
+ *
+ * For further information please have a look into the following paper:
+ * `Motion Trajectory Segmentation via Minimum Cost Multicuts - T. Brox et al`
+ */
 public class SumDistTask extends SimilarityTask {
 
     // Constants defined in Motion Trajectory Segmentation via Min. Cost Multicuts Used in formula (7)
@@ -156,12 +174,12 @@ public class SumDistTask extends SimilarityTask {
     }
 
     protected double z_ab(double d_motion, double d_spatial, double d_color) {
-        double msc_dist = BETA_0_TILDE + BETA_1*d_motion + BETA_2*d_spatial + BETA_3*d_color;
-        double m_dist = BETA_0 + BETA_1*d_motion;
+        double msc_dist = BETA_0_TILDE + BETA_1 * d_motion + BETA_2 * d_spatial + BETA_3 * d_color;
+        double m_dist = BETA_0 + BETA_1 * d_motion;
         return Math.max(msc_dist, m_dist);
     }
 
     protected double prior_probability() {
-        return (Math.log(P_BAR / (1.0-P_BAR)) - Math.log(P/(1.0-P)));
+        return (Math.log(P_BAR / (1.0 - P_BAR)) - Math.log(P / (1.0 - P)));
     }
 }
