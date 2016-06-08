@@ -3,12 +3,22 @@ package similarity;
 import datastructures.Point2d;
 import datastructures.Point3d;
 import datastructures.Trajectory;
-import managers.CalibrationManager;
-import managers.DepthManager;
 import managers.VarianceManager;
 import pipeline_components.ArgParser;
 import java.util.Collection;
 
+/**
+ * SimilarityTask defines how the similarity value between two given
+ * trajectories is computed. Such tasks are polled by threads.
+ * After having run all available tasks, the affinity matrix is computed.
+ *
+ * A similarity task defines a distance measure between trajectories.
+ *
+ * There are basically two types of distance combinations available:
+ * The sum of distances (SD) and the product of distances (PD).
+ * Both types define a family of similarity tasks.
+ *
+ */
 public abstract class SimilarityTask implements Runnable {
 
     // minimal expected timestep size
@@ -36,19 +46,41 @@ public abstract class SimilarityTask implements Runnable {
     protected Trajectory a;
 
     /**
+     * Create a new similarity task that can be run by a thread.
      *
-     * @param a
-     * @param trajectories
+     * In such a tasks, all pair combinations between a given reference trajectory
+     * and all trajectories in a given collection are formed and their affinity value
+     * is computed and assigned.
+     *
+     * @param a reference trajectory
+     * @param trajectories a collection of trajectories
      */
     public SimilarityTask(Trajectory a, Collection<Trajectory> trajectories) {
         this.a = a;
         this.trajectories = trajectories;
     }
 
+    /**
+     * The minimal expected trajectory length. All trajectory pairs that contain a
+     * trajectory that is shorter than this length value get immediately the similarity value zero assigned.
+     *
+     * This avoids to compute affinities among all trajectories that are too short (i.e. skip to short trajectories).
+     *
+     * @return minimal trajectory length
+     */
     public static int minExpectedTrajectoryLength() {
         return MIN_EXPECTED_TRAJ_LEN;
     }
 
+    /**
+     * Computes the similarity between a trajectory pair.
+     *
+     * The order of a and b does not matter.
+     *
+     * @param a 1st trajectory in pair
+     * @param b 2nd trajectory in pair
+     * @return similarity value, the distance between the pair.
+     */
     protected abstract double similarityBetween(Trajectory a, Trajectory b);
 
     /**
@@ -73,9 +105,9 @@ public abstract class SimilarityTask implements Runnable {
      * i.e. the lower frame index, where a trajectory ends, between two given trajectories.
      * This gives the end frame index of a potential overlapping pair.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a trajectory
+     * @param b trajectory
+     * @return frame index of the last overlapping trajectory segment.
      */
     protected int getUpperFrameIndexBetween(Trajectory a, Trajectory b) {
         if (!ArgParser.shouldContinueTrajectories()) {
@@ -352,6 +384,11 @@ public abstract class SimilarityTask implements Runnable {
         return (!pa.isValid() || !pb.isValid());
     }
 
+    /**
+     * Iterate over all pair combinations, compute the affinity value
+     * and symmetrically assign that value to the involved trajectories.
+     * Also update the progress bar.
+     */
     @Override
     public void run() {
         for (Trajectory b : trajectories) {
