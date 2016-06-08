@@ -8,6 +8,7 @@ cars          | 19          | 480 x 640  | ldof            | false     | -
 alley2small   | 50          | 512 x 218  | ldof            | true      | true
 chair_3_cast  | 101         | 512 x 424  | ldof            | true      | true
 wh1           | 104         | 480 x 640  | ldof            | true      | false
+bonn_chairs   |  58         | 480 x 640  | ldof            | true      | true
 
 + Spectral clustering **SC**
 + Min-Cut **MC**
@@ -194,3 +195,54 @@ Used ID | Dir Name |
 2       | `wh1_ldof_ped_top_lambda_100_c_25_ev_10`
 3       | `wh1_ldof_ped_top_lambda_10_c_10_ev_10`
 
+
+## two chairs 
+
+### Core
+
+ID  | Task | NN Variant | Lmabda | Prob  | ct
+--- | ---- | ---------- | ------ | ----- | ---
+1   | 2    | top 90     | 0.01   | -     | 0
+2   | 3    | top 90     | 10     | -     | 0
+3   | 3    | top 90     | 10     | -     | 1
+4   | 1    | both 2000  | -      | 0.875 | 1
+
+### Segmentation
+
+ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM  | nu
+--- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---- | ---
+1   | SC     | 1       | 20            | 20  | 30  | -   | -         | -   | -    |
+2   | SC     | 2       | 5             | 8   | 8   | -   | -         | -   | -    |
+3   | SC     | 3       | 10            | 10  | 10  | -   | -         | -   | -    |
+4   | MC     | 3       | 10            | 10  | 30  | -   | 20        | -   | -    | 1e-6
+5   | KL     | 4       | 3             | 3   | -   | 0   | 5         | 2   | ebo  | 1e-6
+
+### Results from Segmentations
+
+Used ID | Dir Name | 
+------- | ---
+1       | `two_chairs_ldof_pd_top_c_20_ev_30`
+2       | `two_chairs_ldof_ped_top_c_8_ev_8`
+3       | `two_chairs_ldof_ped_top_ct_c_10_ev_10`
+4       | `two_chairs_ldof_ped_top_90_ct_mincut_iters_20_c_10_ev_30_nu_1e-06_lambda_10`
+5       | `two_chairs_ldof_sd_both_2000_kl`
+
+## bonn_chairs_263_3_434
+
+### Core
+
+ID  | Task | NN Variant | Lmabda | Prob | ct
+--- | ---- | ---------- | ------ | ---- | ---
+1   | 2    | top 90     | 0.01   | -    | 0
+
+### Segmentation
+
+ID  | Method | Used ID | Cluster Found | CC  | EV  | DC  | MIC/Iters | RC  | IPM
+--- | ------ | ------- | ------------- | --- | --- | --- | --------- | --- | ---
+1   | SC     | 1       | 5             | 5   | 5   | -   | -         | -   | - 
+
+### Results from Segmentations
+
+Used ID | Dir Name | 
+------- | ---
+1       | `bonn_chairs_263_3_434_ldof_pd_top_c_5_ev_5_lambda_0_01`
