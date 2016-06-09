@@ -66,7 +66,7 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow, threshScale )
             
             
             if d_fw_flow_nsq(ax,ay) > threshScale*(u2*u2 + v2*v2) + 0.002
-                %unreliables(ax,ay) = 1.0; 
+                unreliables(ax,ay) = 1.0; 
                 continue;
             end
             
