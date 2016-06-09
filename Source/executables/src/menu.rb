@@ -23,7 +23,10 @@ class Menu
       puts ""
       print "Selection: "
       selection = gets.chomp
+
       system("clear")
+      SelectionState.flush
+
       case selection
       when FLOW
         puts MODES[selection]

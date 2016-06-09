@@ -3,6 +3,7 @@ class ScriptArg
   def initialize(type, value)
     @type = type
     @value = value.to_s
+    SelectionState.instance.append_to_history(@value)
   end
 
   def type

@@ -9,5 +9,6 @@ require_relative 'src/matlab_script'
 require_relative 'src/ruby_script.rb'
 require_relative 'src/sc_job.rb'
 require_relative 'src/script_arg.rb'
+require_relative 'src/selection_state.rb'
 
 Menu.new
