@@ -6,8 +6,8 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'bonn_chair_srfs_50';
-METHODNAME = 'ldof';
+DATASETNAME = 'c14_hs';
+METHODNAME = 'hs';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
@@ -19,8 +19,10 @@ COMPUTE_DEPTH_VARIANCE = false;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = true;
+USE_OWN_DEPTHS = false;
 DEPTH_SCALE = 0.0002; % for bon data
+
+DEPTH_SCALE = 1/5000;
 
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
@@ -43,6 +45,10 @@ END_FRAME_IDX = boundaries(2);
 
 %% extract flows, trackable regions, flow consistency regions
 if COMPUTE_TRACKING_DATA
+    
+    % works best for ldof flows:
+    % best ldof threshScale is 0.01
+    theshScale = 0.01;
     for t=START_FRAME_IDX:END_FRAME_IDX
 
         % Save the forward and backward flows, 
@@ -71,7 +77,7 @@ if COMPUTE_TRACKING_DATA
 
         % Save a (m x n) matrix that contains all invalid pixel loations
         diffName = strcat(BASE_OUTPUT_PATH,'flow_consistency_',num2str(t),'.mat'); 
-        invalid_regions = consistency_check( forward_flow, backward_flow );
+        invalid_regions = consistency_check( forward_flow, backward_flow, theshScale);
         dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
 
         % Save row and column indicess of trackable pixel locations

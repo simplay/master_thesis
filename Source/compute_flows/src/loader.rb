@@ -14,7 +14,8 @@ class Loader
 require 'pry'
   FLOW_METHODS = [
     "LDOF",
-    "SRSF"
+    "SRSF",
+    "HS"
   ]
 
   MAX_POOL_THREADS = 16
@@ -35,6 +36,7 @@ require 'pry'
       lower, upper = lookup_indices(from_idx, to_idx, fnames)
       generate_flows(fnames, dataset, lower, upper) unless skip_comp
       generate_association_file(folder_path, lower, upper)
+
     when FLOW_METHODS[1]
       @task_type = SrsfFlowTask
       folder_path = dataset_path
@@ -51,6 +53,17 @@ require 'pry'
       FOO
       system("cd xml_to_flo/ && " + run_matlab) unless skip_comp
 
+      generate_association_file(folder_path, lower, upper)
+
+    when FLOW_METHODS[2]
+      @task_type = HsFlowTask
+      folder_path = dataset_path
+      @subfolder_path = "#{folder_path}#{FLOW_METHODS[2].downcase}"
+      Dir.mkdir(@subfolder_path) unless File.exist?(@subfolder_path)
+      genarate_normalized_images(folder_path, skip_comp)
+      fnames = sorted_dataset_fnames(folder_path)
+      lower, upper = lookup_indices(from_idx, to_idx, fnames)
+      generate_flows(fnames, dataset, lower, upper) unless skip_comp
       generate_association_file(folder_path, lower, upper)
     end
   end

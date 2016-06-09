@@ -1,6 +1,7 @@
-function [ unreliables ] = consistency_check( fw_flow, bw_flow )
+function [ unreliables ] = consistency_check( fw_flow, bw_flow, threshScale )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
+% @threshScale equals 0.01 works best for ldof
 
     [m,n, ~] = size(fw_flow);
     
@@ -15,7 +16,7 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
     % compute |du|^2 + |dv|^2 from fw flow.
     d_fw_u_flow = mat2gradfield(fw_u_flow);
     d_fw_v_flow = mat2gradfield(fw_v_flow); 
-    d_fw_flow_nsq = (d_fw_u_flow.^2+d_fw_v_flow.^2);
+    d_fw_flow_nsq = (d_fw_u_flow.^2 + d_fw_v_flow.^2);
    
     unreliables = zeros(m,n);
     
@@ -58,14 +59,14 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow )
             v2 = fw_v_flow(ax,ay);
             
             % |w-w_t| <= ...
-            if (cx-ax)*(cx-ax)+(cy-ay)*(cy-ay) >= 0.01*(u2*u2+v2*v2+u*u+v*v)+0.5
+            if (cx-ax)*(cx-ax)+(cy-ay)*(cy-ay) >= threshScale*(u2*u2 + v2*v2 + u*u + v*v) + 0.5
                 unreliables(ax,ay) = 1.0; 
                 continue;
             end
             
             
-            if d_fw_flow_nsq(ax,ay) > 0.01*(u2*u2+v2*v2)+0.002
-                unreliables(ax,ay) = 1.0; 
+            if d_fw_flow_nsq(ax,ay) > threshScale*(u2*u2 + v2*v2) + 0.002
+                %unreliables(ax,ay) = 1.0; 
                 continue;
             end
             
