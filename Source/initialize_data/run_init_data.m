@@ -74,7 +74,7 @@ function run_init_data( dataset, sampling_rate, compute_tracking_data, compute_f
 
             % Save a (m x n) matrix that contains all invalid pixel loations
             diffName = strcat(BASE_OUTPUT_PATH,'flow_consistency_',num2str(t),'.mat'); 
-            invalid_regions = consistency_check( forward_flow, backward_flow );
+            invalid_regions = consistency_check(forward_flow, backward_flow, 0.01);
             dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
 
             % Save row and column indicess of trackable pixel locations
