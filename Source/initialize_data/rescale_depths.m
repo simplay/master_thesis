@@ -16,7 +16,7 @@ function rescale_depths( input_filepath, img_ext, scale, output_path, match )
     % output_path #=> '~/foobar/rescaled/'
     
     % create target directory in case it does not exist yet
-    if ~exist('name','dir')
+    if ~exist(output_path,'dir')
         mkdir(output_path);
     end
     

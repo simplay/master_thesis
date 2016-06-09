@@ -6,13 +6,13 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'c14_hs';
-METHODNAME = 'hs';
+DATASETNAME = 'c14_filtered';
+METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
+COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;

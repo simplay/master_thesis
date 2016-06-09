@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'example';
+DATASET = 'c14_filtered';
 METHODNAME = 'ldof';
 PREFIX_OUTPUT_FILENAME = 'pd_top';
-PREFIX_INPUT_FILENAME = 'pd_top_30';
+PREFIX_INPUT_FILENAME = 'pd_top_90';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = true;
@@ -28,7 +28,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 2;
+FORCE_EW_COUNT = 3;
 
 % number of clusters we want to segment the given sequence
 CLUSTER_CENTER_COUNT = 3;
@@ -42,13 +42,13 @@ RUN_MODE = 1;
 SHOW_LOCAL_VAR = true;
 
 % show the segmentation figure
-SHOW_SEGMENTATION = false;
+SHOW_SEGMENTATION = true;
 
 % saves the figure as an image and also opens a new figure per image
 SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
-SELECTED_ENTITY_IDX = 6;
+SELECTED_ENTITY_IDX = 2;
 frame_idx = 1;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
