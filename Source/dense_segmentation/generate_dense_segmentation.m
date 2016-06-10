@@ -56,10 +56,10 @@ for k = 1:length(label_values)
     img = imresize(img, f);
 
     mask = double(mask);
-    Omega = mat2Img(mask, mask, mask);
+    Omega = mat2img(mask, mask, mask);
 
     % demosaiced imgle
-    mosaiced = mat2Img(img, img, img);
+    mosaiced = mat2img(img, img, img);
 
     %% find best lambda
     if FIND_OPTIMUM
@@ -67,9 +67,6 @@ for k = 1:length(label_values)
         [ bestLambda ] = findBestLambda(im, mosaiced, Omega, 100 );
         disp('determined best lambda value');
     else
-        % determined using findBestLambda(...)
-        % for Input/fruits.png at 100x133 pixels
-        bestLambda = 1; %default value
         bestLambda = 1; % found by running find best lambda script
     end
 

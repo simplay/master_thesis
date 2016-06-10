@@ -77,8 +77,7 @@ function [demosaicedImg] = demosaicing(mosaiced, Omega, lambda, iterations, inpu
        end
     end
     close(h); 
-    demosaicedImg = mat2Img(Rx_tilde_n, Gx_tilde_n, Bx_tilde_n);
-    %demosaicedImg = mat2Img(Rx_tilde_n, Rx_tilde_n, Rx_tilde_n);
+    demosaicedImg = mat2img(Rx_tilde_n, Gx_tilde_n, Bx_tilde_n);
 end
 
 function E_u = energy_term_for(u, g, omega, lambda)
