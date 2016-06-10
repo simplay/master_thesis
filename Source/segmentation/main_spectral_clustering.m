@@ -8,7 +8,7 @@ addpath('../libs/flow-code-matlab');
 
 DATASET = 'c14_filtered';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'pd_top';
+PREFIX_OUTPUT_FILENAME = 'aaaa';
 PREFIX_INPUT_FILENAME = 'pd_top_90';
 
 % should the eigendecomposition be computed
@@ -23,7 +23,7 @@ REUSE_ASSIGNMENTS = false;
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = false;
+COMPUTE_FULL_RANGE = true;
 % 
 
 % use a prespecified number of eigenvectors
