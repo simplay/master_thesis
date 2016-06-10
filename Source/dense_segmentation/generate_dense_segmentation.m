@@ -9,6 +9,7 @@ DATASET = 'c14_filtered';
 METHODNAME = 'ldof';
 PREFIX_OUTPUT_FILENAME = 'pd_top_filtered_flows';
 PREFIX_INPUT_FILENAME = 'pd_top_90';
+img_index = 1;
 
 % load dataset input file paths
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
@@ -42,7 +43,7 @@ filename = imgs{1};
 segments = zeros(m, n, length(label_values));
 for k = 1:length(label_values)
     label = label_values(k);
-    img_index = 1;
+
     img = sparse_segmentation(frames, imgs, label_assignments, label_mappings, img_index, label);
     img = im2double(img);
     mask = 1 - (img == 0);
@@ -74,9 +75,12 @@ for k = 1:length(label_values)
     demosaicedImg = demosaicing(mosaiced, Omega, bestLambda, iter, mosaiced, verbose);
     demosaicedImg = imresize(demosaicedImg, 1/f);
 
-    segments(:,:,k) = demosaicedImg(:,:,1);
+    d = demosaicedImg(:,:,1);
+    d = d - min(d(:));
+    d = d ./ max(d(:));
+    segments(:,:,k) = (d > 0.15);
 
     %% display results
-    figure
-    imshow(demosaicedImg ./ max(demosaicedImg(:)));
+    figure('name', strcat('Segmentation of iteration ', num2str(k)))
+    imshow(segments(:,:,k));
 end
