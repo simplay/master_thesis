@@ -1,1 +1,30 @@
 \chapter{Implementation}
+
+list and explain different pipeline stages:
+
+\begin{enumerate}
+\item Preprocessing
+	\subitem Filter input images
+	\subitem Rename images to satisfy pipeline naming conventions 
+\item Compute optical flow
+	\subitem Four different methods are available:
+	\subitem Large displacement optical flow (LDOF)
+	\subitem Original flow method proposed by Horn and Schunck (HS)
+	\subitem Semi-rigid scene flow (SRSF)
+	\subitem Layered RGBD flow (LRGB)
+\item Extracting relevant data
+	\subitem traceable candidates
+	\subitem depth fields
+	\subitem color values
+	\subitem flow-and depth field variances.
+\item Compute trajectories and their affinities
+\item Compute sparse segmentation
+	\subitem There are three different segmentation methods available
+	\subitem Spectral clustering of the affinity matrix
+	\subitem MinCut
+	\subitem Kernighan-Lin 
+\item Compute dense segmentation
+	\subitem use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
+\item Evaluate quality
+	\subitem statistically evaluate the quality of the  
+\end{enumerate}
