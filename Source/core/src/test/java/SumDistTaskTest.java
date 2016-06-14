@@ -1,5 +1,5 @@
-import datastructures.TrackingCandidates;
-import datastructures.Trajectory;
+import datastructures.*;
+import junit.framework.Assert;
 import managers.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +32,10 @@ public class SumDistTaskTest {
         public double p_prior_probability() {
             return prior_probability();
         }
+
+        public double p_color_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+            return color_dist(a, b, from_idx, to_idx);
+        }
     }
 
     @Before
@@ -44,6 +48,7 @@ public class SumDistTaskTest {
         TrajectoryManager.release();
         VarianceManager.release();
         MetaDataManager.release();
+        ColorImgManager.release();
         String[] args = {"-d", "dummy", "-task", "1", "-prob", "0.5"};
         ArgParser.getInstance(args);
         nullProdDistTask = new SumDistTaskHelper(null, null);
@@ -114,6 +119,47 @@ public class SumDistTaskTest {
 
             assertEquals(z_gt, nullProdDistTask.p_z_ab(d_motion, d_spatial, d_color), eps);
         }
+    }
+
+    @Test
+    public void testColor_dist() {
+        Trajectory a = new Trajectory(0);
+        Trajectory b = new Trajectory(0);
+
+        int N = 3;
+        int colImgCount = 3;
+        ColorImage[] imgs = new ColorImage[colImgCount];
+        for (int idx = 0; idx < colImgCount; idx++) {
+            ColorImage img = new ColorImage(3, 3);
+            for (int m = 0; m < N; m++) {
+                for (int n = 0; n < N; n++) {
+                    Point3d p = new Point3d(Math.random(), Math.random(), Math.random());
+                    img.setElement(p, m, n);
+                }
+            }
+            imgs[idx] = img;
+            ColorImgManager.getInstance().add(img);
+        }
+
+        for (int idx = 0; idx < colImgCount; idx++) {
+            a.addPoint(new Point2d(1, 1));
+            b.addPoint(new Point2d(1 + Math.random(), 1 + Math.random()));
+        }
+
+        a.markClosed();
+        b.markClosed();
+
+        double d = 0;
+        for (int idx = 0; idx < colImgCount; idx++) {
+            ColorImage img = imgs[idx];
+            Point3d colA = img.valueAt(a.getPointAtFrame(idx));
+            Point3d colB = img.valueAt(b.getPointAtFrame(idx));
+            d += colA.copy().sub(colB).length();
+        }
+
+        double gtColDist = d / 3;
+
+        assertEquals(gtColDist, nullProdDistTask.p_color_dist(a, b, 0, 2), eps);
     }
 
 

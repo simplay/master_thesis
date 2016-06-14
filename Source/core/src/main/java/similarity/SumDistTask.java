@@ -162,7 +162,7 @@ public class SumDistTask extends SimilarityTask {
                 continue;
             }
 
-            ColorImage img = ColorImgManager.getInstance().get(from_idx);
+            ColorImage img = ColorImgManager.getInstance().get(idx);
 
             Point3d rgb_pa = img.valueAt(pa);
             Point3d rgb_pb = img.valueAt(pb);
