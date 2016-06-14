@@ -4,6 +4,7 @@ class Menu
   INIT = "2"
   CORE = "3"
   SC = "4"
+  KL = "5"
   EXIT = "-1"
 
   MODES = {
@@ -11,6 +12,7 @@ class Menu
     INIT => "Extracting relevant core data...",
     CORE => "Generating similarity matrix...",
     SC => "Running Spectral clustering...",
+    KL => "Running Kernighan Lin...",
     EXIT => "Exiting Program..."
   }
 
@@ -58,6 +60,12 @@ class Menu
           StrArg.new("pd_top")
         ]
         sc.execute(args)
+
+      when KL
+        puts MODES[selection]
+        kl = JavaProgram.new("./segmentation/", "kernighan_lin")
+        args = KerLinJob.new.args
+        kl.execute(args)
 
       when EXIT
         puts MODES[selection]
