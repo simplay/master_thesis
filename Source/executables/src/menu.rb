@@ -63,7 +63,7 @@ class Menu
 
       when KL
         puts MODES[selection]
-        kl = JavaProgram.new("./segmentation/", "kernighan_lin")
+        kl = JavaProgram.new("./segmentation/", "kernighan_lin.jar")
         args = KerLinJob.new.args
         kl.execute(args)
 

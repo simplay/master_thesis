@@ -3,9 +3,12 @@ class KerLinJob
   #-d /two_chairs_sed_both_2000 -cc 3 -dc 0 -mic 5 -rc 2 -ipm ebo -prefix test
   def initialize
     datasets = FileList.new("../output/similarities/", ".dat").collect("_sim")
+    datasets = datasets.select do |item|
+      ["sd", "sed"].any? { |sd_task| item.include?(sd_task) }
+    end
     ds_node = LabeledJobNode.new(PlainStrArg, "-d", "Select a dataset:", datasets)
     cc_node = LabeledJobNode.new(PlainStrArg, "-cc", "Enter the number of clusters:")
-    dc_node = LabeledJobNode.new(PlainStrArg, "-cc", "Enter the number of dummy nodes:")
+    dc_node = LabeledJobNode.new(PlainStrArg, "-dc", "Enter the number of dummy nodes:")
     mic_node = LabeledJobNode.new(PlainStrArg, "-mic", "Enter the max. number of iteration per opt. step:")
     rc_node = LabeledJobNode.new(PlainStrArg, "-rc", "Enter the nuber of opt. repetitions:")
     jobs = [
