@@ -6,13 +6,14 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'c14_filtered';
+DATASETNAME = 'c14';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
+USE_FILTERED_DS_FOR_CANDIDATES = false;
+COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
@@ -83,7 +84,15 @@ if COMPUTE_TRACKING_DATA
         % Save row and column indicess of trackable pixel locations
         frame_t = imgs{t};
         img = im2double(imread(frame_t));
-        [ tracking_candidates ] = findTrackingCandidates( img, STEP_SIZE );
+        if USE_FILTERED_DS_FOR_CANDIDATES
+            startIndex = regexp(frame_t, '/');
+            filteredImgFname = frame_t(startIndex(end)+1:end);
+            
+            img_fname = strcat(BASE_FILE_PATH, 'filtered/', filteredImgFname);
+            img = im2double(imread(img_fname));
+        end
+        
+        [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE);
         [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
         datasets = [trackable_row, trackable_col]';
 
