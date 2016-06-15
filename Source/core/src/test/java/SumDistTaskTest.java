@@ -4,8 +4,10 @@ import managers.*;
 import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
+import similarity.SimilarityTask;
 import similarity.SumDistTask;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 
 import static junit.framework.TestCase.assertEquals;
@@ -35,6 +37,33 @@ public class SumDistTaskTest {
 
         public double p_color_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
             return color_dist(a, b, from_idx, to_idx);
+        }
+
+        public double p_avg_spatial_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+            return avg_spatial_dist(a, b, from_idx, to_idx);
+        }
+
+        public double p_motion_dist(Trajectory a, Trajectory b, int from_idx, int to_idx) {
+            return motion_dist(a, b, from_idx, to_idx);
+        }
+
+        public double p_similarityBetween(Trajectory a, Trajectory b) {
+            return similarityBetween(a, b);
+        }
+    }
+
+    private void setTimestep(int stepsize) {
+        Field field = null;
+        try {
+            field = SimilarityTask.class.getDeclaredField("MIN_TIMESTEP_SIZE");
+            field.setAccessible(true);
+            try {
+                field.set(nullProdDistTask, stepsize);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
     }
 
@@ -158,9 +187,106 @@ public class SumDistTaskTest {
         }
 
         double gtColDist = d / 3;
-
         assertEquals(gtColDist, nullProdDistTask.p_color_dist(a, b, 0, 2), eps);
     }
 
+
+    @Test
+    public void testColor_dist_usingTestScenario() {
+        TestScenarioBuilder.build();
+        Object[] trajectories = TrajectoryManager.getTrajectories().toArray();
+        Trajectory a = (Trajectory) trajectories[0];
+        Trajectory b = (Trajectory) trajectories[1];
+
+        double[] colDiff = {0.07, 0.1, 0.13, 0.16, 0.19, 0.22, 0.25};
+
+        double partialSum = 0d;
+        for (int k = 0; k < colDiff.length; k++) {
+            partialSum += colDiff[k];
+            double gt = partialSum / (k + 1);
+            assertEquals(gt, nullProdDistTask.p_color_dist(a, b, 0, k), eps);
+        }
+    }
+
+    @Test
+    public void testAvg_spatial_dist() {
+        TestScenarioBuilder.build();
+        Object[] trajectories = TrajectoryManager.getTrajectories().toArray();
+        Trajectory a = (Trajectory) trajectories[0];
+        Trajectory b = (Trajectory) trajectories[1];
+
+        double[] elementwiseSpDist = {Math.sqrt(2), Math.sqrt(2), 2, 2, Math.sqrt(5), Math.sqrt(10), Math.sqrt(17)};
+
+        double partialSum = 0d;
+        for (int k = 0; k < elementwiseSpDist.length; k++) {
+            partialSum += elementwiseSpDist[k];
+            double gt = partialSum / (k + 1);
+            assertEquals(gt, nullProdDistTask.p_avg_spatial_dist(a, b, 0, k), eps);
+        }
+    }
+
+    @Test
+    public void testMotion_dist() {
+        setTimestep(1);
+        TestScenarioBuilder.build();
+        Object[] trajectories = TrajectoryManager.getTrajectories().toArray();
+        Trajectory a = (Trajectory) trajectories[0];
+        Trajectory b = (Trajectory) trajectories[1];
+
+        double[] elementwiseSpDist = {0, 2, 0, 1, 1, 1};
+
+        for (int k = 1; k < elementwiseSpDist.length; k++) {
+            double max = -1;
+            for (int t = 0; t < k; t++) {
+                double val = elementwiseSpDist[t];
+                if (val > max) {
+                    max = val;
+                }
+            }
+            double gt = Math.sqrt(max / 2);
+            assertEquals(gt, nullProdDistTask.p_motion_dist(a, b, 0, k), eps);
+        }
+    }
+
+    @Test
+    public void testSimilarityBetween() {
+        setTimestep(1);
+        TestScenarioBuilder.build();
+        Object[] trajectories = TrajectoryManager.getTrajectories().toArray();
+        Trajectory a = (Trajectory) trajectories[0];
+        Trajectory b = (Trajectory) trajectories[1];
+
+        double[] elementwiseMoDist = {0, 2, 0, 1, 1, 1};
+        double[] elementwiseSpDist = {Math.sqrt(2), Math.sqrt(2), 2, 2, Math.sqrt(5), Math.sqrt(10), Math.sqrt(17)};
+        double[] colDiff = {0.07, 0.1, 0.13, 0.16, 0.19, 0.22, 0.25};
+
+        double d_color = 0d;
+        for (int k = 0; k < colDiff.length; k++) {
+            d_color += colDiff[k];
+        }
+        d_color = d_color / 7;
+
+
+        double d_sp = 0;
+        for (int k = 0; k < elementwiseSpDist.length; k++) {
+            d_sp += elementwiseSpDist[k];
+        }
+        d_sp = d_sp / 7;
+
+        double d_motion = 0;
+        for (int k = 1; k < elementwiseSpDist.length; k++) {
+            double max = -1;
+            for (int t = 0; t < k; t++) {
+                double val = elementwiseMoDist[t];
+                if (val > max) {
+                    max = val;
+                }
+            }
+            d_motion = Math.sqrt(max / 2);
+        }
+
+        double gt = nullProdDistTask.p_z_ab(d_motion, d_sp, d_color);
+        assertEquals(gt, nullProdDistTask.p_similarityBetween(a, b), eps);
+    }
 
 }
