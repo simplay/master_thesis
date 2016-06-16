@@ -5,6 +5,13 @@ Motion describes the change in position of an object with respect to time and is
 
 Especially the task of an accurate detection and extraction of moving objects in a video, captured by a moving camera, is nowadays still a difficult task. A common technique to address such motion segmentation tasks is to make use of the optical flow, the apparent visual motion that a moving viewer experiences. 
 
+
+
+Motion segmentation aims at decomposing a video in moving objects and background.
+Motion segmentation is the first fundamental step in many computer vision algorithms.
+Motion segmentation applications: robotics, metrology, video surveillance, traffic monitoring
+
+
 MENTION THAT IT IS USED IN NATURE
 MENTION MOTION discontinuities, which CAN BE exploited as motion object boundaries.
 
@@ -19,7 +26,20 @@ WIRTE MORE MOTIVATION
 
 \section{Goals}
 
-The purpose of this thesis is to describe a motion segmentation method that makes use of visual cues, such as the optical flows. In particular we want to exploit available depth information and illustrate how the quality of the results can be enhanced. In addition, this thesis evaluates different flow-and segmentation methods and discusses their shortcomings.
+The purpose of this thesis is to describe a motion segmentation method that makes use of visual cues, such as the optical flows. Moreoever, we want to exploit available depth information and illustrate how the quality of the results can be enhanced. In particular, the presented method should fulfill the follwing constraints:
+
+\begin{itemize}
+  \item supports a moving camera
+  \item be able to deal with occlusions
+  \item can handle multiple objects
+  \item is robust to nois
+  \item can process a coherent sequence of images (video)
+  \item can deal with missing data
+\end{itemize}
+
+assumptions: only handles rigid motion
+ 
+In addition, this thesis evaluates different flow-and segmentation methods and discusses their shortcomings.
 
 List of main contribution
 
@@ -35,9 +55,30 @@ clearly formulate the problem statement
 clearly formulate all assumptions
 
 \section{Related Work}
-initially, list its origin and then, list related contributions in the fields of optical flow, motion segmentation using optical flow and other motion segmentation approaches. 
 
+\subsection{Optical Flow}
+list various existing methods to compute the optical flow
 
+a vector motion field which describes the distribution of the apparent velocities of brightness patterns in a sequence. 
+
+first formalized and computed  for  image  sequences  by  Horn  and  Schunck $\cite{HS}$ in  the  1980. Since the pioneering work of Horn and Schunck, many other approaches have been proposed:
+
+\subsection{Motion Segmentation}
+In this section we describe different approaches that can be used to address the task of motion segmentation.
+
+\paragraph{Image Difference:} Taking the difference between two frames is a simple technique for detecting changes. By thresholding the intensity difference of two frames, a coarse map of the temporal changes can be obtained. Despite its simplicity, this techniques is limited by the presence of noise, camera movement (everything is changing) and low frame rates (nothing is changing). However, instead of directly using the difference image as the segmentation, the rough map of the changing areas can be used as a guide to extract spatial or temporal information in order to track the regions. Image difference techniques have been used in the work of $\cite{Cav05}$, $\cite{Li07}$ and $\cite{Col07}$.
+
+\paragraph{Statistical Approach} Motion segmentation can be related to a classification problem, identifying whether a particular pixel belongs to either the background or the foreground. In $\cite{Cre05}$ the authors present a variational approach for segmenting an image into a set of regions of parametric motions using a model based on a conditional probability for the spatio-temporal image gradient. By exploiting Bayesian theory, they derive a cost functional which depends on parametric motion models for each  of a set of regions and on the boundary separating these regions.
+
+\paragraph{Wavelets}
+The idea is to exploit the ability of wavelets to perform analysis of the different frequency components of the images and then study each component with a resolution matched to its scale. Usually wavelet multi-scale decomposition is used in order to reduce the noise and in conjunction with other approaches, such as optical flow.
+
+\paragraph{Layer Based} The key idea of layers based techniques is to understand which are the different depth layers in the image and which objects lie on which layer. 
+
+\paragraph{Factorization Methods} Allow to recover the structure and motion by using traced features over a the whole image sequence.
+
+\paragraph{Optical Flow}
+track features using the optical flow over the given image sequence, compute affinity matrix based on similarity between the overlapping trajectories, use affinity matrix as an input to solve the segmentation task. LIST work
 
 $\cite{Bro11a}$
 
