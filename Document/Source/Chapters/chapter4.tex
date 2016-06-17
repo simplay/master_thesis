@@ -1,12 +1,19 @@
 \chapter{Implementation}
-In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. Moreover, for each stage, we describe its required input data, what output it generates and all its assumptions and induced limitations. 
+In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. 
 
-problem statement: find the moving object of a video
-input: dataset, depth images
-output: segmentation and pipeline dumps
+The problem statement our pipeline solves is defined as follows: 
+Given a set of images that form a video sequence and their associated depth maps. Our goal is to separate the images into regions that form coherent and independent rigidly moving objects. 
+
+%SHOW FIGURE OF PROBLEM STATEMENT
+% INPUT: IMGS, DEPTHS, OUTPUT: SEGMENTATION
+% SHOW LATER A DETAILED PIPELINE
+
+The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we compute the optical flow on the images and use it as a guide for grouping pixel regions that belong together. 
 
 
-mention pipeline assumptions
+
+
+
 list and explain different pipeline stages:
 
 \begin{enumerate}
@@ -36,5 +43,21 @@ list and explain different pipeline stages:
 	\subitem statistically evaluate the quality of the  
 \end{enumerate}
 
+mention pipeline assumptions
 discuss the details about each pipeline stage
 mention in which language the individual parts are coded.
+
+\subsection{Precomputations}
+Refinement of input data
+Optionally generate filtered version of input data
+re-enumerate image to have a well defined naming
+
+\subsection{Computing Optical Flows}
+
+Optical flows are used to trace coherent tacking points that form a trajectory.
+
+\subsection{Extracting Core Data}
+\subsection{Compute Trajectories and Affinity Matrix}
+\subsection{Sparse Motion Segmentation}
+\subsection{Dense Motion Segmentation}
+\subsection{Evaluation Program}
