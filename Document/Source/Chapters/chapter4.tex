@@ -8,56 +8,61 @@ Given a set of images that form a video sequence and their associated depth maps
 % INPUT: IMGS, DEPTHS, OUTPUT: SEGMENTATION
 % SHOW LATER A DETAILED PIPELINE
 
-The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we compute the optical flow on the images and use it as a guide for grouping pixel regions that belong together. 
+The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we compute the optical flow on the images and use it as a guide for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. 
 
 
 
-
-
-list and explain different pipeline stages:
+Our pipeline has the following main stages:
 
 \begin{enumerate}
-\item Preprocessing
-	\subitem Filter input images
-	\subitem Rename images to satisfy pipeline naming conventions 
-\item Compute optical flow
-	\subitem Four different methods are available:
-	\subitem Large displacement optical flow (LDOF)
-	\subitem Original flow method proposed by Horn and Schunck (HS)
-	\subitem Semi-rigid scene flow (SRSF)
-	\subitem Layered RGBD flow (LRGB)
-\item Extracting relevant data
-	\subitem traceable candidates
-	\subitem depth fields
-	\subitem color values
-	\subitem flow-and depth field variances.
-\item Compute trajectories and their affinities
-\item Compute sparse segmentation
-	\subitem There are three different segmentation methods available
-	\subitem Spectral clustering of the affinity matrix
-	\subitem MinCut
-	\subitem Kernighan-Lin 
-\item Compute dense segmentation
-	\subitem use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
-\item Evaluate quality
-	\subitem statistically evaluate the quality of the  
+\item Dataset Preparations: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions. Optionally, a blurred version of the input images are computed by using a bilateral filter. This filtered images act as an additional, but optional cue, for a later pipeline stage. 
+\item Optical Flows: We compute the forward- and backward-flows on our input sequence using different existing implementations. Our pipeline lets the user select a target method for generating the optical flow fields.
+\item Data Extraction: In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
+\item Trajectories: We use the computed forward flows and the previously extracted traceable feature locations to perform a point tracking. A sequence of traced points form a so called trajectory. In every frame a trajectory can either be started, ended or be continued. The previously computed traceable locations act as the starting points, the forward flow is added to a traceable location and yield the tracked to position, the starting location in the next frame. Tracked to locations that land in an invalid mask location cause the tracking of a trajectory. 
+\item Affinity Matrix: In this stage we compute the similarities between all trajectory pairs. The similarity is computed according to different metrics, which are basically a combination of various distances among overlapping trajectory parts. 
+\item Sparse Motion Segmentation: Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually 
+\item Dense Segmentation: Our pipeline allows to transform the sparse segmentation into a dense segmentation. For this purpose we consider the hole filling problem, formulating it as a convex problem and then solving it using a primal-dual approach using the sparse segmentation as the initial input.
+\item Evaluation: Our pipeline allows to qualitatively and quantitatively evaluate the generated sparse and dense segmentations. In addition, we also can explore the parameter space and its impact by various visualizers.
 \end{enumerate}
 
 mention pipeline assumptions
 discuss the details about each pipeline stage
 mention in which language the individual parts are coded.
 
-\subsection{Precomputations}
+\section{Dataset Preparations}
 Refinement of input data
 Optionally generate filtered version of input data
 re-enumerate image to have a well defined naming
 
-\subsection{Computing Optical Flows}
+Filter input images
+Rename images to satisfy pipeline naming conventions
+
+\section{Computing Optical Flows}
 
 Optical flows are used to trace coherent tacking points that form a trajectory.
 
-\subsection{Extracting Core Data}
-\subsection{Compute Trajectories and Affinity Matrix}
-\subsection{Sparse Motion Segmentation}
-\subsection{Dense Motion Segmentation}
-\subsection{Evaluation Program}
+Four different methods are available:
+Large displacement optical flow (LDOF)
+Original flow method proposed by Horn and Schunck (HS)
+Semi-rigid scene flow (SRSF)
+Layered RGBD flow (LRGB)
+
+
+\section{Extracting Core Data}
+
+
+traceable candidates
+depth fields
+color values
+flow-and depth field variances.
+
+\section{Compute Trajectories and Affinity Matrix}
+\section{Sparse Motion Segmentation}
+There are three different segmentation methods available
+Spectral clustering of the affinity matrix
+MinCut
+Kernighan-Lin 
+\section{Dense Motion Segmentation}
+use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
+\section{Evaluation Program}
+statistically evaluate the quality
