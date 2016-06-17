@@ -21,14 +21,9 @@ Our pipeline has the following main stages:
 In the following sections we examine and discuss each individual pipeline stage in detail. 
 
 \section{Dataset Preparations}
-The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. Optionally, there are also captured depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available. For further information about the dataset conventions, read figure~\ref{sec:datasets} on page~\pageref{sec:datasets}.
-
-Refinement of input data
-Optionally generate filtered version of input data
-re-enumerate image to have a well defined naming
-
-Filter input images
-Rename images to satisfy pipeline naming conventions
+The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. \\ \\
+In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that the value range is in meter units. For further information about the dataset conventions, read section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
+Optionally, a filtered version of the input dataset images can be generated using a Bilateral Filter$\footnote{A Bilateral Filter is a non-linear, edge-preserving blur filter.}$. These filtered images can help improve the process of finding traceable candidate location as well as identifying invalid tracking locations.
 
 \section{Computing Optical Flows}
 
@@ -41,7 +36,7 @@ Semi-rigid scene flow (SRSF)
 Layered RGBD flow (LRGB)
 
 
-\section{Extracting Core Data}
+\section{Data Extraction}
 
 
 traceable candidates
@@ -49,7 +44,8 @@ depth fields
 color values
 flow-and depth field variances.
 
-\section{Compute Trajectories and Affinity Matrix}
+\section{Trajectories and Affinity Matrix}
+\section{Affinity Matrix}
 \section{Sparse Motion Segmentation}
 There are three different segmentation methods available
 Spectral clustering of the affinity matrix
