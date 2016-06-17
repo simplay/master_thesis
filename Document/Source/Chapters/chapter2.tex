@@ -1,9 +1,10 @@
 \chapter{Theoretical Background}
-
-
-\section{Motion Segmentation Pipeline}
+In this chapter we give a introduction in various topics and areas which are necessary in order to understand the implementation of our pipeline and how its generated results were computed. 
 
 \section{Optical Flow}
+
+The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
+
 The optical flow is a visual phenomenon that describes the perception of motion.
 By definition, it is the apparent visual motion a moving viewer experiences. To illustrate this concept, imagine you sit in a moving train and are looking out of one of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
 In summary, the optical flow has the following key properties:
@@ -50,6 +51,9 @@ solution: introduce a smoothness constraint.
 
 \section{Motion Segmentation}
 motion segmentation aims at decomposing a video in moving objects and background by segmenting the objects that undergo different motion patterns.
-\section{Spectral Clustering}
-\section{Graph Cut}
-\section{Kernighan-Lin}
+
+In this section we describe a conceptual approach how the motion segmentation task using optical flows is commonly approached in literature. 
+
+\subsection{Spectral Clustering}
+\subsection{Graph Cut}
+\subsection{Kernighan-Lin Heuristic}
