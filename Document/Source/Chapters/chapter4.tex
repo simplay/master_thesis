@@ -38,8 +38,19 @@ Layered RGBD flow (LRGB)
 
 \section{Data Extraction}
 
+Traceable candidate locations are obtained by applying a Harris Corner Detector on the input image. 
+Features that are identified as corners are a viable option for starting a trajectory tracking.
 
-traceable candidates
+in addition, a boolean grid with a certain cell size is applied to the candidates, acting as a selection mask. This reduces the number of tracking candidates (spacial subsampling) drastically and makes the sampling sparser.
+
+
+mention how invalid regions are computed: occluded regions.
+Occlusion is detected by applyinge backward flow to a continued tracked point and checking whether that resulting point has the same origin as the actual tracked from position.
+
+the color values are stored as cie lab color images.
+
+
+
 depth fields
 color values
 flow-and depth field variances.
