@@ -11,6 +11,10 @@ initial formulation of H.S
 secrets of optical flow
 
 \section{Dense Segmentation}
+
+$\cite{chambolle2011first}$
+$\cite{chambolle2004algorithm}$
+
 \subsection{Problem Statement}
 In this work we address the problem of demosaicing by formulating it as a convex optimization problem. Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. 
 
@@ -142,7 +146,7 @@ Plugging equation $\ref{eq:legendre_fenchel_transform_f}$ and the definitions in
 \subsection{Primal-Dual steps}
 In this section I will present an iterative solver for our stated primal-dual formulation.
 
-In the following I am going to rely on an algorithm formulated by A.Chambolle and T.Pocke which allows to solve primal-formulations as ours stated in equation $\ref{eq:final_primal_dual}$.
+In the following I am going to rely on an algorithm $\cite{chambolle2011first}$ formulated by A.Chambolle and T.Pocke, which allows to solve primal-formulations as ours stated in equation $\ref{eq:final_primal_dual}$.
 They stated an iterative algorithm that has the following update steps:
 
 \begin{align}
