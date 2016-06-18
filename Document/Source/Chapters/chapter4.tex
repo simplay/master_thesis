@@ -85,6 +85,30 @@ However, most trajectories are never due to disocclusion.
 problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
 
 \section{Affinity Matrix}
+
+affinities between trajectories.
+
+trajectories of longer videos are asynchronous, i.e. cover different temporal windows in a shot. the set of points that are tracked across the whole scene is small or empty due to occlusion and disocclusion. a measurement matrix that takes the coordinates of the tracked points in all frames, as used by the multi-body factorization and subspace ethods, will have many missing entries. such a measurement matrix is avoided. rather, pairwise affinities between trajectories are computed. this only requires some trajectories to have some temporal overlap.
+
+we define affinities between all pairs of trajectories that share at least a common frame. they define the edge weights of a graph with trajectories as vertices. trajectory pairs without overlap are assigned zero affinity. the emerging weighted graph is the basis for a grouping with spectral clustering. 
+following such an approach, even trajectories that do not share frames can get transitively connected via other trajectories.
+
+according to the gestalt principle of common fate
+we should assign high affinities to pairs of points that move together.
+
+two persons walking next to each other share the same motion although they are different objects.
+a person sitting in a chair shares the same motion as the objects in the background. 
+the gestalt principle tells us that these situations should be treated conservatively and objects should not be separated. 
+
+in motion segmenation based on two frame optical flow objects cannot be separated in most frames as long as they do not show different motion permantly. 
+
+at this point, the long-term aspect of trajectories is important. as we are not forced any longer to make decisions for each frame independently, we can pick for each pair of trajectories the time instant where the motion is maximally different.
+according to the gestalt principle this instant provided evidence that the two points do not belong to the same object.
+
+MATHEMATICAL FORMULATION
+
+The pairwise affinities for $n$ valid trajectories result in an $n \times n$ affinity matrix $W$.
+
 \section{Sparse Motion Segmentation}
 There are three different segmentation methods available
 Spectral clustering of the affinity matrix
