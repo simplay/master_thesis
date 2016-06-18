@@ -1,4 +1,43 @@
 \chapter{Introduction}
+
+top-down approach require ground truth prior information.
+thus, use a bottom-up approach.
+
+value of motion and gestalt principle of common fate
+motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
+
+however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
+=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
+tracking the interplay of the articulated parts over longer periods yields the missing information about the overall motion.
+=> hence, motion should be analyzed over longer periods (decreases the intra motion variance relative to the inter-object variance). moreover, motion information can be propagated to frames in which the object is mainly static.
+
+for such long term analysis, a tracking is required.
+point tracking is more reliable than superpixels, as stable features are located at edges and corners, rather than in flat areas.
+
+use a semi-dense point tracker based on optical flow that yields reliable trajectories for hundreds of frames.
+eloberate
+
+due to occlusion and disocclusion, 
+trajectories are usually asynchronous, i.e. they start and end in different frames. 
+
+most existing trajectory clustering methods cannot deal with this problem. 
+
+therefore, we define a distance between all pairs of trajectories that share some common frames.
+
+sparse sampling of the frames with our trajectories, 
+we run spectral clustering on all extracted trajectories.
+
+
+long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
+this requires point trajectories
+
+to increase the quality of the point tracking, especially at very fast moving regions: 
+
+track points based on an optical flow method (lodf). 
+
+
+
+
 \section{Motivation}
 
 Motion describes the change in position of an object with respect to time and is one of the most fundamental cue in the human visual system for perceiving the surrounding environment. Particularly, it is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization.

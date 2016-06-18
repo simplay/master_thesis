@@ -38,6 +38,16 @@ Layered RGBD flow (LRGB)
 
 \section{Data Extraction}
 
+\paragraph{Initial Points}
+a set of points is initialized in the first video frame.
+principally, every pixel location could be used. however, homogeneous areas can be problematic for the optical flow. therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
+
+for efficiency reasons, we spatially subsample the initial points.
+factors larger than 12 lose details as there are not enough points to cover small object parts. on the other hand, factors smaller than 4 waste computation time as smaller objects tend to get smoothed away.
+
+
+
+
 Traceable candidate locations are obtained by applying a Harris Corner Detector on the input image. 
 Features that are identified as corners are a viable option for starting a trajectory tracking.
 
@@ -45,7 +55,14 @@ in addition, a boolean grid with a certain cell size is applied to the candidate
 
 
 mention how invalid regions are computed: occluded regions.
-Occlusion is detected by applyinge backward flow to a continued tracked point and checking whether that resulting point has the same origin as the actual tracked from position.
+
+\paragraph{Occlusion detection}
+idea: stop tracking points as soon as a point gets occluded.
+
+in tracking, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. in contrast, we detect occlusions by verifying the consistency of the forward and the backward flow.
+
+Occlusion is detected by applying the backward flow to a continued tracked point and checking whether that resulting point has the same origin as the actual tracked from position. See figure FIGURE. In non-occluded case, the backward flow vector points in the inverse direction of the forward flow vector. if this consistency required is not satisfied, the point is either getting occluded at frame $t+1$ (the next frame) or the flow was not correctly estimated. both are good reasons to stop tracking this point at $t$. Since there are always some small estimation errors in the optical flow, there is a small tolerance interval granted.
+Occlusion comes with the opposite phenomenon disocclision or scaling. to fill these areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame.
 
 the color values are stored as cie lab color images.
 
@@ -55,7 +72,18 @@ depth fields
 color values
 flow-and depth field variances.
 
-\section{Trajectories and Affinity Matrix}
+\section{Trajectories}
+
+every point in frame $t$ can be tracked to the next frame $t+1$ by suing the optical flow field $w_t$ that belongs to frame $t$. In principal, any optical flow method can be used.
+
+tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. For this purpose we make use of the invalid mask computed earlier.
+
+Occlusion comes with the opposite phenomenon disocclision or scaling. to fill these areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame.
+However, most trajectories are never due to disocclusion.
+
+
+problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
+
 \section{Affinity Matrix}
 \section{Sparse Motion Segmentation}
 There are three different segmentation methods available
