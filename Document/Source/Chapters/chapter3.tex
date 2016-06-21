@@ -63,7 +63,24 @@ provides such a behavior. A plot if the negative logit function defined as in $\
 \caption{A plot of the negative logit function applied on the domain [0,1].}
 \label{fig:negative_logit_function}
 \end{figure}
-If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is benificial to cut e
+If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e.
+
+For computing pseudo-probabilities, we use the inverse of the logit function, the so called logistic function
+\begin{equation}
+	f(z) = \frac{1}{1 + \exp \left( -z \right)}.
+	\label{eq:logistic_function}
+\end{equation}
+
+The input values we put into the function from equation $\ref{eq:logistic_function}$ are computed by the transformed trajectory distances $d$:
+\begin{equation}
+	z \equiv z(d) = \beta_0 + \beta_1 d
+\end{equation}
+The prior probability of cutting two trajectories is defined by the intercept value $\beta_0$. Assuming we learned $\beta_0$ for a certain prior cut probability $p$ and are given a new prior cut probability $\tilde{p}$, we can adapt the value $z$ by
+\begin{equation}
+	z = \beta_0 - \log \left( \frac{p}{1-p} \right) + \log \left( \frac{\tilde{p}}{1-\tilde{p}} \right) + \beta_1 d.
+\end{equation}
+If the cut prior is increased, more edges will be cut and the number of resulting segments increases. Small cut priors results in an undersegmentation.
+
 \section{Dense Segmentation}
 
 $\cite{chambolle2011first}$
