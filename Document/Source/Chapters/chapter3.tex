@@ -10,6 +10,25 @@ explain the problem of hole filling
 initial formulation of H.S
 secrets of optical flow
 
+\section{Spectral Clustering}
+\section{Minimum Cost Multicut Problem}
+The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
+
+\begin{equation}
+\begin{aligned}
+& \min_{y \in \{0,1 \}^{|E|}} \sum_{e \in E} c_e y_e \\
+& \text{subject to } y \in MC
+\end{aligned}
+\end{equation}
+
+where $MC$ is the set of all characteristic functions of all multicuts. This corresponds to all $y \in \{0,1 \}^{|E|}$ that form a closed boundaries, representing a valid decomposition of the graph.
+
+A formal decomposition of these characteristic functions can be described as the follows:
+
+\begin{equation}
+	\forall C \in \text{cycles}(G) \forall e \in C: y_e \leq \sum_{e^{'} \in C \backslash \{e\}} y_{e^{'}}
+\end{equation}
+
 \section{Dense Segmentation}
 
 $\cite{chambolle2011first}$

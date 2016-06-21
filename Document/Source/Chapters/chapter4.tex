@@ -111,9 +111,28 @@ The pairwise affinities for $n$ valid trajectories result in an $n \times n$ aff
 
 \section{Sparse Motion Segmentation}
 There are three different segmentation methods available
+
+
 Spectral clustering of the affinity matrix
+
+
+\paragraph{spectral clustering}
+the eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
+underlying assumption: objects in a scene have a certain size.
+
+the min. cost multicut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
+
+limitation: only well defined for non-negative affinity values between trajectories. in practise this means it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. 
+
+
+
+
+
 MinCut
-Kernighan-Lin 
+\paragraph{Kernighan-Lin} 
+formulate trajectory motion segmentation as a minimum cost multicut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showin in $\cite{KB15b}$.
+
+
 \section{Dense Motion Segmentation}
 %TODO: use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
 
