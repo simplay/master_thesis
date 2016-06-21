@@ -29,6 +29,42 @@ A formal decomposition of these characteristic functions can be described as the
 	\forall C \in \text{cycles}(G) \forall e \in C: y_e \leq \sum_{e^{'} \in C \backslash \{e\}} y_{e^{'}}
 \end{equation}
 
+It was shown, that is is sufficient to consider all chordless cycles, i.e. all cycles in which each node is only connected to its successor and predecessor. To avoid trivial solutions, the edge weights are typically chosen to be negative for edges that should be cut and positive for those connection nodes that should be joined. 
+
+Given the cut probabilities $p_e$ of an edge $e \in E$, the negative of the \textit{logit} function 
+
+\begin{equation}
+	\text{logit}\left( p_e \right) = \log \left( \frac{p_e}{1 - p_e} \right)
+	\label{eq:logit_function}
+\end{equation}
+provides such a behavior. A plot if the negative logit function defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[trim axis left]
+\begin{axis}[
+  axis x line=center,
+  axis y line=center,
+  grid=both,
+  xtick={-2,-1,...,1,2},
+  ytick={-2,-1,...,1,2},
+  xlabel={$x$},
+  ylabel={$-\text{logit}\left( x \right)$},
+  xlabel style={below right},
+  ylabel style={above left},
+  no markers,
+  xmin=-0.5,
+  xmax=1.5,
+  ymin=-1.5,
+  ymax=1.5]
+\addplot +[thick, domain=0:1] {-log10(x/(1-x)};
+\end{axis}
+\end{tikzpicture}
+\label{fig:negative_logit_function}
+\caption{A plot of the negative logit function applied on the domain [0,1].}
+\end{figure}
+
+If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is benificial to cut e
 \section{Dense Segmentation}
 
 $\cite{chambolle2011first}$
