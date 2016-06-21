@@ -24,6 +24,22 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 
+% algorithms
+\usepackage{boxedminipage}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+\usepackage{algorithm}
+\renewcommand{\algorithmicforall}{\textbf{Foreach}}
+\newcommand{\init}{\textbf{INIT }}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\asteq}{\mathrel{*}=}
+\newcommand{\myto}{\textbf{TO }}
+\newcommand*\colvec[3][]{
+    \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
+}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+
 \lstset{% 
    language=Matlab, 
    basicstyle=\small\ttfamily, 
@@ -106,6 +122,9 @@
 
 \addcontentsline{toc}{chapter}{\numberline{}List of Figures}
 \listoffigures
+
+\addcontentsline{toc}{chapter}{\numberline{}List of Algorithms}
+\listofalgorithms
 
 \addcontentsline{toc}{chapter}{\numberline{}Bibliography}
 \bibliographystyle{alphadin}

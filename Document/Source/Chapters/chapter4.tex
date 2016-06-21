@@ -1,4 +1,21 @@
 \chapter{Implementation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
 The problem statement our pipeline solves is defined as follows: 
 Given a set of images that form a video sequence and their associated depth maps. Our goal is to separate the images into regions that form coherent and independent rigidly moving objects. \\ \\
@@ -130,8 +147,84 @@ limitation: only well defined for non-negative affinity values between trajector
 
 MinCut
 \paragraph{Kernighan-Lin} 
-formulate trajectory motion segmentation as a minimum cost multicut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showin in $\cite{KB15b}$.
+formulate trajectory motion segmentation as a minimum cost multicut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showin in $\cite{KB15b}$. \\ \\
+Let $G = (E, V)$ be an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. The $KL$ algorithm attempts to find a partition of V into Two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
+\begin{equation}
+	D_a = E_a - I_a
+\label{eq:kl_d_values}
+\end{equation}
+If $a$ and $b$ are interchanged, then the reduction in cost is equals.
+\begin{equation}
+	T_{n} - T_{n-1} = D_a + D_b - 2c_{a,b}
+\label{eq:kl_difference_ext_int_costs}
+\end{equation}
+Note that $c_{a,b}$ in equation $\ref{eq:kl_difference_ext_int_costs}$ defines the ost of the possible edge between $a$ and $b$. \\ \\
+The $KL$ algorithms attempts to find an optimal series of interchange operations between the elements in $A$ and $B$, which maximizes the value of equation $\ref{eq:kl_difference_ext_int_costs}$. The determined optimal operation sequence is then executed to compute the partition of the graph into the sets $A$ and $B$. \\ \\
+In the following the pseudo-code of \emph{Kernighan-Lin} algorithm we used for our implemented, listed in algorithm $\ref{alg:kernighan_lin}$.
+\begin{algorithm}[H]
+\caption{Kernighan-Lin}
+\begin{table}[H]
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Input:} & Graph \emph{G = (V, E)} \\
+    \textbf{Output:} & Binary Graph Partition $\left( A, B \right)$ \\
+  \end{tabular} 
+\end{table}
+\setlength{\fboxrule}{0pt} 
+\begin{boxedminipage}{1.0\textwidth}
+  \begin{algorithmic}[1]
+  	  \State $\text{Determine initial balanced vertex partition into sets A, B}$
+      \Do
+		\State $\forall a \in A, \forall b \in B: \text{Compute D values}$
+		\State $\text{Let gv, av, bv be empty lists}$
+		\For{$\text{n=1 to } |V|/2$}
+			\State $\text{Find } a \in A, b \in B \text{ such that } g = D_a + D_b - 2e_{a,b} \text{ is maximal}$
+			\State $\text{Remove a and b from further consideration in this pass}$
+			\State $\text{Put g to gv, a to av, b to bv}$
+			\State $\text{Update D values for all elements of } A = A \backslash \{a\}, B = B \backslash \{b\}$
+		\EndFor
+		\State $\text{Find k that maximizes } g_{max} = \sum_{i=1}^k gv_i$
+		\If{$g_{max} > 0$} 
+			\State $\text{Exchange } av_1,\dots, av_k \text{ with } bv_1,\dots, bv_k$  
+		\EndIf	
+      \doWhile{$g_{max} > 0$}
+  \end{algorithmic}
+  \end{boxedminipage}
+  \vskip1.5pt
+\label{alg:kernighan_lin}
+\end{algorithm}
+Since our implementation solves for multiple graph segments, we define several initial sets and then apply an alpha-beta expansion heuristics by running algorithm $\ref{alg:kernighan_lin}$ on every distinct pair of vertex set. 
+Our final $KL$ algorithm we use to solve the multi-cut problem is listed in algorithm $\ref{alg:kl_multiple_segments}$.
 
+\begin{algorithm}[H]
+\caption{Kernighan-Lin Multicut Heuristic}
+\begin{table}[H]
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Input:} & Graph \emph{G = (V, E)} \\
+        & Number of segments C \\
+    & Number of repetitions N  \\
+    & Number of dummy vertices D \\
+	\textbf{Output:} & Multiple Graph Partition $\left( A_1,\dots, A_N \right)$ 
+  \end{tabular} 
+\end{table}
+\textbf{Procedures:} $KernighanLin(G)$  \\
+\setlength{\fboxrule}{0pt} 
+\begin{boxedminipage}{1.0\textwidth}
+  \begin{algorithmic}[1]
+  	\For{$n = 1 : N$}
+  	  \State $\text{Split V into C initial balanced sets} A_1,\dots,A_C$
+  	  \State $\text{Append D dummy vertices to each initial set} A_k$ 
+      \ForAll{$\text{distinct vertex set pair} \left( A_k, A_l\right)$}
+        \State $ \text{Form the subgraph } G_{k,l} = (V, E)$
+		\State $\text{Run } KernighanLin(G_{k,l}) \text{ and Update G}$
+      \EndFor
+    \EndFor{$\text{d}$}
+  \end{algorithmic}
+  \end{boxedminipage}
+  \vskip1.5pt
+\label{alg:kl_multiple_segments}
+\end{algorithm}  
+  
+% Explain the algorithm above, the alpha-beta swap, error terms and so forth...
 
 \section{Dense Motion Segmentation}
 %TODO: use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
