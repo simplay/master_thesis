@@ -45,9 +45,14 @@ The expression $\partial_t A$ denotes the averaged motion over time, which is co
 	\partial_t A = \frac{1}{T} \left( x_{t+T}^{A} - x_{t}^{A}, y_{t+T}^{A} - y_{t}^{A}\right)
 \end{equation}
 The exact value of $T$ is either the number of overlapping frames between the $A$ and $B$ or a fixed number, in case there are fewer common frames available, than a fixed threshold. \\ \\
-Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a Matrix $W$.
+Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a $n \times n$ affinity matrix $W$, for $n$ given trajectories. 
 
 \section{Spectral Clustering}
+
+Given the pairwise affinity matrix $W$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
+\begin{equation}
+	D = \text{diag} \left( d_{A_1}, \dots, d_{A_n} \right)
+\end{equation}
 
 \begin{equation}
 	V^{T} \Lambda V = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
