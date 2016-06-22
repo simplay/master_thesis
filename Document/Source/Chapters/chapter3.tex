@@ -10,7 +10,49 @@ explain the problem of hole filling
 initial formulation of H.S
 secrets of optical flow
 
+
+
+\section{Trajectory Affinities}
+Let $A$, $B$ denote two trajectories resulting from the previous tracking step. 
+Our goal is to define the similarity between the trajectories by computing a distance $d(A,B)$ for each trajectory pair. For this purpose we exploit their maximal dissimilarity via their maximal motion difference among all frames of common visibility. 
+\begin{equation}
+	d^2 \left( A, B \right) = \max_t d_t^2 \left( A, B \right)
+	\label{eq:product_distance}
+\end{equation}
+The resulting distance value from equation $\ref{eq:product_distance}$ is then turned into a affinity via the transformation
+\begin{equation}
+	w \left( A, B \right) = e^{ -\lambda d^2 (A, B) }.
+	\label{eq:prod_dist_affinity}
+\end{equation}
+
+where
+
+\begin{equation}
+	d_t^2 \left( A, B \right) = d_{spatial}^{A,B} \left( d_{motion}^{A,B} (t) \right) ^2
+\end{equation}
+
+\begin{equation}
+	d_{spatial}^{A,B} = \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
+\end{equation}
+where $\alpha$ is the first- and $\omega$ is the last- overlapping frame index between the two given trajectories $A$ and $B$.
+
+\begin{equation}
+	d_{motion}^{A,B} \left( t \right)  = \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t}
+\end{equation}
+The expression $\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$.
+
+\begin{equation}
+	\partial_t A = \frac{1}{T} \left( x_{t+T}^{A} - x_{t}^{A}, y_{t+T}^{A} - y_{t}^{A}\right)
+\end{equation}
+The exact value of $T$ is either the number of overlapping frames between the $A$ and $B$ or a fixed number, in case there are fewer common frames available, than a fixed threshold. \\ \\
+Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a Matrix $W$.
+
 \section{Spectral Clustering}
+
+\begin{equation}
+	V^{T} \Lambda V = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
+\end{equation}
+
 \section{Minimum Cost Multicut Problem}
 The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
 
@@ -81,56 +123,23 @@ The prior probability of cutting two trajectories is defined by the intercept va
 \end{equation}
 If the cut prior is increased, more edges will be cut and the number of resulting segments increases. Small cut priors results in an undersegmentation.
 
-\section{Dense Segmentation}
-
-Given two trajectories $A$, $B$.
-
-\begin{equation}
-	d^2 \left( A, B \right) = \max_t d_t^2 \left( A, B \right)
-\end{equation}
-
-\begin{equation}
-	d_{spatial}^{A,B} = \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
-\end{equation}
-where $\alpha$ is the first- and $\omega$ is the last- overlapping frame index between the two given trajectories $A$ and $B$.
-
-
-\begin{equation}
-	d_{motion}^{A,B} \left( t \right)  = \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t}
-\end{equation}
-
-$\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$.
-
-\begin{equation}
-	\partial_t A = \frac{1}{T} \left( x_{t+T}^{A} - x_{t}^{A}, y_{t+T}^{A} - y_{t}^{A}\right)
-\end{equation}
-The exact value of $T$ is either the number of overlapping frames between the $A$ and $B$ or a fixed number, in case there are fewer common frames available, than a fixed threshold. 
-
-$\cite{chambolle2011first}$
-$\cite{chambolle2004algorithm}$
-
 \subsection{Problem Statement}
-In this work we address the problem of demosaicing by formulating it as a convex optimization problem. Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. 
-
+In the following section we address the problem of \emph{demosaicing} by formulating it as a convex optimization. For solving the problem we develop and apply a primal-dual approximation. We exploit this demosaicing implementation in order to solve the hole-filling problem, resulting when being interested in generating the dense- from a sparse segmentation. \\ \\
+Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. \\ \\
 More precisely, let $g$ denote the bayer filter camera raw input image. Then we want to solve for $u=(u_r, u_g, u_g)$ (RGB image) minimzating the following energy term (cost function):
 
 \begin{align}
 	E(u_c) = \norm{\nabla u_c}_2 + \frac{\lambda}{2} \norm{u_c - g}^2_{\Omega_{c}}
 \label{eq:basis_cost_demosaicing}	
 \end{align}
-
 with the measure
 
 \begin{equation}
 	\norm{u_C - g}^2_{\Omega_{C}} = \sum_x \sum_y \Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}^2
 \label{eq:measure}
 \end{equation}
-
-
-where C denotes the three different color channels. $\Omega_{C}$ is defined such that $\Omega_{C}(x,y) = 1$ if the pixel value at $(x,y)$ is \emph{valid}$\footnote{this means that the pixel at location (x,y) is valid for the bayer color mask C}$ and $\Omega_{C}(x,y) = 0$ when the data is missing.
-
-The cost function from equation $\ref{eq:basis_cost_demosaicing}$ consists of a smoothness term, $\norm{\nabla u_c}_2$ and $\norm{u_c - g}^{2}_{\Omega_{c}}$. The first term ensures a smooth color transition between colors in a l2 norm sense. The second term ensures that the reconstructed images does not deviate too much from the given input, i.e. de demosaiced image should resemble to the provided mosaiced raw camera image. This similarity term is further parameterized by a regularization term $\lambda$, indicating how strong the output should match the given input according to the formulated measure in equation $\ref{eq:measure}$. In summary, larger values for $\lambda$ weight the similarity of the input and output image more, and contrarely, lower values weight the color smoothness term more.
-
+where C denotes the three different color channels. $\Omega_{C}$ is defined such that $\Omega_{C}(x,y) = 1$ if the pixel value at $(x,y)$ is \emph{valid}$\footnote{this means that the pixel at location (x,y) is valid for the bayer color mask C}$ and $\Omega_{C}(x,y) = 0$ when the data is missing. \\ \\
+The cost function from equation $\ref{eq:basis_cost_demosaicing}$ consists of a smoothness term, $\norm{\nabla u_c}_2$ and $\norm{u_c - g}^{2}_{\Omega_{c}}$. The first term ensures a smooth color transition between colors in a l2 norm sense. The second term ensures that the reconstructed images does not deviate too much from the given input, i.e. de demosaiced image should resemble to the provided mosaiced raw camera image. This similarity term is further parameterized by a regularization term $\lambda$, indicating how strong the output should match the given input according to the formulated measure in equation $\ref{eq:measure}$. In summary, larger values for $\lambda$ weight the similarity of the input and output image more, and contrarely, lower values weight the color smoothness term more. \\ \\
 Hereby, minimizating the cost function from equation $\ref{eq:basis_cost_demosaicing}$ leads to an optimal demosaiced image $u$.
 Mathematically we want to solve for 
 
@@ -138,8 +147,11 @@ Mathematically we want to solve for
 	\widetilde{u} = \argmin_{u_c} E(u_c)
 \label{eq:our_general_cost_function}
 \end{equation}
-
-We can further simplify the cost function stated in equation $\ref{eq:basis_cost_demosaicing}$ relying on the following observation: Since the function $\Omega_{C}$ is only true for pixels that correspond to the color channel C in the bayer mask, we see that $\Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}$ is only not equal zero if the pixel at location $(x,y)$ belongs to the color channel $C$. Therefore we are allowed to solve the stated optimization problem from equation $\ref{eq:basis_cost_demosaicing}$ for each color channel separately. 
+We can further simplify the cost function stated in equation $\ref{eq:basis_cost_demosaicing}$ relying on the following observation: Since the function $\Omega_{C}$ is only true for pixels that correspond to the color channel C in the bayer mask, we see that 
+\begin{equation}
+	\Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}
+\end{equation}
+is only not equal zero if the pixel at location $(x,y)$ belongs to the color channel $C$. Therefore we are allowed to solve the stated optimization problem from equation $\ref{eq:basis_cost_demosaicing}$ for each color channel separately. 
 
 
 According to this insight we are supposed to minimize the following three independent$\footnote{Independent in the sense that we are allowed to solve for each color channel separately}$ convex problems:
