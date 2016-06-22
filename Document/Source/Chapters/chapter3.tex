@@ -13,6 +13,7 @@ secrets of optical flow
 
 
 \section{Trajectory Affinities}
+\label{sec:trajectory_affinities}
 Let $A$, $B$ denote two trajectories resulting from the previous tracking step. 
 Our goal is to define the similarity between the trajectories by computing a distance $d(A,B)$ for each trajectory pair. For this purpose we exploit their maximal dissimilarity via their maximal motion difference among all frames of common visibility. 
 \begin{equation}
@@ -32,12 +33,14 @@ where
 \end{equation}
 
 \begin{equation}
-	d_{spatial}^{A,B} = \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
+	d_{spatial}^{A,B} = \frac{1}{\omega - \alpha + 1} \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
+\label{eq:spatial_distance}	
 \end{equation}
 where $\alpha$ is the first- and $\omega$ is the last- overlapping frame index between the two given trajectories $A$ and $B$.
 
 \begin{equation}
 	d_{motion}^{A,B} \left( t \right)  = \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t}
+\label{eq:motion_distance}
 \end{equation}
 The expression $\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$.
 
@@ -47,45 +50,41 @@ The expression $\partial_t A$ denotes the averaged motion over time, which is co
 The exact value of $T$ is either the number of overlapping frames between the $A$ and $B$ or a fixed number, in case there are fewer common frames available, than a fixed threshold. \\ \\
 Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a $n \times n$ affinity matrix $W$, for $n$ given trajectories. 
 
-\section{Spectral Clustering}
-
-Given the pairwise affinity matrix $W$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
+\section{Eigendecomposition of Graph Laplacians}
+Given the pairwise affinity matrix $W$ as computed in section $\ref{sec:trajectory_affinities}$ on page $\pageref{sec:trajectory_affinities}$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
 \begin{equation}
 	D = \text{diag} \left( d_{A_1}, \dots, d_{A_n} \right)
 \end{equation}
-
+be the $n \times n$ diagonal matrix with the entries
+\begin{equation}
+	d_{A_k} = \sum_B w \left( A_k, B \right)
+\end{equation}
+The eigendecomposition of the normalized graph laplacian is given by equation $\ref{eq:normalized_graph_laplacian}$.
 \begin{equation}
 	V^{T} \Lambda V = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
+	\label{eq:normalized_graph_laplacian}
 \end{equation}
 
 \section{Minimum Cost Multicut Problem}
 The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
-
 \begin{equation}
 \begin{aligned}
 & \min_{y \in \{0,1 \}^{|E|}} \sum_{e \in E} c_e y_e \\
 & \text{subject to } y \in MC
 \end{aligned}
 \end{equation}
-
-where $MC$ is the set of all characteristic functions of all multicuts. This corresponds to all $y \in \{0,1 \}^{|E|}$ that form a closed boundaries, representing a valid decomposition of the graph.
-
+where $MC$ is the set of all characteristic functions of all multicuts. This corresponds to all $y \in \{0,1 \}^{|E|}$ that form a closed boundaries, representing a valid decomposition of the graph. \\ \\
 A formal decomposition of these characteristic functions can be described as the follows:
-
 \begin{equation}
 	\forall C \in \text{cycles}(G) \forall e \in C: y_e \leq \sum_{e^{'} \in C \backslash \{e\}} y_{e^{'}}
 \end{equation}
-
-It was shown, that is is sufficient to consider all chordless cycles, i.e. all cycles in which each node is only connected to its successor and predecessor. To avoid trivial solutions, the edge weights are typically chosen to be negative for edges that should be cut and positive for those connection nodes that should be joined. 
-
+It was shown, that is is sufficient to consider all chordless cycles, i.e. all cycles in which each node is only connected to its successor and predecessor. To avoid trivial solutions, the edge weights are typically chosen to be negative for edges that should be cut and positive for those connection nodes that should be joined. \\ \\
 Given the cut probabilities $p_e$ of an edge $e \in E$, the negative of the \textit{logit} function 
-
 \begin{equation}
 	\text{logit}\left( p_e \right) = \log \left( \frac{p_e}{1 - p_e} \right)
 	\label{eq:logit_function}
 \end{equation}
 provides such a behavior. A plot if the negative logit function defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
-
 \begin{figure}
 \centering
 \begin{tikzpicture}[trim axis left]
@@ -110,14 +109,12 @@ provides such a behavior. A plot if the negative logit function defined as in $\
 \caption{A plot of the negative logit function applied on the domain [0,1].}
 \label{fig:negative_logit_function}
 \end{figure}
-If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e.
-
+If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e. \\ \\
 For computing pseudo-probabilities, we use the inverse of the logit function, the so called logistic function
 \begin{equation}
 	f(z) = \frac{1}{1 + \exp \left( -z \right)}.
 	\label{eq:logistic_function}
 \end{equation}
-
 The input values we put into the function from equation $\ref{eq:logistic_function}$ are computed by the transformed trajectory distances $d$:
 \begin{equation}
 	z \equiv z(d) = \beta_0 + \beta_1 d
@@ -126,9 +123,27 @@ The prior probability of cutting two trajectories is defined by the intercept va
 \begin{equation}
 	z = \beta_0 - \log \left( \frac{p}{1-p} \right) + \log \left( \frac{\tilde{p}}{1-\tilde{p}} \right) + \beta_1 d.
 \end{equation}
-If the cut prior is increased, more edges will be cut and the number of resulting segments increases. Small cut priors results in an undersegmentation.
+If the cut prior is increased, more edges will be cut and the number of resulting segments increases. Small cut priors results in an undersegmentation. \\ \\
+In the following we define a measure for the trajectory distances. This distances makes use of the motion-, spatial- and color distance of the overlapping segments between two trajectories $A$ and $B$. Note that the definition of the motion distance is given by equation $\ref{eq:motion_distance}$ and the spatial distance is given by the definition stated in equation $\ref{eq:spatial_distance}$. For the color distance we compute the average color within the overlapping frames using the CieLab\footnote{The key property of the Cie Lab color space is that its values are uniformly spaced. This allows us to use the l2 norm in order to compute meaningful color differences.} color space. More precisely, the color distances $d_{color}$ is defined as the follows:
 
-\subsection{Problem Statement}
+\begin{equation}
+	d_{color}^{A,B} = \frac{1}{\omega - \alpha + 1} \sum_{k=\alpha}^\omega \norm{\text{ColorAt}(k, A(k)) - \text{ColorAt}(k, B(k))}_2
+	\label{eq:color_dist}
+\end{equation}
+where $ColorAt(k, A(k))$ yields the CieLab color value in frame $k$ at the image location $A(k)$\footnote{Remember that $A(k)$ denotes the tracking position of trajectory $A$ in frame $k$}.
+The final trajectory distance is computed by combining the described distance values as in equation $\ref{eq:sum_dist}$.
+\begin{equation}
+\begin{aligned}
+z ( A, B ) = \max (\tilde{\beta_0} & + \beta_1 d_{motion}^{A,B} \\
+& + \beta_2 d_{spatial}^{A,B} \\
+& + \beta_3 d_{color}^{A,B},\\
+\beta_0 & + \beta_1 d_{motion}^{A,B} )
+\end{aligned}
+\label{eq:sum_dist}
+\end{equation}
+If the sum of the spatial and the color distance is large in equation $\ref{eq:sum_dist}$ then only the motion distances are considered. This ensures that trajectories which are far apart but move similarly still end up in the same segment.
+
+\section{Hole Filling}
 In the following section we address the problem of \emph{demosaicing} by formulating it as a convex optimization. For solving the problem we develop and apply a primal-dual approximation. We exploit this demosaicing implementation in order to solve the hole-filling problem, resulting when being interested in generating the dense- from a sparse segmentation. \\ \\
 Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. \\ \\
 More precisely, let $g$ denote the bayer filter camera raw input image. Then we want to solve for $u=(u_r, u_g, u_g)$ (RGB image) minimzating the following energy term (cost function):
