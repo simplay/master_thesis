@@ -83,6 +83,29 @@ If the cut prior is increased, more edges will be cut and the number of resultin
 
 \section{Dense Segmentation}
 
+Given two trajectories $A$, $B$.
+
+\begin{equation}
+	d^2 \left( A, B \right) = \max_t d_t^2 \left( A, B \right)
+\end{equation}
+
+\begin{equation}
+	d_{spatial}^{A,B} = \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
+\end{equation}
+where $\alpha$ is the first- and $\omega$ is the last- overlapping frame index between the two given trajectories $A$ and $B$.
+
+
+\begin{equation}
+	d_{motion}^{A,B} \left( t \right)  = \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t}
+\end{equation}
+
+$\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$.
+
+\begin{equation}
+	\partial_t A = \frac{1}{T} \left( x_{t+T}^{A} - x_{t}^{A}, y_{t+T}^{A} - y_{t}^{A}\right)
+\end{equation}
+The exact value of $T$ is either the number of overlapping frames between the $A$ and $B$ or a fixed number, in case there are fewer common frames available, than a fixed threshold. 
+
 $\cite{chambolle2011first}$
 $\cite{chambolle2004algorithm}$
 
