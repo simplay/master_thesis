@@ -106,7 +106,7 @@ provides such a behavior. A plot if the negative logit function defined as in $\
 \addplot +[thick, domain=0:1] {-log10(x/(1-x)};
 \end{axis}
 \end{tikzpicture}
-\caption{A plot of the negative logit function applied on the domain [0,1].}
+\caption[Logit Function Plot]{A plot of the negative logit function applied on the domain [0,1].}
 \label{fig:negative_logit_function}
 \end{figure}
 If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e. \\ \\
