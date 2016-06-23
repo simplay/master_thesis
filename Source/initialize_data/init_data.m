@@ -6,15 +6,15 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'chair_3_cast';
+DATASETNAME = 'bonn_chairs_263_3_434';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-USE_FILTERED_DS_FOR_CANDIDATES = false;
-RUN_BACKGRUND_ELIMINATION = true;
-USE_HOLLOW_CANDIDATES = false;
+RUN_BACKGRUND_ELIMINATION = true; % tries to eliminate weak trackable canidates.
+USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
+USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
@@ -96,13 +96,34 @@ if COMPUTE_TRACKING_DATA
         
         [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE, USE_HOLLOW_CANDIDATES);
         
+        % strengthen candidate selection
         if RUN_BACKGRUND_ELIMINATION
-            backgroundEliminationMask = abs(forward_flow(:,:,1)) + abs(forward_flow(:,:,2));
+            % use l1 dist
+            % backgroundEliminationMask = abs(forward_flow(:,:,1)) + abs(forward_flow(:,:,2));
+            
+            % use l2 dist: magnitude
+            backgroundEliminationMask = sqrt(forward_flow(:,:,1).^2 + forward_flow(:,:,2).^2);
+            
+            % only select valid regions for statistics
+            backgroundEliminationMask = ((1-invalid_regions) .* backgroundEliminationMask);
+            
             %meanBG = mean(backgroundEliminationMask(:));
             %stdBG = std(backgroundEliminationMask(:));
+            
+            % display selected image region
+            % imshow(img(:,:,1).*bgMask)
             % compute the eight quantiles
-            q = quantile(backgroundEliminationMask(:),8);
-            bgMask = backgroundEliminationMask >= 0.95*q(7);
+            q_n = 8;
+            alpha = 0.95;
+            
+            % fetch the q_n quantiles of the valid flow regions
+            q = quantile(backgroundEliminationMask(:), q_n);
+            
+            % select all regions that are between the the alpha-blended
+            % n-th and (n-1)-th quantile.
+            bgMask = backgroundEliminationMask >= (alpha * q(q_n-1) + (1 - alpha) * q(q_n));
+            
+            % strengthen selection process
             tracking_candidates = bgMask .* tracking_candidates;
         end
         
