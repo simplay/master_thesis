@@ -6,13 +6,13 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'bonn_chairs_263_3_434';
+DATASETNAME = 'c14';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-RUN_BACKGRUND_ELIMINATION = true; % tries to eliminate weak trackable canidates.
+RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
@@ -129,9 +129,23 @@ if COMPUTE_TRACKING_DATA
         
         [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
         datasets = [trackable_row, trackable_col]';
-
+    
+        % for generating plots
+        if false
+            fig = figure;
+            imshow(img(:,:,1)*0.4)
+            axis off;
+            hold on
+            for idx_k=1:length(trackable_row),
+                idy = trackable_row(idx_k);
+                idx = trackable_col(idx_k);
+                plot(idx, idy, '.r', 'markersize', 10)
+            end
+            % call save_figure_as_image(fig, './candidates_sparse', 480, 640)
+        end
+        
         % save trackable row and col in text file
-        fName = strcat(BASE_OUTPUT_PATH,'candidates_',num2str(t),'.txt');
+        fName = strcat(BASE_OUTPUT_PATH, 'candidates_', num2str(t), '.txt');
         fid = fopen(fName, 'w');
         if fid ~= -1
             for k=1:size(datasets,1)
