@@ -1,21 +1,5 @@
 \chapter{Implementation}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
 The problem statement our pipeline solves is defined as follows: 
 Given a set of images that form a video sequence and their associated depth maps. Our goal is to separate the images into regions that form coherent and independent rigidly moving objects. \\ \\
@@ -55,7 +39,36 @@ Layered RGBD flow (LRGB)
 
 \section{Data Extraction}
 
-\paragraph{Initial Points}
+\subsection{Tracking Candidates}
+Explain purpose of the tracking candidates. \\ \\
+Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that can be used in the tracking stage of the pipeline. For a given image as shown in subfigure $\ref{fig:c14_f1_cand}$ we initially compute interseting features using by applying a Harris corner detector onto it. The result is shown in figure $\ref{fig:c14_cand_corners}$. We filter weak corner candidates by thresholding too weak corners. A detailed explanation how this thresholding works is described in the appending in section $\ref{sec:corner_thresholding}$ on page $\pageref{sec:corner_thresholding}$.
+
+ The remaining corners form a boolean selection mask as shown in figure $\ref{fig:c14_cand_dense}$. Finally, to avoid oversampling, we further reduce the number of samplings by only taking every $n-th$ sample location. The final tracking canidates are shown in figure $\ref{fig:c14_cand_sparse}$, illustrated as red dots, overlaid on top of the initial input image.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Input Image]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/01}
+   \label{fig:c14_f1_cand}
+}
+\subfigure[Sparse Candidates]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/candidates_sparse}
+   \label{fig:c14_cand_sparse}
+}
+~
+\subfigure[Harris Corners]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/out_corners}
+   \label{fig:c14_cand_corners}
+}
+\subfigure[Dense Candidates]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/c14_f1_candidates}
+   \label{fig:c14_cand_dense}
+}
+\end{center}
+\caption{A visualization of the tracking candidates extraction stages. For a given input image as shown in subfigure $\ref{fig:c14_f1_cand}$ we want to compute a sparse set of traceable feature locations as shown in subfigure $\ref{fig:c14_cand_sparse}$.}
+\label{fig:tracable_candidates}
+\end{figure}
+
+
 a set of points is initialized in the first video frame.
 principally, every pixel location could be used. however, homogeneous areas can be problematic for the optical flow. therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
 
@@ -73,7 +86,7 @@ in addition, a boolean grid with a certain cell size is applied to the candidate
 
 mention how invalid regions are computed: occluded regions.
 
-\paragraph{Occlusion detection}
+\subsection{Occlusion detection}
 idea: stop tracking points as soon as a point gets occluded.
 
 in tracking, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. in contrast, we detect occlusions by verifying the consistency of the forward and the backward flow.

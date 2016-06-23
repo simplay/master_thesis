@@ -4,17 +4,24 @@
 \bibpunct{[}{]}{,}{a}{}{;}
 \usepackage{fancyheadings}
 \usepackage{iamdip}
-\usepackage[pdftex]{graphicx}
-\usepackage{subfig}
+
+% allow to include graphics
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{subfigure}
+
+
+
+
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsfonts}
+
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{pdfpages}
-\usepackage{epsfig}
 \usepackage{color}
 \usepackage{mathtools}
 \usepackage{caption}
@@ -22,7 +29,13 @@
 \usepackage{listings} 
 \usepackage{pgfplots}
 \usepackage{tikz}
-\usepackage{pgfplots}
+
+\usepackage[export]{adjustbox}
+
+
+% have a 3 cm padding (left and right)
+\usepackage[hmargin=3cm]{geometry}
+
 
 % algorithms
 \usepackage{boxedminipage}
