@@ -94,6 +94,22 @@ in tracking, occlusion is usually detected by comparing the appearance of the lo
 Occlusion is detected by applying the backward flow to a continued tracked point and checking whether that resulting point has the same origin as the actual tracked from position. See figure FIGURE. In non-occluded case, the backward flow vector points in the inverse direction of the forward flow vector. if this consistency required is not satisfied, the point is either getting occluded at frame $t+1$ (the next frame) or the flow was not correctly estimated. both are good reasons to stop tracking this point at $t$. Since there are always some small estimation errors in the optical flow, there is a small tolerance interval granted.
 Occlusion comes with the opposite phenomenon disocclision or scaling. to fill these areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame.
 
+\begin{figure}[H]
+\begin{center}
+\subfigure[Input Image]{
+   \includegraphics[width=0.48\linewidth] {implementation/occlusion/01}
+   \label{fig:c14_f1_occ}
+}
+\subfigure[Invalid Regions]{
+   \includegraphics[width=0.48\linewidth] {implementation/occlusion/invalid_regsions}
+   \label{fig:c14_invalid_regions}
+}
+
+\end{center}
+\caption{A visualization of the all invalid locations shown in white color illustrated in subfigure $\ref{fig:c14_invalid_regions}$.}
+\label{fig:invalid_regions}
+\end{figure}
+
 the color values are stored as cie lab color images.
 
 
