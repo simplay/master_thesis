@@ -4,7 +4,33 @@ In this chapter we give a introduction in various topics and areas which are nec
 \section{Optical Flow}
 The optical flow is a visual phenomenon that describes the perception of motion.
 By definition, it is the apparent visual motion a moving viewer experiences. \\ \\
-To illustrate this concept, imagine you sit in a moving train and are looking out of one of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
+To illustrate this concept have a look at figure $\ref{fig:motion_eg}$. Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[1st Frame]{
+   \includegraphics[width=0.47\linewidth] {background/of/ls1}
+   \label{fig:motion_eg_f1}
+}
+\subfigure[2nd Frame]{
+   \includegraphics[width=0.47\linewidth] {background/of/ls2}
+   \label{fig:motion_eg_f2}
+}
+~
+\subfigure[3rd Frame]{
+   \includegraphics[width=0.47\linewidth] {background/of/ls3}
+   \label{fig:motion_eg_f3}
+}
+\subfigure[4th Frame]{
+   \includegraphics[width=0.47\linewidth] {background/of/ls4}
+   \label{fig:motion_eg_f4}
+}
+\end{center}
+\caption{An example of motion effects illustrated by four frames of a video sequence. Objects far away in the background, such as the mountain or the clouds seems to stand still. Objects being a fair distant apart, but also not too far away can be seen over several frames, such as the tree, that is passed. In addition, we also see observe, that the tree moves along the opposite direction as the driving car. Last, we also see the effect of motion blur for objects that are very close such as the grass.}
+\label{fig:motion_eg}
+\end{figure}
+
+
 In summary, the optical flow has the following key properties:
 \begin{itemize}
   \item Overtaken objects appear to move backwards.
