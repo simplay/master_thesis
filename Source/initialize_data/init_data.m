@@ -6,13 +6,15 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'c14';
+DATASETNAME = 'chair_3_cast';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
 USE_FILTERED_DS_FOR_CANDIDATES = false;
+RUN_BACKGRUND_ELIMINATION = true;
+USE_HOLLOW_CANDIDATES = false;
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
@@ -92,7 +94,18 @@ if COMPUTE_TRACKING_DATA
             img = im2double(imread(img_fname));
         end
         
-        [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE);
+        [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE, USE_HOLLOW_CANDIDATES);
+        
+        if RUN_BACKGRUND_ELIMINATION
+            backgroundEliminationMask = abs(forward_flow(:,:,1)) + abs(forward_flow(:,:,2));
+            %meanBG = mean(backgroundEliminationMask(:));
+            %stdBG = std(backgroundEliminationMask(:));
+            % compute the eight quantiles
+            q = quantile(backgroundEliminationMask(:),8);
+            bgMask = backgroundEliminationMask >= 0.95*q(7);
+            tracking_candidates = bgMask .* tracking_candidates;
+        end
+        
         [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
         datasets = [trackable_row, trackable_col]';
 

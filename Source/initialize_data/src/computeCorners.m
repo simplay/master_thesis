@@ -35,8 +35,6 @@ function [ avg_eigenvalue, corners ] = computeCorners( img )
         dxx = imfilter(dxx, g);
         dyy = imfilter(dyy, g);
         dxy = imfilter(dxy, g);
-
-        
         
         base = 0.5*(dxx+dyy);
         discrim = base.^2 + dxy.^2 - dxx.*dyy;
@@ -56,5 +54,3 @@ function [ Ix, Iy ] = compute_smoothed_centraldiff(mat)
         Ix = conv2(mat, dx, 'same');
         Iy = conv2(mat, dy, 'same');
 end
-
-
