@@ -73,9 +73,32 @@ a set of points is initialized in the first video frame.
 principally, every pixel location could be used. however, homogeneous areas can be problematic for the optical flow. therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
 
 for efficiency reasons, we spatially subsample the initial points.
-factors larger than 12 lose details as there are not enough points to cover small object parts. on the other hand, factors smaller than 4 waste computation time as smaller objects tend to get smoothed away.
+factors larger than 12 lose details as there are not enough points to cover small object parts. on the other hand, factors smaller than 6 waste computation time as smaller objects tend to get smoothed away. 
 
-
+An illustration of different sampling rates is shown in figure $\ref{fig:sampling_rate_candidates}$.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Extreme Oversampling]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/sr_2}
+   \label{fig:c14_extreme_oversampling}
+}
+\subfigure[Oversampling]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/sr_4}
+   \label{fig:c14_oversampling}
+}
+~
+\subfigure[Ideal Sampling Rate]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/sr_8}
+   \label{fig:c14_ideal_sampling}
+}
+\subfigure[Undersampling]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/sr_16}
+   \label{fig:c14_undersampling}
+}
+\end{center}
+\caption{A visualization of different sampling rates of tracking candidates}
+\label{fig:sampling_rate_candidates}
+\end{figure}
 
 
 Traceable candidate locations are obtained by applying a Harris Corner Detector on the input image. 
@@ -100,6 +123,11 @@ mention how invalid regions are computed: occluded regions.
 \caption{A visualization of the final dense traceable features.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
+
+
+
+
+
 
 
 \subsection{Occlusion detection}
