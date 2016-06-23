@@ -26,10 +26,10 @@ To illustrate this concept have a look at figure $\ref{fig:motion_eg}$. Imagine 
    \label{fig:motion_eg_f4}
 }
 \end{center}
-\caption{An example of motion effects illustrated by four frames of a video sequence. Objects far away in the background, such as the mountain or the clouds seems to stand still. Objects being a fair distant apart, but also not too far away can be seen over several frames, such as the tree, that is passed. In addition, we also see observe, that the tree moves along the opposite direction as the driving car. Last, we also see the effect of motion blur for objects that are very close such as the grass.}
+\caption[Motion Example]{An example$\footnotemark$ of motion effects illustrated by four frames of a video sequence. Objects far away in the background, such as the mountain or the clouds seems to stand still. Objects being a fair distant apart, but also not too far away can be seen over several frames, such as the tree, that is passed. In addition, we also see observe, that the tree moves along the opposite direction as the driving car. Last, we also see the effect of motion blur for objects that are very close such as the grass.}
 \label{fig:motion_eg}
 \end{figure}
-
+\footnotetext{The shown frames have been extracted from the following youtube video: \\ \url{https://www.youtube.com/watch?v=lo-pWLmMagc}}
 
 In summary, the optical flow has the following key properties:
 \begin{itemize}
@@ -40,6 +40,7 @@ In summary, the optical flow has the following key properties:
   \item The optical flow is maximal if either the object is moving orthogonally towards the viewer's direction or it is moving directly above or below it.
   \item Objects directly in front of a viewer exhibit no optical flow.
 \end{itemize}
+
 The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
 
 \subsection{Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck}
