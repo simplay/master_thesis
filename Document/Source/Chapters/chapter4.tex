@@ -86,6 +86,22 @@ in addition, a boolean grid with a certain cell size is applied to the candidate
 
 mention how invalid regions are computed: occluded regions.
 
+\begin{figure}[H]
+\begin{center}
+\subfigure[All Dense Candidates]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/c14_f1_candidates}
+   \label{fig:c14_f1_cand_dense_2}
+}
+\subfigure[Strict Dense Candidates]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/strict_dense_candidates}
+   \label{fig:c14_cand_dense_strict}
+}
+\end{center}
+\caption{A visualization of the final dense traceable features.}
+\label{fig:tracable_candidates_strict}
+\end{figure}
+
+
 \subsection{Occlusion detection}
 idea: stop tracking points as soon as a point gets occluded.
 
