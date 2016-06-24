@@ -1070,4 +1070,14 @@ public class TrajectoryTest {
         }
     }
 
+    @Test
+    public void testSimilaritiesLargerZeroCount() {
+        Trajectory tra = new Trajectory(0);
+        assertEquals(0, tra.similaritiesLargerZeroCount());
+        tra.assignSimilarityValueTo(1, 1);
+        assertEquals(1, tra.similaritiesLargerZeroCount());
+        tra.assignSimilarityValueTo(2, 1);
+        assertEquals(2, tra.similaritiesLargerZeroCount());
+    }
+
 }
