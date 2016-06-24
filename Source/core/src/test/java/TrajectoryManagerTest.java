@@ -56,6 +56,115 @@ public class TrajectoryManagerTest {
     }
 
     @Test
+    public void testGetTrajectoryHash() {
+        int N = 500;
+        for (int k = 0; k < N; k++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 0), 0);
+        }
+        Collection<Trajectory> tras = TrajectoryManager.getTrajectories();
+        Object[] aTras = tras.toArray();
+        HashMap<Integer, Trajectory> hash = TrajectoryManager.getInstance().getTrajectoryHash();
+        int idx = 0;
+        for (Trajectory hashTra : hash.values()) {
+            assertEquals(hashTra, aTras[idx]);
+            idx++;
+        }
+    }
+
+    @Test
+    public void testFilterTooWeakTrajectoriesAllTooWeak() {
+        int N = 5;
+        for (int k = 0; k < N; k++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 0), 0);
+        }
+        int filteredCount = TrajectoryManager.filterTooWeakTrajectories(1);
+        assertEquals(5, filteredCount);
+    }
+
+    @Test
+    public void testFilterTooWeakTrajectoriesSomeTooWeak() {
+        int N = 5;
+        for (int k = 0; k < N; k++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 0), 0);
+        }
+        Trajectory t1 = TrajectoryManager.getTrajectoryByLabel(1);
+        Trajectory t2 = TrajectoryManager.getTrajectoryByLabel(2);
+        Trajectory t3 = TrajectoryManager.getTrajectoryByLabel(3);
+        Trajectory t4 = TrajectoryManager.getTrajectoryByLabel(4);
+        Trajectory t5 = TrajectoryManager.getTrajectoryByLabel(5);
+
+        t1.assignSimilarityValueTo(2, 1);
+        t1.assignSimilarityValueTo(3, 1);
+        t1.assignSimilarityValueTo(4, 1);
+
+        t2.assignSimilarityValueTo(1, 1);
+        t2.assignSimilarityValueTo(3, 1);
+
+
+        t3.assignSimilarityValueTo(1, 1);
+        t3.assignSimilarityValueTo(2, 1);
+
+        t4.assignSimilarityValueTo(1, 1);
+
+        // t1 has 3 sims (kept)
+        // t2, t3 have 2 sims (are kept)
+        // t4 has 1 sim (filtered)
+        // t5 has zero sim (filtered)
+        // => thus filter count should be equals 2, when filtering all < 2
+        int filteredCount = TrajectoryManager.filterTooWeakTrajectories(2);
+
+        assertEquals(2, filteredCount);
+    }
+
+    @Test
+    public void testFilterTooWeakTrajectoriesSomeTooWeakCase2() {
+        int N = 5;
+        for (int k = 0; k < N; k++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 0), 0);
+        }
+        Trajectory t1 = TrajectoryManager.getTrajectoryByLabel(1);
+        Trajectory t2 = TrajectoryManager.getTrajectoryByLabel(2);
+        Trajectory t3 = TrajectoryManager.getTrajectoryByLabel(3);
+        Trajectory t4 = TrajectoryManager.getTrajectoryByLabel(4);
+        Trajectory t5 = TrajectoryManager.getTrajectoryByLabel(5);
+
+        t1.assignSimilarityValueTo(2, 1);
+        t1.assignSimilarityValueTo(3, 1);
+        t1.assignSimilarityValueTo(4, 1);
+
+        t2.assignSimilarityValueTo(1, 1);
+        t2.assignSimilarityValueTo(3, 1);
+
+
+        t3.assignSimilarityValueTo(1, 1);
+        t3.assignSimilarityValueTo(2, 1);
+
+        t4.assignSimilarityValueTo(1, 1);
+
+        // t1 has 3 sims (kept)
+        // t2, t3 have 2 sims (filtered)
+        // t4 has 1 sim (filtered)
+        // t5 has zero sim (filtered)
+        // => thus filter count should be equals 4, when filtering all < 3
+        int filteredCount = TrajectoryManager.filterTooWeakTrajectories(3);
+
+        assertEquals(4, filteredCount);
+    }
+
+    @Test
+    public void testGetTrajectoryByLabel() {
+        int N = 5;
+        for (int k = 0; k < N; k++) {
+            TrajectoryManager.getInstance().startNewTrajectoryAt(new Point2d(0, 0), 0);
+        }
+
+        for (int k = 1; k <= N; k++) {
+            // first valid label value is equals 1
+            assertEquals(k, TrajectoryManager.getTrajectoryByLabel(k).getLabel());
+        }
+    }
+
+    @Test
     public void testIterator() {
         int N = 500;
         for (int k = 0; k < N; k++) {

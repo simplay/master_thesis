@@ -190,7 +190,7 @@ public class Main {
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
 
         int similarityThreshold = 20;
-        Logger.println("Filtering too weak trajectories (having fewer than" + similarityThreshold + "similarities assigned) ...");
+        Logger.println("Filtering too weak trajectories (having fewer than " + similarityThreshold + " similarities assigned) ...");
         int tooWeakCount = TrajectoryManager.filterTooWeakTrajectories(similarityThreshold);
         Logger.println("=> Filtered " + tooWeakCount + " trajectories.");
 
