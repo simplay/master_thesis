@@ -163,7 +163,6 @@ public class Main {
             Logger.println("Color and Depth Cameras do not overlap.");
             Logger.println(" => Warping depth fields...");
 
-            // TODO should we also warp the depth variance values?
             DepthManager.warpDepthFields();
             Logger.println("Warped depth fields.");
         }
@@ -185,10 +184,16 @@ public class Main {
         long beforeAffCompTime = System.currentTimeMillis();
         new AffinityCalculator();
         long afterAffCompTime = System.currentTimeMillis();
-        Logger.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime)/1000d)+ "s");
+        Logger.println("Computing similarity values took " + ((afterAffCompTime-beforeAffCompTime) / 1000d)+ "s");
         Logger.println();
 
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
+
+        int similarityThreshold = 20;
+        Logger.println("Filtering too weak trajectories (having fewer than" + similarityThreshold + "similarities assigned) ...");
+        int tooWeakCount = TrajectoryManager.filterTooWeakTrajectories(similarityThreshold);
+        Logger.println("=> Filtered " + tooWeakCount + " trajectories.");
+
         Logger.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         Logger.println();
 
@@ -210,7 +215,7 @@ public class Main {
 
         long tillFinishedTime = System.currentTimeMillis();
         Logger.println();
-        Logger.println("Total elapsed time: " + ((tillFinishedTime-startTime)/1000d)+ "s");
+        Logger.println("Total elapsed time: " + ((tillFinishedTime-startTime) / 1000d)+ "s");
 
         // Write logger status file to "../output/logs/"
         Logger.writeLog();

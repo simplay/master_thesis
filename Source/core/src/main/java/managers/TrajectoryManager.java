@@ -33,14 +33,65 @@ public class TrajectoryManager implements Iterable<Trajectory>{
     }
 
     /**
+     * Fetch a trajectory by its label.
+     *
+     * @param label unique trajectory label identifier.
+     * @return the trajectory that belongs to the given label.
+     */
+    public static Trajectory getTrajectoryByLabel(int label) {
+        return getInstance().getTrajectoryHash().get(label);
+    }
+
+    /**
+     * Filters all trajecotries that have fewer similarity values larger than a given threshold value.
+     * This removes trajectories that have a local peek contribution, which can be considered as noise.
+     *
+     * @param similarityCountThresh number expected similarity values larger than 0.
+     * @return number of filtered trajectories.
+     */
+    public static int filterTooWeakTrajectories(int similarityCountThresh) {
+        int tooWeakCount = 0;
+        LinkedList<Trajectory> tooWeakTrajectories = new LinkedList<>();
+        for (Trajectory tra : getTrajectories()) {
+            if (tra.similaritiesLargerZeroCount() < similarityCountThresh) {
+                tooWeakCount++;
+                tooWeakTrajectories.add(tra);
+            }
+        }
+
+        for (Trajectory traj : tooWeakTrajectories) {
+                for (Trajectory other : getTrajectories()) {
+                    other.filterSimilarityOfTrajectory(traj.getLabel());
+                }
+                traj.markAsDeletable();
+        }
+        getInstance().filterDeletableTrajectories();
+        return tooWeakCount;
+    }
+
+    /**
      * Create a new trajectory manager singleton
      */
     private TrajectoryManager() {
         trajectories = new HashMap<Integer, Trajectory>();
     }
 
+    /**
+     * Fetches a collection of all existing trajectories.
+     *
+     * @return collection of trajectories.
+     */
     public static Collection<Trajectory> getTrajectories() {
         return instance.trajectories.values();
+    }
+
+    /**
+     * Obtain the HashMap data-structure that contains all trajectories.
+     *
+     * @return all trajectories order by their label id.
+     */
+    public HashMap<Integer, Trajectory> getTrajectoryHash() {
+        return trajectories;
     }
 
     /**

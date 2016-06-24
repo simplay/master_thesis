@@ -283,6 +283,22 @@ public class Trajectory implements Iterable<Point2d>, Comparable<Trajectory>{
     }
 
     /**
+     * Count the number of similarity values larger than zero
+     * Is used to identify and filter to week, yet polluting, trajectories.
+     *
+     * @return Number of affinities that have a contribution.
+     */
+    public int similaritiesLargerZeroCount() {
+        int greaterThanZeroCount = 0;
+        for (double sim : similarities.values()) {
+            if (Math.abs(sim) > 0d) {
+                greaterThanZeroCount++;
+            }
+        }
+        return greaterThanZeroCount;
+    }
+
+    /**
      * Get the representation used by the TrajectoryWriter.
      *
      * Requires the trajectories marked as closed in order to have a valid output representation.
