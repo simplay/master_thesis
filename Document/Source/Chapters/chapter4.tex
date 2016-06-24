@@ -205,25 +205,28 @@ An simple, but initial first idea would be to smooth the computed flow fields, t
 	G_{\sigma}\left( x \right) = \frac{1}{2 \pi \sigma^2} e^{-\frac{x^2}{2 \sigma^2}}
 \label{eq:gaussian_filter}
 \end{equation}
-However, filtering the flows directly is not the best choice. The reason for this is based on the fact that a Gaussian filter acts as a low-pass filter. Thus, after applying this kernel, many details in the flow, such as motion boundaries, will be washed out or will be removed completely.
+However, filtering the flows directly is not the best choice. The reason for this is based on the fact that a Gaussian filter acts as a low-pass filter. Thus, after applying this kernel, many details in the flow, such as motion boundaries, will be washed out or will be removed completely. \\ \\
+Another blur filter, which addresses the issue of smoothing out edges, is the so called Bilateral Filter $\textbf{BF}$. Similar to the Gaussian Convolution, this filter also computes a weighed average of an image, but the same time takes into account the variation of intensities to preserve edges. 
 
-Similarly to the Gaussian convolution, the bilateral filter is also defined as a weighted average of pixels. The difference is that the bilateral filter takes into account the variation of intensities to preserve edges. 
+Let $\bf{I}$ denote an image and $\bf{p}$ one of its pixels. The neighborhood pixels of $\bf{p}$ are denoted by $\mathcal{N}_p$. Then, the Bilateral filter $\textbf{BF}$ can be defined as described in equation $\ref{eq:bilateral_filter}$.
+\begin{equation}
+	\textbf{BF} \left\{ \bf{I}_{\bf{p}} \right\} = \frac{1}{W_{\bf{p}}} \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right) \bf{I}_{\bf{q}}
+\label{eq:bilateral_filter}
+\end{equation}
+Note that $w_{\bf{p}, \bf{q}}$ denotes the weight between the pixels $\bf{p}$ and $\bf{q}$, whereas the term $W_{\bf{p}}$ defined in equation $\ref{eq:bilateral_filter_weights}$ is the sum of all weights between a fixed pixel $\bf{p}$ and its neighbors.
 
 \begin{equation}
 	w_{\bf{p}, \bf{q}} \left( \bf{I} \right) = G_{\sigma_s} (\norm{\bf{p} - \bf{q}}) G_{\sigma_r} (\bf{I}_{\bf{p}} - \bf{I}_{\bf{q}}) 
 \label{eq:bilateral_filter_neighbor_weight}
 \end{equation}
 
+The weight in equation $\ref{eq:bilateral_filter_neighbor_weight}$ has a spatial component $G_{\sigma_s} (\norm{\bf{p} - \bf{q}})$ as well as it considers the intensity range $G_{\sigma_r} (\bf{I}_{\bf{p}} - \bf{I}_{\bf{q}})$.
+
 \begin{equation}
 	W_{\bf{p}} \left( \bf{I} \right) = \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right)
 \label{eq:bilateral_filter_weights}
 \end{equation}
-
-\begin{equation}
-	\textbf{BF} \left\{ \bf{I}_{\bf{p}} \right\} = \frac{1}{W_{\bf{p}}} \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right) \bf{I}_{\bf{q}}
-\label{eq:bilateral_filter}
-\end{equation}
-
+Instead of using a filtered flow field, we go for another, more robust idea. Imagine we would know the error of the computed flows. Then, by using the variance of the field, we directly could address the error by normalizing the flow value by its corresponding variance value. Since we do not know the actual error, we have to define a good estimator of the flow variance. \\ \\
 Let $\bf{q}_p$ denote a vector containing all neighbors of pixel $\bf{p}$ and $\bf{w}_p$ is the vector consisting of all weights computed using equation $\ref{eq:bilateral_filter_neighbor_weight}$. Mathematically, this can be formulated as the follows:
 \begin{equation}
 \begin{aligned}
@@ -240,7 +243,13 @@ The definitions from equation $\ref{eq:bilat_weight_components}$ allow us to def
 	\mathbf{E} \left[ \bf{p} \right] = \frac{\bf{w}_{p}^{T} \bf{q}_p}{\norm{\bf{w}_{p}}}
 \end{equation}
 
-The rationale of bilateral filtering is that two pixels are close to each other not only if they occupy nearby spatial locations but also if they have some similarity in the photometric range
+For a given optical flow $\bf{F} = (\bf{F_u}, \bf{F_v})$ we can compute its variance by the definition stated in equation $\ref{eq:flow_var_opt_flow}$.
+\begin{equation}
+	\mathbf{Var} \left[ \bf{F} \right] = \frac{1}{2} \left( \mathbf{Var} \left[ \bf{F_u} \right] + \mathbf{Var} \left[ \bf{F_v} \right] \right)
+\label{eq:flow_var_opt_flow}	
+\end{equation}
+
+STATE MEANING
 
 \begin{figure}[H]
 \begin{center}
