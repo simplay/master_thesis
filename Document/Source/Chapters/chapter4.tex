@@ -39,6 +39,47 @@ Layered RGBD flow (LRGB)
 
 \section{Data Extraction}
 
+% TODO formulate basic bla of dataextraction stages
+
+Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in this stage.
+
+\begin{algorithm}[H]
+\caption{Data Extraction}
+\begin{table}[H]
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Input:} & Dataset Images \bf{F} \\
+		& Forward- and Backward Optical Flows \bf{OF} \\
+ 		& Depth Images (\emph{optional}) \bf{DI} \\
+    \textbf{Output:} & Traceable Feature Locations \bf{TF} \\
+    & Occluded Location Masks \bf{OM}\\
+    & Cie-Lab Color Images \bf{CI} \\
+    & Flow Variances \bf{FV} \\
+    & Depth Variances \bf{DV} \\
+    
+  \end{tabular} 
+\end{table}
+\setlength{\fboxrule}{0pt} 
+\begin{boxedminipage}{1.0\textwidth}
+  \begin{algorithmic}[1]
+      \ForAll{$\text{frame } f \in \bf{F}$}
+        \State $\text{Run Thresholded Harris Corner Detector}.$
+		\State $\text{Append Sampled Features to } \bf{TF}.$
+		\State $\text{Fetch } fwf,bwf \in \bf{OF} \text{ that belongs to f}.$
+		\State $\text{Apply forward-backward-flow check on fwf and bwf} \bf{TF}.$
+		\State $\text{Append invalid check locations to } \bf{OM}.$
+		\State $\text{Apply a special variant of the bilateral filter on fwf}.$
+		\State $\text{Append filtered flow to } \bf{FV}.$
+		\State $\text{Transform f to CIE Lab Colorspace and append it to } \bf{CI}.$
+		\State $\text{Fetch } df \in \bf{DI} \text{ that belongs to f}.$
+		\State $\text{Apply a 2-pass special variant of the bilateral filter on } df$
+		\State $\text{Append the filtered depth to } \bf{DV}$
+      \EndFor
+  \end{algorithmic}
+  \end{boxedminipage}
+  \vskip1.5pt
+\label{alg:data_extraction}
+\end{algorithm}
+
 \subsection{Tracking Candidates}
 Explain purpose of the tracking candidates. \\ \\
 Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that can be used in the tracking stage of the pipeline. For a given image as shown in subfigure $\ref{fig:c14_f1_cand}$ we initially compute interseting features using by applying a Harris corner detector onto it. The result is shown in figure $\ref{fig:c14_cand_corners}$. We filter weak corner candidates by thresholding too weak corners. A detailed explanation how this thresholding works is described in the appending in section $\ref{sec:corner_thresholding}$ on page $\pageref{sec:corner_thresholding}$.
@@ -156,7 +197,7 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. to fill th
 
 the color values are stored as cie lab color images.
 
-
+\subsection{Flow Variance}
 
 depth fields
 color values
