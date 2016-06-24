@@ -1,109 +1,23 @@
 function [variances] = computeLocalFlowVar(flowfield, method, combination_method, sig_s, sig_r, valid_regions)
 %COMPUTELOCALFLOWVAR Summary of this function goes here
 %   Detailed explanation goes here
-SHOW_VARS = false;
+    [sigmaSq, mu, cov_xy, wl] = localVariance(flowfield, sig_s, sig_r, true, valid_regions);
+    var_x = sigmaSq(:,:,1);
+    var_y = sigmaSq(:,:,2);
 
+    var_x(isnan(var_x))=0;
+    var_y(isnan(var_y))=0;
+    cov_xy(isnan(cov_xy))=0;
 
-    x = flowfield(:,:,1);
-    y = flowfield(:,:,2);
-    if method > 0
-        [ff, w_u, w_v, wl] = bfiltmat2(flowfield, sig_s, sig_r, false);
-
-        % bilarteral filtered flow field directions
-        % act as 
-        xx = ff(:,:,1);
-        yy = ff(:,:,2);
-        e_x = xx;
-        e_y = yy;
-
-    end
-    
-    if method == 0
-        [sigmaSq, mu, cov_xy, wl] = localVariance( flowfield, sig_s, sig_r, true, valid_regions);
-        var_x = sigmaSq(:,:,1);
-        var_y = sigmaSq(:,:,2);
-        
-        var_x(isnan(var_x))=0;
-        var_y(isnan(var_y))=0;
-        cov_xy(isnan(cov_xy))=0;
-        if combination_method == 1
-            variances = (var_x + var_y)/2;
-        else
-            cov_xy = cov_xy.*(cov_xy > 0);
-            variances = var_x + var_y + 2*cov_xy;
-        end
-        
-        if SHOW_VARS
-            tmp = variances.*valid_regions;
-            tmp = sqrt(tmp);
-            figure('name', 'log scaled');
-            imshow(log(tmp+1)/log(max(tmp(:)+1)));
-            figure('name', '01 scaled');
-            tmp = tmp - min(tmp(:));
-            tmp = tmp ./ max(tmp(:));
-            imshow(tmp);
-        end
-           
-    elseif method == 1
-        [m, n, ~] = size(flowfield);
-        var_x = zeros(m,n);
-        var_y = zeros(m,n);
-        c_idx = 1;
-        for i=1:m-wl,
-            for j=1:n-wl,
-                mu_x_ij = e_x(i,j);
-                mu_y_ij = e_y(i,j);
-                
-                w_x_ij = w_v(:,:,c_idx);
-                w_y_ij = w_u(:,:,c_idx);
-                
-                sum_w_x = sum(w_x_ij(:));
-                sum_w_y = sum(w_y_ij(:));
-                
-                tmp_x = 0;
-                tmp_y = 0;
-                for w_i=1:wl,
-                    for w_j=1:wl
-                        idx = i + w_i - 1;
-                        idy = j + w_j - 1;
-                        
-                        % squared shifted centeral value
-                        ssc_x = (x(idx, idy)-mu_x_ij)^2;
-                        ssc_y = (y(idx, idy)-mu_y_ij)^2;
-                        
-                        tmp_x = tmp_x + (w_x_ij(w_i, w_j)*ssc_x);
-                        tmp_y = tmp_y + (w_y_ij(w_i, w_j)*ssc_y);
-                     
-                        
-                    end
-                end
-                c_idx = c_idx + 1;
-                var_x(i,j) = tmp_x/sum_w_x;
-                var_y(i,j) = tmp_y/sum_w_y;
-            end
-        end
-        variances = (var_x + var_y)/2;    
+    if combination_method == 1
+        variances = (var_x + var_y)/2;
     else
-        t = 12;
-        kernel = ones(t,t)/(t*t);
-
-        % var(x+y) = var(x) + var(y) + 2*cov(x,y)
-        e_x = xx; %conv2(x, kernel, 'same') / (t*t);
-        e_y = yy; %conv2(y, kernel, 'same') / (t*t);
-
-        % var(x) = E((x-e(x))^2)
-        var_x = conv2((x-e_x).^2, kernel, 'same');
-        var_y = conv2((y-e_y).^2, kernel, 'same');
-
-        % cov(x,y) = E((x-e(x))*(y-e(y)))
-        cov_xy = conv2((x-e_x).*(y-e_y), kernel, 'same');
-
-        % var(x+y) = var(x) + var(y) + 2*cov(x,y)
+        cov_xy = cov_xy.*(cov_xy > 0);
         variances = var_x + var_y + 2*cov_xy;
     end
 end
 
-function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_r, remove_center, valid_regions)
+function [sigma, mu, cov_xy, windowLength] = localVariance(img, sigma_s, sigma_r, remove_center, valid_regions)
 %BFILTIMG2 apply a bilateral filter o a m x n x 2 tensor.
 %   @param img flow field, m x n x 2 tensor
 %   @param sigma_s special std [FLOAT], unit in pixel (pixel neighborhood)
@@ -131,15 +45,11 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
     cov_xy = zeros(m,n);
     tic;
     parfor i = 1:m,
-        for j = 1:n,
-
-            
+        for j = 1:n, 
             [rowIndices, columnIndices] = getRanges(i, j, m, n, windowLength);
-            
             neighboordhoodValues1 = img(rowIndices, columnIndices, 1);
             
-            valid_region_ij = valid_regions(rowIndices,columnIndices);
-            
+            valid_region_ij = valid_regions(rowIndices,columnIndices);     
             
             DeltaNValues1 = (neighboordhoodValues1-img(i,j, 1));
             DeltaNValues1 = (DeltaNValues1.^2) /(-2*sigma_r*sigma_r);
@@ -148,19 +58,14 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
             DeltaNValues2 = (neighboordhoodValues2-img(i,j, 2));
             DeltaNValues2 = (DeltaNValues2.^2) /(-2*sigma_r*sigma_r);
             
-            
-            
             deltaNIdx = getScaledIdxDistanceMat2(rowIndices, columnIndices, ...
                                                 [i,j], -2*sigma_s^2);
             
-                    
-                                            % unterscheide filter weights
-                                            % nach dimension
-                       %  EV1 = exp(DeltaNValues1+deltaNIdx);
-            %EV2 = exp(DeltaNValues2+deltaNIdx);
-                                           
- 
-            
+            % unterscheide filter weights
+            % nach dimension
+            %  EV1 = exp(DeltaNValues1+deltaNIdx);
+            % EV2 = exp(DeltaNValues2+deltaNIdx);
+                                                     
             EV1 = valid_region_ij.*exp(DeltaNValues1+deltaNIdx+DeltaNValues2);
             EV2 = valid_region_ij.*exp(DeltaNValues2+deltaNIdx+DeltaNValues1);
             
@@ -171,7 +76,6 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
                 EV1(idx,idj) = 0;
                 EV2(idx,idj) = 0;
             end
-            
 
             % if sum == 0, then assign -1 (define an assert for that case)
             mu_x_ij = (EV1(:)'*neighboordhoodValues1(:))/sum(EV1(:));
@@ -179,7 +83,6 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
             
             mu_x(i,j) = mu_x_ij;
             mu_y(i,j) = mu_y_ij;
-            
             
             % compute bilateral covariance cov(x,y)
             c_x = neighboordhoodValues1-mu_x_ij;
@@ -206,6 +109,5 @@ function [sigma, mu, cov_xy, windowLength] = localVariance( img, sigma_s, sigma_
     
     mu = mat2img(mu_x, mu_y, mu_y);
     mu = mu(:,:,1:2);
-    
 end
 
