@@ -189,19 +189,77 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. to fill th
    \includegraphics[width=0.48\linewidth] {implementation/occlusion/invalid_regsions}
    \label{fig:c14_invalid_regions}
 }
-
 \end{center}
 \caption[Occluded Regions]{A visualization of the all invalid locations shown in white color illustrated in subfigure $\ref{fig:c14_invalid_regions}$.}
 \label{fig:invalid_regions}
 \end{figure}
 
-the color values are stored as cie lab color images.
+the color values are stored as CIE lab color images.
 
 \subsection{Flow Variance}
 
+In a later stage in our pipeline, we will compute differences between different optical flow field locations. Since our optical flows may contain noise, especially along motion boundaries, we have to make our pipeline robust to these negative influence of noise. In particular, when taking the difference between two noisy flow locations, the noise level can get amplified. The purpose of this section is to describe a method how to normalize flow differences. 
+
+An simple, but initial first idea would be to smooth the computed flow fields, to reduce the noise level along the boundaries. A commonly used approach to blur an image is to convolve the image with a Gaussian kernel as defined in equation $\ref{eq:gaussian_filter}$.
+\begin{equation}
+	G_{\sigma}\left( x \right) = \frac{1}{2 \pi \sigma^2} e^{-\frac{x^2}{2 \sigma^2}}
+\label{eq:gaussian_filter}
+\end{equation}
+However, filtering the flows directly is not the best choice. The reason for this is based on the fact that a Gaussian filter acts as a low-pass filter. Thus, after applying this kernel, many details in the flow, such as motion boundaries, will be washed out or will be removed completely.
+
+Similarly to the Gaussian convolution, the bilateral filter is also defined as a weighted average of pixels. The difference is that the bilateral filter takes into account the variation of intensities to preserve edges. 
+
+\begin{equation}
+	w_{\bf{p}, \bf{q}} \left( \bf{I} \right) = G_{\sigma_s} (\norm{\bf{p} - \bf{q}}) G_{\sigma_r} (\bf{I}_{\bf{p}} - \bf{I}_{\bf{q}}) 
+\label{eq:bilateral_filter_neighbor_weight}
+\end{equation}
+
+\begin{equation}
+	W_{\bf{p}} \left( \bf{I} \right) = \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right)
+\label{eq:bilateral_filter_weights}
+\end{equation}
+
+\begin{equation}
+	\textbf{BF} \left\{ \bf{I}_{\bf{p}} \right\} = \frac{1}{W_{\bf{p}}} \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right) \bf{I}_{\bf{q}}
+\label{eq:bilateral_filter}
+\end{equation}
+
+Let $\bf{q}_p$ denote a vector containing all neighbors of pixel $\bf{p}$ and $\bf{w}_p$ is the vector consisting of all weights computed using equation $\ref{eq:bilateral_filter_neighbor_weight}$. Mathematically, this can be formulated as the follows:
+\begin{equation}
+\begin{aligned}
+& \bf{q_p} = \left( q_1, \dots, q_{|\mathcal{N}_p|} \right) \\
+& \bf{w_p} = \left( w_{p, q_1}, \dots, w_{p, q_{|\mathcal{N}_p|}} \right) \\
+& \text{where } \forall q_k \in \mathcal{N}_p
+\end{aligned}
+\label{eq:bilat_weight_components}
+\end{equation}
+
+The definitions from equation $\ref{eq:bilat_weight_components}$ allow us to define an expected value of pixel $\bf{p}$.
+
+\begin{equation}
+	\mathbf{E} \left[ \bf{p} \right] = \frac{\bf{w}_{p}^{T} \bf{q}_p}{\norm{\bf{w}_{p}}}
+\end{equation}
+
+The rationale of bilateral filtering is that two pixels are close to each other not only if they occupy nearby spatial locations but also if they have some similarity in the photometric range
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Flow Field]{
+   \includegraphics[width=0.48\linewidth] {implementation/flow_var/ff_c14_1}
+   \label{fig:c14_fv_flow}
+}
+\subfigure[Variance Field]{
+   \includegraphics[width=0.48\linewidth] {implementation/flow_var/fv_c14_1}
+   \label{fig:c14_fv_var}
+}
+\end{center}
+\caption[Flow Variance]{Visualization of the flow variance computed by applying a bilateral filter on the optical forward flow.}
+\label{fig:flow_variance}
+\end{figure}
+
 depth fields
 color values
-flow-and depth field variances.
+depth field variances.
 
 \section{Trajectories}
 
