@@ -50,6 +50,8 @@
 \newcommand{\pluseq}{\mathrel{+}=}
 \newcommand{\asteq}{\mathrel{*}=}
 \newcommand{\myto}{\textbf{TO }}
+
+% usage: \colvec[a]{b}{c} or \colvec{a}{b}
 \newcommand*\colvec[3][]{
     \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
 }
@@ -63,6 +65,7 @@
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\prox}{\text{prox}}
+
 \DeclareMathOperator*{\argmin}{arg\,min}
 \newcommand{\twonorm}[1]{\left\lVert#1\right\rVert_2}
 
