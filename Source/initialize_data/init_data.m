@@ -6,16 +6,16 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'c14';
+DATASETNAME = 'bonn_chairs_263_3_434';
 METHODNAME = 'ldof';
 STEP_SIZE = 8;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
+COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
+RUN_BACKGRUND_ELIMINATION = true; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
-COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
+COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
 COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
@@ -80,7 +80,7 @@ if COMPUTE_TRACKING_DATA
 
         % Save a (m x n) matrix that contains all invalid pixel loations
         diffName = strcat(BASE_OUTPUT_PATH,'flow_consistency_',num2str(t),'.mat'); 
-        invalid_regions = consistency_check( forward_flow, backward_flow, theshScale);
+        invalid_regions = consistency_check(forward_flow, backward_flow, theshScale);
         dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
 
         % Save row and column indicess of trackable pixel locations
@@ -142,6 +142,7 @@ if COMPUTE_TRACKING_DATA
                 plot(idx, idy, '.r', 'markersize', 10)
             end
             % call save_figure_as_image(fig, './candidates_sparse', 480, 640)
+            save_figure_as_image(fig, './foobar4', 480, 640)
         end
         
         % save trackable row and col in text file
@@ -331,7 +332,7 @@ if COMPUTE_FLOW_VARIANCES
         fname = strcat('../output/tracker_data/',DATASETNAME,'/flow_consistency_',num2str(t),'.mat');
         invalid_regions = load(fname, '-ASCII');
         disp(['Flow Variance Iteration ', num2str(t), '...']);
-        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 0, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
+        local_flow_variances(:,:,t) = computeLocalFlowVar(fw_flow, 0, 1, VAR_SIGMA_S, VAR_SIGMA_R, (1.0-invalid_regions));
         
         global_variances = [global_variances, var(fw_flow(:))];
     end

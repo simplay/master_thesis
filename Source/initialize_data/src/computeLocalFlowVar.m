@@ -8,9 +8,9 @@ function [variances] = computeLocalFlowVar(flowfield, method, combination_method
     var_x(isnan(var_x))=0;
     var_y(isnan(var_y))=0;
     cov_xy(isnan(cov_xy))=0;
-
+    
     if combination_method == 1
-        variances = (var_x + var_y)/2;
+        variances = 2*(var_x + var_y);
     else
         cov_xy = cov_xy.*(cov_xy > 0);
         variances = var_x + var_y + 2*cov_xy;
