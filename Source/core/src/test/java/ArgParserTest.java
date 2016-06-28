@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pipeline_components.ArgParser;
 import pipeline_components.Logger;
+import similarity.SimilarityTask;
 import similarity.SimilarityTaskType;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +47,7 @@ public class ArgParserTest {
         assertEquals(false, ArgParser.hasCustomFileNamePrefix());
         assertEquals(NearestNeighborMode.ALL, ArgParser.getNNMode());
         assertEquals(false, ArgParser.shouldContinueTrajectories());
+        assertEquals(SimilarityTask.minExpectedTrajectoryLength(), ArgParser.getMinExpectedTrajectoryLength());
     }
 
     @Test
@@ -100,7 +102,8 @@ public class ArgParserTest {
                 "-prob", "0.93",
                 "-debug", "1",
                 "-dscale", "12",
-                "-ct", "1"
+                "-ct", "1",
+                "-metl", "6"
         };
         ArgParser.getInstance(args);
 
@@ -118,6 +121,8 @@ public class ArgParserTest {
         assertEquals(true, ArgParser.hasCustomFileNamePrefix());
         assertEquals(NearestNeighborMode.TOP_AND_WORST_N, ArgParser.getNNMode());
         assertEquals(true, ArgParser.shouldContinueTrajectories());
+        assertEquals(6, ArgParser.getMinExpectedTrajectoryLength());
+
     }
 
     @Test

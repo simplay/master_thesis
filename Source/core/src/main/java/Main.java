@@ -136,7 +136,7 @@ public class Main {
         Logger.println("Filtered too short trajectories...");
         Logger.println("=> Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
-        int trajectoryLen = SimilarityTask.minExpectedTrajectoryLength();
+        int trajectoryLen = ArgParser.getMinExpectedTrajectoryLength();
         Logger.println("Filtering all trajectory shorter than " + trajectoryLen + "...");
         TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
         Logger.println("=> Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());

@@ -2,6 +2,7 @@ package pipeline_components;
 
 import datastructures.NearestNeighborMode;
 import datastructures.NearestNeighborsHeap;
+import similarity.SimilarityTask;
 import similarity.SimilarityTaskType;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -123,6 +124,21 @@ public class ArgParser {
             return 100;
         }
         return Integer.parseInt(nnCount);
+    }
+
+    /**
+     * Get the minimal expected trajectory length.
+     * All trajectories that are shorter than this length are filtered
+     * and thus are discarded.
+     *
+     * @return minimal expected trajectory length.
+     */
+    public static int getMinExpectedTrajectoryLength() {
+        String metLen = getInstance().getHashValue("metl");
+        if (metLen == null) {
+            return SimilarityTask.minExpectedTrajectoryLength();
+        }
+        return Integer.parseInt(metLen);
     }
 
     /**
@@ -323,6 +339,7 @@ public class ArgParser {
         Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         Logger.println("+ Using NN Mode: " + getNNMode().name());
         Logger.println("+ Applying trajectory continuation: " + shouldContinueTrajectories());
+        Logger.println("+ Minimal expected trajectory length: " + getMinExpectedTrajectoryLength());
 
         if (shouldSkipNNCount()) {
             Logger.println("  => Ignoring the Nearest Neighbor Count and returning the complete neighborhood instead.");
