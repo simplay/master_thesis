@@ -14,8 +14,9 @@ secrets of optical flow
 
 \section{Trajectory Affinities}
 \label{sec:trajectory_affinities}
-Let $A$, $B$ denote two trajectories resulting from the previous tracking step. 
-Our goal is to define the similarity between the trajectories by computing a distance $d(A,B)$ for each trajectory pair. For this purpose we exploit their maximal dissimilarity via their maximal motion difference among all frames of common visibility. 
+In this section we explain how we calculate similarities between extracted trajectories. This computation is the fundamental step of our work.
+Before going into details, let us first revisit the definition of a trajectory. By the term trajectory we refer to a list of tracking points, which is ordered by the frame index in which each point was traced. Therefore, every points knows to which frame it belongs to. \\ \\
+Let $A$, $B$ denote two trajectories resulting from the previous tracking step. Our goal is to define the similarity between the trajectories by computing a distance $d(A,B)$ between every trajectory pair. For that purpose we exploit their maximal dissimilarity via their maximal motion difference among all frames of common visibility. The squared version of this conceptual formula description is listed in equation $\ref{eq:prod_dist_affinity}$ 
 \begin{equation}
 	d^2 \left( A, B \right) = \max_t d_t^2 \left( A, B \right)
 	\label{eq:product_distance}
@@ -25,6 +26,8 @@ The resulting distance value from equation $\ref{eq:product_distance}$ is then t
 	w \left( A, B \right) = e^{ -\lambda d^2 (A, B) }.
 	\label{eq:prod_dist_affinity}
 \end{equation}
+This measure is based on the work of Shepard $\cite{Shepard87}$ who proposed as a universal law that distance and perceived similarity are related via an exponential function.
+
 
 where
 
