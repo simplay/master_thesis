@@ -134,12 +134,12 @@ public class Main {
         TrajectoryManager.getInstance().filterOnePointedTrajectories();
 
         Logger.println("Filtered too short trajectories...");
-        Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println("=> Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
 
         int trajectoryLen = SimilarityTask.minExpectedTrajectoryLength();
-        Logger.println("Filtering all trajectory shorter than " + trajectoryLen);
+        Logger.println("Filtering all trajectory shorter than " + trajectoryLen + "...");
         TrajectoryManager.getInstance().filterTrajectoriesShorterThanMinLen(trajectoryLen);
-        Logger.println("Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println("=> Number of remaining trajectories: "+ TrajectoryManager.getInstance().trajectoryCount());
         Logger.println();
 
         /**
@@ -161,10 +161,10 @@ public class Main {
 
         if (CalibrationManager.shouldWarpDepthFields() && ArgParser.useDepthCues()) {
             Logger.println("Color and Depth Cameras do not overlap.");
-            Logger.println(" => Warping depth fields...");
+            Logger.println("Warping depth fields...");
 
             DepthManager.warpDepthFields();
-            Logger.println("Warped depth fields.");
+            Logger.println("=> Warped depth fields.");
         }
 
         // Transform trajectory points to euclidian space
@@ -173,7 +173,7 @@ public class Main {
 
             // all remaining trajectories exhibit at least one tracking point that has a valid depth value associated.
             TrajectoryManager.getInstance().filterDeletableTrajectories();
-            Logger.println("Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
+            Logger.println("=> Remaining trajectories after depth transformations: " + TrajectoryManager.getInstance().trajectoryCount());
         }
 
         /**
@@ -194,7 +194,7 @@ public class Main {
         int tooWeakCount = TrajectoryManager.filterTooWeakTrajectories(similarityThreshold);
         Logger.println("=> Filtered " + tooWeakCount + " trajectories.");
 
-        Logger.println("Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
+        Logger.println("=> Remaining trajectories after post filtering: " + TrajectoryManager.getInstance().trajectoryCount());
         Logger.println();
 
         /**
