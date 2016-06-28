@@ -48,6 +48,7 @@ public class ArgParserTest {
         assertEquals(NearestNeighborMode.ALL, ArgParser.getNNMode());
         assertEquals(false, ArgParser.shouldContinueTrajectories());
         assertEquals(SimilarityTask.minExpectedTrajectoryLength(), ArgParser.getMinExpectedTrajectoryLength());
+        assertEquals(20 ,ArgParser.getCountSimilaritiesNotZero());
     }
 
     @Test
@@ -103,7 +104,8 @@ public class ArgParserTest {
                 "-debug", "1",
                 "-dscale", "12",
                 "-ct", "1",
-                "-metl", "6"
+                "-metl", "6",
+                "-snz", "15"
         };
         ArgParser.getInstance(args);
 
@@ -122,7 +124,7 @@ public class ArgParserTest {
         assertEquals(NearestNeighborMode.TOP_AND_WORST_N, ArgParser.getNNMode());
         assertEquals(true, ArgParser.shouldContinueTrajectories());
         assertEquals(6, ArgParser.getMinExpectedTrajectoryLength());
-
+        assertEquals(15 ,ArgParser.getCountSimilaritiesNotZero());
     }
 
     @Test

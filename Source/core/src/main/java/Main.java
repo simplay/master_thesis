@@ -5,7 +5,6 @@ import readers.*;
 import pipeline_components.AffinityCalculator;
 import pipeline_components.ArgParser;
 import pipeline_components.Tracker;
-import similarity.SimilarityTask;
 import writers.*;
 import java.io.*;
 
@@ -189,7 +188,7 @@ public class Main {
 
         TrajectoryManager.getInstance().filterNoSimilarityTrajectories();
 
-        int similarityThreshold = 20;
+        int similarityThreshold = ArgParser.getCountSimilaritiesNotZero();
         Logger.println("Filtering too weak trajectories (having fewer than " + similarityThreshold + " similarities assigned) ...");
         int tooWeakCount = TrajectoryManager.filterTooWeakTrajectories(similarityThreshold);
         Logger.println("=> Filtered " + tooWeakCount + " trajectories.");

@@ -52,7 +52,9 @@ By default it is either 1000 (when using depth cues) or 0.1 (otherwise).
 
 + **-dscale FLAT** scale of depth field values to have those values in meters.
 
-+ **-metl INT** minimal expected trajectory length. All trajectories shorter than this specified length are filtered. By default this value is equal to the constant `SimilarityTask.MIN_EXPECTED_TRAJ_LEN`.
++ **-metl INT** the minimal expected trajectory length. All trajectories shorter than this specified length are filtered. By default this value is equal to the constant `SimilarityTask.MIN_EXPECTED_TRAJ_LEN`.
+
++ **-snz INT** the minimal expected number of affinities that should be assigned to every trajectory. Trajectories having fewer affinities assigned to will be filtered. The default value is equals **20**.
 
 ## Generated Output Files
 

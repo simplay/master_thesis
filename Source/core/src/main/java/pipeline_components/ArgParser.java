@@ -142,6 +142,27 @@ public class ArgParser {
     }
 
     /**
+     * Get the expected number of affinity values
+     * that are supposed to be assigned to a trajectory.
+     * Trajectories having fewer similarities assigned than
+     * this expected number are filtered.
+     *
+     * This parameter acts as a trajectory filter threshold.
+     *
+     * By default this value is equals 20.
+     *
+     * @return number of not zero similarities per trajectory.
+     */
+    public static int getCountSimilaritiesNotZero() {
+        // similarities not zero (snz)
+        String snz = getInstance().getHashValue("snz");
+        if (snz == null) {
+            return 20;
+        }
+        return Integer.parseInt(snz);
+    }
+
+    /**
      * Should the assigned nearest neighborcount be skipped.
      *
      * @return true if we do not want to use the given nn count otherwise false.
@@ -340,6 +361,7 @@ public class ArgParser {
         Logger.println("+ Using NN Mode: " + getNNMode().name());
         Logger.println("+ Applying trajectory continuation: " + shouldContinueTrajectories());
         Logger.println("+ Minimal expected trajectory length: " + getMinExpectedTrajectoryLength());
+        Logger.println("+ Minimal expected affinity count per trajectory: " + getCountSimilaritiesNotZero());
 
         if (shouldSkipNNCount()) {
             Logger.println("  => Ignoring the Nearest Neighbor Count and returning the complete neighborhood instead.");
