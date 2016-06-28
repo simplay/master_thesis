@@ -72,6 +72,7 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow, threshScale )
             
         end
     end
-
+    % all zero flow contributions are considered as unreliable too
+    unreliables = ((fw_u_flow == 0).*(fw_v_flow == 0)) | unreliables;
 end
 
