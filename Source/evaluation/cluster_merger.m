@@ -1,15 +1,18 @@
 addpath('../matlab_shared');
 addpath('../segmentation/src')
 
+%%
 DATASET = 'bonn_watercan_713_3_884_SRSF';
 PREFIX_INPUT_FILENAME = 'ped_top_3000';
 METHODNAME = 'srsf';
-OUT_PATH = './';
 FRAME_IDX = 4;
-% [FileName, FilePath, ~] = uigetfile('.txt');
-% LABELS_FILE_PATH = strcat(FilePath, FileName);
+
+%%
+[FileName, FilePath, ~] = uigetfile('.txt');
+LABELS_FILE_PATH = strcat(FilePath, FileName);
+OUT_PATH = '../output/cluster_merges/';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Document/Results/final/watercan/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
-LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Document/Results/final/watercan/bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_ct_1_l_5_c_12_ev_18/labels.txt';
+% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Document/Results/final/watercan/bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_ct_1_l_5_c_12_ev_18/labels.txt';
 fileID = fopen(LABELS_FILE_PATH);
 C = textscan(fileID,'%d,%d');
 label_assignments = cell2mat(C(2)) + 1;
@@ -19,7 +22,6 @@ label_identifiers = unique(label_assignments);
 % load gt: white means invalid region, i.e. ignore those labels
 gt_fname = strcat(num2str(FRAME_IDX), '.png');
 gt_img = imread(strcat('../../Data/', DATASET, '/gt/', gt_fname));
-disp('');
 
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
 pr = '';
@@ -93,13 +95,13 @@ for k=1:length(merged_labels)
     li_value = label_identifiers(k);
     
     label_assignments(label_assignments == li_value) = ml_id;
-    
 end
 filepath = OUT_PATH;
-figure_name = strcat(DATASET, '_', PREFIX_INPUT_FILENAME);
-figure_name = strcat(OUT_PATH, figure_name);
-write_label_clustering_file(label_assignments, label_mappings, filepath)
-save_figure_as_image(fig, '', m, n)
+figure_dir_name = strcat(OUT_PATH, DATASET, '_', PREFIX_INPUT_FILENAME, '/');
 
+if exist(figure_dir_name, 'dir') == 0
+    mkdir(figure_dir_name);
+end
 
-% load labels and activities of target dataset
+write_label_clustering_file(label_assignments, label_mappings, figure_dir_name)
+save_figure_as_image(fig, strcat(figure_dir_name, 'merged_frame_', num2str(FRAME_IDX)), m, n)
