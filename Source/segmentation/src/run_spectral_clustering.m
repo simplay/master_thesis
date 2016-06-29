@@ -5,9 +5,9 @@ function label_assignments = run_spectral_clustering(W, U_small, S_small, RUN_MO
     
     if RUN_MODE == 1
         if REUSE_ASSIGNMENTS == 0
-            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 200, true);  
-            write_label_clustering_file(label_assignments, label_mappings, path);
+            [label_assignments] = spectral_custering( U_small, CLUSTER_CENTER_COUNT, 200, true);   
         end
+        write_label_clustering_file(label_assignments, label_mappings, path);
     end
     
     % For each frame under consideration, perform appropriate segmentation
