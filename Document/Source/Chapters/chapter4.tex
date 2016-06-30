@@ -327,6 +327,8 @@ problems of optical flow methods yield bad segmentations. known problems: large 
 
 \section{Affinity Matrix}
 
+mention how to transform tracked points to 3d space using camera calibration data.
+
 affinities between trajectories.
 
 trajectories of longer videos are asynchronous, i.e. cover different temporal windows in a shot. the set of points that are tracked across the whole scene is small or empty due to occlusion and disocclusion. a measurement matrix that takes the coordinates of the tracked points in all frames, as used by the multi-body factorization and subspace ethods, will have many missing entries. such a measurement matrix is avoided. rather, pairwise affinities between trajectories are computed. this only requires some trajectories to have some temporal overlap.
