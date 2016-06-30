@@ -3,7 +3,7 @@ addpath('../segmentation/src')
 
 %%
 DATASET = 'bonn_watercan_713_3_884_SRSF';
-PREFIX_INPUT_FILENAME = 'ped_top_3000';
+PREFIX_INPUT_FILENAME = 'ped_top_200';
 METHODNAME = 'srsf';
 FRAME_IDX = 4;
 
@@ -19,7 +19,7 @@ label_assignments = cell2mat(C(2)) + 1;
 fclose(fileID);
 label_identifiers = unique(label_assignments);
 
-% load gt: white means invalid region, i.e. ignore those labels
+%% load gt: white means invalid region, i.e. ignore those labels
 gt_fname = strcat(num2str(FRAME_IDX), '.png');
 gt_img = imread(strcat('../../Data/', DATASET, '/gt/', gt_fname));
 
@@ -97,7 +97,9 @@ for k=1:length(merged_labels)
     label_assignments(label_assignments == li_value) = ml_id;
 end
 filepath = OUT_PATH;
-figure_dir_name = strcat(OUT_PATH, DATASET, '_', PREFIX_INPUT_FILENAME, '/');
+matching_indices = strfind(FilePath, '/');
+startMatchIdx = (matching_indices(end-1)+1);
+figure_dir_name = strcat(OUT_PATH, FilePath(startMatchIdx:end-1), '/');
 
 if exist(figure_dir_name, 'dir') == 0
     mkdir(figure_dir_name);

@@ -1,75 +1,131 @@
 addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 %% load ground truth img
-DS = 'c14';
-imgName = '01.pgm';
-DS_BASE_PATH = strcat('../../Data/',DS,'/gt/',imgName);
+DATASET = 'bonn_watercan_713_3_884';
+img_index = 4;
+STEPSIZE_DATA = 12;
+PREFIX_INPUT_FILENAME = 'ped_top_3000';
+METHODNAME = 'ldof';
+SIMPLIFIED_STATISTICS = false;
+
+%%
+imgName = strcat(num2str(img_index), '.png');
+DS_BASE_PATH = strcat('../../Data/',DATASET,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
+gtImg = rgb2gray(gtImg);
 figure('name', 'ground truth')
+
 imshow(gtImg);
 
 %% load eval img
 % load label
 
-SIMPLIFIED_STATISTICS = true;
+
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
 CF_PATH = '../output/clustering/';
 suffix = 'labels_1.txt';
+%[FileName, FilePath, ~] = uigetfile('.txt');
+%LABELS_FILE_PATH = strcat(FilePath, FileName);
+LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
 
-cf_fname = strcat(CF_PATH,DS,'_',suffix);
-fid = fopen(cf_fname);
-label_cluster_assignments = dlmread(cf_fname);
 
-BASE = '../output/similarities/';
-label_mappings = labelfile2mat(strcat(BASE,DS));
-img_index = 1;
-STEPSIZE_DATA = 8;
-DATASET = DS;
+fileID = fopen(LABELS_FILE_PATH);
+C = textscan(fileID,'%d,%d');
+label_assignments = cell2mat(C(2)) + 1;
+fclose(fileID);
 
-frames = loadAllTrajectoryLabelFrames(DATASET, 1, 4);
+%cf_fname = strcat(CF_PATH,DS,'_',suffix);
+fid = fopen(LABELS_FILE_PATH);
+label_cluster_assignments = dlmread(LABELS_FILE_PATH);
+
+%BASE = '../output/similarities/';
+%label_mappings = labelfile2mat(strcat(BASE,DS));
+
+
+
+
+[BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
+pr = '';
+if isempty(PREFIX_INPUT_FILENAME) == 0
+    pr = strcat(PREFIX_INPUT_FILENAME, '_');
+end
+label_mappings = labelfile2mat(strcat(BASE, DATASET, '_', pr));
+
+
+
+
+
+
+[boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
+frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
 frame = frames{img_index};
-row_inds = frame.ax;
-col_inds = frame.ay;
 
 
+rgb_values = rgb_list(8);
+[gt_m, gt_n, ~] = size(gtImg);
+dsImg = zeros(gt_m, gt_n);
+label_identifiers = unique(label_assignments);
 
-dsImg = zeros(size(gtImg));
-for k=1:length(row_inds)
-        pixel_label = frame.labels(k);
-        ax = frame.ax(k);
-        ay = frame.ay(k);
+BBB = zeros(2, length(label_assignments));
+for idx=1:length(label_assignments)
+    lm_idx = label_mappings(idx);
+    fl_idx = find(frame.labels == lm_idx);
+    if (isempty(fl_idx))
+        continue;
+    end
+    assignment = label_assignments(idx);
+    color_id = label_identifiers(find(label_identifiers == assignment));
+    iax = floor(frame.ax(fl_idx));
+    iay = floor(frame.ay(fl_idx));
+    BBB(1, idx) = gtImg(iax, iay);
+    BBB(2, idx) = color_id;
+    dsImg(iax, iay) = color_id;
+end
+
+gtColor2ClusterLabel = zeros(2, length(label_identifiers));
+for k=1:length(label_identifiers)
+    u_label = label_identifiers(k);
+    idxs = find(BBB(2, :) == u_label);
     
-    
-    
-    
-    % since the first label is 2 but the first lookup index is 1
-    %transformed_pixel_label = label_to_vector_index(label_mappings, pixel_label); % pixel_label - 1;
-    if isempty(pixel_label) == 0
-        [a,~,~] = find(label_cluster_assignments(:,1) == pixel_label);
-        c_val = label_cluster_assignments(a,2);
-        if isempty(c_val) == 0
-            dsImg(ax, ay) = c_val;
+    votingLabels = unique(BBB(1, idxs));
+    maxCount = -1;
+    bestVoteLabel = -1;
+    for v=1:length(votingLabels)
+        vote = votingLabels(v);
+        voteCount = length(find(BBB(1, idxs) == vote));
+        if (voteCount > maxCount)
+            maxCount = voteCount;
+            bestVoteLabel = vote;
         end
     end
-
+    gtColor2ClusterLabel(1, k) = u_label;
+    gtColor2ClusterLabel(2, k) = bestVoteLabel;
+    
 end
+
+
+% map gray scale value to cluster id:
+
+
 figure('name', 'all samples')
 dsImgShow = dsImg - min(dsImg(:));
 dsImgShow = dsImgShow ./ max(dsImgShow(:));
 imshow(im2double(dsImgShow));
 
-labels = unique(label_cluster_assignments(:,2));
 TL = -1;
 lid = -1;
-for k=1:length(labels)
-    l = labels(k);
+for k=1:length(label_identifiers)
+    l = label_identifiers(k);
     lenL = length(find(dsImg== l));
     if lenL > TL
         TL = lenL;
         lid = l;
     end
 end
+gtLabels = label_identifiers;
+forgroundLabels = label_identifiers(~(label_identifiers == lid));
+backgroundLabel = label_identifiers(label_identifiers == lid);
 
 allSamples = dsImg;
 [a,b,c] = find(dsImg == lid);
@@ -95,6 +151,15 @@ samplesUsedCount = sum(sum(allSamples > 0));
 % fraction between the used samples and the total number of pixels
 density = samplesUsedCount/totalPixelCount;
 
+
+% transform forground cluster labels to their color value in gt img
+forgroundAsColor = zeros(1, length(forgroundLabels));
+for k=1:length(forgroundLabels),
+    gtColorId = find(gtColor2ClusterLabel(1,:) == forgroundLabels(k));
+    colorValueOfCurrentCluster = gtColor2ClusterLabel(2, gtColorId);
+    forgroundAsColor(k) = colorValueOfCurrentCluster;
+end
+
 if SIMPLIFIED_STATISTICS
     % samples classified as forground that actually also belong to the
     % forground.
@@ -102,7 +167,12 @@ if SIMPLIFIED_STATISTICS
     TP_Count = sum(sum(TP > 0));
 
     % samples classified to background that actually belong to forground
-    FN = backgroundSamples .*(backgroundSamples > 0) & (gtImg > 0);
+    fn_mask = zeros(size(gtImg));
+    for k = 1:length(forgroundAsColor)
+        fn_mask = fn_mask | (gtImg == forgroundAsColor(k));
+    end
+    
+    FN = backgroundSamples .*(backgroundSamples > 0) & fn_mask;
     FN_Count = sum(sum(FN > 0));
 
     % samples classified to forground that do belong to the background
@@ -127,20 +197,24 @@ if SIMPLIFIED_STATISTICS
     disp(['F1 score: ', num2str(100*F1_score), '%'])    
 else
     
-    forgroundLabels = unique(forgroundSamples(:,:));
-    forgroundLabels = forgroundLabels(find(forgroundLabels > 0));
+    % forgroundLabels = unique(forgroundSamples(:,:));
+    % forgroundLabels = forgroundLabels(find(forgroundLabels > 0));
 
-    backgroundLabel = unique(backgroundSamples(:,:));
-    backgroundLabel = backgroundLabel(find(backgroundLabel > 0));
+    %backgroundLabel = unique(backgroundSamples(:,:));
+    %backgroundLabel = backgroundLabel(find(backgroundLabel > 0));
     
-    gtLabels = unique(gtImg(:,:));
-    gtLabels = gtLabels(find(gtLabels > 0));
+    %gtLabels = unique(gtImg(:,:));
+    %gtLabels = gtLabels(find(gtLabels > 0));
 
     % count how many time a gt mask got assigned by a segmented cluster
     clusterPerMaskCount = zeros(size(gtLabels));
    
     % samples classified to background that actually belong to forground
-    FN = backgroundSamples .*(backgroundSamples > 0) & (gtImg > 0);
+    fn_mask = zeros(size(gtImg));
+    for k = 1:length(forgroundAsColor)
+        fn_mask = fn_mask | (gtImg == forgroundAsColor(k));
+    end
+    FN = backgroundSamples .*(backgroundSamples > 0) & fn_mask;
     FN_Count = sum(sum(FN > 0));
     
     avg_F1_score = 0;
@@ -151,26 +225,23 @@ else
         
         
         current_fg_mask = (forgroundSamples == curr_flabel);
+        figure('name', strcat('mask nr: ', num2str(k)));
+        imshow(current_fg_mask);
+        
         
         % find best matching gt mask label
         % note that several (detected) clusters clusers can be assigned to
         % the same gt mask.
-        bestVotingScore = -1;
-        best_gt_Label = -1;
-        for t = 1: length(gtLabels)
-            curr_gt_label = gtLabels(t);
-            votingScore = sum(sum((gtImg == curr_gt_label & current_fg_mask) > 0));
-            if votingScore > bestVotingScore
-                bestVotingScore = votingScore;
-                best_gt_Label = curr_gt_label;
-            end
-        end
+
+        
+        gtColorId = find(gtColor2ClusterLabel(1,:) == curr_flabel);
+        colorValueOfCurrentCluster = gtColor2ClusterLabel(2, gtColorId);
         
         % increment cluster count
         gt_mask_idx = find(gtLabels == best_gt_Label);
         clusterPerMaskCount(gt_mask_idx) = clusterPerMaskCount(gt_mask_idx) + 1;
         
-        TP = forgroundSamples.*(current_fg_mask & (gtImg == best_gt_Label));
+        TP = forgroundSamples.*(current_fg_mask & (gtImg == colorValueOfCurrentCluster));
         TP_Count = sum(sum(TP > 0));
 
         % samples classified to forground that do belong to the background
