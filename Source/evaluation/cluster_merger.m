@@ -2,9 +2,9 @@ addpath('../matlab_shared');
 addpath('../segmentation/src')
 
 %%
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-PREFIX_INPUT_FILENAME = 'ped_top_200';
-METHODNAME = 'srsf';
+DATASET = 'bonn_watercan_713_3_884';
+PREFIX_INPUT_FILENAME = 'ped_top_3000';
+METHODNAME = 'ldof';
 FRAME_IDX = 4;
 
 %%

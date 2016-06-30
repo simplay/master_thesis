@@ -23,11 +23,9 @@ imshow(gtImg);
 
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
-CF_PATH = '../output/clustering/';
-suffix = 'labels_1.txt';
-%[FileName, FilePath, ~] = uigetfile('.txt');
-%LABELS_FILE_PATH = strcat(FilePath, FileName);
-LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
+[FileName, FilePath, ~] = uigetfile('.txt');
+LABELS_FILE_PATH = strcat(FilePath, FileName);
+% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
 
 
 fileID = fopen(LABELS_FILE_PATH);
@@ -35,15 +33,8 @@ C = textscan(fileID,'%d,%d');
 label_assignments = cell2mat(C(2)) + 1;
 fclose(fileID);
 
-%cf_fname = strcat(CF_PATH,DS,'_',suffix);
 fid = fopen(LABELS_FILE_PATH);
 label_cluster_assignments = dlmread(LABELS_FILE_PATH);
-
-%BASE = '../output/similarities/';
-%label_mappings = labelfile2mat(strcat(BASE,DS));
-
-
-
 
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
 pr = '';
@@ -238,7 +229,7 @@ else
         colorValueOfCurrentCluster = gtColor2ClusterLabel(2, gtColorId);
         
         % increment cluster count
-        gt_mask_idx = find(gtLabels == best_gt_Label);
+        gt_mask_idx = find(gtLabels == curr_flabel);
         clusterPerMaskCount(gt_mask_idx) = clusterPerMaskCount(gt_mask_idx) + 1;
         
         TP = forgroundSamples.*(current_fg_mask & (gtImg == colorValueOfCurrentCluster));
