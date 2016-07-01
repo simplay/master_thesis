@@ -18,6 +18,70 @@ Sensitivity and specificity are statistical measures of the performance of a bin
 \label{tab:prediction_sensitivity}
 \end{table}
 
+\section{Datasets}
+\label{sec:datasets}
+make table similar to github redme about dataset
+display first,center and last frame per dataset
+
+\section{Parameterspace Exploration}
+\subsection{Influence of $\lambda$}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[trim axis left]
+\begin{axis}[
+  axis x line=center,
+  axis y line=center,
+  grid=both,
+  xtick={-1,...,10},
+  ytick={-1,...,10},
+  xlabel={$x$},
+  ylabel={$e^{-\lambda d}$},
+  xlabel style={below right},
+  ylabel style={above left},
+  no markers,
+  xmin=-0.5,
+  xmax=1.5,
+  ymin=-1.5,
+  ymax=1.5]
+\addplot +[thick, domain=0:10] {exp(-x)};
+\end{axis}
+\end{tikzpicture}
+\caption[Affinity Function]{A plot of the affinity transformation function. We observe that the smaller the $\lambda$ paramter gets, the larger the affinities become and wise versa.}
+\label{fig:exp_effect_lambda}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+
+\subfigure[$\lambda = 1$]{
+   \includegraphics[width=0.48\linewidth] {evaluation/effect_of_lambda/cars_lambda_1}
+   \label{fig:cars_eff_lam_a}
+}
+\subfigure[$\lambda = 0.1$]{
+   \includegraphics[width=0.48\linewidth] {evaluation/effect_of_lambda/cars_lambda_0_1}
+   \label{fig:cars_eff_lam_b}
+}
+~
+\subfigure[$\lambda = 0.01$]{
+   \includegraphics[width=0.48\linewidth] {evaluation/effect_of_lambda/cars_lambda_0_01}
+   \label{fig:cars_eff_lam_b}
+}
+\subfigure[$\lambda = 0.001$]{
+   \includegraphics[width=0.48\linewidth] {evaluation/effect_of_lambda/cars_lambda_0_001}
+   \label{fig:cars_eff_lam_b}   
+}
+\end{center}
+\caption[Influence of Lambda Parameter]{Illustration of the influence of the $\lambda$ parameter used for computing trajectory affinities. A plot of the affinity transformation function is shown in figure $\ref{fig:exp_effect_lambda}$. }
+\label{fig:cars_effect_of_lambda}
+\end{figure}
+
+\section{Qualitative Evaluation}
+mention available pipeline levels and their main parameters again
+tracking candidates
+
+\section{Quantitative Evaluation}
 
 
 %TODO: statistics: performance of selected set of methods applied on all datasets: HS_PD_SC, LDOF_PD_SC (classic), LDOF_PED_MC, LDOF_SD, LDOF_SED, SRSF_PED, SRSF_SED
@@ -33,7 +97,7 @@ method comparison, given a fixed number of clusters
 
 Fragmentation: 0.66667
 
-\begin{table}[]
+\begin{table}[H]
 \centering
 \begin{tabular}{|l|l|r|l|l|}
 \hline
@@ -151,14 +215,9 @@ SRSF SED KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
 explain the assumption of the datasets
 explain what kind of segmentations have been generated and evaluated.
 
-\section{Datasets}
-\label{sec:datasets}
-make table similar to github redme about dataset
-display first,center and last frame per dataset
 
-\section{Qualitative Evaluation}
-mention available pipeline levels and their main parameters again
-tracking candidates
+
+
 
 
 
@@ -167,4 +226,4 @@ running different similarity tasks
 
 
 
-\section{Quantitative Evaluation}
+
