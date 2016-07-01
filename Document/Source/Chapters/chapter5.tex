@@ -1,6 +1,14 @@
 \chapter{Experiments}
 
+
 %TODO: explain statistical method: precission, recall, f1, density
+%TODO: statistics: performance of selected set of methods applied on all datasets: HS_PD_SC, LDOF_PD_SC (classic), LDOF_PED_MC, LDOF_SD, LDOF_SED, SRSF_PED, SRSF_SED
+%TODO: statistics: influence of lambda using LDOF_PD
+%TODO: statistics: LDOF_PED_SC vs LDOF_PD_SC
+%TODO: statistics: LDOF_PED_SC vs LDOF_PED_SC
+%TODO: statistics: LDOF_PD_MC vs LDOF_SD
+%TODO: statistics: LDOF_PED_MC vs LDOF_SED
+%TODO: statistics: best case - tweak paras for a dataset.
 
 method comparison, given a fixed number of clusters
 
@@ -53,6 +61,8 @@ Fragmentation: 0.66667
 \label{fig:bonn_watercan_method_cmp_2}
 \end{figure}
 
+
+
 \begin{table}[]
 \centering
 \begin{tabular}{|l|l|r|l|l|}
@@ -60,7 +70,7 @@ Fragmentation: 0.66667
 \multicolumn{5}{|c|}{Method Comparison, 12 fixed Clusters, Bonn Watercan}                        \\ \hline
               & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 LDOF PD SC * & 0.44434 & 72.783 \%   & 66.1853 \%     & 70.3883 \%  \\ \hline
-LDOF PD MC * & 0.44434 & 68.3453 \%   & 91.3462 \%     & 39.0947 \%  \\ \hline              
+LDOF PD MC * & 0.44434 & 34.1727 \%   & 45.6731 \%     & 52.1262 \%  \\ \hline              
 LDOF PED SC * & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.7364 \%  \\ \hline
 LDOF PED MC * & 0.43522 & 64.4977 \%   & 81.0601 \%     & 73.0532 \%  \\ \hline
 LDOF SD KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline

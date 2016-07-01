@@ -1,10 +1,11 @@
 addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
+clear all
 %% load ground truth img
 DATASET = 'bonn_watercan_713_3_884';
 img_index = 4;
 STEPSIZE_DATA = 12;
-PREFIX_INPUT_FILENAME = 'ped_top_3000';
+PREFIX_INPUT_FILENAME = 'pd_top_200';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
@@ -12,7 +13,14 @@ SIMPLIFIED_STATISTICS = false;
 imgName = strcat(num2str(img_index), '.png');
 DS_BASE_PATH = strcat('../../Data/',DATASET,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
+gt_img = double(gtImg);
+gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
+
+uniqueSumValues = unique(gt_sum);
+uniqueSumValues = uniqueSumValues((uniqueSumValues ~= (255+255*8+255*16)));
+uniqueSumValues = uniqueSumValues + 1;
 gtImg = rgb2gray(gtImg);
+
 figure('name', 'ground truth')
 
 imshow(gtImg);
@@ -23,8 +31,9 @@ imshow(gtImg);
 
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
-[FileName, FilePath, ~] = uigetfile('.txt');
-LABELS_FILE_PATH = strcat(FilePath, FileName);
+% [FileName, FilePath, ~] = uigetfile('.txt');
+% LABELS_FILE_PATH = strcat(FilePath, FileName);
+LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
 
 
@@ -42,11 +51,6 @@ if isempty(PREFIX_INPUT_FILENAME) == 0
     pr = strcat(PREFIX_INPUT_FILENAME, '_');
 end
 label_mappings = labelfile2mat(strcat(BASE, DATASET, '_', pr));
-
-
-
-
-
 
 [boundaries, imgs, ~, ~] = read_metadata(BASE_FILE_PATH, METHODNAME);
 frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
@@ -66,15 +70,25 @@ for idx=1:length(label_assignments)
         continue;
     end
     assignment = label_assignments(idx);
-    color_id = label_identifiers(find(label_identifiers == assignment));
+    %color_id = label_identifiers(find(label_identifiers == assignment));
     iax = floor(frame.ax(fl_idx));
     iay = floor(frame.ay(fl_idx));
+    
+    if (gtImg(iax, iay) == 0 | gtImg(iax, iay) == 255)
+        continue;
+    end
+    
     BBB(1, idx) = gtImg(iax, iay);
-    BBB(2, idx) = color_id;
-    dsImg(iax, iay) = color_id;
+    BBB(2, idx) = assignment;
+    dsImg(iax, iay) = assignment;
 end
 
 gtColor2ClusterLabel = zeros(2, length(label_identifiers));
+
+
+
+
+
 for k=1:length(label_identifiers)
     u_label = label_identifiers(k);
     idxs = find(BBB(2, :) == u_label);
@@ -114,9 +128,10 @@ for k=1:length(label_identifiers)
         lid = l;
     end
 end
-gtLabels = label_identifiers;
-forgroundLabels = label_identifiers(~(label_identifiers == lid));
-backgroundLabel = label_identifiers(label_identifiers == lid);
+keyboard;
+gtLabels = uniqueSumValues;
+forgroundLabels = uniqueSumValues(~(uniqueSumValues == lid));
+backgroundLabel = uniqueSumValues(uniqueSumValues == lid);
 
 allSamples = dsImg;
 [a,b,c] = find(dsImg == lid);
@@ -147,6 +162,10 @@ density = samplesUsedCount/totalPixelCount;
 forgroundAsColor = zeros(1, length(forgroundLabels));
 for k=1:length(forgroundLabels),
     gtColorId = find(gtColor2ClusterLabel(1,:) == forgroundLabels(k));
+    if isempty(gtColorId)
+        forgroundAsColor(k) = -1;
+        continue;
+    end
     colorValueOfCurrentCluster = gtColor2ClusterLabel(2, gtColorId);
     forgroundAsColor(k) = colorValueOfCurrentCluster;
 end
@@ -232,15 +251,24 @@ else
         gt_mask_idx = find(gtLabels == curr_flabel);
         clusterPerMaskCount(gt_mask_idx) = clusterPerMaskCount(gt_mask_idx) + 1;
         
-        TP = forgroundSamples.*(current_fg_mask & (gtImg == colorValueOfCurrentCluster));
+        if sum(current_fg_mask(:)) == 0
+            TP = zeros(size(current_fg_mask));
+        else
+            TP = forgroundSamples.*(current_fg_mask & (gtImg == colorValueOfCurrentCluster));
+            
+        end
         TP_Count = sum(sum(TP > 0));
-
         % samples classified to forground that do belong to the background
         FP = (forgroundSamples == curr_flabel) - (TP > 0);
         FP_Count = sum(sum(FP > 0));
-
-        avg_precission = avg_precission + (TP_Count / (TP_Count + FP_Count));
-        avg_recall = avg_recall + (TP_Count / (TP_Count + FN_Count));
+        
+        if ~(TP_Count + FP_Count == 0)
+            avg_precission = avg_precission + (TP_Count / (TP_Count + FP_Count));
+        end
+        
+        if ~(TP_Count + FN_Count == 0)
+            avg_recall = avg_recall + (TP_Count / (TP_Count + FN_Count));
+        end
         avg_F1_score = avg_F1_score + 2*((avg_precission*avg_recall) / (avg_precission+avg_recall));
     end
     

@@ -1,9 +1,9 @@
 addpath('../matlab_shared');
 addpath('../segmentation/src')
-
+clear all
 %%
 DATASET = 'bonn_watercan_713_3_884';
-PREFIX_INPUT_FILENAME = 'ped_top_3000';
+PREFIX_INPUT_FILENAME = 'pd_top_200';
 METHODNAME = 'ldof';
 FRAME_IDX = 4;
 
@@ -12,7 +12,7 @@ FRAME_IDX = 4;
 LABELS_FILE_PATH = strcat(FilePath, FileName);
 OUT_PATH = '../output/cluster_merges/';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Document/Results/final/watercan/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
-% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Document/Results/final/watercan/bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_ct_1_l_5_c_12_ev_18/labels.txt';
+% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ldof_ped_sc_l10_s_12_ct_c_18_ev_12/labels.txt';
 fileID = fopen(LABELS_FILE_PATH);
 C = textscan(fileID,'%d,%d');
 label_assignments = cell2mat(C(2)) + 1;
@@ -37,6 +37,9 @@ frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PRE
  frame = frames{FRAME_IDX};
 
 [m, n, ~] = size(gt_img);
+
+gtImgGray = rgb2gray(gt_img);
+
 gt_img = double(gt_img);
 gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 color_values = unique(gt_sum);
@@ -60,7 +63,7 @@ for k=1:length(label_identifiers)
             assignment = sub_label_assignments(idx);
     end
     [value, max_idx] = max(color_label_count);
-    merged_labels(k) = max_idx;
+    merged_labels(k) = color_values(max_idx);
 end
 
 filename = imgs{FRAME_IDX};
@@ -81,7 +84,8 @@ for idx=1:length(label_assignments)
         disp('');
     end
     color_id = merged_labels(find(label_identifiers == assignment));
-    t = rgb_values(color_id, :);
+    % t = rgb_values(color_id, :);
+    t = rgb_values(find(color_values == color_id), :);
     color_value = [t(1), t(2), t(3)];
     plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color_value, 'Marker', '*');
     hold on
