@@ -30,10 +30,53 @@ Sensitivity and specificity are statistical measures of the performance of a bin
 
 method comparison, given a fixed number of clusters
 
-dataset: bonn watercan
+
 Fragmentation: 0.66667
 
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|r|l|l|}
+\hline
+\multicolumn{5}{|c|}{Comparision cars dataset 3 clusters}                        \\ \hline
+              & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 0.66829 & 91.0544 \%   & 89.8432 \%     & 88.1876 \%  \\ \hline
+LDOF PD MC & 0.66829 & 91.0502 \%   & 88.9107 \%     & 87.5879 \%  \\ \hline              
+LDOF SD & 0.69987 & 79.2541 \%   & 92.709 \%     & 80.9941 \%  \\ \hline
+\end{tabular}
+\caption[Cars Dataset]{My caption}
+\label{tab:cars_ldof_quality}
+\end{table}
 
+\begin{figure}[H]
+\begin{center}
+
+\subfigure[GT]{
+   \includegraphics[width=0.48\linewidth] {evaluation/method_2d_ds/gt_1}
+   \label{fig:cars_a}
+}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/method_2d_ds/ldof_pd_sc}
+   \label{fig:cars_b}
+}
+~
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/method_2d_ds/ldof_pd_mc}
+   \label{fig:cars_c}
+}
+\subfigure[LDOF SD]{
+   \includegraphics[width=0.48\linewidth] {evaluation/method_2d_ds/ldof_sd}
+   \label{fig:cars_d}   
+}
+\end{center}
+\caption[Method Comparison]{Visualization of segmentation resulting when running our pipeline on a dataset without depth information.}
+\label{fig:cars_dataset}
+\end{figure}
+
+
+
+
+dataset: bonn watercan
+Fragmentation: 0.66667
 
 \begin{figure}[H]
 \begin{center}
