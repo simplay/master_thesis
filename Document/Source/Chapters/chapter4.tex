@@ -325,7 +325,45 @@ However, most trajectories are never due to disocclusion.
 
 problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
 
+
 \section{Affinity Matrix}
+
+
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[GT]{
+   \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/fc}
+   \label{fig:cars_a}
+}
+\subfigure[Affinities Car]{
+   \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/cb}
+   \label{fig:cars_b}
+}
+~
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/woods}
+   \label{fig:cars_c}
+}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/street}
+   \label{fig:cars_d}
+}
+\end{center}
+\caption[Trajectory Affinities]{Visualization of affinities among trajectories and the structure of the matrix $W$.}
+\label{fig:cars_affinities}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+   \includegraphics[width=0.65\linewidth] {implementation/affinities/cars/cars_w}
+   \label{fig:cars_w}
+\end{center}
+\caption[Affinity Matrix]{Visualization of affinities among trajectories and the structure of the matrix $W$.}
+\label{fig:cars_affinity_matrix}
+\end{figure}
+
 
 mention how to transform tracked points to 3d space using camera calibration data.
 
