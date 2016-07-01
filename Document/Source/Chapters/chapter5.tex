@@ -1,5 +1,7 @@
 \chapter{Experiments}
 
+%TODO: explain statistical method: precission, recall, f1, density
+
 method comparison, given a fixed number of clusters
 
 dataset: bonn watercan
@@ -36,6 +38,20 @@ Fragmentation: 0.66667
 \label{fig:bonn_watercan_method_cmp}
 \end{figure}
 
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/meth_cmp_bonn_wc/ldof_pd_mc}
+   \label{fig:bonn_wc_e}
+}
+\subfigure[LDOF PD MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/meth_cmp_bonn_wc/srsf_ped_mc}
+   \label{fig:bonn_wc_f}   
+}
+\end{center}
+\caption[Method Comparison 2]{Visualization of merged segmentations when comparing various methods}
+\label{fig:bonn_watercan_method_cmp_2}
+\end{figure}
 
 \begin{table}[]
 \centering
@@ -43,7 +59,7 @@ Fragmentation: 0.66667
 \hline
 \multicolumn{5}{|c|}{Method Comparison, 12 fixed Clusters, Bonn Watercan}                        \\ \hline
               & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-LDOF PD SC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
+LDOF PD SC * & 0.44434 & 72.783 \%   & 66.1853 \%     & 70.3883 \%  \\ \hline
 LDOF PD MC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline              
 LDOF PED SC * & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.7364 \%  \\ \hline
 LDOF PED MC * & 0.43522 & 64.4977 \%   & 81.0601 \%     & 73.0532 \%  \\ \hline
