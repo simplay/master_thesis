@@ -1,7 +1,25 @@
 \chapter{Experiments}
-
-
 %TODO: explain statistical method: precission, recall, f1, density
+
+Sensitivity and specificity are statistical measures of the performance of a binary classification test, also known in statistics as classification function:
+
+    Sensitivity (also called the true positive rate, or the recall in some fields) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
+    Specificity (also called the true negative rate) measures the proportion of negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).
+
+\begin{table}[]
+\centering
+\begin{tabular}{l|l|l|}
+\cline{2-3}
+ & \begin{tabular}[c]{@{}l@{}}Prediction\\ Positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}Prediction\\ Negative\end{tabular} \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} True Positive} & \cellcolor[HTML]{CB0000}False Negative \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} False Positive} & \cellcolor[HTML]{34FF34}True Negative \\ \hline
+\end{tabular}
+\caption[Prediction and Sensivity]{My caption}
+\label{tab:prediction_sensitivity}
+\end{table}
+
+
+
 %TODO: statistics: performance of selected set of methods applied on all datasets: HS_PD_SC, LDOF_PD_SC (classic), LDOF_PED_MC, LDOF_SD, LDOF_SED, SRSF_PED, SRSF_SED
 %TODO: statistics: influence of lambda using LDOF_PD
 %TODO: statistics: LDOF_PED_SC vs LDOF_PD_SC
