@@ -2,10 +2,10 @@ addpath('../matlab_shared');
 addpath('../segmentation/src')
 clear all
 %%
-DATASET = 'bonn_watercan_713_3_884';
-PREFIX_INPUT_FILENAME = 'pd_top_200';
+DATASET = 'cars';
+PREFIX_INPUT_FILENAME = 'sd_both_3000';
 METHODNAME = 'ldof';
-FRAME_IDX = 4;
+FRAME_IDX = 1;
 
 %%
 [FileName, FilePath, ~] = uigetfile('.txt');
@@ -36,10 +36,16 @@ frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PRE
 
  frame = frames{FRAME_IDX};
 
-[m, n, ~] = size(gt_img);
+[m, n, c] = size(gt_img);
 
+if c == 1
+    tmp = zeros(m, n, 3);
+    tmp(:,:,1) = gt_img;
+    tmp(:,:,2) = 0;
+    tmp(:,:,3) = 0;
+    gt_img = tmp;
+end
 gtImgGray = rgb2gray(gt_img);
-
 gt_img = double(gt_img);
 gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 color_values = unique(gt_sum);

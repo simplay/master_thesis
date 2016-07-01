@@ -2,10 +2,10 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'bonn_watercan_713_3_884';
-img_index = 4;
-STEPSIZE_DATA = 12;
-PREFIX_INPUT_FILENAME = 'pd_top_200';
+DATASET = 'cars';
+img_index = 1;
+STEPSIZE_DATA = 8;
+PREFIX_INPUT_FILENAME = 'sd_both_3000';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
@@ -13,13 +13,27 @@ SIMPLIFIED_STATISTICS = false;
 imgName = strcat(num2str(img_index), '.png');
 DS_BASE_PATH = strcat('../../Data/',DATASET,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
+[m, n, c] = size(gtImg);
+if c == 1
+    tmp = zeros(m, n, 3);
+    tmp(:,:,1) = gtImg;
+    tmp(:,:,2) = 0;
+    tmp(:,:,3) = 0;
+    gtImg = tmp;
+end
+
 gt_img = double(gtImg);
 gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 
 uniqueSumValues = unique(gt_sum);
 uniqueSumValues = uniqueSumValues((uniqueSumValues ~= (255+255*8+255*16)));
 uniqueSumValues = uniqueSumValues + 1;
-gtImg = rgb2gray(gtImg);
+
+if c == 1
+    gtImg = gtImg(:,:,1);
+else
+    gtImg = rgb2gray(gtImg);
+end
 
 figure('name', 'ground truth')
 
@@ -31,9 +45,9 @@ imshow(gtImg);
 
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
-% [FileName, FilePath, ~] = uigetfile('.txt');
-% LABELS_FILE_PATH = strcat(FilePath, FileName);
-LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
+[FileName, FilePath, ~] = uigetfile('.txt');
+LABELS_FILE_PATH = strcat(FilePath, FileName);
+% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
 
 
@@ -128,7 +142,7 @@ for k=1:length(label_identifiers)
         lid = l;
     end
 end
-keyboard;
+% keyboard;
 gtLabels = uniqueSumValues;
 forgroundLabels = uniqueSumValues(~(uniqueSumValues == lid));
 backgroundLabel = uniqueSumValues(uniqueSumValues == lid);
