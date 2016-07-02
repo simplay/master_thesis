@@ -54,7 +54,7 @@ The exact value of $T$ is either the number of overlapping frames between the $A
 Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a $n \times n$ affinity matrix $W$, for $n$ given trajectories. 
 
 \section{Eigendecomposition of Graph Laplacians}
-Given the pairwise affinity matrix $W$ as computed in section $\ref{sec:trajectory_affinities}$ on page $\pageref{sec:trajectory_affinities}$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
+Given the pairwise affinity matrix $W$ as computed in section $\ref{sec:trajectory_affinities}$ on page $\pageref{sec:trajectory_affinities}$. An example of such an matrix is shown in figure $\ref{fig:cars_affinity_mat_sub}$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
 \begin{equation}
 	D = \text{diag} \left( d_{A_1}, \dots, d_{A_n} \right)
 \end{equation}
@@ -62,11 +62,37 @@ be the $n \times n$ diagonal matrix with the entries
 \begin{equation}
 	d_{A_k} = \sum_B w \left( A_k, B \right)
 \end{equation}
-The eigendecomposition of the normalized graph laplacian is given by equation $\ref{eq:normalized_graph_laplacian}$.
+The eigendecomposition of the normalized graph Laplacian is given by equation $\ref{eq:normalized_graph_laplacian}$.
 \begin{equation}
 	V^{T} \Lambda V = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
 	\label{eq:normalized_graph_laplacian}
 \end{equation}
+Where $V$ denotes a matrix containing the column-wise eigenvectors of the Laplacian and $\lambda$ is a diagonal matrix containing the corresponding eigenvalues. Figure $\ref{fig:cars_eigenvectors_laplacian}$ shows two example eigenvectors, resulting from the $\textit{cars}$ dataset.
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Eigenvector Front-Car]{
+   \includegraphics[width=0.48\linewidth] {derivation/eigenvectors/cars/ev_cf}
+   \label{fig:cars_eigenvectors_laplacian_a}
+}
+\subfigure[Eigenvector Back-Car]{
+   \includegraphics[width=0.48\linewidth] {derivation/eigenvectors/cars/ev_cb}
+   \label{fig:cars_eigenvectors_laplacian_b}
+}
+\end{center}
+\caption[Eigenvectors of the Laplacian]{Visualizing the contribution of two significant eigenvectors of the Laplacian of the affinity matrix that belong to the \textit{cars} dataset.}
+\label{fig:cars_eigenvectors_laplacian}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.7\linewidth] {derivation/eigenvectors/cars/w_mat}
+
+\end{center}
+\caption[Affinity Matrix W]{Visualization of the affinity matrix $W$ that belongs to the \textit{cars} dataset.}
+\label{fig:cars_affinity_mat_sub}
+\end{figure}
+
 
 \section{Minimum Cost Multicut Problem}
 The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
