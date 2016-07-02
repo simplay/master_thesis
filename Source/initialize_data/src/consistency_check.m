@@ -59,6 +59,15 @@ function [ unreliables ] = consistency_check( fw_flow, bw_flow, threshScale )
             v2 = fw_v_flow(ax,ay);
             
             % |w-w_t| <= ...
+            % fowardflow fwf, backwardflow bwf
+            % dflow = fwf + bwf
+            % idally, dflow is euqals 0
+            % but due to numerical reasons, its can be >
+            % start post p_s = (ax, ay)
+            % p_s + forward_flow(ax,ay) = p_e
+            % reconstructed starting position p_rs
+            % rs = p_e + backwardflow(p_e)
+            % ||p_rs-p_s||^2 < eps * ||dflow||^2 + bias
             if (cx-ax)*(cx-ax)+(cy-ay)*(cy-ay) >= threshScale*(u2*u2 + v2*v2 + u*u + v*v) + 0.5
                 unreliables(ax,ay) = 1.0; 
                 continue;
