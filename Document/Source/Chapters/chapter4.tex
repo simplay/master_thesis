@@ -326,6 +326,42 @@ However, most trajectories are never due to disocclusion.
 problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
 
 
+Given the principal point $p = \left(p_x, p_y \right)$ and the focal lengths $\left(f_x, f_y \right)$ we can compute the following homogeneous transformation:
+\begin{equation}
+\colvec[f_x X + Z p_x]{f_y Y + Z p_y}{Z} =
+\begin{bmatrix}
+f_x & 0 & p_x & 0 \\
+0 & f_y & p_y & 0 \\
+0 & 0 & 1 & 0
+\end{bmatrix}
+\begin{pmatrix}
+X \\
+Y \\
+Z \\
+1
+\end{pmatrix}
+\end{equation}
+
+In the following, let us assume $d \equiv z$. Then
+
+\begin{equation}
+	\colvec[X]{X}{Z} \mapsto \left( \frac{f_x x}{d} + p_x, \frac{f_y y}{d} + p_y \right)^T
+\end{equation}
+
+since
+
+\begin{equation}
+\begin{aligned}
+	d \left( \frac{x - p_x}{f_x} \right) = \hat{x} \Leftrightarrow \frac{\hat{x}}{d} f_x + p_x = x \\
+	d \left( \frac{y - p_y}{f_y} \right) = \hat{y} \Leftrightarrow \frac{\hat{y} f_y}{d} + p_y = y 
+\end{aligned}
+\label{eq:depth_tranfomation}
+\end{equation}.
+
+For given pixel coorinates $\left( x,y \right)$ that indicate image locations, we want to transform them into camera coordinates, using depth maps, by applying equation $\ref{eq:depth_tranfomation}$.
+
+
+
 \section{Affinity Matrix}
 
 
