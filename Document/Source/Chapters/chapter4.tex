@@ -360,11 +360,37 @@ since
 
 For given pixel coorinates $\left( x,y \right)$ that indicate image locations, we want to transform them into camera coordinates, using depth maps, by applying equation $\ref{eq:depth_tranfomation}$.
 
+given the extrinsic and intrinsic camera calibration data,
+
+\begin{equation}
+\begin{aligned}
+	\text{Camera}^{depth} : \left( p^d = (p_x^d, p_y^d), f^d = (f_x^d, f_y^d)\right) \\
+	\text{Camera}^{color} : \left( p^c = (p_x^c, p_y^c), f^c = (f_x^c, f_y^c)\right) \\
+	\textbf{E} : \text{Camera}^{depth} \rightarrow \text{Camera}^{color}
+\end{aligned}
+\label{eq:calib_data}
+\end{equation}.
+
+Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\left( x, y, z \right)$ using the camera calibration data defined as in equation $\ref{eq:calib_data}$. Furthermore, let the depth value d $\in$ $\bf{D}$. Then we have to perform the following transformations steps:
+
+\begin{enumerate}
+\item Transform image location onto depth camera space
+\begin{equation}
+	\forall (u, v), \forall d = \textbf{D}(u,v): \colvec[\frac{u - p_x^d}{f_x^d} d]{\frac{v - p_y^d}{f_y^d} d}{d} = \colvec[x]{y}{z} \equiv \bf{p}
+\end{equation}
+\item Align depth camera on color camera by appling the extrinsic matrix $E$:
+\begin{equation}
+	\forall p: \hat{p} \equiv \colvec[\hat{x}]{\hat{y}}{\hat{z}} =  E p
+\end{equation}
+\item transform onto color camera
+\begin{equation}
+	\forall \hat{p} : \left( \hat{u}, \hat{v}\right) = \colvec{\frac{\hat{x}}{\hat{z}} f_x^c + p_x^c}{\frac{\hat{y}}{\hat{z}} f_y^c + p_y^c}
+\end{equation}
+\end{enumerate}
+
 
 
 \section{Affinity Matrix}
-
-
 
 \begin{figure}[H]
 \begin{center}
