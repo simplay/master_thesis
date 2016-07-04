@@ -94,6 +94,16 @@ Where $V$ denotes a matrix containing the column-wise eigenvectors of the Laplac
 \end{figure}
 
 
+	
+
+\begin{equation}
+\begin{aligned}
+& E \left( \pi, K \right) = \sum_{A} \sum_{k=1}^K \delta_{\pi^A, k} \norm{\bf{v}^A - \mu_k}_{\lambda} + \nu \sum_A \sum_{B \in \mathcal{N}(A)} \frac{1- \delta_{\pi^A, \pi^B}}{\norm{\bf{v}^A - \bf{v}^B}} \\
+& \text{where } \norm{\bf{v}^A - \bf{\mu}}_\lambda = \sum \frac{v_i^A -  \mu_i}{\lambda_i}
+\end{aligned} 
+\end{equation}
+
+
 \section{Minimum Cost Multicut Problem}
 The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
 \begin{equation}
