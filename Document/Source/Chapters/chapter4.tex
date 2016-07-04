@@ -1,4 +1,6 @@
 \chapter{Implementation}
+%TODO: where should we use this: problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
+
 
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
 The problem statement our pipeline solves is defined as follows: 
@@ -330,18 +332,17 @@ depth field variances.
 
 
 \section{Trajectories}
+As discussed earlier, motion is a spatially and temporal coherent visual cue. This key insight tells us that motion is not frame-wise independent. Hence, we have to extract the whole motion history of every frame location and feed it to a particular segmentation method in order to produce viable motion groupings. To build the history of a point we track it to its successor frames using the optical flow. Such a ordered list of tracked to points is called trajectory. Finally, the set of all possible trajectories forms the seeked motion history. In this section we explain in detail the required steps to generate such trajectories and their 3d version using camera calibration data.
 
+\subsection{Point tracking}
 every point in frame $t$ can be tracked to the next frame $t+1$ by suing the optical flow field $w_t$ that belongs to frame $t$. In principal, any optical flow method can be used.
 
 tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. For this purpose we make use of the invalid mask computed earlier.
 
 Occlusion comes with the opposite phenomenon disocclision or scaling. to fill these areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame.
-However, most trajectories are never due to disocclusion.
-
-
-problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
-
-\subsection{Point tracking}
+However, most trajectories are never due to disocclusion.  
+ 
+Our implementation performs point tracking based on optical flow data.
 
 \subsection{Transformation to 3d points}
 Given the principal point $p = \left(p_x, p_y \right)$ and the focal lengths $\left(f_x, f_y \right)$ we can compute the following homogeneous transformation:
