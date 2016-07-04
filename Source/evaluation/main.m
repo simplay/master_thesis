@@ -2,10 +2,10 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'cars';
-img_index = 1;
+DATASET = 'bonn_chairs_263_3_434';
+img_index = 20;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'sd_both_3000';
+PREFIX_INPUT_FILENAME = 'pd_top_400';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
@@ -87,6 +87,10 @@ for idx=1:length(label_assignments)
     %color_id = label_identifiers(find(label_identifiers == assignment));
     iax = floor(frame.ax(fl_idx));
     iay = floor(frame.ay(fl_idx));
+    
+    if (iax < 1 || iay < 0) 
+        continue 
+    end
     
     if (gtImg(iax, iay) == 0 | gtImg(iax, iay) == 255)
         continue;

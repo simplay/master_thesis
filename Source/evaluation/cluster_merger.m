@@ -2,10 +2,10 @@ addpath('../matlab_shared');
 addpath('../segmentation/src')
 clear all
 %%
-DATASET = 'cars';
-PREFIX_INPUT_FILENAME = 'sd_both_3000';
+DATASET = 'bonn_chairs_263_3_434';
+PREFIX_INPUT_FILENAME = 'pd_top_400';
 METHODNAME = 'ldof';
-FRAME_IDX = 1;
+FRAME_IDX = 20;
 
 %%
 [FileName, FilePath, ~] = uigetfile('.txt');
@@ -50,6 +50,7 @@ gt_img = double(gt_img);
 gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 color_values = unique(gt_sum);
 merged_labels = zeros(1, length(label_identifiers));
+%%
 for k=1:length(label_identifiers)
     l_id = label_identifiers(k);
     sub_label_assignments = label_assignments(label_assignments == l_id);
@@ -63,6 +64,10 @@ for k=1:length(label_identifiers)
             end
             i_x = floor(frame.ax(fl_idx));
             i_y = floor(frame.ay(fl_idx));
+            
+            if (i_x < 1 || i_y < 0 || i_x > m || i_y > n) 
+                continue 
+            end
             % find idx of this label and increment
             gt_idx = find(color_values == gt_sum(i_x, i_y));
             color_label_count(gt_idx) = color_label_count(gt_idx) + 1;
@@ -86,11 +91,9 @@ for idx=1:length(label_assignments)
         continue;
     end
     assignment = label_assignments(idx);
-    if assignment == 13
-        disp('');
-    end
     color_id = merged_labels(find(label_identifiers == assignment));
     % t = rgb_values(color_id, :);
+    disp(num2str(idx))
     t = rgb_values(find(color_values == color_id), :);
     color_value = [t(1), t(2), t(3)];
     plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color_value, 'Marker', '*');
