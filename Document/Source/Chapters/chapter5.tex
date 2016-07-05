@@ -3,24 +3,19 @@
 
 Sensitivity and specificity are statistical measures of the performance of a binary classification test, also known in statistics as classification function:
 
-    Sensitivity (also called the true positive rate, or the recall in some fields) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
+  Sensitivity (also called the true positive rate, or the recall in some fields) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
     Specificity (also called the true negative rate) measures the proportion of negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).
-    
- 
- For the quantitative evaluation of our experiments we make use of the F-measure. This measure is often used in determining the performance of  classification tasks in machine learning. To compute its score, this measure takes into account both, the recission and the recall of the test. 
- The definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
-   
- 
- 
-  It considers both the precision p and the recall r of the test to compute the score: p is the number of correct positive results divided by the number of all positive results, and r is the number of correct positive results divided by the number of positive results that should have been returned.
-  
-   The F1 score can be interpreted as a weighted average of the precision and recall, where an F1 score reaches its best value at 1 and worst at 0.
-  
-\begin{equation}
-	F_1 = 2 \left( \frac{\text{preccision} \times \text{recall}}{\text{preccision} +\text{recall}} \right)
-\label{eq:f1_score}
-\end{equation}    
 
+
+    
+For the final quantitative evaluation of our experiments we make use of the F1 measure. This measure is often used in determining the performance of  classification tasks in machine learning. To compute its score, this measure takes into account both, the precission and the recall of the test. 
+ The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
+\begin{equation}
+F_1 = 2 \left( \frac{\text{preccision} \times \text{recall}}{\text{preccision} +\text{recall}} \right)
+\label{eq:f1_score}
+\end{equation}  
+The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
+    
 \begin{table}[]
 \centering
 \begin{tabular}{l|l|l|}
