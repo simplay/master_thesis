@@ -383,7 +383,12 @@ After processing the first frame, we continue with tracking points in the next f
 The set of all these locations is processed the same way as described as the points in the initial stage. We repeat this procedure until we visited every dataset frame. \\ \\
 Again, please note that tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. 
 
+%TODO: make trajectory tracking figure using the visualizer scripts.
+Finally, figure FIGURE gives an impression of an actual point tracking, showing the resulting trajectories on the \textit{cars} dataset. As we can see, points tracked in the same moving objects exhibit coherent trajectories.
+
 \subsection{Transformation to 3d points}
+Ultimately, our pipeline should be able to work with 3d data. To enable this, we have to make use of the extracted depth map and use their information in order to transform the 2d trajectory points to 3d points in space. Ideally, the distances, computed to define an affinity measure between trajectories, should be more accurate. 
+
 Given the principal point $p = \left(p_x, p_y \right)$ and the focal lengths $\left(f_x, f_y \right)$ we can compute the following homogeneous transformation:
 \begin{equation}
 \colvec[f_x X + Z p_x]{f_y Y + Z p_y}{Z} =
@@ -524,12 +529,8 @@ underlying assumption: objects in a scene have a certain size.
 the min. cost multicut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
 
 limitation: only well defined for non-negative affinity values between trajectories. in practise this means it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. 
+\paragraph{MinCut} 
 
-
-
-
-
-MinCut
 \paragraph{Kernighan-Lin} 
 formulate trajectory motion segmentation as a minimum cost multicut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showin in $\cite{KB15b}$. \\ \\
 Let $G = (E, V)$ be an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. The $KL$ algorithm attempts to find a partition of V into Two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
