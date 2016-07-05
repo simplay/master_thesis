@@ -5,7 +5,7 @@ clear all
 DATASET = 'bonn_chairs_263_3_434';
 img_index = 20;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'pd_top_400';
+PREFIX_INPUT_FILENAME = 'ped_top_400';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
@@ -292,7 +292,7 @@ else
     
     precission = avg_precission / length(forgroundLabels);
     recall = avg_recall / length(forgroundLabels);
-    F1_score = avg_F1_score / (length(forgroundLabels)+1);
+    F1_score = 2 * ((precission * recall) / (precission + recall));
     
     disp(['density: ', num2str(100*density), '%'])
     disp(['precission: ', num2str(100*precission), '%'])

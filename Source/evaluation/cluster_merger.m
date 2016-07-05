@@ -3,7 +3,7 @@ addpath('../segmentation/src')
 clear all
 %%
 DATASET = 'bonn_chairs_263_3_434';
-PREFIX_INPUT_FILENAME = 'pd_top_400';
+PREFIX_INPUT_FILENAME = 'ped_top_400';
 METHODNAME = 'ldof';
 FRAME_IDX = 20;
 
@@ -93,7 +93,6 @@ for idx=1:length(label_assignments)
     assignment = label_assignments(idx);
     color_id = merged_labels(find(label_identifiers == assignment));
     % t = rgb_values(color_id, :);
-    disp(num2str(idx))
     t = rgb_values(find(color_values == color_id), :);
     color_value = [t(1), t(2), t(3)];
     plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color_value, 'Marker', '*');
