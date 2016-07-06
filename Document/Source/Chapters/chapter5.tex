@@ -16,7 +16,7 @@ F_1 = 2 \left( \frac{\text{preccision} \times \text{recall}}{\text{preccision} +
 \end{equation}  
 The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
     
-\begin{table}[]
+\begin{table}[H]
 \centering
 \begin{tabular}{l|l|l|}
 \cline{2-3}
@@ -30,6 +30,26 @@ The F1 score can be interpreted as a normalized weighted average of the precisio
 
 \section{Datasets}
 \label{sec:datasets}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Dataset} & \textbf{\#Frames} & \textbf{Resolution} & \textbf{Has Depths} & \textbf{Cameras Aligned} \\ \hline
+cars & 19 & 480 x 640 & false & false \\ \hline
+wh & 104 & 480 x 640 & true & false \\ \hline
+bonn\_chairs & 58 & 480 x 640 & true & true \\ \hline
+bonn\_watercan & 58 & 480 x 640 & true & true \\ \hline
+bonn\_cerealbox & 101 & 480 x 640 & true & true \\ \hline
+alley2 & 50 & 512 x 218 & true & true \\ \hline
+two\_chairs & 61 & 512 x 424 & true & true \\ \hline
+chair & 101 & 512 x 424 & true & true \\ \hline
+\end{tabular}
+\caption[Datasets]{Properties of our used datasets.}
+\label{tab:datasets}
+\end{table}
+
+
 make table similar to github redme about dataset
 display first,center and last frame per dataset
 
