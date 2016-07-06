@@ -105,6 +105,12 @@ tracking candidates
 method comparison, given a fixed number of clusters
 
 
+density: 0.37402%
+precission: 96.1708%
+recall: 89.9521%
+F1 score: 92.9576%
+
+
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|r|l|l|}
@@ -116,6 +122,7 @@ LDOF PD MC & 0.43685 & 86.4193 \%   & 76.1967 \%     & 80.9867 \%  \\ \hline
 LDOF PED SC & 0.37174 & 95.0959 \%   & 78.1937 \%     & 85.8205 \%  \\ \hline
 LDOF PED MC & 0.37174 & 83.3878 \%   & 91.4203 \%     & 87.2195 \%  \\ \hline              
 LDOF SD & 0.43848 & 74.7623 \%   & 96.4264 \%     & 84.2235 \%  \\ \hline
+LDOF SED & 0.37402 & 96.1708 \%   & 89.9521 \%     & 92.9576 \%  \\ \hline
 \end{tabular}
 \caption[Cars Dataset]{My caption}
 \label{tab:eval_bonn_chairs}
@@ -146,11 +153,19 @@ LDOF SD & 0.43848 & 74.7623 \%   & 96.4264 \%     & 84.2235 \%  \\ \hline
    \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_ped_mc}
    \label{fig:bonn_chairs_e}
 }
+~
+\subfigure[LDOF SD KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_sd_kl}
+   \label{fig:bonn_chairs_d}
+}
+\subfigure[LDOF SED KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_sed_kl}
+   \label{fig:bonn_chairs_e}
+}
 \end{center}
 \caption[Evaluation Bonn Chairs]{pew}
 \label{fig:eval_bonn_chairs}
 \end{figure}
-
 
 
 Fragmentation: 0.66667
