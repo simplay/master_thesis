@@ -80,7 +80,7 @@ function run_init_data( dataset, sampling_rate, compute_tracking_data, compute_f
             % Save row and column indicess of trackable pixel locations
             frame_t = imgs{t};
             img = im2double(imread(frame_t));
-            [ tracking_candidates ] = findTrackingCandidates( img, STEP_SIZE );
+            [ tracking_candidates ] = findTrackingCandidates( img, STEP_SIZE, false);
             [trackable_row, trackable_col, ~] = find(tracking_candidates == 1);
             datasets = [trackable_row, trackable_col]';
 
