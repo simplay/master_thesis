@@ -2,6 +2,7 @@ clc
 
 addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
+addpath('')
 
 DATASET = 'cars';
 METHODNAME = 'ldof';
@@ -32,6 +33,7 @@ imshow(I);
 [xx, yy] = ginput(selection_count);
 close(t);
 
+rgb_values = rgb_list(ceil(log2(selection_count * num_el)));
 TILL = img_index+2;
 SHOW_CANDIDATES = false;
 count = 0;
@@ -39,7 +41,7 @@ for u=img_index:TILL
     iter = 1;
     
     if u < TILL
-        prevFrameIdcs = zeros(2, selection_count*num_el);
+        prevFrameIdcs = zeros(2, selection_count * num_el);
     end
     
     frame = frames{u};
@@ -134,10 +136,10 @@ for u=img_index:TILL
             end
 
             drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1), y(2)-y(1),0 );
-            drawArrow3d = @(x,y,z) quiver3(x(1),y(1),z(1),x(2)-x(1),y(2)-y(1),z(2));
+            drawArrow3d = @(x,y,z, a_color) quiver3(x(1),y(1),z(1),x(2)-x(1),y(2)-y(1),z(2), 'Color', a_color);
 
             for t=1:length(tracking_p_range),
-
+                color = rgb_values(iter, :);
                 % find tracked pixels at frame 1
                 label = tracking_p_range(t);
 
@@ -172,11 +174,11 @@ for u=img_index:TILL
                 y = [y0, y1];
                 if SHOULD_PLOT3D
                     z = [count,(count + 1)];
-                    plot3(y1, x1, (count + 1), 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
+                    plot3(y1, x1, (count + 1), 'Color', color, 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
                     if count < length(img_index:TILL) - 1
-                        plot3(y0, x0, count, 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
+                        plot3(y0, x0, count, 'Color', color, 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
                         hold on
-                        drawArrow3d(y, x, z);
+                        drawArrow3d(y, x, z, color);
                     end
                 else
                     plot(y0, x0, '.r');
@@ -192,9 +194,10 @@ count = count + 1;
 end
 
 for t=1:length(prevFrameIdcs),
+    color = rgb_values(t, :);
     idxs = prevFrameIdcs(:, t);
     x1 = idxs(1);
     y1 = idxs(2);
-    plot3(y1, x1, (count), 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
+    plot3(y1, x1, (count), 'Color', color, 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
     hold on
 end
