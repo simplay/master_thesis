@@ -12,8 +12,8 @@ SHOULD_PLOT3D = true;
 img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
-num_el = 1;
-selection_count = 2;
+num_el = 3;
+selection_count = 3;
 
 % load relevant trajectory associated data
 [imgs, fwf, bwf, boundaries, label_mappings, frames] = load_trajectory_data(DATASET, METHODNAME, PREFIX_INPUT_FILENAME, START_FRAME, END_FRAME);
@@ -33,6 +33,12 @@ TILL = img_index+2;
 SHOW_CANDIDATES = false;
 count = 0;
 for u=img_index:TILL
+    iter = 1;
+    
+    if u < TILL
+        prevFrameIdcs = zeros(2, selection_count*num_el);
+    end
+    
     frame = frames{u};
     if SHOW_CANDIDATES
         figure('name', 'tracked points');
@@ -93,14 +99,20 @@ for u=img_index:TILL
             if k == 1 && count == 0
                 figure
             end
+            direction = [1 0 0];
+            degrees = 90;
             if count == 0
-            surf((count)*ones(size(img1)), img1,'EdgeColor','none')
+                surf((count)*ones(size(img1)), img1,'EdgeColor','none');
             end
             hold on
-                surf((count+1)*ones(size(img2)), img2,'EdgeColor','none')
+            % if mod(count, 3) == 2
+                surf((count+1)*ones(size(img2)), img2,'EdgeColor','none');
+                
+            % end
             grid off
             axis off
-            alpha(.4)
+            alpha(.5)
+            set(gca,'YDir','reverse');
             %set(gca,'Xdir','reverse','Ydir','reverse')
         end
 
@@ -138,6 +150,12 @@ for u=img_index:TILL
                 next_data_idx = find(next_frame.labels == label);
                 x1 = next_frame.ax(next_data_idx);
                 y1 = next_frame.ay(next_data_idx);
+                
+                if u < TILL
+                    prevFrameIdcs(1, iter) = x1;
+                    prevFrameIdcs(2, iter) = y1;
+                    iter = iter + 1;
+                end
 
                 next_lookups(k, t) = next_data_idx;
 
@@ -153,17 +171,26 @@ for u=img_index:TILL
                     plot3(y1, x1, (count + 1), '.b');
                     if count < length(img_index:TILL) - 1
                         plot3(y0, x0, count, '.r');
-
+                        hold on
                         drawArrow3d(y, x, z);
                     end
                 else
-                    plot(y0, x0, '.r');
-                    plot(y1, x1, '.b');
+                    plot(y0, x0, '*r');
+                    plot(y1, x1, '*b');
                     drawArrow(y, x);
                 end
 
             end
         end
     end
+    prevFrame = frame;
 count = count + 1;
+end
+
+for t=1:length(prevFrameIdcs),
+    idxs = prevFrameIdcs(:, t);
+    x1 = idxs(1);
+    y1 = idxs(2);
+    plot3(y1, x1, (count), '.b');
+    hold on
 end
