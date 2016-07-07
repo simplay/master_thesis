@@ -1,29 +1,21 @@
-DATASETNAME = 'c14';
+clc
+
+addpath('../libs/flow-code-matlab');
+addpath('../matlab_shared');
+
+DATASET = 'cars';
 METHODNAME = 'ldof';
-DS_PREFIX = '';
-PREFIX = '';
+PREFIX_INPUT_FILENAME = 'pd_both_10';
 STEPSIZE_DATA = 8;
+SHOULD_PLOT3D = true;
 
 img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
-SHOULD_PLOT3D = true;
+num_el = 10;
 
-addpath('../libs/flow-code-matlab');
-addpath('../matlab_shared');
-BASE = '../output/similarities/';
-
-
-PREFIX_FRAME_TENSOR_FILE = [DATASETNAME, '_step_', num2str(STEPSIZE_DATA), '_frame_'];
-
-DATASET_PATH = strcat(DATASETNAME, '/');
-BASE_FILE_PATH = strcat('../../Data/', DATASET_PATH);
-
-label_mappings = labelfile2mat(strcat(BASE, PREFIX, DATASETNAME));
-[~, imgs, fwf, bwf] = read_metadata(BASE_FILE_PATH, METHODNAME);
-
-fnpath = strcat('../output/tracking_tensor/');
-savefile = strcat(fnpath, strcat(DATASETNAME, '.mat'));
+% load relevant trajectory associated data
+[imgs, fwf, bwf, boundaries, label_mappings, frames] = load_trajectory_data(DATASET, METHODNAME, PREFIX_INPUT_FILENAME, START_FRAME, END_FRAME);
 
 %%
 t = figure;
@@ -33,15 +25,10 @@ I = mat2img(img(:,:,1));
 imshow(I);
 
 % plot all tracked points
-
-num_el = 40;
 [x, y] = ginput(1);
 close(t);
 
-
-frames = loadAllTrajectoryLabelFrames(DATASETNAME, START_FRAME, END_FRAME, DS_PREFIX);
 frame = frames{img_index};
-
 figure('name', 'tracked points');
 img = imread(imgs{1});
 imshow(img(:,:,1))
