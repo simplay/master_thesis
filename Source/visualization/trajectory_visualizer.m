@@ -12,7 +12,7 @@ SHOULD_PLOT3D = true;
 img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
-num_el = 5;
+num_el = 1;
 selection_count = 2;
 
 % load relevant trajectory associated data
@@ -29,104 +29,141 @@ imshow(I);
 [xx, yy] = ginput(selection_count);
 close(t);
 
-frame = frames{img_index};
-figure('name', 'tracked points');
-img = imread(imgs{1});
-imshow(img(:,:,1))
-hold on;
-for idx_k = 1:length(frame.ax),
-    ax = frame.ax(idx_k);
-    ay = frame.ay(idx_k);
-    plot(ay, ax, '.r')
-end
-
-len = length(frame.ax);
-row_idx = zeros(len, 1);
-col_idx = zeros(len, 1);
-
-row_ids = frame.ax;
-col_ids = frame.ay;
-
-% TODO iterate over for loop here
-for k=1:length(xx)
-    x = xx(k);
-    y = yy(k);
-    distances = sum([row_ids-y,col_ids-x].^2, 2);
-
-    % find smallest num_el labels
-    [ASorted, AIdx] = sort(distances);
-    smallestNElements = ASorted(1:num_el);
-    smallestNIdx = AIdx(1:num_el);
-
-    labels = zeros(length(smallestNIdx),1);
-    for l_idx = 1:length(smallestNIdx)
-        labels(l_idx) = frame.labels(smallestNIdx(l_idx));
+TILL = img_index+2;
+SHOW_CANDIDATES = false;
+count = 0;
+for u=img_index:TILL
+    frame = frames{u};
+    if SHOW_CANDIDATES
+        figure('name', 'tracked points');
+        img = imread(imgs{1});
+        imshow(img(:,:,1))
+        hold on;
+        for idx_k = 1:length(frame.ax),
+            ax = frame.ax(idx_k);
+            ay = frame.ay(idx_k);
+            plot(ay, ax, '.r')
+        end
     end
 
+    len = length(frame.ax);
+    row_idx = zeros(len, 1);
+    col_idx = zeros(len, 1);
 
-    %%
-    disp('the FROM position in img1 has to correspond to the TO position in img2.');
+    row_ids = frame.ax;
+    col_ids = frame.ay;
 
-    if SHOULD_PLOT3D
-        img1 = imread(imgs{1});
-        img1 = img1(:,:,1);
-        img2 = imread(imgs{2});
-        img2 = img2(:,:,1);
-        if k == 1
-            figure
+    % TODO iterate over for loop here
+
+    for k=1:length(xx)
+        if count == 0
+            if k == 1
+                %next_lookups = zeros(length(xx), length(tracking_p_range));
+            end
+            x = xx(k);
+            y = yy(k);
+            distances = sum([row_ids-y,col_ids-x].^2, 2);
+
+            % find smallest num_el labels
+            [ASorted, AIdx] = sort(distances);
+            smallestNElements = ASorted(1:num_el);
+            smallestNIdx = AIdx(1:num_el);
+
+            labels = zeros(length(smallestNIdx),1);
+            for l_idx = 1:length(smallestNIdx)
+                labels(l_idx) = frame.labels(smallestNIdx(l_idx));
+            end
+        else
+            smallestNIdx = next_lookups(k, :);
+            if smallestNIdx ~= 0
+                labels = zeros(length(smallestNIdx),1);
+                for l_idx = 1:length(smallestNIdx)
+                    labels(l_idx) = frame.labels(smallestNIdx(l_idx));
+                end
+            end
         end
-        surf(0*ones(size(img1)), img1,'EdgeColor','none')
-        hold on
-        surf(1*ones(size(img2)), img2,'EdgeColor','none')
 
-    end
-
-    for k=1:2,
-        if SHOULD_PLOT3D == false
-            figure('name', strcat('img ', num2str(k)));
-            img = imread(imgs{k});
-            imshow(img)
-            hold on;
+        %%
+        disp('the FROM position in img1 has to correspond to the TO position in img2.');
+        if SHOULD_PLOT3D
+            img1 = imread(imgs{1});
+            img1 = img1(:,:,1);
+            img2 = imread(imgs{2});
+            img2 = img2(:,:,1);
+            if k == 1 && count == 0
+                figure
+            end
+            if count == 0
+            surf((count)*ones(size(img1)), img1,'EdgeColor','none')
+            end
+            hold on
+                surf((count+1)*ones(size(img2)), img2,'EdgeColor','none')
+            grid off
+            axis off
+            alpha(.4)
+            %set(gca,'Xdir','reverse','Ydir','reverse')
         end
 
-        tracking_p_range = labels(labels > 0);
-
-        drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1), y(2)-y(1),0 );
-        drawArrow3d = @(x,y,z) quiver3(x(1),y(1),z(1),x(2)-x(1),y(2)-y(1),z(2));
-
-        for t=1:length(tracking_p_range),
-
-            % find tracked pixels at frame 1
-            label = tracking_p_range(t);
-
-            data_idx = smallestNIdx(t);
-            x0 = frame.ax(data_idx);
-            y0 = frame.ay(data_idx);
-
-            next_frame = frames{img_index+1};
-
-            next_data_idx = find(next_frame.labels == label);
-            x1 = next_frame.ax(next_data_idx);
-            y1 = next_frame.ay(next_data_idx);
-
-            if isempty(x1) || isempty(y1)
-                continue;
+        for r=1:1,
+            if SHOULD_PLOT3D == false
+                figure('name', strcat('img ', num2str(r)));
+                img = imread(imgs{r});
+                imshow(img)
+                hold on;
             end
 
-            %%
-            x = [x0, x1];
-            y = [y0, y1];
-            if SHOULD_PLOT3D
-                z = [0,1];
-                plot3(y0,x0,0, '.r');
-                plot3(y1,x1,1, '.b');
-                drawArrow3d(y,x,z);   
-            else
-                plot(y0,x0, '.r');
-                plot(y1,x1, '.b');
-                drawArrow(y,x);
+            tracking_p_range = labels(labels > 0);
+            if k == 1 && mod(count, 2) == 0 
+                next_lookups = zeros(length(xx), length(tracking_p_range));
             end
 
+            drawArrow = @(x,y) quiver( x(1),y(1),x(2)-x(1), y(2)-y(1),0 );
+            drawArrow3d = @(x,y,z) quiver3(x(1),y(1),z(1),x(2)-x(1),y(2)-y(1),z(2));
+
+            for t=1:length(tracking_p_range),
+
+                % find tracked pixels at frame 1
+                label = tracking_p_range(t);
+
+                data_idx = smallestNIdx(t);
+                if data_idx == 0
+                    continue
+                end
+
+                x0 = frame.ax(data_idx);
+                y0 = frame.ay(data_idx);
+
+                next_frame = frames{img_index+1};
+
+                next_data_idx = find(next_frame.labels == label);
+                x1 = next_frame.ax(next_data_idx);
+                y1 = next_frame.ay(next_data_idx);
+
+                next_lookups(k, t) = next_data_idx;
+
+                if isempty(x1) || isempty(y1)
+                    continue;
+                end
+
+                %%
+                x = [x0, x1];
+                y = [y0, y1];
+                if SHOULD_PLOT3D
+                    z = [count,(count + 1)];
+                    plot3(y1, x1, (count + 1), '.b');
+                    if count < length(img_index:TILL) - 1
+                        plot3(y0, x0, count, '.r');
+
+                        drawArrow3d(y, x, z);
+                    end
+                else
+                    plot(y0, x0, '.r');
+                    plot(y1, x1, '.b');
+                    drawArrow(y, x);
+                end
+
+            end
         end
     end
+count = count + 1;
 end
