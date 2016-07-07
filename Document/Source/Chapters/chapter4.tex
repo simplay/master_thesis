@@ -338,7 +338,6 @@ As discussed earlier, motion is a spatially and temporal coherent visual cue. Th
 \subsection{Point tracking}
 Every point in frame $t$ can be tracked to the next frame $t+1$ by using the optical flow field $w_t$ that belongs to frame $t$. 	In principle, any optical flow method can be used. Our implementation supports various flow methods$\footnote{In general, our pipeline supports any flow method that can produce .flo files. However, the follwoing methods are directly supported: the \textit{ldof}, \textit{hs}, \textit{srsf} and \textit{lrgbd} flow methods}$. Please refer to section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$ to get a detailed list and description. Algorithm $\ref{alg:point_tracking}$ \\ \\
 
-
 \begin{algorithm}[H]
 \caption{Point Tracking}
 \begin{table}[H]
@@ -381,10 +380,16 @@ $\newline$
 Initially, we load all the extracted Harris corner feature locations that belong to the first dataset frame and its corresponding forward flow field. For each such feature location, we lookup its value in the flow field. Next, we add this looked-up flow vector to currently considered feature image coordinate. The result is the \textit{tracked to} position within the second frame. If this computed tracked to position is not occluded, we keep it. Otherwise we discard it. Deciding whether or not a location is occluded is done by performing a lookup in the occlusion mask. Moreover, points that land outside valid image locations are discarded. \\ \\
 After processing the first frame, we continue with tracking points in the next frame. This time we not only have to track the extracted Harris features, but we also have to continue every \textit{tracked to} position from the previous iteration. To fill disoccluded areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame. \\ \\
 The set of all these locations is processed the same way as described as the points in the initial stage. We repeat this procedure until we visited every dataset frame. \\ \\
-Again, please note that tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. 
+Again, please note that tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. \\ \\
+Finally, figure $\ref{fig:cars_trajectories}$ gives an impression of an actual point tracking, showing the resulting trajectories on the \textit{cars} dataset. As we can see, points tracked in the same moving objects exhibit coherent trajectories.
+\begin{figure}[H]
+\begin{center}
 
-%TODO: make trajectory tracking figure using the visualizer scripts.
-Finally, figure FIGURE gives an impression of an actual point tracking, showing the resulting trajectories on the \textit{cars} dataset. As we can see, points tracked in the same moving objects exhibit coherent trajectories.
+\includegraphics[width=0.7\linewidth] {implementation/trajectories/cars_trajectories_4_sel}
+\end{center}
+\caption[Trajectories]{Exemplary trajectories tracked in the cars dataset shown in different color. The tracking points exhibit the same color as the trajectory the belong to. The tracking points are plotted as thick dots.}
+\label{fig:cars_trajectories}
+\end{figure}
 
 \subsection{Transformation to 3d points}
 Ultimately, our pipeline should be able to work with 3d data. To enable this, we have to make use of the extracted depth map and use their information in order to transform the 2d trajectory points to 3d points in space. Ideally, the distances, computed to define an affinity measure between trajectories, should be more accurate. 
