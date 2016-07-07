@@ -15,6 +15,9 @@ END_FRAME = 4;
 num_el = 3;
 selection_count = 3;
 
+% constants
+MARKER_THICKNESS = 15;
+
 % load relevant trajectory associated data
 [imgs, fwf, bwf, boundaries, label_mappings, frames] = load_trajectory_data(DATASET, METHODNAME, PREFIX_INPUT_FILENAME, START_FRAME, END_FRAME);
 
@@ -111,8 +114,9 @@ for u=img_index:TILL
             % end
             grid off
             axis off
-            alpha(.5)
+            alpha(.35)
             set(gca,'YDir','reverse');
+            colormap(gray)
             %set(gca,'Xdir','reverse','Ydir','reverse')
         end
 
@@ -168,15 +172,15 @@ for u=img_index:TILL
                 y = [y0, y1];
                 if SHOULD_PLOT3D
                     z = [count,(count + 1)];
-                    plot3(y1, x1, (count + 1), '.b');
+                    plot3(y1, x1, (count + 1), 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
                     if count < length(img_index:TILL) - 1
-                        plot3(y0, x0, count, '.r');
+                        plot3(y0, x0, count, 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
                         hold on
                         drawArrow3d(y, x, z);
                     end
                 else
-                    plot(y0, x0, '*r');
-                    plot(y1, x1, '*b');
+                    plot(y0, x0, '.r');
+                    plot(y1, x1, '.b');
                     drawArrow(y, x);
                 end
 
@@ -191,6 +195,6 @@ for t=1:length(prevFrameIdcs),
     idxs = prevFrameIdcs(:, t);
     x1 = idxs(1);
     y1 = idxs(2);
-    plot3(y1, x1, (count), '.b');
+    plot3(y1, x1, (count), 'Color', [1 1 0], 'MarkerSize', MARKER_THICKNESS, 'Marker', '.');
     hold on
 end
