@@ -1,6 +1,24 @@
 \chapter{Experiments}
 %TODO: explain statistical method: precission, recall, f1, density
 
+For the final quantitative evaluation formulate a series of experiments and then perform a statistical hypothesis testing. 
+We use our resulting segmentations as a prediction and compare it against a predefined ground truth. 
+
+
+Our random variable 
+
+For this purpose we introduce a binary random variable, indicating whether a particular sampling point is assigned to the correct ground truth segment.
+
+To illustrate the concept of hypothesis testing let discuss the follo
+
+
+X = suffers from deadly infection
+TP: a person suffers from a particular infection and was detected. person can be cured and won't infect other person.
+FN: a person suffers from a infection and was not detected. thus might infect other people. bad scenario
+FP: a person is healthy but was incorrectly diagnosed being ill. person will be treated even though it is healthy. bad scenario
+TN: a person is healthy and was actually diagnosed like that. everything is okay.
+
+
 Sensitivity and specificity are statistical measures of the performance of a binary classification test, also known in statistics as classification function:
 
   Sensitivity (also called the true positive rate, or the recall in some fields) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
@@ -18,18 +36,31 @@ The F1 score can be interpreted as a normalized weighted average of the precisio
     
 \begin{table}[H]
 \centering
-\begin{tabular}{l|l|l|}
+\begin{tabular}{c|c|c|}
 \cline{2-3}
  & \begin{tabular}[c]{@{}l@{}}Prediction\\ Positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}Prediction\\ Negative\end{tabular} \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} True Positive} & \cellcolor[HTML]{CB0000}False Negative \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} False Positive} & \cellcolor[HTML]{34FF34}True Negative \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} $\bf{TP}$ } & \cellcolor[HTML]{CB0000} $\bf{FN}$ \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} $\bf{FP}$ } & \cellcolor[HTML]{34FF34} $\bf{TN}$ \\ \hline
 \end{tabular}
 \caption[Prediction and Sensivity]{My caption}
 \label{tab:prediction_sensitivity}
 \end{table}
 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.6\linewidth] {evaluation/prec_recall}
+\end{center}
+\caption[Concept Recall and Precision]{This figure illustrates graphically the concept of Recall (\textbf{R}) and Precision (\textbf{P}). When estimating the sampling of a binary random variable, there are basically four possible outcomes: The we predicted it being true and it is true (\textbf{TP}), we predicted it true but it is false (\textbf{FP}), we predicted it false and it was actually negative (\textbf{FN}) or we predicted it to be true but it was actually false (\textbf{TN}). }
+\label{fig:eval_concept_recall_precc}
+\end{figure}
+
+
+
 \section{Datasets}
 \label{sec:datasets}
+
+
+
 
 \begin{table}[H]
 \centering
@@ -129,8 +160,14 @@ mention that we use merged clusters for performing the evaluations.
 
 
 \subsubsection{Bonn Chairs}
+% TODO: update results according to the new mask:
+% particularly, mention the following observations:
+% ldof flow perform poor, since they are not able to successfully segment the lower chair part. this might be due to many reasons:
+% on one hand, trajectories have to be relatively robust similar to each other to prevent oversegmentation potentially resulting from rotational movements. On the other hand, the movement of the lower chair segment strongly correlates with the upper (seat, lean) segment. Moreover, trajectories within this lower chair region are not very accurate due to shadows and lightning conditions.
+% TODO: compare impact of results when using a complete chair mask
+% TODO: compare results when using SRSF flows
 
-The \textit{Bonn Chairs} dataset is a video sequence consiting of 58 frames. It shows a room containing two chairs and a man. The man is moving the and rotating the right chair. Also, the camera is moving. See figure $\ref{fig:eval_bonn_chairs_frames}$ to get a better understanding of the whole scene.
+The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It shows a room containing two chairs and a man. The man is moving the and rotating the right chair. Also, the camera is moving. See figure $\ref{fig:eval_bonn_chairs_frames}$ to get a better understanding of the whole scene.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 1]{
