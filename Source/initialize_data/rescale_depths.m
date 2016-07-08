@@ -14,7 +14,15 @@ function rescale_depths( input_filepath, img_ext, scale, output_path, match )
     % img_ext #=> '.png'
     % scale #=> 3
     % output_path #=> '~/foobar/rescaled/'
-    
+%    
+% @example Rescale a Bonn Dataset   
+%   in = '../../Data/bonn_chairs_263_3_434_SRSF/depth';    
+%   out = '../../Data/bonn_chairs_263_3_434_SRSF/depth/rescaled/';
+%   match = '';
+%   ext = '.png'
+%   rescale_depths(in, ext, 5, out, match);
+%   rescale_depths(in, ext, 5, out, match);
+
     % create target directory in case it does not exist yet
     if ~exist(output_path,'dir')
         mkdir(output_path);
