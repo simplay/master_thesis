@@ -3,9 +3,11 @@ addpath('../segmentation/src')
 clear all
 %%
 DATASET = 'bonn_chairs_263_3_434';
-PREFIX_INPUT_FILENAME = 'ped_top_400';
+PREFIX_INPUT_FILENAME = 'pd_top_400';
 METHODNAME = 'ldof';
-FRAME_IDX = 20;
+FRAME_IDX = 30;
+GT_SUFFIX = '';
+FILTER_AMBIGUOUS = true;
 
 %%
 [FileName, FilePath, ~] = uigetfile('.txt');
@@ -20,8 +22,14 @@ fclose(fileID);
 label_identifiers = unique(label_assignments);
 
 %% load gt: white means invalid region, i.e. ignore those labels
-gt_fname = strcat(num2str(FRAME_IDX), '.png');
+gt_fname = strcat(num2str(FRAME_IDX), GT_SUFFIX, '.png');
 gt_img = imread(strcat('../../Data/', DATASET, '/gt/', gt_fname));
+
+if FILTER_AMBIGUOUS
+    gt_fname = strcat(num2str(FRAME_IDX), GT_SUFFIX, '_amb.png');
+    gt_amb_img = double(imread(strcat('../../Data/', DATASET, '/gt/', gt_fname)));
+    gt_amb_img = gt_amb_img(:,:,1) + gt_amb_img(:,:,2) + gt_amb_img(:,:,3);
+end
 
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
 pr = '';
@@ -65,11 +73,19 @@ for k=1:length(label_identifiers)
             i_x = floor(frame.ax(fl_idx));
             i_y = floor(frame.ay(fl_idx));
             
-            if (i_x < 1 || i_y < 0 || i_x > m || i_y > n) 
+            if (i_x < 1 || i_y < 1 || i_x > m || i_y > n) 
                 continue 
             end
             % find idx of this label and increment
             gt_idx = find(color_values == gt_sum(i_x, i_y));
+            
+            if FILTER_AMBIGUOUS
+                if gt_amb_img(i_x, i_y, 1) == 0
+                    continue;
+                end
+            end
+            
+            
             color_label_count(gt_idx) = color_label_count(gt_idx) + 1;
             assignment = sub_label_assignments(idx);
     end
@@ -87,6 +103,7 @@ rgb_values = rgb_list(8);
 for idx=1:length(label_assignments)
     lm_idx = label_mappings(idx);
     fl_idx = find(frame.labels == lm_idx);
+
     if (isempty(fl_idx))
         continue;
     end
@@ -95,6 +112,18 @@ for idx=1:length(label_assignments)
     % t = rgb_values(color_id, :);
     t = rgb_values(find(color_values == color_id), :);
     color_value = [t(1), t(2), t(3)];
+    i_x = floor(frame.ax(fl_idx));
+    i_y = floor(frame.ay(fl_idx));  
+    
+    if (i_x < 1 || i_y < 1 || i_x > m || i_y > n) 
+        continue 
+    end
+    
+    if FILTER_AMBIGUOUS
+        if gt_amb_img(i_x, i_y, 1) == 0
+            plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', [1,1,1], 'Marker', 'O');
+        end 
+    end
     plot(frame.ay(fl_idx), frame.ax(fl_idx), 'Color', color_value, 'Marker', '*');
     hold on
 end

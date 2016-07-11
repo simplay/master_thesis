@@ -3,14 +3,20 @@ addpath('../matlab_shared');
 clear all
 %% load ground truth img
 DATASET = 'bonn_chairs_263_3_434';
-img_index = 20;
+img_index = 30;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'ped_top_400';
+PREFIX_INPUT_FILENAME = 'sed_both_2400';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
+FILTER_AMBIGUOUS = false;
+
 %%
-imgName = strcat(num2str(img_index), '.png');
+if FILTER_AMBIGUOUS
+    imgName = strcat(num2str(img_index), '_amb.png');
+else
+    imgName = strcat(num2str(img_index), '.png');
+end
 DS_BASE_PATH = strcat('../../Data/',DATASET,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
 [m, n, c] = size(gtImg);
@@ -28,6 +34,7 @@ gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 uniqueSumValues = unique(gt_sum);
 uniqueSumValues = uniqueSumValues((uniqueSumValues ~= (255+255*8+255*16)));
 uniqueSumValues = uniqueSumValues + 1;
+uniqueSumValues = uniqueSumValues(uniqueSumValues ~= 1);
 
 if c == 1
     gtImg = gtImg(:,:,1);
