@@ -153,13 +153,230 @@ tracking candidates
 %TODO: statistics: LDOF_PED_MC vs LDOF_SED
 %TODO: statistics: best case - tweak paras for a dataset.
 
+%TODO: varying anzahl cluster: chair bonn/cerealbox 2:12, 3d lodf, unmerged results (ped sc, mc, mache plot anz.cluster/f1 score je methode plus prec-recall plot je methode
+%TODO: mache overall performance stat. wenn standard params
+
 method comparison, given a fixed number of clusters
 
 \subsection{Evaluation of Datasets}
 mention that we use merged clusters for performing the evaluations.
 
-
 \subsubsection{Bonn Chairs}
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 1]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/1}
+   \label{fig:eval_bonn_chairs_frames_a}
+}
+\subfigure[Frame 12]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/12}
+   \label{fig:eval_bonn_chairs_frames_b}
+}
+\subfigure[Frame 24]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/24}
+   \label{fig:eval_bonn_chairs_frames_c}
+}
+~
+\subfigure[Frame 35]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/35}
+   \label{fig:eval_bonn_chairs_frames_a}
+}
+\subfigure[Frame 47]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/47}
+   \label{fig:eval_bonn_chairs_frames_b}
+}
+\subfigure[Frame 58]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/58}
+   \label{fig:eval_bonn_chairs_frames_c}
+}
+\end{center}
+\caption[Bonn Chairs Dataset]{Listing of 6 ascending frames of the our Bonn Chairs dataset. In this dataset we have a scene in which there are 2 chairs and a man in a room. The man is moving and rotating the right chair. The same time, also the camera is slightly moving around.}
+\label{fig:eval_bonn_chairs_frames}
+\end{figure}
+
+% foo
+
+% new gt 30
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/30_amb}
+\end{center}
+\caption[Bonn Chairs GT Frame 30]{Ground truth frame No. 30 of the Bonn Chairs dataset.}
+\label{fig:eval_bonn_chairs_gt_30}
+\end{figure}
+% end new gt 30
+
+% new raw segmentations frame 30
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_sc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_a}
+}
+\subfigure[LDOF PD MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_mc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_b}
+}
+~
+\subfigure[LDOF PED SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_sc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_c}
+}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_mc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_d}
+}
+~
+\subfigure[LDOF SD KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sd_kl}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_e}
+}
+\subfigure[LDOF SED KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sed_kl}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_f}
+}
+\end{center}
+\caption[Bonn Chairs Segmentations Frame 30]{Segmentations produced by our pipeline when running the Bonn Chairs dataset, using 10 clusters.}
+\label{fig:eval_bonn_chairs_raw_segmentations_frame_30}
+\end{figure}
+% end raw segmentations frame 30
+
+% new bonn chairs fig
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_sc}
+   \label{fig:bonn_chairs_c_10_b}
+}
+\subfigure[LDOF PD MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_mc}
+   \label{fig:bonn_chairs_c_10_c}
+}
+~
+\subfigure[LDOF PED SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_sc}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_mc}
+   \label{fig:bonn_chairs_c_10_e}
+}
+~
+\subfigure[LDOF SD KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sd_kl}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[LDOF SED KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sed_kl}
+   \label{fig:bonn_chairs_c_10_e}
+}
+\end{center}
+\caption[Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 30 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
+\label{fig:eval_bonn_chairs_c_10}
+\end{figure}
+% end new bonn chairs fig
+
+% new bc table
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\multicolumn{6}{|c|}{Comparison bonn chairs dataset using 10 clusters}                        \\ \hline
+\textbf{Method} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Fragmentation} \\ \hline
+LDOF PD SC & 0.41/0.43 & 49.98/47.48 \%   & 61.88/61.88 \%     & 55.29/53.73 \%  & x \% \\ \hline
+LDOF PD MC & 0.41/0.43 & 45.30/42.46 \%   & 66.10/66.10 \%     & 53.75/51.70 \%  & x \%   \\ \hline
+LDOF PED SC & 0.34/0.35& 59.54/56.86 \%   & 47.35/47.35 \%     & 52.75/51.67 \%  & x \%   \\ \hline
+LDOF PED MC & 0.34/0.35 & 59.30/56.68 \%   & 50.56/50.56 \%     & 54.58/53.44 \%  & x \%   \\ \hline              
+LDOF SD KL & 0.41/0.43 & 36.96/21.14 \%   & 27.57/21.14 \%     & 31.58/21.14 \%  & x \%   \\ \hline
+LDOF SED KL & 0.34/0.36 & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%    & x \%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs Merged 10 Clusters]{}
+\label{tab:eval_bonn_chairs_c_10}
+\end{table}
+% end new bc table
+
+
+
+
+
+Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
+
+
+
+
+
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[6 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_6}
+   \label{fig:bonn_chairs_sed_varyingclusters_a}
+}
+\subfigure[9 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_9}
+   \label{fig:bonn_chairs_sed_varyingclusters_b}
+}
+\subfigure[10 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_10}
+   \label{fig:bonn_chairs_sed_varyingclusters_c}
+}
+\end{center}
+\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
+\label{fig:bonn_chairs_sed_varyingclusters}
+\end{figure}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|r|l|l|}
+\hline
+\multicolumn{5}{|c|}{Bonn Chairs LDOF SED}                        \\ \hline
+\textbf{Clusters} & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+6 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+9 & 0.34147 & 82.4557 \%   & 93.5785 \%     & 87.6657 \%  \\ \hline              
+10 & 0.34147 & 91.3424 \%   & 81.6007 \%     & 86.1972 \%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs SED Varying Clusters]{foobar}
+\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}
+\end{table}
+
+%TODO mention some facts about the qualitative properties of the segmentations.
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/30_easy_amb}
+\end{center}
+\caption[Bonn Chairs Simple GT Frame 30]{Simplified ground truth frame No. 30 of the Bonn Chairs dataset.}
+\label{fig:eval_bonn_chairs_simple_gt_30}
+\end{figure}
+
+% Make merged table
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multicolumn{5}{|c|}{Comparison bonn chairs dataset using 10 clusters using the simple mask}                        \\ \hline
+\textbf{Method} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 0.41113 & 82.4671 \%   & 90.7807 \%     & 86.4244 \% \\ \hline
+LDOF PD MC & 0.41113 & 75.8905 \%   & 95.3212 \%     & 84.5033 \%  \\ \hline
+LDOF PED SC & 0.33594 & 97.2414 \%   & 69.1012 \%     & 80.791 \%  \\ \hline
+LDOF PED MC & 0.33594 & 96.6997 \%   & 73.6677 \%     & 83.6268 \%  \\ \hline              
+LDOF SD KL & X & X \%   & X \%     & X \%    \\ \hline
+LDOF SED KL & 0.34147 & 95.9657 \%   & 86.5871 \%     & 91.0355 \%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs Merged 10 Clusters]{}
+\label{tab:eval_bonn_chairs_c_10_simple}
+\end{table}
+
+
+
+% Make table including statistics
+
+
+
+\subsubsection{OLD Bonn Chairs}
 % TODO: update results according to the new mask:
 % particularly, mention the following observations:
 % ldof flow perform poor, since they are not able to successfully segment the lower chair part. this might be due to many reasons:
@@ -197,7 +414,7 @@ The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It
 }
 \end{center}
 \caption[Bonn Chairs Dataset]{Listing of 6 ascending frames of the our Bonn Chairs dataset. In this dataset we have a scene in which there are 2 chairs and a man in a room. The man is moving and rotating the right chair. The same time, also the camera is slightly moving around.}
-\label{fig:eval_bonn_chairs_frames}
+\label{fig:OLD_eval_bonn_chairs_frames}
 \end{figure}
 This dataset contains depth images as well as camera calibration data. The depth-and color camera are already aligned. \\ \\
 For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$. 
@@ -304,90 +521,6 @@ We clearly observe, that as soon as we make use of depth informations, the F1 me
 \end{figure}
 
 
-% new bonn chairs fig
-\begin{figure}[H]
-\begin{center}
-\subfigure[LDOF PD SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_sc}
-   \label{fig:bonn_chairs_c_10_b}
-}
-\subfigure[LDOF PD MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_mc}
-   \label{fig:bonn_chairs_c_10_c}
-}
-~
-\subfigure[LDOF PED SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_sc}
-   \label{fig:bonn_chairs_c_10_d}
-}
-\subfigure[LDOF PED MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_mc}
-   \label{fig:bonn_chairs_c_10_e}
-}
-~
-\subfigure[LDOF SD KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sd_kl}
-   \label{fig:bonn_chairs_c_10_d}
-}
-\subfigure[LDOF SED KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sed_kl}
-   \label{fig:bonn_chairs_c_10_e}
-}
-\end{center}
-\caption[Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 30 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
-\label{fig:eval_bonn_chairs_c_10}
-\end{figure}
-% end new bonn chairs fig
-
-% new bc table
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|r|l|l|l|}
-\hline
-\multicolumn{6}{|c|}{Comparison bonn chairs dataset using 10 clusters}                        \\ \hline
-              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Fragmentation} \\ \hline
-LDOF PD SC & 0.43685 & 86.2087 \%   & 76.607 \%     & 81.1247 \%  & x \% \\ \hline
-LDOF PD MC & 0.43685 & 86.4193 \%   & 76.1967 \%     & 80.9867 \%  & x \%   \\ \hline
-LDOF PED SC & 0.37174 & 95.0959 \%   & 78.1937 \%     & 85.8205 \%  & x \%   \\ \hline
-LDOF PED MC & 0.37174 & 83.3878 \%   & 91.4203 \%     & 87.2195 \%  & x \%   \\ \hline              
-LDOF SD KL & 0.41146 / 0.42741 & 36.9619 / 21.1382 \%   & 27.5697 / 21.1382 \%     & 31.5823 / 21.1382 \%  & x \%   \\ \hline
-LDOF SED KL & 0.37402 & $\textbf{96.1708}$ \%   & 89.9521 \%     & $\textbf{92.9576}$ \%    & x \%  \\ \hline
-\end{tabular}
-\caption[Bonn Chairs Merged 10 Clusters]{}
-\label{tab:eval_bonn_chairs_c_10}
-\end{table}
-% end new bc table
-
-
-
-Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
-
-
-
-
-
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[6 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_6}
-   \label{fig:bonn_chairs_sed_varyingclusters_a}
-}
-\subfigure[9 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_9}
-   \label{fig:bonn_chairs_sed_varyingclusters_b}
-}
-\subfigure[10 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_10}
-   \label{fig:bonn_chairs_sed_varyingclusters_c}
-}
-\end{center}
-\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
-\label{fig:bonn_chairs_sed_varyingclusters}
-\end{figure}
-
-%TODO mention some facts about the qualitative properties of the segmentations.
-
 \subsubsection{Cars Dataset}
 
 
@@ -488,18 +621,22 @@ Fragmentation: 0.66667
 \hline
 \multicolumn{5}{|c|}{Method Comparison, 12 fixed Clusters, Bonn Watercan}                        \\ \hline
               & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+HS PD SC & 0.44434 & 72.783 \%   & 66.1853 \%     & 69.3275 \%  \\ \hline
+HS PD MC & 0.44434 & 34.1727 \%   & 45.6731 \%     & 39.0947 \%  \\ \hline              
+HS PED SC & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.9770 \%  \\ \hline
+HS PED MC & 0.43522 & 64.4977 \%   & 81.0601 \%     & 71.8366 \%  \\ \hline            
 LDOF PD SC * & 0.44434 & 72.783 \%   & 66.1853 \%     & 69.3275 \%  \\ \hline
 LDOF PD MC * & 0.44434 & 34.1727 \%   & 45.6731 \%     & 39.0947 \%  \\ \hline              
 LDOF PED SC * & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.9770 \%  \\ \hline
 LDOF PED MC * & 0.43522 & 64.4977 \%   & 81.0601 \%     & 71.8366 \%  \\ \hline
-LDOF SD KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-LDOF SED KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
 SRSF PD SC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
 SRSF PD MC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
 SRSF PED SC * & 0.20085 & 83.5144 \%   & 95.7385 \%     & 89.2096 \%  \\ \hline
 SRSF PED MC * & 0.19889 & 92.9871 \%   & 70 \%     & 79.8725 \%  \\ \hline
-SRSF SD KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-SRSF SED KL & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
+LRGBD PD SC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
+LRGBD PD MC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
+LRGBD PED SC & 0.20085 & 83.5144 \%   & 95.7385 \%     & 89.2096 \%  \\ \hline
+LRGBD PED MC & 0.19889 & 92.9871 \%   & 70 \%     & 79.8725 \%  \\ \hline
 \end{tabular}
 \caption[Method Comparision Bonn Watercan]{My caption}
 \label{tab:bonn_wc_methods}
