@@ -369,6 +369,19 @@ LDOF SED KL & 0.34147 & 95.9657 \%   & 86.5871 \%     & 91.0355 \%  \\ \hline
 Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
 \begin{figure}[H]
 \begin{center}
+\subfigure[2 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_5}
+   \label{fig:bonn_chairs_sed_varyingclusters_a}
+}
+\subfigure[3 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_6}
+   \label{fig:bonn_chairs_sed_varyingclusters_b}
+}
+\subfigure[4 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_7}
+   \label{fig:bonn_chairs_sed_varyingclusters_c}
+}
+~
 \subfigure[5 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_5}
    \label{fig:bonn_chairs_sed_varyingclusters_a}
@@ -402,10 +415,13 @@ Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor 
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|r|l|l|}
+\begin{tabular}{|c|l|r|l|l|}
 \hline
 \multicolumn{5}{|c|}{Bonn Chairs LDOF SED}                        \\ \hline
 \textbf{Clusters} & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+2 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+3 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+4 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
 5 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
 6 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
 7 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
