@@ -9,7 +9,7 @@ PREFIX_INPUT_FILENAME = 'sed_both_2400';
 METHODNAME = 'ldof';
 SIMPLIFIED_STATISTICS = false;
 
-FILTER_AMBIGUOUS = false;
+FILTER_AMBIGUOUS = true;
 
 %%
 if FILTER_AMBIGUOUS
@@ -95,7 +95,7 @@ for idx=1:length(label_assignments)
     iax = floor(frame.ax(fl_idx));
     iay = floor(frame.ay(fl_idx));
     
-    if (iax < 1 || iay < 0) 
+    if (iax < 1 || iay < 1) 
         continue 
     end
     
