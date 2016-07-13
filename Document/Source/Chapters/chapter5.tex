@@ -304,6 +304,61 @@ We clearly observe, that as soon as we make use of depth informations, the F1 me
 \end{figure}
 
 
+% new bonn chairs fig
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_sc}
+   \label{fig:bonn_chairs_c_10_b}
+}
+\subfigure[LDOF PD MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_mc}
+   \label{fig:bonn_chairs_c_10_c}
+}
+~
+\subfigure[LDOF PED SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_sc}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_mc}
+   \label{fig:bonn_chairs_c_10_e}
+}
+~
+\subfigure[LDOF SD KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sd_kl}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[LDOF SED KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sed_kl}
+   \label{fig:bonn_chairs_c_10_e}
+}
+\end{center}
+\caption[Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 30 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
+\label{fig:eval_bonn_chairs_c_10}
+\end{figure}
+% end new bonn chairs fig
+
+% new bc table
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|r|l|l|l|}
+\hline
+\multicolumn{6}{|c|}{Comparison bonn chairs dataset using 10 clusters}                        \\ \hline
+              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Fragmentation} \\ \hline
+LDOF PD SC & 0.43685 & 86.2087 \%   & 76.607 \%     & 81.1247 \%  & x \% \\ \hline
+LDOF PD MC & 0.43685 & 86.4193 \%   & 76.1967 \%     & 80.9867 \%  & x \%   \\ \hline
+LDOF PED SC & 0.37174 & 95.0959 \%   & 78.1937 \%     & 85.8205 \%  & x \%   \\ \hline
+LDOF PED MC & 0.37174 & 83.3878 \%   & 91.4203 \%     & 87.2195 \%  & x \%   \\ \hline              
+LDOF SD KL & 0.41146 / 0.42741 & 36.9619 / 21.1382 \%   & 27.5697 / 21.1382 \%     & 31.5823 / 21.1382 \%  & x \%   \\ \hline
+LDOF SED KL & 0.37402 & $\textbf{96.1708}$ \%   & 89.9521 \%     & $\textbf{92.9576}$ \%    & x \%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs Merged 10 Clusters]{}
+\label{tab:eval_bonn_chairs_c_10}
+\end{table}
+% end new bc table
+
+
 
 Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
 
