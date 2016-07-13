@@ -288,7 +288,7 @@ LDOF PD SC & 0.41/0.43 & 49.98/47.48 \%   & 61.88/61.88 \%     & 55.29/53.73 \% 
 LDOF PD MC & 0.41/0.43 & 45.30/42.46 \%   & 66.10/66.10 \%     & 53.75/51.70 \%  & x \%   \\ \hline
 LDOF PED SC & 0.34/0.35& 59.54/56.86 \%   & 47.35/47.35 \%     & 52.75/51.67 \%  & x \%   \\ \hline
 LDOF PED MC & 0.34/0.35 & 59.30/56.68 \%   & 50.56/50.56 \%     & 54.58/53.44 \%  & x \%   \\ \hline              
-LDOF SD KL & 0.41/0.43 & 36.96/21.14 \%   & 27.57/21.14 \%     & 31.58/21.14 \%  & x \%   \\ \hline
+LDOF SD KL & 0.41/0.43 & 48.46/46.34 \%   & 63.44/63.44 \%     & 54.95/53.56 \%  & x \%   \\ \hline
 LDOF SED KL & 0.34/0.36 & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%    & x \%  \\ \hline
 \end{tabular}
 \caption[Bonn Chairs Merged 10 Clusters]{}
@@ -343,13 +343,46 @@ Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor 
 
 %TODO mention some facts about the qualitative properties of the segmentations.
 
-
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/30_easy_amb}
 \end{center}
 \caption[Bonn Chairs Simple GT Frame 30]{Simplified ground truth frame No. 30 of the Bonn Chairs dataset.}
 \label{fig:eval_bonn_chairs_simple_gt_30}
+\end{figure}
+
+% Make table including statistics
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PD SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/pd_sc}
+   \label{fig:bonn_chairs_c_10_simple_b}
+}
+\subfigure[LDOF PD MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/pd_mc}
+   \label{fig:bonn_chairs_c_10_simple_c}
+}
+~
+\subfigure[LDOF PED SC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/ped_sc}
+   \label{fig:bonn_chairs_c_10_simple_d}
+}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/ped_mc}
+   \label{fig:bonn_chairs_c_10_simple_e}
+}
+~
+\subfigure[LDOF SD KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/sd_kl}
+   \label{fig:bonn_chairs_c_10_simple_d}
+}
+\subfigure[LDOF SED KL]{
+   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_merged_simple/sed_kl}
+   \label{fig:bonn_chairs_c_10_simple_e}
+}
+\end{center}
+\caption[Simple Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 30 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
+\label{fig:eval_bonn_chairs_c_10_simple}
 \end{figure}
 
 % Make merged table
@@ -363,17 +396,12 @@ LDOF PD SC & 0.41113 & 82.4671 \%   & 90.7807 \%     & 86.4244 \% \\ \hline
 LDOF PD MC & 0.41113 & 75.8905 \%   & 95.3212 \%     & 84.5033 \%  \\ \hline
 LDOF PED SC & 0.33594 & 97.2414 \%   & 69.1012 \%     & 80.791 \%  \\ \hline
 LDOF PED MC & 0.33594 & 96.6997 \%   & 73.6677 \%     & 83.6268 \%  \\ \hline              
-LDOF SD KL & X & X \%   & X \%     & X \%    \\ \hline
+LDOF SD KL & 0.41146 & 79.7901 \%   & 91.2061 \%     & 85.117 \%    \\ \hline
 LDOF SED KL & 0.34147 & 95.9657 \%   & 86.5871 \%     & 91.0355 \%  \\ \hline
 \end{tabular}
 \caption[Bonn Chairs Merged 10 Clusters]{}
 \label{tab:eval_bonn_chairs_c_10_simple}
 \end{table}
-
-
-
-% Make table including statistics
-
 
 
 \subsubsection{OLD Bonn Chairs}
