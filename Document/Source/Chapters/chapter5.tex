@@ -300,46 +300,6 @@ LDOF SED KL & 0.34/0.36 & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%
 
 
 
-Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
-
-
-
-
-
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[6 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_6}
-   \label{fig:bonn_chairs_sed_varyingclusters_a}
-}
-\subfigure[9 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_9}
-   \label{fig:bonn_chairs_sed_varyingclusters_b}
-}
-\subfigure[10 Clusters]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chair_ldof_sed/f_20_c_10}
-   \label{fig:bonn_chairs_sed_varyingclusters_c}
-}
-\end{center}
-\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
-\label{fig:bonn_chairs_sed_varyingclusters}
-\end{figure}
-
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|r|l|l|}
-\hline
-\multicolumn{5}{|c|}{Bonn Chairs LDOF SED}                        \\ \hline
-\textbf{Clusters} & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-6 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
-9 & 0.34147 & 82.4557 \%   & 93.5785 \%     & 87.6657 \%  \\ \hline              
-10 & 0.34147 & 91.3424 \%   & 81.6007 \%     & 86.1972 \%  \\ \hline
-\end{tabular}
-\caption[Bonn Chairs SED Varying Clusters]{foobar}
-\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}
-\end{table}
 
 %TODO mention some facts about the qualitative properties of the segmentations.
 
@@ -402,6 +362,61 @@ LDOF SED KL & 0.34147 & 95.9657 \%   & 86.5871 \%     & 91.0355 \%  \\ \hline
 \caption[Bonn Chairs Merged 10 Clusters]{}
 \label{tab:eval_bonn_chairs_c_10_simple}
 \end{table}
+
+
+
+% foo
+Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor for this cluster assignment. The reason for this is because this method was not well parameterized, resulting in a large oversegmentation. However, since this optimal parameter assignment exists, but was not found, we further investigated the performance by performing two additional experiments. The SED method was run, once using 9 clusters (indicated by SED* KL), and once again using 10 clusters (SED** KL). As we can see, the method LDOF SED** KL is superior compared to every other method run on this dataset. The actual segmentation results of the different SED methods are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
+\begin{figure}[H]
+\begin{center}
+\subfigure[5 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_6}
+   \label{fig:bonn_chairs_sed_varyingclusters_a}
+}
+\subfigure[6 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_6}
+   \label{fig:bonn_chairs_sed_varyingclusters_b}
+}
+\subfigure[7 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_7}
+   \label{fig:bonn_chairs_sed_varyingclusters_c}
+}
+~
+\subfigure[8 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_8}
+   \label{fig:bonn_chairs_sed_varyingclusters_a}
+}
+\subfigure[9 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_9}
+   \label{fig:bonn_chairs_sed_varyingclusters_b}
+}
+\subfigure[10 Clusters]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_10}
+   \label{fig:bonn_chairs_sed_varyingclusters_c}
+}
+\end{center}
+\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
+\label{fig:bonn_chairs_sed_varyingclusters}
+\end{figure}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|r|l|l|}
+\hline
+\multicolumn{5}{|c|}{Bonn Chairs LDOF SED}                        \\ \hline
+\textbf{Clusters} & \textbf{Density} & \textbf{Precission} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+5 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+6 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+7 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+8 & 0.34147 & 20.8826 \%   & 32.9602 \%     & 25.5668 \%  \\ \hline
+9 & 0.34147 & 82.4557 \%   & 93.5785 \%     & 87.6657 \%  \\ \hline              
+10 & 0.34147 & 91.3424 \%   & 81.6007 \%     & 86.1972 \%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs SED Varying Clusters]{foobar}
+\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}
+\end{table}
+%bar
 
 
 \subsubsection{OLD Bonn Chairs}
