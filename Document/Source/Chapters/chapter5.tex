@@ -1,3 +1,4 @@
+% TODO ask: macht SRSF PD überhaupt sinn?
 \chapter{Experiments}
 %TODO: explain statistical method: precission, recall, f1, density
 
@@ -162,7 +163,7 @@ method comparison, given a fixed number of clusters
 mention that we use merged clusters for performing the evaluations.
 
 \subsubsection{Bonn Chairs}
-
+The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It shows a room containing two chairs and a man. The man is moving the and rotating the right chair. Also, the camera is moving. See figure $\ref{fig:eval_bonn_chairs_frames}$ to get a better understanding of the whole scene.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 1]{
@@ -194,7 +195,8 @@ mention that we use merged clusters for performing the evaluations.
 \caption[Bonn Chairs Dataset]{Listing of 6 ascending frames of the our Bonn Chairs dataset. In this dataset we have a scene in which there are 2 chairs and a man in a room. The man is moving and rotating the right chair. The same time, also the camera is slightly moving around.}
 \label{fig:eval_bonn_chairs_frames}
 \end{figure}
-
+This dataset contains depth images as well as camera calibration data. The depth-and color camera are already aligned. \\ \\
+For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
 % foo
 
 % new gt 30
@@ -443,7 +445,7 @@ Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor 
 % TODO: compare impact of results when using a complete chair mask
 % TODO: compare results when using SRSF flows
 
-The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It shows a room containing two chairs and a man. The man is moving the and rotating the right chair. Also, the camera is moving. See figure $\ref{fig:eval_bonn_chairs_frames}$ to get a better understanding of the whole scene.
+
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 1]{
@@ -475,8 +477,7 @@ The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It
 \caption[Bonn Chairs Dataset]{Listing of 6 ascending frames of the our Bonn Chairs dataset. In this dataset we have a scene in which there are 2 chairs and a man in a room. The man is moving and rotating the right chair. The same time, also the camera is slightly moving around.}
 \label{fig:OLD_eval_bonn_chairs_frames}
 \end{figure}
-This dataset contains depth images as well as camera calibration data. The depth-and color camera are already aligned. \\ \\
-For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$. 
+ 
 \begin{figure}[H]
 \begin{center}
 \subfigure[LDOF PD SC]{
