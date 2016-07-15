@@ -2,16 +2,15 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'bonn_chairs_263_3_434';
-img_index = 30;
+DATASET = 'chair_3_cast';
+img_index = 75;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'sed_both_2400';
+PREFIX_INPUT_FILENAME = 'ped_top_400';
 METHODNAME = 'ldof';
-SIMPLIFIED_STATISTICS = false;
-
 FILTER_AMBIGUOUS = true;
 
 %%
+SIMPLIFIED_STATISTICS = false;
 if FILTER_AMBIGUOUS
     imgName = strcat(num2str(img_index), '_amb.png');
 else

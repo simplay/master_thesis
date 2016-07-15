@@ -2,10 +2,10 @@ addpath('../matlab_shared');
 addpath('../segmentation/src')
 clear all
 %%
-DATASET = 'bonn_chairs_263_3_434';
+DATASET = 'chair_3_cast';
 PREFIX_INPUT_FILENAME = 'pd_top_400';
 METHODNAME = 'ldof';
-FRAME_IDX = 30;
+FRAME_IDX = 60;
 GT_SUFFIX = '';
 FILTER_AMBIGUOUS = true;
 
