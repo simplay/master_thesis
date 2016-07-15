@@ -806,7 +806,7 @@ PD MC & \textbf{38.70}\% & 38.14\% & 45.65\% & 49.64\% \\ \hline
 PED SC & 13.14\% & 35.29\% & 50.75\% & 52.14\%  \\ \hline
 PED MC & 26.81\% & 42.94\% & 38.70\% & \textbf{56.23}\% \\ \hline
 \end{tabular}
-\caption{My caption}
+\caption[Chair 3 Cast: Average Precision Scores]{My caption}
 \label{tab:chair_3_cast_avg_precision}
 \end{table}
 
@@ -821,7 +821,7 @@ PD MC & 13.10\% & 24.51\% & \textbf{44.07}\% & \textbf{53.50}\% \\ \hline
 PED SC & 10.20\% & 28.29\% & 39.24\% & 33.75\% \\ \hline
 PED MC & \textbf{19.37}\% & \textbf{38.86}\% & 41.88\% & 50.07\% \\ \hline
 \end{tabular}
-\caption{My caption}
+\caption[Chair 3 Cast: Average Recall Scores]{My caption}
 \label{tab:chair_3_cast_avg_recall}
 \end{table}
 
@@ -836,11 +836,26 @@ PD MC & 19.50\% & 29.79\% & 44.63\% & 51.40\% \\ \hline
 PED SC & 11.48\% & 30.89\% & 43.88\% & 40.69\% \\ \hline
 PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hline
 \end{tabular}
-\caption{My caption}
+\caption[Chair 3 Cast: Average F1 Scores]{My caption}
 \label{tab:chair_3_cast_avg_f1}
 \end{table}
 
 
+\begin{figure}[H]
+\begin{center}
+
+\subfigure[Recall / Precision Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/avg/avg_prec_rec}
+   \label{fig:chair_3_cast_plot_avg_stat_a}
+}
+\subfigure[Cluster Count / F1 Score Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/avg/avg_clust_f1}
+   \label{fig:chair_3_cast_plot_avg_stat_b}
+}
+\end{center}
+\caption[Chair 3 Cast avg statistic plots]{Plots of the average performance of the four methods PED SC, PD MC, PED SC and PED MC for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
+\label{fig:chair_3_cast_plot_avg_stat}
+\end{figure}
 
 
 c 5
