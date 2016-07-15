@@ -192,6 +192,20 @@ For the following experiment we only use LDOF flows. Moreover, we fix the number
 \end{figure}
 % end raw segmentations frame 30
 
+
+% TODO list qualitative observations here, old version is below:
+%Ideally, a segmentation should have a separate mask for the man's arm, the lower parts (the seat and the star base) of the office chair and its backrest, as well as one for the background.
+%
+%At a first glance, are methods were performing rather well, being capable of detecting all these expected masks. However, there is still a difference in the their result's quality. Especially around the region of the men's arm, we observe a difference of quality when comparing methods that make use of depth information with those not making use of any depth. Non-depth using methods tend to assign points to the arm's cluster which should belong to the background. This could however be due to the fact that such points are spatially close to the arm and thus exhibit a large affinity value to the trajectories within the arm region. \\ \\
+%Interestingly, the SD KL method was oversegmenting the chair's seat into two clusters. One possible explanation for this could be, that we were using a too large probability value when using six clusters. \\ \\
+%Some methods seem to have trouble in correctly segmenting the chair's arm lean, especially all MC clustering methods seem to have issues in correctly assigning this region. \\ \\
+%Last, please notice that we used many more cluster for the SED KL method, since it performed very poor when using six clusters. The actual result when using 6 only six clusters is shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$. The reason why we legitimate ourself to use this 10 cluster result is stated below.
+%
+%STATE SOME QUALITATIVE OBSERVATIONS HERE. \\ \\
+%
+%For measuring the quantitative performance of the resulting segmentations we compare their merged cluster versions, which are shown in figure $\ref{fig:eval_bonn_chairs}$, with the ground truth mask as depcited in figure $\ref{fig:eval_bonn_chairs_gt_20}$.
+
+
 % new bonn chairs fig
 \begin{figure}[H]
 \begin{center}
@@ -445,149 +459,12 @@ Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor 
 \label{fig:bonn_chairs_plot_avg_stat}
 \end{figure}
 
-
-\subsubsection{OLD Bonn Chairs}
 % TODO: update results according to the new mask:
 % particularly, mention the following observations:
 % ldof flow perform poor, since they are not able to successfully segment the lower chair part. this might be due to many reasons:
 % on one hand, trajectories have to be relatively robust similar to each other to prevent oversegmentation potentially resulting from rotational movements. On the other hand, the movement of the lower chair segment strongly correlates with the upper (seat, lean) segment. Moreover, trajectories within this lower chair region are not very accurate due to shadows and lightning conditions.
 % TODO: compare impact of results when using a complete chair mask
 % TODO: compare results when using SRSF flows
-
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[Frame 1]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/1}
-   \label{fig:eval_bonn_chairs_frames_a}
-}
-\subfigure[Frame 12]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/12}
-   \label{fig:eval_bonn_chairs_frames_b}
-}
-\subfigure[Frame 24]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/24}
-   \label{fig:eval_bonn_chairs_frames_c}
-}
-~
-\subfigure[Frame 35]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/35}
-   \label{fig:eval_bonn_chairs_frames_a}
-}
-\subfigure[Frame 47]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/47}
-   \label{fig:eval_bonn_chairs_frames_b}
-}
-\subfigure[Frame 58]{
-   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/58}
-   \label{fig:eval_bonn_chairs_frames_c}
-}
-\end{center}
-\caption[Bonn Chairs Dataset]{Listing of 6 ascending frames of the our Bonn Chairs dataset. In this dataset we have a scene in which there are 2 chairs and a man in a room. The man is moving and rotating the right chair. The same time, also the camera is slightly moving around.}
-\label{fig:OLD_eval_bonn_chairs_frames}
-\end{figure}
- 
-\begin{figure}[H]
-\begin{center}
-\subfigure[LDOF PD SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_pd_sc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_a}
-}
-\subfigure[LDOF PD MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_pd_mc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_b}
-}
-~
-\subfigure[LDOF PED SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_ped_sc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_c}
-}
-\subfigure[LDOF PED MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_ped_mc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_d}
-}
-~
-\subfigure[LDOF SD KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_sd_kl}
-   \label{fig:eval_bonn_chairs_raw_segmentations_e}
-}
-\subfigure[LDOF SED** KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_segmentations_raw_f_20/ldof_sed_kl}
-   \label{fig:eval_bonn_chairs_raw_segmentations_f}
-}
-\end{center}
-\caption[Bonn Chairs Segmentations]{Segmentations produced by our pipeline when running the Bonn Chairs dataset, using six cluster.}
-\label{fig:eval_bonn_chairs_raw_segmentations}
-\end{figure}
-Ideally, a segmentation should have a separate mask for the man's arm, the lower parts (the seat and the star base) of the office chair and its backrest, as well as one for the background.
-
-At a first glance, are methods were performing rather well, being capable of detecting all these expected masks. However, there is still a difference in the their result's quality. Especially around the region of the men's arm, we observe a difference of quality when comparing methods that make use of depth information with those not making use of any depth. Non-depth using methods tend to assign points to the arm's cluster which should belong to the background. This could however be due to the fact that such points are spatially close to the arm and thus exhibit a large affinity value to the trajectories within the arm region. \\ \\
-Interestingly, the SD KL method was oversegmenting the chair's seat into two clusters. One possible explanation for this could be, that we were using a too large probability value when using six clusters. \\ \\
-Some methods seem to have trouble in correctly segmenting the chair's arm lean, especially all MC clustering methods seem to have issues in correctly assigning this region. \\ \\
-Last, please notice that we used many more cluster for the SED KL method, since it performed very poor when using six clusters. The actual result when using 6 only six clusters is shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$. The reason why we legitimate ourself to use this 10 cluster result is stated below.
-
-STATE SOME QUALITATIVE OBSERVATIONS HERE. \\ \\
-
-For measuring the quantitative performance of the resulting segmentations we compare their merged cluster versions, which are shown in figure $\ref{fig:eval_bonn_chairs}$, with the ground truth mask as depcited in figure $\ref{fig:eval_bonn_chairs_gt_20}$.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/gt_20}
-\end{center}
-\caption[Bonn Chairs GT Frame 20]{Ground truth frame No. 20 of the Bonn Chairs dataset.}
-\label{fig:eval_bonn_chairs_gt_20}
-\end{figure}
-Quantitative evaluations are listed in table $\ref{tab:eval_bonn_chairs}$. 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|r|l|l|l|}
-\hline
-\multicolumn{6}{|c|}{Comparison bonn chairs dataset using 6 clusters}                        \\ \hline
-              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Fragmentation} \\ \hline
-LDOF PD SC & 0.43685 & 86.2087 \%   & 76.607 \%     & 81.1247 \%  & x \% \\ \hline
-LDOF PD MC & 0.43685 & 86.4193 \%   & 76.1967 \%     & 80.9867 \%  & x \%   \\ \hline
-LDOF PED SC & 0.37174 & 95.0959 \%   & 78.1937 \%     & 85.8205 \%  & x \%   \\ \hline
-LDOF PED MC & 0.37174 & 83.3878 \%   & 91.4203 \%     & 87.2195 \%  & x \%   \\ \hline              
-LDOF SD KL & 0.43848 & 74.7623 \%   & \textbf{96.4264} \%     & 84.2235 \%  & x \%   \\ \hline
-LDOF SED KL & 0.37402 & 38.5505 \%   & 66.0331 \%     & 48.6809 \%  & x \%   \\ \hline
-LDOF $\text{SED}^{*}$ KL & 0.37402 & 73.8535 \%   & 94.4836 \%     & 82.9045 \%   & x \%  \\ \hline
-LDOF $\text{SED}^{**}$ KL & 0.37402 & $\textbf{96.1708}$ \%   & 89.9521 \%     & $\textbf{92.9576}$ \%    & x \%  \\ \hline
-\end{tabular}
-\caption[Cars Dataset]{Quantitative evaluation of the bonn chairs dataset using the LDOF flow method. Note that there are two additional evaluations for the SED method available, indicated by * and **. The * variant was run using 9 clusters and the ** was run using 10 clusters. The reason for doing so was that the parameter space was simply too large to find the optimal parameter to obtain no oversegmentation. See figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.}
-\label{tab:eval_bonn_chairs}
-\end{table}
-We clearly observe, that as soon as we make use of depth informations, the F1 measure increases drastically. Additionally, the summed distances (SD, SED) outperform product distances (PD,PED). The merged segmentations used for the evaluation are shown in figure $\ref{fig:eval_bonn_chairs}$. \\ \\
-\begin{figure}[H]
-\begin{center}
-\subfigure[LDOF PD SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_pd_sc}
-   \label{fig:bonn_chairs_b}
-}
-\subfigure[LDOF PD MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_pd_mc}
-   \label{fig:bonn_chairs_c}
-}
-~
-\subfigure[LDOF PED SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_ped_sc}
-   \label{fig:bonn_chairs_d}
-}
-\subfigure[LDOF PED MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_ped_mc}
-   \label{fig:bonn_chairs_e}
-}
-~
-\subfigure[LDOF SD KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_sd_kl}
-   \label{fig:bonn_chairs_d}
-}
-\subfigure[LDOF SED** KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs/ldof_sed_kl}
-   \label{fig:bonn_chairs_e}
-}
-\end{center}
-\caption[Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 20 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
-\label{fig:eval_bonn_chairs}
-\end{figure}
 
 
 \subsection{Cars Dataset}
