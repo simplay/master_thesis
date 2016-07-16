@@ -4,6 +4,8 @@ import datastructures.NearestNeighborMode;
 import datastructures.NearestNeighborsHeap;
 import similarity.SimilarityTask;
 import similarity.SimilarityTaskType;
+import sun.rmi.runtime.Log;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -256,6 +258,20 @@ public class ArgParser {
     }
 
     /**
+     * Does the program make use of depth variances.
+     *
+     * This means, that we are running the PEAD similarity task.
+     * In addition, in case if the depth-and color camera do not overlap,
+     * we have to warp the depth variance fields, similarly as we warp the depth field.
+     * See DepthManager for further information.
+     *
+     * @return true if it does, otherwise false.
+     */
+    public static boolean useDepthVariances() {
+        return getSimTask().usesDepthVariance();
+    }
+
+    /**
      * Indicates whether the local flow variance should
      * be used for normalizing the motion distance when computing the similarity matrix.
      *
@@ -343,6 +359,9 @@ public class ArgParser {
      * Print the resulting state given a certain user input into the logger.
      */
     public static void reportUsedParameters() {
+        Logger.println("TRAJECTORY AFFINITY CALCULATOR");
+        Logger.println("==============================");
+        Logger.println();
         Logger.print("Provided runtime args: ");
         Logger.println(getInstance().toString());
         Logger.println("Using the following runtime parameter setting:");
@@ -355,7 +374,7 @@ public class ArgParser {
         Logger.println("+ Running task: " + getSimTask().getName() + " [" + getSimTask().getIdName() + "]");
         Logger.println("+ Using local flow variances: " + useLocalVariance());
         Logger.println("+ Using depth cues: " + useDepthCues());
-        Logger.println("+ Using depth variances: " + getSimTask().usesDepthVariance());
+        Logger.println("+ Using depth variances: " + useDepthVariances());
         Logger.println("+ Using color cues: " + useColorCues());
         Logger.println("+ Writing Nearest Neighbor Count: " + getNearestNeighborhoodCount());
         Logger.println("+ Using NN Mode: " + getNNMode().name());
@@ -378,5 +397,8 @@ public class ArgParser {
         }
 
         Logger.println("+ Program runs in debug mode: " + runInDebugMode());
+    }
+
+    public static void showHelp() {
     }
 }

@@ -142,6 +142,28 @@ public class ArgParserTest {
     }
 
     @Test
+    public void testUseDepthVarianceFalseCase() {
+        String dataset = "foobarbaz";
+        String[] args = {
+                "-d", dataset,
+                "-task", "3",
+        };
+        ArgParser.getInstance(args);
+        assertEquals(false, ArgParser.useDepthVariances());
+    }
+
+    @Test
+    public void testUseDepthVarianceTrueCase() {
+        String dataset = "foobarbaz";
+        String[] args = {
+                "-d", dataset,
+                "-task", "5",
+        };
+        ArgParser.getInstance(args);
+        assertEquals(true, ArgParser.useDepthVariances());
+    }
+
+    @Test
     public void testCanCallReportUsedParameters() {
         String dataset = "foobarbaz";
         String[] args = {

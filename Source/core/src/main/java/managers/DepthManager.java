@@ -4,6 +4,8 @@ import datastructures.DepthField;
 import datastructures.DepthVarField;
 import datastructures.Mat3x4;
 import datastructures.Point3d;
+import pipeline_components.ArgParser;
+
 import java.util.ArrayList;
 
 /**
@@ -143,7 +145,13 @@ public class DepthManager {
         // Iterate over all loaded depth maps
         for(int k = 0; k < instance.length(); k++) {
             DepthField df = instance.get(k);
-            DepthVarField dvf = DepthVarManager.getInstance().get(k);
+
+            // only attempt to warp depth variances in case we are running
+            // the PAED similarity task.
+            DepthVarField dvf = null;
+            if (ArgParser.useDepthVariances()) {
+                dvf = DepthVarManager.getInstance().get(k);
+            }
 
             // initialized the warped depth map in which initially each location
             // is marked as invalid (i.e. each lookup position is equal to zero).
@@ -195,8 +203,11 @@ public class DepthManager {
                         } else if(frontmostDepth == 0) {
                             warpedDf.setAt(i_tilde, j_tilde, d_tilde);
 
-                            // set warped depth var according to front-most depth value.
-                            warpedDVarF.setAt(i_tilde, j_tilde, dvf.valueAt(i, j));
+                            // Only update a warped depth variance filed, if we ware running a PAED similarity task.
+                            if (ArgParser.useDepthVariances()) {
+                                // set warped depth var according to front-most depth value.
+                                warpedDVarF.setAt(i_tilde, j_tilde, dvf.valueAt(i, j));
+                            }
                         }
 
                     }
@@ -205,7 +216,11 @@ public class DepthManager {
 
             // overwrite previous depth field and depth var field with their warped fields
             getInstance().setAt(warpedDf, k);
-            DepthVarManager.getInstance().setAt(dvf, k);
+
+            // Only update a warped depth variance filed, if we ware running a PAED similarity task.
+            if (ArgParser.useDepthVariances()) {
+                DepthVarManager.getInstance().setAt(dvf, k);
+            }
         }
     }
 
