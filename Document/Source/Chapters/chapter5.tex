@@ -709,7 +709,7 @@ running different similarity tasks
 \begin{figure}[H]
 \begin{center}
 
-\subfigure[GT Frame 45]{
+\subfigure[Gt Frame 45]{
    \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/gt/45}
    \label{fig:chair_3_cast_masks_a}
 }
@@ -722,7 +722,7 @@ running different similarity tasks
    \label{fig:chair_3_cast_masks_c}
 }
 \end{center}
-\caption[Chair 3 Cast Masks]{pew}
+\caption[Chair 3 Cast Masks]{An illustration of the ground truth masks we use to evaluate the performance of our segmentations.}
 \label{fig:chair_3_cast_masks}
 \end{figure}
 
@@ -747,7 +747,7 @@ running different similarity tasks
    \label{fig:chair_3_cast_masks_d}
 }
 \end{center}
-\caption[Chair 3 Cast Winner]{pew}
+\caption[Chair 3 Cast Winner]{Listing the four top segmentation results of frame 60 based on the scored F1 value.}
 \label{fig:chair_3_cast_best_f_score_results}
 \end{figure}
 
@@ -773,7 +773,7 @@ running different similarity tasks
    \label{fig:chair_3_cast_masks_merged_d}
 }
 \end{center}
-\caption[Chair 3 Cast Winner]{pew}
+\caption[Chair 3 Cast Winner]{Visualization of the merged segmentations of the figures shown in figure $\ref{fig:chair_3_cast_best_f_score_results}$.}
 \label{fig:chair_3_cast_best_f_score_results_merged}
 \end{figure}
 
@@ -787,41 +787,20 @@ PD SC & 18.01\% & \textbf{55.17}\% & \textbf{55.12}\% & \textbf{56.23}\% \\ \hli
 PD MC & \textbf{38.70}\% & 38.14\% & 45.65\% & 49.64\% \\ \hline
 PED SC & 13.14\% & 35.29\% & 50.75\% & 52.14\%  \\ \hline
 PED MC & 26.81\% & 42.94\% & 38.70\% & \textbf{56.23}\% \\ \hline
-\end{tabular}
-\caption[Chair 3 Cast: Average Precision Scores]{My caption}
-\label{tab:chair_3_cast_avg_precision}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
 \multicolumn{5}{|c|}{Average Recall} \\ \hline
-\textbf{Method / \#Cluster} & 5 & 10 & 15 & 20 \\ \hline
 PD SC & 12.34\% & 19.22\% & 38.13\% & 47.82\% \\ \hline
 PD MC & 13.10\% & 24.51\% & \textbf{44.07}\% & \textbf{53.50}\% \\ \hline
 PED SC & 10.20\% & 28.29\% & 39.24\% & 33.75\% \\ \hline
 PED MC & \textbf{19.37}\% & \textbf{38.86}\% & 41.88\% & 50.07\% \\ \hline
-\end{tabular}
-\caption[Chair 3 Cast: Average Recall Scores]{My caption}
-\label{tab:chair_3_cast_avg_recall}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
 \multicolumn{5}{|c|}{Average F1 Score} \\ \hline
-\textbf{Method / \#Cluster} & 5 & 10 & 15 & 20 \\ \hline
 PD SC & 14.02\% & 28.47\% & \textbf{45.04}\% & 51.59\% \\ \hline
 PD MC & 19.50\% & 29.79\% & 44.63\% & 51.40\% \\ \hline
 PED SC & 11.48\% & 30.89\% & 43.88\% & 40.69\% \\ \hline
 PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hline
 \end{tabular}
-\caption[Chair 3 Cast: Average F1 Scores]{My caption}
-\label{tab:chair_3_cast_avg_f1}
+\caption[Chair 3 Cast: Average Precision Scores]{Average performance on the chair 3 cast dataset for a varying number of clusters. For large and low cluster counts, PED MC achieves the best F1 scores.}
+\label{tab:chair_3_cast_avg_performance}
 \end{table}
-
 
 \begin{figure}[H]
 \begin{center}
@@ -854,7 +833,7 @@ PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hl
    \label{fig:chair_3_cast_gt_worst_best_c}
 }
 \end{center}
-\caption[Chair 3 Cast Worst/Best Result]{pew}
+\caption[Chair 3 Cast Worst/Best Result]{Comparison of the worst- (center) and the best (right) segmentation results according to the F1 measure using the shown mask on the left.}
 \label{fig:chair_3_cast_gt_worst_best}
 \end{figure}
 
@@ -886,6 +865,14 @@ avgs
 %ped sc density:0.6062\%
 %ped mc density:0.6062\%
 
+
+% TODO: cereal SRSF PED MC, LDOF PED MC
+%TODO: mache evaluation über alle datasets
+
+% TODO wh1	: PED SC PED MC
+% matrix clusters/eigenvectors for MC
+% c = 2, 3, 4, 5
+% eigs 2 3 4 5
 
 
 
