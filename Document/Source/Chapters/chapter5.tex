@@ -939,6 +939,89 @@ for number of iters 0...10 evaluate performance of results
 
 
 
+\subsection{Two Chairs}
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 15]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/ds/15}
+   \label{fig:two_chairs_dataset_a}
+}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/ds/40}
+   \label{fig:two_chairs_dataset_b}
+}
+~
+\subfigure[GT 15]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/gt/15}
+   \label{fig:two_chairs_dataset_c}
+}
+\subfigure[GT 40]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/gt/40}
+   \label{fig:two_chairs_dataset_d}
+}
+\end{center}
+\caption[Two Chairs Dataset]{foobar}
+\label{fig:two_chairs_dataset}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[PD SC Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/pd_sc}
+   \label{fig:two_chairs_seg_f_15_a}
+}
+\subfigure[PD MC Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/pd_mc}
+   \label{fig:two_chairs_seg_f_15_b}
+}
+\subfigure[PED SC Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/ped_sc}
+   \label{fig:two_chairs_seg_f_15_c}
+}
+\subfigure[PED MC Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/ped_mc}
+   \label{fig:two_chairs_seg_f_15_d}
+}
+~
+\subfigure[PD SC Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/pd_sc}
+   \label{fig:two_chairs_seg_f_15_e}
+}
+\subfigure[PD MC Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/pd_mc}
+   \label{fig:two_chairs_seg_f_15_f}
+}
+\subfigure[PED SC Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/ped_sc}
+   \label{fig:two_chairs_seg_f_15_g}
+}
+\subfigure[PED MC Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/ped_mc}
+   \label{fig:two_chairs_seg_f_15_h}
+}
+\end{center}
+\caption[Two Chairs Segmentation]{foobar}
+\label{fig:two_chairs_seg_f_15_40}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Performance Two Chairs dataset}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 88.1991\%   & 65.3383\%     & 74.9641\%  \\ \hline
+PD MC & 87.9687\%   & 60.0087\%     & 65.3910\%  \\ \hline 
+PED SC & 97.1673\%   & 73.2142\%     & 76.4836\%  \\ \hline
+PED MC & 96.0427\%   & 96.8572\%     & 96.4160\%  \\ \hline               
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:two_chairs_performance}
+\end{table}
+
+
+
 
 
 
