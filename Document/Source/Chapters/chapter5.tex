@@ -1022,6 +1022,68 @@ PED MC & 96.0427\%   & 96.8572\%     & 96.4160\%  \\ \hline
 
 
 
+\begin{figure}[H]
+\begin{center}
+\subfigure[1 Iteration]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_1}
+   \label{fig:two:chairs_segmentations_ped_mc_iters_a}
+}
+\subfigure[2 Iterations]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_2}
+   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
+}
+~
+\subfigure[2 Iterations]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_3}
+   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
+}
+\subfigure[2 Iterations]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_5}
+   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
+}
+\end{center}
+\caption[Segmentations Waving Hand]{foobar}
+\label{fig:two:chairs_segmentations_ped_mc_iters}
+\end{figure}
+
+
+%
+\begin{figure}[H]
+\begin{center}
+\subfigure[Recall/Precision Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/rec_prec}
+   \label{fig:two_chairs_ped_mc_iterations_a}
+}
+\subfigure[Iterations/F1 Score Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
+   \label{fig:two_chairs_ped_mc_iterations_b}
+}
+\end{center}
+\caption[Convergence PED MC]{foobar}
+\label{fig:two_chairs_ped_mc_iterations}
+\end{figure}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Convergence PED MC Two Chairs}                        \\ \hline
+Iteration & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+0 & 0\%   & 0\%     & 0\%  \\ \hline
+1 & 83.55\%   & 95.97\%     & 89.33\%  \\ \hline
+2 & 92.24\%   & 93.28\%     & 92.76\%  \\ \hline 
+3 & 96.89\%   & 94.42\%     & 95.64\%  \\ \hline
+4 & 97.14\%   & 94.49\%     & 95.80\%  \\ \hline
+5 & 97.22\%   & 94.51\%     & 95.84\%  \\ \hline               
+\end{tabular}
+\caption[Convergence PED MC]{My caption}
+\label{tab:two_chairs_ped_mc_iterations}
+\end{table}
+
+
+
+
 
 
 
