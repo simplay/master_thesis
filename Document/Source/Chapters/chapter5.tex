@@ -874,6 +874,68 @@ avgs
 % c = 2, 3, 4, 5
 % eigs 2 3 4 5
 
+% TODO artificial results
+
+% rotating statue
+
+\subsection{wh1}
+
+6 clusters, 6 eigenvectors
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/40}
+   \label{fig:wh1_performance_a}
+}
+\subfigure[GT]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/gt/40}
+   \label{fig:wh1_performance_b}
+}
+\end{center}
+\caption[Segmentations Waving Hand]{foobar}
+\label{fig:wh1_performance}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[PD SC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_pd_sc}
+   \label{fig:wh1_performance_a}
+}
+\subfigure[PED MC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_ped_mc}
+   \label{fig:wh1_performance_b}
+}
+\end{center}
+\caption[Segmentations Waving Hand]{foobar}
+\label{fig:wh1_performance}
+\end{figure}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Performance Waving Hand dataset}                        \\ \hline
+Method & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 0.58 & 69.67\%   & 58.66\%     & 63.69\%  \\ \hline
+PED MC & 0.36 & 71.60\%   & 70.52\%     & 71.06\%  \\ \hline              
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:wh1_performance}
+\end{table}
+
+
+experiment 2
+method ped mc
+for 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
+of number of clusters,eigenvectors
+
+experiment 3
+method ped mc
+for number of iters 0...10 evaluate performance of results 
+
 
 
 
