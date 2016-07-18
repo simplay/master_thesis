@@ -2,12 +2,12 @@ addpath('../matlab_shared');
 addpath('../segmentation/src')
 clear all
 %%
-DATASET = 'chair_3_cast';
-PREFIX_INPUT_FILENAME = 'pd_top_400';
+DATASET = 'two_chairs';
+PREFIX_INPUT_FILENAME = 'ped_top_400';
 METHODNAME = 'ldof';
-FRAME_IDX = 60;
+FRAME_IDX = 15;
 GT_SUFFIX = '';
-FILTER_AMBIGUOUS = true;
+FILTER_AMBIGUOUS = false;
 
 %%
 [FileName, FilePath, ~] = uigetfile('.txt');

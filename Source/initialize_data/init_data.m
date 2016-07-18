@@ -6,13 +6,13 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'bonn_chairs_263_3_434';
+DATASETNAME = 'two_chairs';
 METHODNAME = 'ldof';
-STEP_SIZE = 8;
+STEP_SIZE = 12;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
-RUN_BACKGRUND_ELIMINATION = true; % tries to eliminate weak trackable canidates.
+RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
 COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
@@ -22,7 +22,7 @@ COMPUTE_DEPTH_VARIANCE = false;
 
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = false;
+USE_OWN_DEPTHS = true;
 DEPTH_SCALE = 0.0002; % for bon data
 
 DEPTH_SCALE = 1/5000;
@@ -51,7 +51,9 @@ if COMPUTE_TRACKING_DATA
     
     % works best for ldof flows:
     % best ldof threshScale is 0.01
+    % srsf likes 0.4
     theshScale = 0.01;
+    %theshScale = 0.4;
     for t=START_FRAME_IDX:END_FRAME_IDX
 
         % Save the forward and backward flows, 
@@ -142,7 +144,7 @@ if COMPUTE_TRACKING_DATA
                 plot(idx, idy, '.r', 'markersize', 10)
             end
             % call save_figure_as_image(fig, './candidates_sparse', 480, 640)
-            save_figure_as_image(fig, './foobar4', 480, 640)
+            % save_figure_as_image(fig, './foobar4', 480, 640)
         end
         
         % save trackable row and col in text file

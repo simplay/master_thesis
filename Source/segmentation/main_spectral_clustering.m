@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'c14_filtered';
+DATASET = 'two_chairs';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'aaaa';
-PREFIX_INPUT_FILENAME = 'pd_top_90';
+PREFIX_OUTPUT_FILENAME = 'eval_ped_sc';
+PREFIX_INPUT_FILENAME = 'ped_top_400';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = true;
@@ -23,15 +23,15 @@ REUSE_ASSIGNMENTS = false;
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
-COMPUTE_FULL_RANGE = true;
+COMPUTE_FULL_RANGE = false;
 % 
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 3;
+FORCE_EW_COUNT = 6;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 3;
+CLUSTER_CENTER_COUNT = 6;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -39,7 +39,7 @@ CLUSTER_CENTER_COUNT = 3;
 % RUN_MODE = 3 => vis eigenvector
 RUN_MODE = 1;
 
-SHOW_LOCAL_VAR = true;
+SHOW_LOCAL_VAR = false;
 
 % show the segmentation figure
 SHOW_SEGMENTATION = true;
@@ -48,8 +48,9 @@ SHOW_SEGMENTATION = true;
 SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
-SELECTED_ENTITY_IDX = 2;
-frame_idx = 1;
+% 265
+SELECTED_ENTITY_IDX = 1;
+frame_idx = 15;
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

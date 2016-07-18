@@ -14,7 +14,7 @@ img_index = 1;
 START_FRAME = 1;
 END_FRAME = 4;
 num_el = 3;
-selection_count = 3;
+selection_count = 4;
 
 % constants
 MARKER_THICKNESS = 15;

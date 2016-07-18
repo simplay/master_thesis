@@ -33,6 +33,7 @@ function plotF1(fs, range, plotLabels)
     end
     
     xlabel('Cluster Count', 'fontsize', 20)
+    xlabel('Iterations', 'fontsize', 20)
     ylabel('F1 Score', 'fontsize', 20)
     grid on
     if ~skip

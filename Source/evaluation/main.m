@@ -2,12 +2,12 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'chair_3_cast';
-img_index = 75;
+DATASET = 'two_chairs';
+img_index = 15;
 STEPSIZE_DATA = 8;
 PREFIX_INPUT_FILENAME = 'ped_top_400';
 METHODNAME = 'ldof';
-FILTER_AMBIGUOUS = true;
+FILTER_AMBIGUOUS = false;
 
 %%
 SIMPLIFIED_STATISTICS = false;
@@ -19,6 +19,7 @@ end
 DS_BASE_PATH = strcat('../../Data/',DATASET,'/gt/',imgName);
 gtImg = imread(DS_BASE_PATH);
 [m, n, c] = size(gtImg);
+cc = c;
 if c == 1
     tmp = zeros(m, n, 3);
     tmp(:,:,1) = gtImg;
@@ -53,7 +54,8 @@ disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
 [FileName, FilePath, ~] = uigetfile('.txt');
 LABELS_FILE_PATH = strcat(FilePath, FileName);
-% LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
+%LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/wh1_ldof_eval_ev_c_ped_mc_iters_10_c_6_ev_6_nu_1e-07/labels.txt';
+%LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
 
 
@@ -98,7 +100,7 @@ for idx=1:length(label_assignments)
         continue 
     end
     
-    if (gtImg(iax, iay) == 0 | gtImg(iax, iay) == 255)
+    if (gtImg(iax, iay) == 0 | (gtImg(iax, iay) == 255 && c == 1))
         continue;
     end
     
@@ -108,10 +110,6 @@ for idx=1:length(label_assignments)
 end
 
 gtColor2ClusterLabel = zeros(2, length(label_identifiers));
-
-
-
-
 
 for k=1:length(label_identifiers)
     u_label = label_identifiers(k);
@@ -163,8 +161,8 @@ for k=1:length(a)
     dsImg(a(k),b(k)) = 0;
 end
 
-dsImgShow = dsImg - min(dsImg(:));
-dsImgShow = dsImgShow ./ max(dsImgShow(:));
+dsImgShow = (dsImgShow > 0).*((dsImg ./ max(dsImg(:)))+1)/2;
+
 figure('name', 'sparse forground (cluster) samples');
 imshow(im2double(dsImgShow));
 

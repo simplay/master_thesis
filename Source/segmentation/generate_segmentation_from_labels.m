@@ -3,31 +3,32 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'c14';
+DATASET = 'cars';
 METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_1400';
+PREFIX_INPUT_FILENAME = 'sd_both_4000';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = '';
+PART_DS_PREF = 'test_cars_1';
 
 PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME);
 if ~isempty(PART_DS_PREF)
+    
     PART_DS = strcat(PART_DS, '_', PART_DS_PREF);
 end
 
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'eee';
+PREFIX_OUTPUT_FILENAME = 'sed_kl_c_9_2';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 
 
 USE_CUSTOM_TILL_BOUND = false;
-frame_idx = 40;
-TILL_FRAME = 4;
+frame_idx = 10;
+TILL_FRAME = 1;
 
 SAVE_FIGURES = true;
-SHOW_SEGMENTATION = false;
+SHOW_SEGMENTATION = true;
 
 %% load relevant data
 [BASE, BASE_FILE_PATH] = parse_input_file_path(DATASET); 
@@ -63,7 +64,7 @@ range = frame_idx:frame_idx;
 if COMPUTE_FULL_RANGE
     range = boundaries(1):1:boundaries(2);
 end
-
+range = 1:1;
 write_label_clustering_file(label_assignments, label_mappings, path);
 rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
 for img_index = range

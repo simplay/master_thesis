@@ -16,7 +16,7 @@ function rescale_depths( input_filepath, img_ext, scale, output_path, match )
     % output_path #=> '~/foobar/rescaled/'
 %    
 % @example Rescale a Bonn Dataset   
-%   in = '../../Data/bonn_chairs_263_3_434_SRSF/depth';    
+%   in = '../../Data/bonn_chairs_263_3_434_SRSF/depth/';    
 %   out = '../../Data/bonn_chairs_263_3_434_SRSF/depth/rescaled/';
 %   match = '';
 %   ext = '.png'

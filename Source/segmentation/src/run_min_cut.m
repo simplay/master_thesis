@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES, REUSE_LABEL_ASSIGNMENT, label_assignments)
+function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES, REUSE_LABEL_ASSIGNMENT, label_assignments, USE_SIMPLE_COLORS)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -59,7 +59,7 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
     if REUSE_LABEL_ASSIGNMENT == 0
         label_assignments = zeros(length(W), 1);
     end
-    rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
+    rgb_values = rgb_list(CLUSTER_CENTER_COUNT, USE_SIMPLE_COLORS);
     %%
     N = length(W);
     for K=CLUSTER_CENTER_COUNT:CLUSTER_CENTER_COUNT%4%min(20,2*m)
