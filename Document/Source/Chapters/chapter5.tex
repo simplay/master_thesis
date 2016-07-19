@@ -903,9 +903,17 @@ avgs
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_pd_sc}
    \label{fig:wh1_performance_a}
 }
+\subfigure[PD MC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_pd_mc}
+   \label{fig:wh1_performance_b}
+}
+\subfigure[PED SC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_ped_sc}
+   \label{fig:wh1_performance_c}
+}
 \subfigure[PED MC]{
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_ped_mc}
-   \label{fig:wh1_performance_b}
+   \label{fig:wh1_performance_d}
 }
 \end{center}
 \caption[Segmentations Waving Hand]{foobar}
@@ -915,12 +923,14 @@ avgs
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{5}{|c|}{Performance Waving Hand dataset}                        \\ \hline
-Method & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-PD SC & 0.58 & 69.67\%   & 58.66\%     & 63.69\%  \\ \hline
-PED MC & 0.36 & 71.60\%   & 70.52\%     & 71.06\%  \\ \hline              
+\multicolumn{4}{|c|}{Performance Waving Hand dataset}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 69.67\%   & 58.66\%     & 63.69\%  \\ \hline
+PD MC & 55.16\%   & 68.076\%     & 60.94\%  \\ \hline
+PED SC & 75.40\%   & 62.90\%     & 68.58\%  \\ \hline
+PED MC & 71.47\%   & 67.39\%     & 69.37\%  \\ \hline               
 \end{tabular}
 \caption[Cars Varying $\lambda$]{My caption}
 \label{tab:wh1_performance}
