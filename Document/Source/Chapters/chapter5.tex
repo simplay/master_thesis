@@ -1145,6 +1145,58 @@ Iteration & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 \label{tab:two_chairs_ped_mc_iterations}
 \end{table}
 
+\subsection{Bonn Cerealbox}
+particular hard dataset, long frame sequence, very shaky camera, strong shadows, deformation due to human hand.
+ev,c
+20,15
+ldof
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/ds/f_40}
+   \label{fix:bonn_cerealbox_ds_a}
+}
+\subfigure[GT Frame 40]{
+   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/ds/gt_40}
+   \label{fix:bonn_cerealbox_ds_b}
+}
+\end{center}
+\caption[Bonn Cerealbox Dataset]{foobar}
+\label{fix:bonn_cerealbox_ds}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\subfigure[PD MC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/segmentations/ldof_pd_mc}
+   \label{fix:bonn_cerealbox_segmentations_mc_methods_a}
+}
+\subfigure[PED MC]{
+   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/segmentations/ldof_ped_mc}
+   \label{fix:bonn_cerealbox_segmentations_mc_methods_b}
+}
+\end{center}
+\caption[Bonn Cerealbox Segmentations]{foobar}
+\label{fix:bonn_cerealbox_segmentations_mc_methods}
+\end{figure}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Performance Bonn Cerealbox dataset}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 32.26\%   & 33.33\%     & 32.79\%  \\ \hline
+PD MC & 73.81\%   & 80.57\%     & 77.04\%  \\ \hline 
+PED SC & 76.15\%   & 86.69\%     & 81.08\%  \\ \hline
+PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline               
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:bonn_cerealbox_performance}
+\end{table}
+
 
 
 
