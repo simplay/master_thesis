@@ -603,7 +603,7 @@ Fragmentation: 0.66667
    \includegraphics[width=0.48\linewidth] {evaluation/meth_cmp_bonn_wc/ldof_ped_sc}
    \label{fig:bonn_wc_a}
 }
-\subfigure[LDOF PED SC]{
+\subfigure[LDOF PED MC]{
    \includegraphics[width=0.48\linewidth] {evaluation/meth_cmp_bonn_wc/ldof_ped_mc}
    \label{fig:bonn_wc_b}
 }
@@ -639,30 +639,31 @@ Fragmentation: 0.66667
 
 \begin{table}[]
 \centering
-\begin{tabular}{|l|l|r|l|l|}
+\begin{tabular}{|l|r|l|l|}
 \hline
-\multicolumn{5}{|c|}{Method Comparison, 12 fixed Clusters, Bonn Watercan}                        \\ \hline
-              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-HS PD SC & 0.44434 & 72.783 \%   & 66.1853 \%     & 69.3275 \%  \\ \hline
-HS PD MC & 0.44434 & 34.1727 \%   & 45.6731 \%     & 39.0947 \%  \\ \hline              
-HS PED SC & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.9770 \%  \\ \hline
-HS PED MC & 0.43522 & 64.4977 \%   & 81.0601 \%     & 71.8366 \%  \\ \hline            
-LDOF PD SC * & 0.44434 & 72.783 \%   & 66.1853 \%     & 69.3275 \%  \\ \hline
-LDOF PD MC * & 0.44434 & 34.1727 \%   & 45.6731 \%     & 39.0947 \%  \\ \hline              
-LDOF PED SC * & 0.43522 & 94.2955 \%   & 58.2015 \%     & 71.9770 \%  \\ \hline
-LDOF PED MC * & 0.43522 & 64.4977 \%   & 81.0601 \%     & 71.8366 \%  \\ \hline
-SRSF PD SC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-SRSF PD MC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-SRSF PED SC * & 0.20085 & 83.5144 \%   & 95.7385 \%     & 89.2096 \%  \\ \hline
-SRSF PED MC * & 0.19889 & 92.9871 \%   & 70 \%     & 79.8725 \%  \\ \hline
-LRGBD PD SC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-LRGBD PD MC & 0.21094 & 84.4582 \%   & 70 \%     & 75.8336 \%  \\ \hline
-LRGBD PED SC & 0.20085 & 83.5144 \%   & 95.7385 \%     & 89.2096 \%  \\ \hline
-LRGBD PED MC & 0.19889 & 92.9871 \%   & 70 \%     & 79.8725 \%  \\ \hline
+\multicolumn{4}{|c|}{Method Comparison, 12 fixed Clusters, Bonn Watercan}                        \\ \hline
+              & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+HS PD SC  & 72.78\%   & 66.19\%     & 69.33\%  \\ \hline
+HS PD MC  & 34.17\%   & 45.67\%     & 39.09\%  \\ \hline              
+HS PED SC  & 94.30\%   & 58.20\%     & 71.98\%  \\ \hline
+HS PED MC  & 64.50\%   & 81.06\%     & 71.84\%  \\ \hline            
+LDOF PD SC *  & 72.78\%   & 66.19\%     & 69.33\%  \\ \hline
+LDOF PD MC *  & 34.17\%   & 45.67\%     & 39.09\%  \\ \hline              
+LDOF PED SC *  & 94.30\%   & 58.20\%     & 71.98\%  \\ \hline
+LDOF PED MC *  & 64.50\%   & 81.06\%     & 71.84\%  \\ \hline
+SRSF PD SC  * & 96.25 \%   & 83.03\%     & 89.15\%  \\ \hline
+SRSF PD MC  * & 95.12 \%   & 86.96\%     & 90.86\%  \\ \hline
+SRSF PED SC  * & 90.00 \%   & 96.25\%     & 93.02\%  \\ \hline
+SRSF PED MC  * & 94.23 \%   & 95.04\%     & 94.63\%  \\ \hline
+LRGBD PD SC *  & - \%   & - \%     & - \%  \\ \hline
+LRGBD PD MC * & - \%   & - \%     & - \%  \\ \hline
+LRGBD PED SC *  & 30.00\%   & 16.68\%     & 21.43\%  \\ \hline
+LRGBD PED MC  & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \end{tabular}
 \caption[Method Comparission Bonn Watercan]{My caption}
 \label{tab:bonn_wc_methods}
 \end{table}
+
 
 
 explain the assumption of the datasets
