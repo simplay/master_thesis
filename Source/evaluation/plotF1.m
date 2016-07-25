@@ -33,8 +33,9 @@ function plotF1(fs, range, plotLabels)
     end
     
     xlabel('Cluster Count', 'fontsize', 20)
-    xlabel('Iterations', 'fontsize', 20)
+    xlabel('Clusters', 'fontsize', 20)
     ylabel('F1 Score', 'fontsize', 20)
+    set(gca,'xtick',0:10)
     grid on
     if ~skip
         leg = legend(as, plotLabels);

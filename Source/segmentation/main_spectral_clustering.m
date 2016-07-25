@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'two_chairs';
-METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'eval_ped_sc';
-PREFIX_INPUT_FILENAME = 'ped_top_400';
+DATASET = 'bonn_watercan_713_3_884_SRSF';
+METHODNAME = 'srsf';
+PREFIX_OUTPUT_FILENAME = 'aaabbc';
+PREFIX_INPUT_FILENAME = 'ped_top_202';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = true;
@@ -28,10 +28,10 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 6;
+FORCE_EW_COUNT = 18;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 6;
+CLUSTER_CENTER_COUNT = 12;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -50,7 +50,9 @@ SAVE_FIGURES = true;
 SELECT_AFFINITY_IDX = false;
 % 265
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 15;
+frame_idx = 4;
+
+
 
 PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT

@@ -1,10 +1,17 @@
-function [ tracking_candidates ] = findTrackingCandidates( img, step_size, more_hollow )
+function [ tracking_candidates ] = findTrackingCandidates( img, step_size, more_hollow, RUN_INV_MODE)
 %FINDTRACKINGCANDIDATES Summary of this function goes here
 %   Detailed explanation goes here
+    if nargin < 4
+        RUN_INV_MODE = false;
+    end
     [m,n, ~] = size(img);
     offset = 5;
     [avg_eigenvalue, corners] = computeCorners(img);
-
+    
+    if RUN_INV_MODE
+        corners = 1-corners;
+    end
+    
     affinityScale = 0.1;
     shiftThreshold = 0.1;
     if more_hollow

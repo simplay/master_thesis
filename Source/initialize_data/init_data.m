@@ -6,12 +6,12 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'two_chairs';
-METHODNAME = 'ldof';
+DATASETNAME = 'bonn_watercan_713_3_884_LRGBD';
+METHODNAME = 'lrgbd';
 STEP_SIZE = 12;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
 RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
@@ -20,9 +20,18 @@ COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
 
+% strengthen validity check: when enabled, also the flow magnitude is taken
+% into account for determining whether a certain feature location can be
+% used for sampling. too week flows are skipped (lower than a sqrt(100th) of a
+% pixel unit). used for the statue dataset
+APPLY_STRONG_VALIDITY_CHECK = false;
+
+% extract additional feature locationslocated at poorly textured regions.
+USE_EXTENDED_TRACKING_CANDIDATES = false;
+
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
-USE_OWN_DEPTHS = true;
+USE_OWN_DEPTHS = false;
 DEPTH_SCALE = 0.0002; % for bon data
 
 DEPTH_SCALE = 1/5000;
@@ -53,7 +62,7 @@ if COMPUTE_TRACKING_DATA
     % best ldof threshScale is 0.01
     % srsf likes 0.4
     theshScale = 0.01;
-    %theshScale = 0.4;
+    theshScale = 0.4;
     for t=START_FRAME_IDX:END_FRAME_IDX
 
         % Save the forward and backward flows, 
@@ -82,7 +91,13 @@ if COMPUTE_TRACKING_DATA
 
         % Save a (m x n) matrix that contains all invalid pixel loations
         diffName = strcat(BASE_OUTPUT_PATH,'flow_consistency_',num2str(t),'.mat'); 
+        
+        flow_mag = forward_flow(:,:,1).^2 + forward_flow(:,:,2).^2;
+        
         invalid_regions = consistency_check(forward_flow, backward_flow, theshScale);
+        if APPLY_STRONG_VALIDITY_CHECK
+            invalid_regions = 1-(1-invalid_regions).* (flow_mag > 0.01);
+        end
         dlmwrite(diffName, invalid_regions, 'delimiter',' ','precision',PRECISSION);
 
         % Save row and column indicess of trackable pixel locations
@@ -97,6 +112,18 @@ if COMPUTE_TRACKING_DATA
         end
         
         [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE, USE_HOLLOW_CANDIDATES);
+        
+        % this mode is used for datasets that exhibit few feature at at important location
+        % due to a lack of texture information. e.g. the statue in the
+        % statue dataset. only enable this option in case you know what you
+        % are doing.
+        if USE_EXTENDED_TRACKING_CANDIDATES
+            [ sanity_tracking_cand ] = findTrackingCandidates(img, 1, USE_HOLLOW_CANDIDATES);
+            [ tracking_candidates_inv ] = findTrackingCandidates(img, STEP_SIZE, USE_HOLLOW_CANDIDATES, true);
+            tracking_candidates_inv = (1-sanity_tracking_cand).*tracking_candidates_inv;
+            tracking_candidates_inv = (1-invalid_regions).*tracking_candidates_inv;
+            tracking_candidates = tracking_candidates_inv | tracking_candidates;
+        end
         
         % strengthen candidate selection
         if RUN_BACKGRUND_ELIMINATION

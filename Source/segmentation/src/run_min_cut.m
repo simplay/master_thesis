@@ -1,4 +1,4 @@
-function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES, REUSE_LABEL_ASSIGNMENT, label_assignments, USE_SIMPLE_COLORS)
+function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, num_of_iters, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, NU, FILTER_ZERO_EIGENVALUES, REUSE_LABEL_ASSIGNMENT, label_assignments, USE_SIMPLE_COLORS, SHOULD_EXCLUDE_U_IDXS, EXCLUDED_U_IDXS)
 %RUN_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -26,6 +26,18 @@ function [W, U_small, S_small, U_full, S_full, label_assignments] = run_min_cut(
 
     %% load appropriate data
     [W, U_full, S_full, U_small, S_small] = extract_eigendecomp_data(BASE, DATASET, pr, W, U_full, S_full, THRESH, USE_EIGS, COMPUTE_EIGS, USE_CLUSER_EW_COUNT, FORCE_EW_COUNT, FILTER_ZERO_EIGENVALUES);
+    if SHOULD_EXCLUDE_U_IDXS
+        selected_u_idx = ones(1, size(U_small, 2));
+        orig_u_sel_idxs = 1:size(U_small, 2);
+        for k=1:length(EXCLUDED_U_IDXS)
+            excluded_idx = EXCLUDED_U_IDXS(k);
+            selected_u_idx(excluded_idx) = 0;
+        end
+        orig_u_sel_idxs = orig_u_sel_idxs(logical(selected_u_idx));
+        U_small = aggregate_mat_cols(U_small, orig_u_sel_idxs);
+        S_small = S_small(logical(selected_u_idx));
+    end
+    
     
     %% display segmentation and its data.
 

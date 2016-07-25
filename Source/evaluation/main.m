@@ -2,12 +2,13 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'two_chairs';
-img_index = 15;
+DATASET = 'bonn_watercan_713_3_884_SRSF';
+img_index = 4;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'ped_top_400';
-METHODNAME = 'ldof';
-FILTER_AMBIGUOUS = false;
+PREFIX_INPUT_FILENAME = 'ped_top_202';
+METHODNAME = 'srsf';
+FILTER_AMBIGUOUS = true;
+MUTED = true;
 
 %%
 SIMPLIFIED_STATISTICS = false;
@@ -42,9 +43,10 @@ else
     gtImg = rgb2gray(gtImg);
 end
 
-figure('name', 'ground truth')
-
-imshow(gtImg);
+if ~MUTED
+    figure('name', 'ground truth')
+    imshow(gtImg);
+end
 
 %% load eval img
 % load label
@@ -135,10 +137,14 @@ end
 % map gray scale value to cluster id:
 
 
-figure('name', 'all samples')
+
 dsImgShow = dsImg - min(dsImg(:));
 dsImgShow = dsImgShow ./ max(dsImgShow(:));
-imshow(im2double(dsImgShow));
+
+if ~MUTED
+    figure('name', 'all samples')
+    imshow(im2double(dsImgShow));
+end
 
 TL = -1;
 lid = -1;
@@ -163,15 +169,19 @@ end
 
 dsImgShow = (dsImgShow > 0).*((dsImg ./ max(dsImg(:)))+1)/2;
 
-figure('name', 'sparse forground (cluster) samples');
-imshow(im2double(dsImgShow));
+if ~MUTED
+    figure('name', 'sparse forground (cluster) samples');
+    imshow(im2double(dsImgShow));
+end
 
 % do the statistics here
 forgroundSamples = dsImg;
 backgroundSamples = (allSamples > 0)-(forgroundSamples > 0);
 
-figure('name', 'sparse background (cluster) samples');
-imshow(im2double(backgroundSamples));
+if ~MUTED
+    figure('name', 'sparse background (cluster) samples');
+    imshow(im2double(backgroundSamples));
+end
 
 totalPixelCount = size(gtImg,1)*size(gtImg,2);
 samplesUsedCount = sum(sum(allSamples > 0));
@@ -257,9 +267,11 @@ else
         
         
         current_fg_mask = (forgroundSamples == curr_flabel);
-        figure('name', strcat('mask nr: ', num2str(k)));
-        imshow(current_fg_mask);
         
+        if ~MUTED
+            figure('name', strcat('mask nr: ', num2str(k)));
+            imshow(current_fg_mask);
+        end
         
         % find best matching gt mask label
         % note that several (detected) clusters clusers can be assigned to
@@ -316,9 +328,11 @@ X = meshgrid(0:0.01:1);
 Y = X';
 Z = (X.*Y)./(X+Y);
 
-figure('name', 'F-score isobars')
-contourf(X,Y,Z)
-hold on
-plot(recall, precission, 'rx')
-xlabel('recall')
-ylabel('precission')
+if ~MUTED
+    figure('name', 'F-score isobars')
+    contourf(X,Y,Z)
+    hold on
+    plot(recall, precission, 'rx')
+    xlabel('recall')
+    ylabel('precission')
+end
