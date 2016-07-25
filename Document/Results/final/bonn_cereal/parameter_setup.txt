@@ -1,0 +1,58 @@
+prepare
+all candidates
+
+ped
+-d bonn_cerealbox_150_3_450 -task 3 -var 1 -nn 100 -nnm top -lambda 20 -snz 50 -metl 20
+
+sc
+bonn_cerealbox_150_3_450_ldof_ped_sc_c_18_ev_25
+
+mc
+bonn_cerealbox_150_3_450_ldof_ped_mc_iters_20_c_18_ev_25_nu_1e-06
+
+nu = 1e-6
+iter = 20
+ev/c = 25/18
+
+pd
+-d bonn_cerealbox_150_3_450 -task 2 -var 1 -nn 100 -nnm top -lambda 0.001 -snz 50 -metl 10
+
+mc
+bonn_cerealbox_150_3_450_ldof_pd_mc_iters_20_c_18_ev_25_nu_1e-09
+
+sc
+
+
+==========
+evals
+frame 40
+
+pd sc
+density: 0.49902%
+precission: 32.2581%
+recall: 33.3333%
+F1 score: 32.7869%
+
+pd mc
+density: 0.71094%
+precission: 73.8146%
+recall: 80.568%
+F1 score: 77.0436%
+
+ped sc
+density: 0.57454%
+precission: 76.149%
+recall: 86.6854%
+F1 score: 81.0763%
+Fragmentation: 0.75
+
+ped mc
+density: 0.49902%
+precission: 88.8713%
+recall: 91.9846%
+F1 score: 90.4011%
+Fragmentation: 0.75
+
+
+
+

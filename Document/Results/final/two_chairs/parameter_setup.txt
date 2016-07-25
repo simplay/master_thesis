@@ -1,0 +1,142 @@
+pd, sc
+
+avg
+precission: 88.1991%
+recall:65.3383%
+F1 score:74.9641%
+
+
+15
+density: 0.5021%
+precission: 83.0877%
+recall: 66.4383%
+F1 score: 73.8361%
+Fragmentation: 0.66667
+
+40
+density: 0.632%
+precission: 93.3105%
+recall: 64.2383%
+F1 score: 76.0921%
+Fragmentation: 0.66667
+
+
+pd mc
+-d two_chairs -task 2 -var 1 -nn 400 -nnm top -lambda 0.1 -metl 6
+6/6
+nu = 0.0000001
+10 iters
+
+avg
+precission: 87.9687%
+recall: 60.0087%
+F1 score: 65.3910%
+
+15
+density: 0.5021%
+precission: 82.8757%
+recall: 56.2523%
+F1 score: 67.0167%
+Fragmentation: 0.66667
+
+40
+density: 0.632%
+precission: 93.0617%
+recall: 63.7652%
+F1 score: 75.677%
+
+
+ped sc
+
+avg
+precission:97.1673%
+recall:73.2142%
+F1 score:76.4836%
+
+15
+density: 0.40122%
+precission: 98.7097%
+recall: 84.5357%
+F1 score: 91.0745%
+Fragmentation: 0.66667
+
+40
+density: 0.50302%
+precission: 95.625%
+recall: 61.8927%
+F1 score: 75.147%
+
+
+ped mc
+-d two_chairs -task 3 -var 1 -nn 400 -nnm top -lambda 10 -metl 6
+6/6
+nu = 0.0000001
+10 iters
+
+avg
+precission:96.0427%
+recall:96.8572%
+F1 score:96.4160%
+
+15
+density: 0.40122%
+precission: 97.2222%
+recall: 94.5053%
+F1 score: 95.8445%
+Fragmentation: 0.66667
+
+40
+density: 0.50302%
+precission: 94.8632%
+recall: 99.2091%
+F1 score: 96.9875%
+Fragmentation: 0.66667
+
+
+
+ped mc iters
+
+0
+density: 0.40122%
+precission: 0%
+recall: 0%
+F1 score: NaN%
+Fragmentation: 0.66667
+
+1
+density: 0.40122%
+precission: 83.5526%
+recall: 95.9704%
+F1 score: 89.332%
+Fragmentation: 0.66667
+
+2
+density: 0.40122%
+precission: 92.2407%
+recall: 93.2817%
+F1 score: 92.7583%
+Fragmentation: 0.66667
+
+3
+density: 0.40122%
+precission: 96.8882%
+recall: 94.42%
+F1 score: 95.6382%
+Fragmentation: 0.66667
+
+4
+density: 0.40122%
+precission: 97.1449%
+recall: 94.4864%
+F1 score: 95.7972%
+Fragmentation: 0.66667
+
+5
+density: 0.40122%
+precission: 97.2222%
+recall: 94.5053%
+F1 score: 95.8445%
+Fragmentation: 0.66667
+
+
+

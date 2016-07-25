@@ -1,0 +1,456 @@
+ldof pd sc
+lambda 0.01
+c=6, ev=6
+bonn_chairs_263_3_434_ldof_ldof_pd_sc_l_0_01_c_6_ev_6
+
+ldof pd mc:
+lambda 5
+iters 10, c = 6, ev = 10, nu = 1e-9
+bonn_chairs_263_3_434_ldof_ldof_pd_mc_l_5_iters_10_c_6_ev_10_nu_1e-09
+
+ldof ped sc
+lambda 5
+c 6, ev 6
+bonn_chairs_263_3_434_ldof_ldof_ped_sc_l_5_c_6_ev_6
+
+ldof ped mc
+lambda 0.01
+iters 10, c = 6, ev = 10, nu = 1e-7
+bonn_chairs_263_3_434_ldof_ldof_ped_mc_l_0_01_iters_0_c_6_ev_10_nu_1e-07
+
+ldof sd kl
+c 6, nn 2400, prob 0.88
+bonn_chairs_263_3_434_ldof_sd_kl
+Provided runtime args: -nn 2400 -prob 0.88 -task 1 -d bonn_chairs_263_3_434 -var 1 -nnm both
+Provided runtime args: -cc 6 -rc 10 -d bonn_chairs_263_3_434_sd_both_2400 -mic 5 -prefix test3 -ipm ebo -dc 0
+
+ldof sed kl
+p = 0_9875 nn 2400
+bonn_chairs_263_3_434_ldof_sed_kl_c_9_p_0_9875
+
+ldof sed kl
+prob 0.9875 
+c 10 nn 2400
+-d bonn_chairs_263_3_434 -task 4 -var 1 -nn 2400 -nnm both -prob 0.9875
+-d bonn_chairs_263_3_434_sed_both_2400 -cc 10 -dc 0 -mic 6 -rc 7 -ipm ebo -prefix test_g
+bonn_chairs_263_3_434_ldof_sed_kl_c_10
+
+
+
+
+
+
+
+
+
+================
+pd, sc => bonn_chairs_263_3_434_ldof_pd_sc_l_100_c_10_ev_10
+
+
+
+
+NEW statis
+
++ sed 6
+amb
+density: 0.34147%
+precission: 20.8826%
+recall: 32.9602%
+F1 score: 25.5668%
+Fragmentation: 0.75
+
+density: 0.35742%
+precission: 25.7453%
+recall: 23.6318%
+F1 score: 24.6433%
+Fragmentation: 0.75
+
+
++ sed 9
+amb
+density: 0.34147%
+precission: 82.4557%
+recall: 93.5785%
+F1 score: 87.6657%
+Fragmentation: 0.75
+
+density: 0.35742%
+precission: 56.1452%
+recall: 63.3899%
+F1 score: 59.548%
+Fragmentation: 0.75
+
++ sed 10
+
+amb
+density: 0.34147%
+precission: 91.3424%
+recall: 81.6007%
+F1 score: 86.1972%
+Fragmentation: 0.75
+
+with
+density: 0.35742%
+precission: 64.4193%
+recall: 64.6269%
+F1 score: 64.5229%
+Fragmentation: 0.75
+
+
+sd
+
+
+PED, no zeros
+-d bonn_chairs_263_3_434 -task 3 -var 1 -nn 400 -nnm top -lambda 100
+MC: top 400, c/ev = 10/30, nu=1e-9, 15iters
+amb
+density: 0.33594%
+precission: 59.2959%
+recall: 50.5616%
+F1 score: 54.5815%
+Fragmentation: 0.75
+
+density: 0.34798%
+precission: 56.6766%
+recall: 50.5616%
+F1 score: 53.4447%
+Fragmentation: 0.75
+
+
+SC: 10/10
+amb
+density: 0.33594%
+precission: 59.5402%
+recall: 47.3533%
+F1 score: 52.7521%
+Fragmentation: 0.75
+
+density: 0.34798%
+precission: 56.8627%
+recall: 47.3533%
+F1 score: 51.6742%
+Fragmentation: 0.75
+
+
+PD
+-d bonn_chairs_263_3_434 -task 2 -var 1 -nn 400 -nnm top -lambda 0.01
+mc
+amb
+density: 0.41113%
+precission: 45.295%
+recall: 66.0955%
+F1 score: 53.7532%
+Fragmentation: 0.75
+
+density: 0.42546%
+precission: 42.4592%
+recall: 66.0955%
+F1 score: 51.7041%
+Fragmentation: 0.75
+
+sc
+amb
+density: 0.41113%
+precission: 49.9781%
+recall: 61.876%
+F1 score: 55.2942%
+Fragmentation: 0.75
+
+density: 0.42546%
+precission: 47.4813%
+recall: 61.876%
+F1 score: 53.7313%
+Fragmentation: 0.75
+
+-d bonn_chairs_263_3_434 -task 1 -var 1 -nn 2400 -nnm both -prob 0.88
+sd
+amb
+density: 0.41146%
+precission: 48.4561%
+recall: 63.4404%
+F1 score: 54.945%
+Fragmentation: 0.75
+
+density: 0.42741%
+precission: 46.3365%
+recall: 63.4404%
+F1 score: 53.556%
+Fragmentation: 0.75
+
+
+    
+    C
+    |
+C - O — C
+    |
+    C
+
+
+22, 0
+716, 535
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SIMPLIFIED STAT
+
+pd sc
+density: 0.41113%
+precission: 82.4671%
+recall: 90.7807%
+F1 score: 86.4244%
+Fragmentation: 0.66667
+
+pd mc
+density: 0.41113%
+precission: 75.8905%
+recall: 95.3212%
+F1 score: 84.5033%
+Fragmentation: 0.66667
+
+
+ped sc
+density: 0.33594%
+precission: 97.2414%
+recall: 69.1012%
+F1 score: 80.791%
+Fragmentation: 0.66667
+
+
+ped mc
+density: 0.33594%
+precission: 96.6997%
+recall: 73.6677%
+F1 score: 83.6268%
+Fragmentation: 0.66667
+
+sd kl
+density: 0.41146%
+precission: 79.7901%
+recall: 91.2061%
+F1 score: 85.117%
+Fragmentation: 0.66667
+
+
+sed kl
+density: 0.34147%
+precission: 95.9657%
+recall: 86.5871%
+F1 score: 91.0355%
+Fragmentation: 0.66667
+
+
+
+
+
+
+
+
+SED var clusters
+
+2:
+density: 0.34147%
+precission: 22.0844%
+recall: 33.209%
+F1 score: 26.5276%
+Fragmentation: 0.75
+
+3:
+density: 0.34147%
+precission: 26.4095%
+recall: 33.209%
+F1 score: 29.4215%
+Fragmentation: 0.75
+
+4:
+density: 0.34147%
+precission: 26.9504%
+recall: 33.0846%
+F1 score: 29.7041%
+
+5:
+density: 0.34147%
+precission: 29.5429%
+recall: 32.9602%
+F1 score: 31.1581%
+
+6:
+density: 0.34147%
+precission: 20.8826%
+recall: 32.9602%
+F1 score: 25.5668%
+
+7:
+density: 0.34147%
+precission: 56.5344%
+recall: 49.5055%
+F1 score: 52.787%
+
+8:
+density: 0.34147%
+precission: 48.5531%
+recall: 65.2722%
+F1 score: 55.6847%
+
+9:
+density: 0.34147%
+precission: 82.4557%
+recall: 93.5785%
+F1 score: 87.6657%
+Fragmentation: 0.75
+
+10:
+
+
+
+
+
+
+
+pd, sc
+2
+density: 0.41113%
+precission: 0
+recall: 0
+F1 score: 0
+
+3:
+density: 0.41113%
+precission: 18.3007%
+recall: 9.7561%
+F1 score: 12.7273%
+Fragmentation: 0.75
+
+4:
+density: 0.41113%
+precission: 25.3012%
+recall: 28%
+F1 score: 26.5823%
+Fragmentation: 0.75
+
+5:
+density: 0.41113%
+precission: 23.4568%
+recall: 19.8606%
+F1 score: 21.5094%
+Fragmentation: 0.75
+
+6:
+density: 0.41113%
+precission: 40.2885%
+recall: 30.4363%
+F1 score: 34.6762%
+Fragmentation: 0.75
+
+7.
+density: 0.41113%
+precission: 49.8838%
+recall: 66.0133%
+F1 score: 56.8262%
+Fragmentation: 0.75
+
+8
+density: 0.41113%
+precission: 49.8134%
+recall: 58.3516%
+F1 score: 53.7455%
+Fragmentation: 0.75
+
+9
+density: 0.41113%
+precission: 49.8611%
+recall: 65.377%
+F1 score: 56.5745%
+Fragmentation: 0.75
+
+10
+density: 0.41113%
+precission: 49.9781%
+recall: 61.876%
+F1 score: 55.2942%
+Fragmentation: 0.75
+
+
+ped mc
+
+
+
+2
+density: 0.33594%
+precission: 33.3333%
+recall: 16.9192%
+F1 score: 22.4456%
+Fragmentation: 0.75
+
+3
+density: 0.33594%
+precission: 26.5512%
+recall: 23.2323%
+F1 score: 24.7811%
+Fragmentation: 0.75
+
+4
+density: 0.33594%
+precission: 26.1745%
+recall: 29.5455%
+F1 score: 27.758%
+Fragmentation: 0.75
+
+5
+density: 0.33594%
+precission: 26.2003%
+recall: 24.1162%
+F1 score: 25.1151%
+Fragmentation: 0.75
+
+6
+density: 0.33594%
+precission: 58.941%
+recall: 54.4361%
+F1 score: 56.599%
+Fragmentation: 0.75
+
+7
+density: 0.33594%
+precission: 58.9655%
+recall: 46.03%
+F1 score: 51.7009%
+Fragmentation: 0.75
+
+8
+density: 0.33594%
+precission: 58.4717%
+recall: 43.609%
+F1 score: 49.9584%
+Fragmentation: 0.75
+
+9
+density: 0.33594%
+precission: 59.3882%
+recall: 55.2381%
+F1 score: 57.238%
+Fragmentation: 0.75
+
+10
+density: 0.33594%
+precission: 59.2959%
+recall: 50.5616%
+F1 score: 54.5815%
+Fragmentation: 0.75
+
+
+
+

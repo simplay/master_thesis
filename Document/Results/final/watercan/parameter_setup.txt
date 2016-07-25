@@ -1,0 +1,89 @@
+OLD
+bonn_watercan_713_3_884_SRSF_srsf_ped_10_iter_iters_30_c_12_ev_18_nu_1e-08_200_nn_l_10_ct
+===============================
+
+watercan
+c_12_ev_18
+N = 100
+
+bonn_watercan_713_3_884_ldof_ldof_pd_sc_l10_s_12_ct_c_18_ev_12
+bonn_watercan_713_3_884_ldof_ldof_ped_sc_l10_s_12_ct_c_18_ev_12
+
+bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_30_c_12_ev_18_nu_1e-08
+bonn_watercan_713_3_884_ldof_ped_10_iter_sc_iters_30_c_12_ev_18_nu_1e-08
+
+
+
+
+bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_ct_1_l_5_c_12_ev_18
+
+
+new srsf ped mc
+-d bonn_watercan_713_3_884_SRSF -task 3 -var 1 -nn 202 -nnm top -lambda 10 -metl 10
+bonn_watercan_713_3_884_SRSF_srsf_srsf_new_mc_iters_30_c_12_ev_18_nu_1e-07
+
+bonn_watercan_713_3_884_LRGBD_lrgbd_pew_foobar_c_12_ev_18
+
+
+LDOF
+
+pd sc
+l = 10
+c_12_ev_18
+
+pd mc
+12_ev_18_nu_1e-08
+N = 100
+
+ped sc
+l = 10
+c_12_ev_18
+
+
+srsf 
+
+ped mc
+bonn_watercan_713_3_884_SRSF_ped_top_202_sim
+-nn 202 -nnm top -lambda 10 -metl 10
+iters_30_c_12_ev_18_nu_1e-07
+
+precission: 94.2308%
+recall: 95.0381%
+F1 score: 94.6327%
+
+pd mc
+bonn_watercan_713_3_884_LRGBD_pd_top_200_sim
+bonn_watercan_713_3_884_SRSF_srsf_srsf_mc_pd_sc_c_12_ev_18
+-d bonn_watercan_713_3_884_SRSF -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 6
+
+srsf ped sc
+density: 0.11816%
+precission: 90.0042%
+recall: 96.25%
+F1 score: 93.02%
+
+srsf pd mc
+
+density: 0.15039%
+precission: 95.122%
+recall: 86.9626%
+F1 score: 90.8595%
+Fragmentation: 0.66667
+
+srsf pd sc
+density: 0.15039%
+precission: 96.25%
+recall: 83.0303%
+F1 score: 89.1528%
+Fragmentation: 0.66667
+
+lrgbd
+
+sc
+
+ped
+N = 202
+pd mc
+-d bonn_watercan_713_3_884_LRGBD -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 6
+nu = 1.0000e-08
+c_12_ev_18

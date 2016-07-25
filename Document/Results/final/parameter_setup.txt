@@ -1,0 +1,80 @@
+bonn chair
+
+bonn water
+
+cars
+
+-d cars -task 2 -var 1 -nn 50 -nnm top -lambda 0.01
+ldof pd sc
+density: 0.66829%
+precission: 91.0544%
+recall: 89.8432%
+F1 score: 88.1876%
+Fragmentation: 0.66667
+
+-d cars -task 2 -var 1 -nn 2000 -nnm top -lambda 0.01
+ldof pd mc
+density: 0.66829%
+precission: 91.0502%
+recall: 88.9107%
+F1 score: 87.5879%
+Fragmentation: 0.66667
+
+ldof sd
+density: 0.69987%
+precission: 79.2541%
+recall: 92.709%
+F1 score: 80.9941%
+Fragmentation: 0.66667
+
+bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_l_10_ct_c_8_ev_8
+srsf, s: 12, ped
+SC, 8 EV, 8 Clusters, lambda: 10, ct: 1
+
+bonn_watercan_713_3_884_SRSF_ldof_ped_15_iter_iters_0_c_12_ev_12_nu_1e-09
+srsf, s: 12, ped
+MC, 15 iters, 12 EV, 12 Clusters, 3000 top neighbors, lambda: 10, ct: 1
+
+
+ldof, pd, sc
+density: 0.44434%
+precission: 72.783%
+recall: 66.1853%
+F1 score: 70.3883%
+Fragmentation: 0.66667
+
+ldof, pd, mc
+density: 0.44434%
+precission: 34.1727%
+recall: 45.6731%
+F1 score: 52.1262%
+Fragmentation: 0.5
+
+
+ldof, ped, sc
+density: 0.43522%
+precission: 94.2955%
+recall: 58.2015%
+F1 score: 71.7364%
+Fragmentation: 0.66667
+
+ldof, ped, mc
+density: 0.43522%
+precission: 64.4977%
+recall: 81.0601%
+F1 score: 73.0532%
+Fragmentation: 0.66667
+
+srsf, ped, mc
+density: 0.19889%
+precission: 92.9871%
+recall: 70%
+F1 score: 79.3059%
+Fragmentation: 0.66667
+
+srsf, ped, sc
+density: 0.20085%
+precission: 83.5144%
+recall: 95.7385%
+F1 score: 89.0611%
+Fragmentation: 0.66667

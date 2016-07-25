@@ -1,0 +1,269 @@
+
+pd, mc
+wh1_ldof_wh1_pd_mc_iters_10_c_6_ev_6_nu_1e-11
+density: 0.58073%
+precission: 55.1588%
+recall: 68.076%
+F1 score: 60.9404%
+
+ped sc
+density: 0.3623%
+precission: 75.4024%
+recall: 62.8964%
+F1 score: 68.584%
+Fragmentation: 0.8
+
+ped mc
+ped wh1_ldof_wh1_ped_mc_iters_20_c_6_ev_6_nu_1e-10
+density: 0.3623%
+precission: 71.4658%
+recall: 67.3935%
+F1 score: 69.3699%
+
+
+
+
+c/ev = 6/6
+
+pd, sc
+density: 0.58138%
+precission: 69.6738%
+recall: 58.6556%
+F1 score: 63.6917%
+Fragmentation: 0.8
+
+ped sc
+density: 0.36296%
+precission: 68.0267%
+recall: 63.8146%
+F1 score: 65.8534%
+Fragmentation: 0.8
+
+ped mc
+density: 0.36296%
+precission: 71.6014%
+recall: 70.524%
+F1 score: 71.0587%
+
+pd mc
+density: 0.58138%
+precission: 71.2928%
+recall: 75.7267%
+F1 score: 73.4429%
+Fragmentation: 0.8
+
+
+iters
+
+0
+density: 0.36296%
+precission: 0%
+recall: 0%
+F1 score: NaN%
+Fragmentation: 0.8
+
+1
+density: 0.36296%
+precission: 18.2327%
+recall: 50%
+F1 score: 26.7213%
+Fragmentation: 0.8
+
+2
+density: 0.36296%
+precission: 26.3899%
+recall: 47.4014%
+F1 score: 33.9042%
+Fragmentation: 0.8
+
+3
+density: 0.36296%
+precission: 39.8598%
+recall: 61.5971%
+F1 score: 48.3998%
+Fragmentation: 0.8
+
+4
+density: 0.36296%
+precission: 49.9947%
+recall: 58.0762%
+F1 score: 53.7333%
+Fragmentation: 0.8
+
+5
+density: 0.36296%
+precission: 70.4204%
+recall: 75.3418%
+F1 score: 72.798%
+
+6
+density: 0.36296%
+precission: 71.9072%
+recall: 72.3127%
+F1 score: 72.1094%
+Fragmentation: 0.8
+
+7
+density: 0.36296%
+precission: 71.6014%
+recall: 70.524%
+F1 score: 71.0587%
+
+8
+density: 0.36296%
+precission: 71.6014%
+recall: 70.524%
+F1 score: 71.0587%
+Fragmentation: 0.8
+
+
+
+
+====
+
+ev_c matrix
+
+
+2/2
+density: 0.3623%
+precission: 7.027%
+recall: 23.6364%
+F1 score: 10.8333%
+
+2/3
+density: 0.3623%
+precission: 29.2835%
+recall: 40.4545%
+F1 score: 33.9743%
+Fragmentation: 0.8
+
+2/4
+density: 0.3623%
+precission: 33.8034%
+recall: 36.2849%
+F1 score: 35.0002%
+Fragmentation: 0.8
+
+2/5
+density: 0.3623%
+precission: 59.6141%
+recall: 79.733%
+F1 score: 68.2212%
+
+2/6
+density: 0.3623%
+precission: 48.6286%
+recall: 50.2662%
+F1 score: 49.4339%
+
+
+3/2
+density: 0.3623%
+precission: 6.9519%
+recall: 23.6364%
+F1 score: 10.7438%
+Fragmentation: 0.8
+
+3/3
+density: 0.3623%
+precission: 28.6232%
+recall: 41.1723%
+F1 score: 33.7696%
+Fragmentation: 0.8
+
+3/4
+precission: 27.8237%
+recall: 40.4545%
+F1 score: 32.9708%
+
+3/5
+precission: 45.9422%
+recall: 57.1652%
+F1 score: 50.9429%
+
+3/6
+precission: 45.5917%
+recall: 61.0388%
+F1 score: 52.1964%
+
+4/2
+precission: 6.9892%
+recall: 23.6364%
+F1 score: 10.7884%
+
+4/3
+precission: 30.2805%
+recall: 41.1723%
+F1 score: 34.8963%
+
+4/4
+precission: 46.8967%
+recall: 57.2044%
+F1 score: 51.5402%
+
+4/5
+precission: 43.5262%
+recall: 60.4967%
+F1 score: 50.6272%
+
+4/6
+precission: 65.6035%
+recall: 79.2758%
+F1 score: 71.7945%
+
+5/2
+density: 0.3623%
+precission: 7.0479%
+recall: 24.0909%
+F1 score: 10.9053%
+
+5/3
+precission: 30.2805%
+recall: 41.1723%
+F1 score: 34.8963%
+
+5/4
+precission: 49.3535%
+recall: 52.5524%
+F1 score: 50.9028%
+
+5/5
+precission: 53.5508%
+recall: 54.2949%
+F1 score: 53.9203%
+
+5/6
+precission: 70.2334%
+recall: 71.7136%
+F1 score: 70.9658%
+
+6/2
+precission: 7.0479%
+recall: 24.0909%
+F1 score: 10.9053%
+
+6/3
+precission: 30.2805%
+recall: 41.1723%
+F1 score: 34.8963%
+
+6/4
+precission: 50.1136%
+recall: 52.5524%
+F1 score: 51.3041%
+
+6/5
+precission: 53.8095%
+recall: 53.4238%
+F1 score: 53.6159%
+
+6/6
+precission: 71.4658%
+recall: 67.3935%
+F1 score: 69.3699%
+
+
+
+
+
+
