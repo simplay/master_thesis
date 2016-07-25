@@ -1224,13 +1224,40 @@ PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline
 \label{fix:alley_segmentations}
 \end{figure}
 
+\subsection{Statue}
 
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/ldof_ped_mc}
+   \label{fix:alley_segmentations_a}
+}
+\subfigure[SRSF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/srsf_ped_mc}
+   \label{fix:alley_segmentations_b}
+}
+\subfigure[LGBDR PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/lrgbd_ped_mc}
+   \label{fix:alley_segmentations_a}
+}
+\end{center}
+\caption[Bonn Cerealbox Segmentations]{foobar}
+\label{fix:alley_segmentations}
+\end{figure}
 
-
-
-
-
-
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Performance Statue dataset}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PED MC & 69.93\%   & 38.23\%     & 49.44\%  \\ \hline
+SRSF PED MC & 72.47\%   & 70.68\%     & 71.56\%  \\ \hline
+LRGBD PED MC & 61.46\%   & 8.37\%     & 14.73\%  \\ \hline              
+\end{tabular}
+\caption[Performance Statue]{My caption}
+\label{tab:statue_performance}
+\end{table}
 
 
 
