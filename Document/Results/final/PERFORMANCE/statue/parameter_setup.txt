@@ -1,0 +1,89 @@
+srsf ped mc
+
+f30
+precission: 88.1127%
+recall: 84.3305%
+F1 score: 86.1801%
+
+f60
+precission: 67.6416%
+recall: 72.8954%
+F1 score: 70.1703%
+
+f90
+precission: 93.4737%
+recall: 99.2218%
+F1 score: 96.2620%
+
+
+srsf ped sc
+
+f30
+precission: 46.732%
+recall: 38.3242%
+F1 score: 42.1125%
+
+f60
+precission: 74.3255%
+recall: 50.8237%
+F1 score: 60.3679%
+
+f90
+precission: 90.493%
+recall: 100%
+F1 score: 95.0092%
+
+
+srsf pd mc
+
+f30
+precission: 73.2857%
+recall: 48.0447%
+F1 score: 58.0397%
+
+f60
+precission: 67.9483%
+recall: 74.3773%
+F1 score: 71.0176%
+
+f90
+precission: 96.6102%
+recall: 99.3031%
+F1 score: 97.9381%
+
+
+ldof ped mc
+
+f30
+precission: 84.249%
+recall: 100%
+F1 score: 91.4513%
+
+f60
+precission: 70.5546%
+recall: 54.244%
+F1 score: 61.3334%
+
+f90
+precission: 98.6111%
+recall: 98.6111%
+F1 score: 98.6111%
+
+
+
+ldof pd sc
+
+f30
+precission: 81.1851%
+recall: 29.8749%
+F1 score: 43.6772%
+
+f60
+precission: 67.6357%
+recall: 31.1388%
+F1 score: 42.6445%
+
+f90
+precission: 100%
+recall: 82.1277%
+F1 score: 90.1869%
