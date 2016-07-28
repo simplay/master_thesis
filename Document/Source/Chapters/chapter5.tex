@@ -584,21 +584,43 @@ $\lambda$              & \textbf{Density} & \textbf{Precision} & \textbf{Recall}
 \label{tab:cars_varying_lambas}
 \end{table}
 
-
-
-
 \subsection{Bonn Watercan Dataset}
-
-dataset: bonn watercan
-Fragmentation: 0.66667
 
 \begin{figure}[H]
 \begin{center}
-\subfigure[GT Waterbox Frame 4]{
-   \includegraphics[width=0.7\linewidth] {evaluation/meth_cmp_bonn_wc/gt_4}
-   \label{fig:bonn_gieskanne_gt}
+\subfigure[Frame 4]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/ds/4}
+   \label{fig:bonn_watercan_ds_a}
+}
+\subfigure[Ground Truth Frame 4]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/gt/4}
+   \label{fig:bonn_watercan_ds_b}
 }
 ~
+\subfigure[Frame 30]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/ds/30}
+   \label{fig:bonn_watercan_ds_c}
+}
+\subfigure[Ground Truth Frame 30]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/gt/30}
+   \label{fig:bonn_watercan_ds_d}
+}
+~
+\subfigure[Frame 54]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/ds/54}
+   \label{fig:bonn_watercan_ds_e}
+}
+\subfigure[Ground Truth Frame 54]{
+   \includegraphics[width=0.48\linewidth] {evaluation/watercan/gt/54}
+   \label{fig:bonn_watercan_ds_f}
+}
+\end{center}
+\caption[The Bonn Watercan Dataset]{Listing the Bonn Watercan Dataset and its ground truth frames.}
+\label{fig:bonn_watercan_ds}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
 \subfigure[LDOF PED SC]{
    \includegraphics[width=0.48\linewidth] {evaluation/meth_cmp_bonn_wc/ldof_ped_sc}
    \label{fig:bonn_wc_a}
@@ -655,8 +677,8 @@ SRSF PD SC & 96.25 \%   & 83.03\%     & 89.15\%  \\ \hline
 SRSF PD MC & 95.12 \%   & 86.96\%     & 90.86\%  \\ \hline
 SRSF PED SC & 90.00 \%   & 96.25\%     & 93.02\%  \\ \hline
 SRSF PED MC & 94.23 \%   & 95.04\%     & 94.63\%  \\ \hline
-LRGBD PD SC & - \%   & - \%     & - \%  \\ \hline
-LRGBD PD MC & - \%   & - \%     & - \%  \\ \hline
+LRGBD PD SC & 0 \%   & 0 \%     & 0 \%  \\ \hline
+LRGBD PD MC & 0 \%   & 0 \%     & 0 \%  \\ \hline
 LRGBD PED SC & 30.00\%   & 16.68\%     & 21.43\%  \\ \hline
 LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \end{tabular}
@@ -1304,7 +1326,7 @@ LRGBD PED MC & 61.46\%   & 8.37\%     & 14.73\%  \\ \hline
 
 \subsection{Overall Performance}
 
-running 5 datasets, each has 3 ground truth frames, averaged performance is then given in table below:
+In this last experiment we perform an overall evaluation of our main methods using their standard parameter setup. For this evaluation we use five datasets (cerealbox, chairs, watercan, waving arm, statue). Each method computes the segmentation on each dataset. For each dataset we use 3 ground truth images, which we use to evaluate the quality of the resulting segmentations. The averaged performance is listed in table \ref{tab:overall_performance}.
 
 \begin{table}[H]
 \centering
@@ -1321,6 +1343,6 @@ SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
 \caption[Overall Performance]{My caption}
 \label{tab:overall_performance}
 \end{table}
-
+We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using min cut for generating the segmentation is better than running spectral clustering.
 
 
