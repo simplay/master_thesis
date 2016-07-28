@@ -584,6 +584,11 @@ $\lambda$              & \textbf{Density} & \textbf{Precision} & \textbf{Recall}
 \label{tab:cars_varying_lambas}
 \end{table}
 
+observations:
+too large lambda values lead to not-fully covered segments
+whereas choosing a too small lambda value leads to an oversegmentation.
+
+
 \subsection{Bonn Watercan Dataset}
 
 \begin{figure}[H]
@@ -687,6 +692,12 @@ LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \end{table}
 
 
+observations
+SRSF outperforms every other flow method
+using depth maps leads too a drasti segmentation improvement.
+HS with depth cues almost achieves the same segmentation performance as when using LDOF flows. However, keep in mind that HS flows are computed about roughly 20 times faster than LDOF flows.
+even though the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation.
+
 
 
 
@@ -708,7 +719,30 @@ running different similarity tasks
 
 
 
+\begin{figure}[H]
+\begin{center}
 
+\subfigure[Extracted Layers Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/layers_30}
+   \label{fig:issues_lrgbd_flows_a}
+}
+\subfigure[Forward Flow Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/fw_flow_30}
+   \label{fig:issues_lrgbd_flows_b}
+}
+\subfigure[Segmentation PED MC Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/seg_30}
+   \label{fig:issues_lrgbd_flows_c}
+}
+\end{center}
+\caption[Issue with LRGBD Flows]{foobar}
+\label{fig:issues_lrgbd_flows}
+\end{figure}
+
+observations:
+LRGBD flows yield a poor segmentation when used by our pipeline.
+having a closer look at the generated flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to / are intersecting.
+the resulting segmentation when using lrgbd flows separates the layers rather than moving objects.
 
 
 
