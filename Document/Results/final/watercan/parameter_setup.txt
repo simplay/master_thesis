@@ -87,3 +87,32 @@ pd mc
 -d bonn_watercan_713_3_884_LRGBD -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 6
 nu = 1.0000e-08
 c_12_ev_18
+
+
+hs
+ped mc
+-d bonn_watercan_713_3_884_HS -task 3 -var 1 -nn 200 -nnm top -lambda 5
+bonn_watercan_713_3_884_HS_hs_knorke_abc_iters_30_c_12_ev_18_nu_1e-07
+
+ped sc
+precission: 71.5873%
+recall: 81.958%
+F1 score: 76.4224%
+
+ped mc
+precission: 71.8356%
+recall: 74.5944%
+F1 score: 73.189%
+
+pd sc
+precission: 90%
+recall: 31.258%
+F1 score: 46.4006%
+
+pd mc
+precission: 41.9811%
+recall: 39.3805%
+F1 score: 40.6393%
+
+
+

@@ -1,0 +1,20 @@
+NU = 1e-7
+lambda = 5, 0.1 (ped, pd)
+|N| = 200
+iters = 30
+C = 2 * #(estimated moving objects)
+EV = 2 * C
+
+cereal
+
+-d bonn_cerealbox_150_3_450_SRSF -task 3 -var 1 -nn 200 -nnm top -lambda 5 -metl 8 -prefix final
+
+using EV/C : 20/10
+
+mc
+bonn_cerealbox_150_3_450_SRSF_srsf_final_srsf_ped_mc_iters_10_c_10_ev_20_nu_1e-09
+
+chairs
+-d bonn_chairs_263_3_434 -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 8 -prefix final
+-d bonn_chairs_263_3_434 -task 3 -var 1 -nn 200 -nnm top -lambda 5 -metl 8 -prefix final
+EV/C : 16/8
