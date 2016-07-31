@@ -86,3 +86,29 @@ f45
 precission: 75.8224%
 recall: 55.0048%
 F1 score: 63.7573%
+
+
+srsf sed kl
+
+p 95.97%r 86.59%f 91.04%
+
+
+===============
+
+
+T. Brox’ GraphCut
+
+f15
+precission: 15.6129%
+recall: 22.4847%
+F1 score: 18.429%
+
+f30
+precission: 14.6959%
+recall: 25.059%
+F1 score: 18.5268%
+
+f45
+precission: 10.9826%
+recall: 14.4929%
+F1 score: 12.4959%

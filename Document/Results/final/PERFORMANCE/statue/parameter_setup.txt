@@ -87,3 +87,43 @@ f90
 precission: 100%
 recall: 82.1277%
 F1 score: 90.1869%
+
+
+srsf sed kl
+
+f30
+
+precission: 84.468%
+recall: 93.21%
+F1 score: 
+
+f60
+precission: 83.1618%
+recall: 91.34%
+
+f90
+precission: 86.2745%
+recall: 100%
+F1 score: 92.6316%
+
+r 84.6348
+p 94.8500
+
+
+============
+
+T. Brox’ GraphCut
+
+f30
+precission: 30.0498%
+recall: 40.3512%
+
+f60
+precission: 93.3291%
+recall: 44.4407%
+F1 score: 60.2107%
+
+f90
+precission: 100%
+recall: 79.8115%
+F1 score: 88.7724%

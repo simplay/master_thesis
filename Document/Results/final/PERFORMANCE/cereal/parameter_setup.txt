@@ -89,4 +89,29 @@ recall: 32.2097%
 F1 score: 19.5011%
 
 
+srsf sed kl
 
+81.1544
+94.1033
+87.1505
+
+
+============
+
+
+T. Brox’ GraphCut
+
+f40
+precission: 11.0382%
+recall: 13.8635%
+F1 score: 12.2906%
+
+f60
+precission: 10.8736%
+recall: 14.6769%
+F1 score: 12.4922%
+
+f80
+precission: 11.6741%
+recall: 13.8829%
+F1 score: 12.683%
