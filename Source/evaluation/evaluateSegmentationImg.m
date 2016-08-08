@@ -1,15 +1,15 @@
 % evaluates graphically segmenation results, given the graphical
 % segmentation, the gt mask and the amb. mask.
 
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-FRAME_IDX = 30;
+DATASET = 'statue_SRSF';
+FRAME_IDX = 90;
 FILTER_AMBIGUOUS = true;
 
 % load segmentation image
 [FileName, FilePath, ~] = uigetfile('.ppm');
 segmentationFilePathName = strcat(FilePath, FileName);
 
-% define gt images
+%% define gt images
 BASE_PATH = strcat('../../Data/', DATASET, '/gt/');
 gtFileName = strcat(BASE_PATH, num2str(FRAME_IDX), '.png');
 if FILTER_AMBIGUOUS
@@ -24,6 +24,17 @@ segmentationImg = rgb2gray(segmentationImg);
 rawSegmentLabels = unique(segmentationImg);
 % exclude white background
 rawSegmentLabels = rawSegmentLabels(rawSegmentLabels ~= 1);
+
+%exclude amb. regions from masks
+if FILTER_AMBIGUOUS
+    invalidRegions = (gtAmbImg == 0);
+    validSegments = (segmentationImg ~= 1).*(1-invalidRegions);
+    segmentationImg = segmentationImg.*validSegments;
+    [rows, cols] = find(segmentationImg == 0);
+    for k=1:length(rows)
+        segmentationImg(rows(k), cols(k)) = 1;
+    end
+end
 
 % extract background and foreground labels
 gtLabels = unique(gtImg);
@@ -69,16 +80,7 @@ for k=1:length(rawSegmentLabels)
 end
 rawSegmentLabels = unique(rawSegmentLabels);
 
-%exclude amb. regions from masks
-if FILTER_AMBIGUOUS
-    invalidRegions = (gtAmbImg == 0);
-    validSegments = (segmentationImg ~= 1).*(1-invalidRegions);
-    segmentationImg = segmentationImg.*validSegments;
-    [rows, cols] = find(segmentationImg == 0);
-    for k=1:length(rows)
-        segmentationImg(rows(k), cols(k)) = 1;
-    end
-end
+
 
 % all samples and background samples
 allSamples = segmentationImg ~= 1;
