@@ -459,23 +459,27 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 
 
 \section{Affinity Matrix}
+In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. Such a matrix basically encodes a similarity value between every existing trajectory pair combination according to a predefined measure.
+
+
+
 
 \begin{figure}[H]
 \begin{center}
-\subfigure[GT]{
+\subfigure[Similarities Car Forground]{
    \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/fc}
    \label{fig:cars_a}
 }
-\subfigure[Affinities Car]{
+\subfigure[Similarities Car Background]{
    \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/cb}
    \label{fig:cars_b}
 }
 ~
-\subfigure[LDOF PD SC]{
+\subfigure[Similarities Woods]{
    \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/woods}
    \label{fig:cars_c}
 }
-\subfigure[LDOF PD SC]{
+\subfigure[Similarities Street]{
    \includegraphics[width=0.48\linewidth] {implementation/affinities/cars/street}
    \label{fig:cars_d}
 }
@@ -495,7 +499,20 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 \end{figure}
 
 
-mention how to transform tracked points to 3d space using camera calibration data.
+\begin{figure}[H]
+\begin{center}
+   \includegraphics[width=0.7\linewidth] {implementation/affinities/modes}
+   \label{fig:cars_w}
+\end{center}
+\caption[Affinity Pipeline Modes]{foobar}
+\label{fig:affinity_modes}
+\end{figure}
+
+
+
+
+
+%TODO mention how to transform tracked points to 3d space using camera calibration data.
 
 affinities between trajectories.
 
