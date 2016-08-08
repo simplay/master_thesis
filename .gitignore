@@ -48,3 +48,8 @@ Source/core/testdata/
 Source/executables/*.jar
 Source/segmentation/kernighan_lin/out/
 Source/output/tracker_data/**/*.png*
+Document/Results/**/*.png
+Document/Results/**/*.jpg
+Document/EPS/
+Document/Results/*.png
+Document/Results/*.jpg
