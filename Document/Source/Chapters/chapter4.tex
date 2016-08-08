@@ -682,8 +682,9 @@ When computing the gradient and divergence finite approximation schemes, I used 
 
 One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
 
-\section{Evaluation Program}
-In this section we describe how we evaluate our generated segmentations. Principally, the quality of a resulting segmentation is measured by comparing it against a manually drawn ground truth segmentation image.
+\section{Segment Merger}
+In this section we describe our technique to reduce oversegmentations produced by our pipeline. This stage is invoked before running the evalaution program, implemented as a post-processing stage.
+
 \begin{figure}[H]
 \begin{center}
 \subfigure[Ground Truth Segmentation]{
@@ -718,6 +719,9 @@ i = \argmaxl_{M_i \in M} \left\vert{S_j \cap M_i}\right\vert
 \label{eq:merging_label_formula}
 \end{equation}
 The idea is to find the ground truth mask $i$ that yields the most point intersections with the currently considered segment $S_j$. Next, we update every point in $S_j$ by setting their segment label to $i$. After doing so we have computed the merged segmentation version of the initial oversegmentation. An example is shown in figure $\ref{fig:merger_result_c}$.
+
+\section{Evaluation Program}
+Finally, in this last section we describe how we evaluate our generated segmentations. Principally, the quality of a resulting segmentation is measured by comparing it against a manually drawn ground truth segmentation image.
 
 \section{NOTES}
 mention pipeline assumptions
