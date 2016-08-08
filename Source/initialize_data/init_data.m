@@ -6,17 +6,17 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'bonn_watercan_713_3_884_LRGBD';
-METHODNAME = 'lrgbd';
+DATASETNAME = 'statue_SRSF';
+METHODNAME = 'srsf';
 STEP_SIZE = 12;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
 RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
-COMPUTE_FLOW_VARIANCES = true; % compute local and global flow variance
-COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
+COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
+COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
 
@@ -29,6 +29,10 @@ APPLY_STRONG_VALIDITY_CHECK = false;
 % extract additional feature locationslocated at poorly textured regions.
 USE_EXTENDED_TRACKING_CANDIDATES = false;
 
+% should we use a subselection of tracking candidates according to a given
+% region mask. This drastically reduces the overall sampling.
+USE_SUBSEL_MASK = false;
+
 % encoding of own depth files: qRgb(0,(depth[idx]>>8)&255,depth[idx]&255);
 % i.e. real depth value is d = 255*G + B
 USE_OWN_DEPTHS = false;
@@ -39,6 +43,11 @@ DEPTH_SCALE = 1/5000;
 VAR_SIGMA_S = 5;
 VAR_SIGMA_R = 0.3; %apply to appropriate quiver region in flow field
 
+if USE_SUBSEL_MASK
+    SUBSEL_MASK_PATH = ['../../Data/', DATASETNAME, '/mask/mask.png'];
+    subsel_mask = im2double(imread(SUBSEL_MASK_PATH));
+    subsel_mask = subsel_mask(:,:,1); 
+end
 
 %% 
 BASE_OUTPUT_PATH = strcat('../output/tracker_data/',DATASETNAME,'/');
@@ -95,6 +104,11 @@ if COMPUTE_TRACKING_DATA
         flow_mag = forward_flow(:,:,1).^2 + forward_flow(:,:,2).^2;
         
         invalid_regions = consistency_check(forward_flow, backward_flow, theshScale);
+        if USE_SUBSEL_MASK
+            invalid_regions = 1-((1-invalid_regions).* subsel_mask);
+        end
+        
+        
         if APPLY_STRONG_VALIDITY_CHECK
             invalid_regions = 1-(1-invalid_regions).* (flow_mag > 0.01);
         end
@@ -103,6 +117,7 @@ if COMPUTE_TRACKING_DATA
         % Save row and column indicess of trackable pixel locations
         frame_t = imgs{t};
         img = im2double(imread(frame_t));
+        % imshow((1-consistency_check(forward_flow, backward_flow, 0.01)).*img(:,:,1))
         if USE_FILTERED_DS_FOR_CANDIDATES
             startIndex = regexp(frame_t, '/');
             filteredImgFname = frame_t(startIndex(end)+1:end);
@@ -112,6 +127,10 @@ if COMPUTE_TRACKING_DATA
         end
         
         [ tracking_candidates ] = findTrackingCandidates(img, STEP_SIZE, USE_HOLLOW_CANDIDATES);
+        if USE_SUBSEL_MASK
+            tracking_candidates = tracking_candidates .* subsel_mask;
+        end
+        
         
         % this mode is used for datasets that exhibit few feature at at important location
         % due to a lack of texture information. e.g. the statue in the
