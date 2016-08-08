@@ -1,7 +1,7 @@
-function label_assignments = run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, SAVE_FIGURES, SHOW_SEGMENTATION, col_sel, REUSE_ASSIGNMENTS, label_assignments)
+function label_assignments = run_spectral_clustering(W, U_small, S_small, RUN_MODE, CLUSTER_CENTER_COUNT, frames, imgs, label_mappings, range, path, SAVE_FIGURES, SHOW_SEGMENTATION, col_sel, REUSE_ASSIGNMENTS, label_assignments, USE_SIMPLE_COLORS)
 %RUN_SPECTRAL_CLUSTERING Summary of this function goes here
 %   Detailed explanation goes here
-    rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
+    rgb_values = rgb_list(CLUSTER_CENTER_COUNT, USE_SIMPLE_COLORS);
     
     if RUN_MODE == 1
         if REUSE_ASSIGNMENTS == 0

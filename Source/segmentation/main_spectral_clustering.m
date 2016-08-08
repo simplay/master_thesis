@@ -6,32 +6,34 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-METHODNAME = 'srsf';
-PREFIX_OUTPUT_FILENAME = 'aaabbc';
-PREFIX_INPUT_FILENAME = 'ped_top_202';
+DATASET = 'cars';
+METHODNAME = 'ldof';
+PREFIX_OUTPUT_FILENAME = 'merge_example3';
+PREFIX_INPUT_FILENAME = 'pd_top_100';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = false;
+REUSE_ASSIGNMENTS = true;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
 FILTER_ZERO_EIGENVALUES = true;
 
 % iterate over all existing images in sequence
 COMPUTE_FULL_RANGE = false;
-% 
+
+% should we use simple coloring scheme
+USE_SIMPLE_COLORS = true;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 18;
+FORCE_EW_COUNT = 6;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 12;
+CLUSTER_CENTER_COUNT = 6;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -50,7 +52,7 @@ SAVE_FIGURES = true;
 SELECT_AFFINITY_IDX = false;
 % 265
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 4;
+frame_idx = 1;
 
 
 
@@ -61,7 +63,7 @@ end
 %%
 if exist('W','var') == 0
     disp('setting initial values...')
-    W = 1; U_full = 1; S_full = 1; assignments = 1;
+    W = 1; U_full = 1; S_full = 1; label_assignments = 1;
 end
 
 % Do not change these parameters set below in productive code, just for
@@ -73,4 +75,4 @@ USE_EIGS = true;
 % Additional additive bias to make computation more reliable
 THRESH = 0.0000;
 
-[W, U, S, U_full, S_full, assignments] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, FILTER_ZERO_EIGENVALUES, REUSE_ASSIGNMENTS, assignments);
+[W, U, S, U_full, S_full, label_assignments] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, FILTER_ZERO_EIGENVALUES, REUSE_ASSIGNMENTS, label_assignments, USE_SIMPLE_COLORS);
