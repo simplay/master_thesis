@@ -527,16 +527,16 @@ There are three different segmentation methods available
 Spectral clustering of the affinity matrix
 
 
-\paragraph{spectral clustering}
+\subsection{spectral clustering}
 the eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
 underlying assumption: objects in a scene have a certain size.
 
 the min. cost multicut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
 
 limitation: only well defined for non-negative affinity values between trajectories. in practise this means it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. 
-\paragraph{MinCut} 
+\subsection{MinCut} 
 
-\paragraph{Kernighan-Lin} 
+\subsection{Kernighan-Lin} 
 formulate trajectory motion segmentation as a minimum cost multicut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showin in $\cite{KB15b}$. \\ \\
 Let $G = (E, V)$ be an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. The $KL$ algorithm attempts to find a partition of V into Two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
 \begin{equation}
@@ -683,13 +683,20 @@ When computing the gradient and divergence finite approximation schemes, I used 
 One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
 
 \section{Evaluation Program}
-statistically evaluate the quality
+In this section we describe how we evaluate our generated segmentations. Principally, The quality of a resulting segmentation is measured by comparing it against a manually drawn ground truth segmentation image.
+
+Usually, our results exhibit an oversegmentation. Therefore we want to apply a merging stage onto our results before running the evaluation. The goal of the merging phase is to lower the number of total segments but the same time retain meaningful segmentation labels. Different approaches how to implement such a merging mechanism are described in literature (LIST SOME REFS HERE). However, we use a much simpler approach. For every resulting segment we determine is closest corresponding ground truth mask label and assign it to it.  
+
+Basically, a segmentation $S$ is as a set of points in which every point is assigned to a certain segment identifier. In the following let us denote $S_j$ as the subset of points in $S$ that belong to the segmentation label $j$. Similarly, let $M$ denote the set of all ground truth points with their corresponding mask labels and $M_i$ the set of all points that belong to the ground truth mask $i$. Then, to find the corresponding ground truth label for a segment $S_j$ we simply only have to evaluate formula given by equation $\ref{eq:merging_label_formula}$. 
+\begin{equation}
+i = \argmaxl_{M_i \in M} \left\vert{S_j \cap M_i}\right\vert
+\label{eq:merging_label_formula}
+\end{equation}
+After applying this equation to every segment $S_j$ we have computed the merged segmentation version of the initial oversegmentation.
 
 
 
-
-
-
+\section{NOTES}
 mention pipeline assumptions
 discuss the details about each pipeline stage
 mention in which language the individual parts are coded.

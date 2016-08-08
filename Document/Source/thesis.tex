@@ -67,7 +67,14 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\prox}{\text{prox}}
 
-\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\newcommand*{\argminl}{\argmin\limits}
+% use `limits` notation for subscripts: 
+% => example: $\argmaxl_{i} \norm{S_j \cap M_i}$ 
+\newcommand*{\argmaxl}{\argmax\limits}
+
+
 \newcommand{\twonorm}[1]{\left\lVert#1\right\rVert_2}
 
 \headrulewidth 0.5pt \addtolength{\headheight}{5pt}
