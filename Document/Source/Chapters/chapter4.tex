@@ -687,17 +687,23 @@ In this section we describe how we evaluate our generated segmentations. Princip
 \begin{figure}[H]
 \begin{center}
 \subfigure[Ground Truth Segmentation]{
-   \includegraphics[width=0.31\linewidth] {implementation/merger/mask}
+   \includegraphics[width=0.47\linewidth] {implementation/merger/mask}
    \label{fig:merger_result_a}
 }
 \subfigure[Generated Segmentation]{
-   \includegraphics[width=0.31\linewidth] {implementation/merger/oversegmentation}
+   \includegraphics[width=0.47\linewidth] {implementation/merger/oversegmentation}
    \label{fig:merger_result_b}
 }
-\subfigure[Merged Segmentation]{
-   \includegraphics[width=0.31\linewidth] {implementation/merger/merged}
+~
+\subfigure[Overlay Ground Truth / Segmentation]{
+   \includegraphics[width=0.47\linewidth] {implementation/merger/mask_segments_overlay}
    \label{fig:merger_result_c}
 }
+\subfigure[Merged Segmentation]{
+   \includegraphics[width=0.47\linewidth] {implementation/merger/merged}
+   \label{fig:merger_result_d}
+}
+
 \end{center}
 \caption[Segmentation Merger]{Visualization of our segment merger's input and output. As an input it expects a ground truth segmentation (see figure $\ref{fig:merger_result_a}$) and a generated oversegmentation (see figure $\ref{fig:merger_result_b}$). As output it yields the merged segmentation as shown in subfigure $\ref{fig:merger_result_c}$.}
 \label{fig:merger_result}
