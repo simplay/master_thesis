@@ -183,7 +183,7 @@ Occlusion is detected by applying the backward flow to a continued tracked point
 %TODO create figure showing: point in frame 1 gets  tolerance interval
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=0.48\linewidth] {implementation/occlusion/detection}
+\includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
 \end{center}
 \caption[Occlusion Detection]{Conceptual illustration of occlusion detection. For any tracking candidate we apply its corresponding forward flow to find its position in the next frame. From there, we look-up its backward flow and apply it on the tracked to position. If we land close to the point in the original tracked from frame, we say, that the point is not occluded and otherwise we call the point occluded.}
 \label{fig:occlusion_detection}
@@ -192,7 +192,7 @@ In non-occluded case, the backward flow vector points in the inverse direction o
 \begin{equation}
 \begin{aligned}
 & \forall p_t \in \text{Frame t}:	\norm{\hat{p_t}-p_t}_2^2 < \epsilon \norm{\hat{w}_t - w_t}_2^2 + b \\
-& \text{where } \hat{p_t} = (p_t + w_t) + \hat{w_t}
+& \text{where } \hat{p_t} = p_{t+1} + \hat{w_t} \text{ with } p_{t+1} = p_t + w_t
 \end{aligned}
 \label{eq:occlussion_error_tol}
 \end{equation} \\
