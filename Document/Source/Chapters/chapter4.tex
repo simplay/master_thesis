@@ -460,33 +460,25 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 
 
 \section{Affinity Matrix}
-In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation.
-
-Trajectories of longer videos are asynchronous, i.e. cover different temporal windows in a shot. the set of points that are tracked across the whole scene is small or empty due to occlusion and disocclusion. a measurement matrix that takes the coordinates of the tracked points in all frames, as used by the multi-body factorization and subspace methods, will have many missing entries. therefore, such a measurement matrix is avoided. rather, pairwise affinities between trajectories are computed. this only requires some trajectories to have some temporal overlap.
-
-we define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts.
-
+In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. \\ \\
+Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
+However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. We define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
 Hence, as the very first step our pipeline fetches the previously extracted trajectories to form every possible pair combination. For each trajectory pair different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between overlapping trajectory segments:
-
 \begin{itemize}
   \item The spatial distance $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other.
-  \item the color distance $d_{\text{color}}$: within a certain object region, associated trajectories are tracked at locations that have a similar color value.
-  \item the motion distance $d_{\text{motion}}$: according to the gestalt principle, for each pair of trajectories at the time instant where the motion is maximally different, we can conclude, that the two points do not belong to the same object.
+  \item The color distance $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value.
+  \item The motion distance $d_{\text{motion}}$: according to the gestalt principle, for each pair of trajectories at the time instant where the motion is maximally different, we can conclude, that the two points do not belong to the same object.
 \end{itemize}
 
 % ADD FIGURE SHOWING THE DISTANCES
 
-The spatial distance is simply the average distance between the overlapping pair segments according to the euclidean norm. For computing the color distance we do the following: For every overlapping tracking point of any pair, we lookup the color value in its corresponding frame. Then, we compute the distance between the looked-up color values by transforming the color values to the $\text{CIE l*a*b}$ colorspace$\footnote{This transformation enables us to use the l2 norm in order to compute color distances.}$ and then applying the l2 norm. We finally compute the average of these color distances which is equals $d_{\text{color}}$. 
-
-Lastly, some insight into how the motion distance is computed.
-
-
-There are two main setting a user has to specify preliminarily: Whether or not depth cues should be used and which kind of similarity measure should be used. 
-
-Both options have a large impact on the final outcome of the affinity matrix. When enabling depth cues, all available depth fields are loaded into the pipeline. In combination with the depth- and color-camera calibration data, this enables the pipeline to compute the three dimensional version of each traced trajectory point, analogous as described in the previous subsection $\ref{subsection:transform_to_3d_points}$ on page $\pageref{subsection:transform_to_3d_points}$. This 3d positions are then used for computing the spatial distance between the overlapping parts of any trajectory pair. \\ \\
-Our pipeline basically supports two distance combination methods: Either it combines them by calculating the weighted sum of the distance values or it multiplies all the distances. Depending on the used combination strategy, different segmentation methods will later be used. Summed distances can only be used in combination together with the Kernighan-Lin segmentation method whereas the product of distances can be either used in our spectral clustering- or min-cut segmentation method$\footnote{The reason for this limitation is due to the fact that the summed distance method may yield negative affinities since some weights are negative.}$.
-
-All possible modes are listed in figure $\ref{fig:affinity_modes}$.
+The spatial distance is simply the average distance between the overlapping pair segments according to the euclidean norm. \\ \\
+For computing the color distance we do the following: For every overlapping tracking point of any pair, we lookup the color value in its corresponding frame. Then, we compute the distance between the looked-up color values by transforming the color values to the $\text{CIE l*a*b}$ colorspace$\footnote{This transformation enables us to use the l2 norm in order to compute color distances.}$ and then applying the l2 norm. We finally compute the average of these color distances which is equals $d_{\text{color}}$. \\ \\
+The motion distance is computed as the follows: For both trajectories of any pair, we iterate over their overlapping tracking points. The coordinates of those points are used as lookup indices in the corresponding forward flow fields. The idea is to compute the forward difference for every lookup point with a certain step size. These forward differences are then assigned to every tracking point. Next, we compute the euclidean norm between the overlapping forward differences. The final motion distance is the average of all these forward difference norms. \\ \\
+There are two main setting a user has to specify preliminarily: Whether or not depth cues should be used and which kind of similarity measure should be used. Both options have a large impact on the final outcome of the affinity matrix. \\ \\
+When enabling depth cues, all available depth fields are loaded into the pipeline. In combination with the depth- and color-camera calibration data, this enables the pipeline to compute the three dimensional version of each traced trajectory point, analogous as described in the previous subsection $\ref{subsection:transform_to_3d_points}$ on page $\pageref{subsection:transform_to_3d_points}$. This 3d positions are then used for computing the spatial distance between the overlapping parts of any trajectory pair. \\ \\
+Our pipeline basically supports two distance combination methods: Either it combines them by calculating the weighted sum of the distance values or it multiplies all the distances. Depending on the used combination strategy, different segmentation methods will later be used. Summed distances can only be used in combination together with the Kernighan-Lin segmentation method whereas the product of distances can be either used in our spectral clustering- or min-cut segmentation method$\footnote{The reason for this limitation is due to the fact that the summed distance method may yield negative affinities since some weights are negative.}$. \\ \\
+Finally, every possible mode is listed in figure $\ref{fig:affinity_modes}$.
 \begin{figure}[H]
 \begin{center}
    \includegraphics[width=0.7\linewidth] {implementation/affinities/modes}
