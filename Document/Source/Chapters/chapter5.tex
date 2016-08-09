@@ -1387,8 +1387,6 @@ Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline
 \end{table}
 We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using min cut for generating the segmentation is better than running spectral clustering.
 
-% TODO merge those two paragraphs
-
 Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
 
 
