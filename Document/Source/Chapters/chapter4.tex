@@ -460,7 +460,13 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 
 
 \section{Affinity Matrix}
-In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. Such a matrix basically encodes a similarity value between trajectories according to a predefined measure. Hence, as the very first step our pipeline fetches the previously extracted trajectories to form every possible pair combination. For each trajectory pair different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between overlapping trajectory segments: The spatial distance $d_{\text{spatial}}$, the color distance $d_{\text{color}}$ and the motion distance $d_{\text{motion}}$. \\ \\
+In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation.
+
+Trajectories of longer videos are asynchronous, i.e. cover different temporal windows in a shot. the set of points that are tracked across the whole scene is small or empty due to occlusion and disocclusion. a measurement matrix that takes the coordinates of the tracked points in all frames, as used by the multi-body factorization and subspace methods, will have many missing entries. therefore, such a measurement matrix is avoided. rather, pairwise affinities between trajectories are computed. this only requires some trajectories to have some temporal overlap.
+
+we define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts.
+
+Hence, as the very first step our pipeline fetches the previously extracted trajectories to form every possible pair combination. For each trajectory pair different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between overlapping trajectory segments: The spatial distance $d_{\text{spatial}}$, the color distance $d_{\text{color}}$ and the motion distance $d_{\text{motion}}$. \\ \\
 
 
 % ADD FIGURE SHOWING THE DISTANCES
@@ -524,21 +530,16 @@ Apart from generating the affinity matrix our pipeline also extracts the nearest
 \end{figure}
 
 
+The pairwise affinities for $n$ valid trajectories result in an $n \times n$ affinity matrix $W$.
 
 
 
+%
 
-
-
-%TODO mention how to transform tracked points to 3d space using camera calibration data.
-
-affinities between trajectories.
-
-trajectories of longer videos are asynchronous, i.e. cover different temporal windows in a shot. the set of points that are tracked across the whole scene is small or empty due to occlusion and disocclusion. a measurement matrix that takes the coordinates of the tracked points in all frames, as used by the multi-body factorization and subspace ethods, will have many missing entries. such a measurement matrix is avoided. rather, pairwise affinities between trajectories are computed. this only requires some trajectories to have some temporal overlap.
-
-we define affinities between all pairs of trajectories that share at least a common frame. they define the edge weights of a graph with trajectories as vertices. trajectory pairs without overlap are assigned zero affinity. the emerging weighted graph is the basis for a grouping with spectral clustering. 
+ they define the edge weights of a graph with trajectories as vertices. trajectory pairs without overlap are assigned zero affinity. the emerging weighted graph is the basis for a grouping with spectral clustering. 
 following such an approach, even trajectories that do not share frames can get transitively connected via other trajectories.
 
+%
 according to the gestalt principle of common fate
 we should assign high affinities to pairs of points that move together.
 
@@ -551,9 +552,6 @@ in motion segmenation based on two frame optical flow objects cannot be separate
 at this point, the long-term aspect of trajectories is important. as we are not forced any longer to make decisions for each frame independently, we can pick for each pair of trajectories the time instant where the motion is maximally different.
 according to the gestalt principle this instant provided evidence that the two points do not belong to the same object.
 
-MATHEMATICAL FORMULATION
-
-The pairwise affinities for $n$ valid trajectories result in an $n \times n$ affinity matrix $W$.
 
 \section{Sparse Motion Segmentation}
 There are three different segmentation methods available
