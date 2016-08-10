@@ -30,15 +30,15 @@ Optionally, a filtered version of the input dataset images can be generated usin
 
 \section{Computing Optical Flows}
 \label{sec:impl_optical_flow}
+In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. Flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of the motion segmentation. \\ \\
+A conceptual idea as well as a mathematical formulation is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. \\ \\
+Our pipeline strictly relies on existing implementations of the following four flow methods: Large displacement optical flow (LDOF), the original flow method proposed by Horn and Schunck (HS), Semi-rigid scene flow (SRSF) and Layered RGBD flow (LRGB). \\ \\
+In the reminder of this section we give a summary of the used flow methods.
 
-Optical flows are used to trace coherent tacking points that form a trajectory.
-
-Four different methods are available:
-Large displacement optical flow (LDOF)
-Original flow method proposed by Horn and Schunck (HS)
-Semi-rigid scene flow (SRSF)
-Layered RGBD flow (LRGB)
-
+\subsection{HS}
+\subsection{LDOF}
+\subsection{SRSF}
+\subsection{LRGBD}
 
 \section{Data Extraction}
 
