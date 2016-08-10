@@ -3,8 +3,14 @@ In this chapter we give a introduction in various topics and areas which are nec
 
 \section{Optical Flow}
 \label{sec:optical_flow}
+In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by giving an in intuitive definition, followed by a mathematical definition. Next, we discuss how such flow fields can be visualized. Lastly, we summarize and explain the pioneering formulation of HS used to estimate flow fields.
+
+\subsection{Definition}
+
 The optical flow is a visual phenomenon that describes the perception of motion.
-By definition, it is the apparent visual motion a moving viewer experiences. To To give the reader a better, more intuitive understanding of this concept, have a look at figure $\ref{fig:motion_eg}$.
+By definition, it is the apparent visual motion a moving viewer experiences.
+
+To To give the reader a better, more intuitive understanding of this concept, have a look at figure $\ref{fig:motion_eg}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[1st Frame]{
@@ -44,12 +50,33 @@ In summary, the optical flow has the following key properties:
 The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
 
 %TODO: Write mathematical definition of the optical flow
+\subsection{Mathematical Formulation}
+
+
 The optical flow is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame.
+\subsection{Visualization of Flowfields}
 
+For visualizing flow fields we use the color encoding shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized flow vectors. The angle in the circle corresponds to the direction and the distance to the center to the velocity. \\ \\
+Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Flow Color Codes]{
+   \includegraphics[width=0.35\linewidth] {background/of/flowfield_color_encoding}
+   \label{fig:color_encoding_flows_a}
+}
+~
+\subfigure[Example flow visualization]{
+   \includegraphics[width=0.5\linewidth] {background/of/cars_fwf_1}
+   \label{fig:color_encoding_flows_b}
+}
+\end{center}
+\caption[Visual Color Encoding of Flow Fields]{On the left a visualization of the color plate used to draw flow fields and on the right flow field visualized by this color scheme.}
+\label{fig:color_encoding_flows}
+\end{figure}
 
-
-\subsection{Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck}
+\subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
+Developed and formulated in Determining Optical Flow by Berthold K.P. Horn and Brian G. Schnunck.
 
 Is the distribution of apparent velocities of movement of brightness patterns in an image.
 Can arise from relative motion of objects and the viewer.
