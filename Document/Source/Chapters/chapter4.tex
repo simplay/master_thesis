@@ -33,9 +33,18 @@ Optionally, a filtered version of the input dataset images can be generated usin
 In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. Flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. \\ \\
 Our pipeline strictly relies on existing implementations of the following four flow methods: Large displacement optical flow (LDOF), the original flow method proposed by Horn and Schunck (HS), Semi-rigid scene flow (SRSF) and Layered RGBD flow (LRGB). \\ \\
-In the reminder of this section we give a summary of the used flow methods.
+In the reminder of this section we summarize the used flow methods.
 
 \subsection{HS}
+In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
+When using the abbreviation HS we strictly refer to their implementation. \\ \\
+The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
+\begin{itemize}
+  \item The quadratic penalty function is replaced by the Charbonnier penalty $p\left( x \right) = \sqrt{x^2 + \epsilon^2}$. This penalty is supposed to be more error-prone to outliers.
+  \item An incremental multi-resolution technique is applied to estimate flow fields with large displacements. The optical flow estimated at a coarse level is used to warp the second image toward the first at the next finer level and a flow increment is calculated between the first image and the warped second image. Each level is recursively downsampled by applying a Gaussian filter from its nearest lower level.
+  \item An enhanced objective function is used, which including a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
+\end{itemize}
+
 \subsection{LDOF}
 \subsection{SRSF}
 \subsection{LRGBD}
