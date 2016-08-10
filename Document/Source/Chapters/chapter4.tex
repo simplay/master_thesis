@@ -814,10 +814,6 @@ i = \argmaxl_{M_i \in M} \left\vert{S_j \cap M_i}\right\vert
 \end{equation}
 The idea is to find the ground truth mask $i$ that yields the most point intersections with the currently considered segment $S_j$. Next, we update every point in $S_j$ by setting their segment label to $i$. After doing so we have computed the merged segmentation version of the initial oversegmentation. An example is shown in figure $\ref{fig:merger_result_c}$.
 
-\section{Evaluation Program}
-Finally, in this last section we describe how we evaluate our generated segmentations. Principally, the quality of a resulting segmentation is measured by comparing it against a manually drawn ground truth segmentation image.
 
-\section{NOTES}
-mention pipeline assumptions
-discuss the details about each pipeline stage
-mention in which language the individual parts are coded.
+% TODO mention pipeline assumptions
+% TODO mention in which language the individual parts are coded.
