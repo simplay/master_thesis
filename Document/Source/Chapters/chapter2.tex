@@ -4,9 +4,7 @@ In this chapter we give a introduction in various topics and areas which are nec
 \section{Optical Flow}
 \label{sec:optical_flow}
 The optical flow is a visual phenomenon that describes the perception of motion.
-By definition, it is the apparent visual motion a moving viewer experiences. \\ \\
-To illustrate this concept have a look at figure $\ref{fig:motion_eg}$. Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
-
+By definition, it is the apparent visual motion a moving viewer experiences. To To give the reader a better, more intuitive understanding of this concept, have a look at figure $\ref{fig:motion_eg}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[1st Frame]{
@@ -31,6 +29,7 @@ To illustrate this concept have a look at figure $\ref{fig:motion_eg}$. Imagine 
 \label{fig:motion_eg}
 \end{figure}
 \footnotetext{The shown frames have been extracted from the following youtube video: \\ \url{https://www.youtube.com/watch?v=lo-pWLmMagc}}
+Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
 
 In summary, the optical flow has the following key properties:
 \begin{itemize}
@@ -43,6 +42,11 @@ In summary, the optical flow has the following key properties:
 \end{itemize}
 
 The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
+
+%TODO: Write mathematical definition of the optical flow
+The optical flow is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame.
+
+
 
 \subsection{Determining Optical Flow - Berthold K.P. Horn and Brian G. Schnunck}
 
