@@ -1,5 +1,7 @@
 \chapter{Implementation}
 %TODO: where should we use this: problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
+% TODO mention pipeline assumptions
+% TODO mention in which language the individual parts are coded.
 
 
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
@@ -815,5 +817,4 @@ i = \argmaxl_{M_i \in M} \left\vert{S_j \cap M_i}\right\vert
 The idea is to find the ground truth mask $i$ that yields the most point intersections with the currently considered segment $S_j$. Next, we update every point in $S_j$ by setting their segment label to $i$. After doing so we have computed the merged segmentation version of the initial oversegmentation. An example is shown in figure $\ref{fig:merger_result_c}$.
 
 
-% TODO mention pipeline assumptions
-% TODO mention in which language the individual parts are coded.
+
