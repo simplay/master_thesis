@@ -98,7 +98,28 @@ a method to compute dense scene flow from RGBD images by modeling the motion as 
 
 The proposed apporach provides an adjustable combination between local and piecewise rigidity, hich in conjunction with a global rigid estimation is able to capture the motion in real world scenes.
 
+%s1 
+propose    a    per-pixel    over-
+parameterized representation using rotation and translation
+to  capture  the  global  rigid  motion  of  the  scene  while
+allowing  local  deviations.    Their  method  is  more  suited
+for  a  single  moving  object.   By  comparison  our  method
+captures the global 3D motion for each individually moving
+object  and  can  handle  multiple  moving  objects
+
+%s2
+overparametrize scene flow and estimate a 6-DoF rigid- body motion at each pixel. They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions
+
 \subsection{LRGBD}
+In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
+The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation.
+%s1
+%estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
+
+%s2
+%Other methods do segment the scene to impose rigidity or strong regularization over the regions (or segments). However, these segmentations are only used as tools to improve the accuracy of the estimates, and do not really cor-
+%respond to the underlying/independent motions of the scene => partitions the scene into depth layers
+%Therefore, the segmentation-from-motion problem, which can be particularly useful for scene understanding or human-machine interaction, is not truely addressed by these methods.
 
 \section{Data Extraction}
 
@@ -144,10 +165,18 @@ Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in
 \end{algorithm}
 
 \subsection{Tracking Candidates}
-Explain purpose of the tracking candidates. \\ \\
+In this section we explain our approach how we determine image locations that exhibit meaningful motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position by our point tracker and thus responsible for detecting moving objects. \\ \\
+The simplest idea would be to track every pixel location. On one hand, this would indeed capture every moving object. On the other hand, however, this also would make the motion tracking task highly inefficient, yet infeasible for common image resolutions. Therefore, we want a method which offers us a sparse sampling of the image locations but the same time hits enough meaningful candidates. \\ \\
+Ideally, we want to use a feature detector that ignores points in homogeneous areas but selects points that show structural information in their vicinity. Since image corners exhibit a lot of structural information a Harris detector is a solid choice to approach this task.
+
+% State idea behind the harris detector
+
+
+
+
 Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that can be used in the tracking stage of the pipeline. For a given image as shown in subfigure $\ref{fig:c14_f1_cand}$ we initially compute interseting features using by applying a Harris corner detector onto it. The result is shown in figure $\ref{fig:c14_cand_corners}$. We filter weak corner candidates by thresholding too weak corners. A detailed explanation how this thresholding works is described in the appending in section $\ref{sec:corner_thresholding}$ on page $\pageref{sec:corner_thresholding}$.
 
- The remaining corners form a boolean selection mask as shown in figure $\ref{fig:c14_cand_dense}$. Finally, to avoid oversampling, we further reduce the number of samplings by only taking every $n-th$ sample location. The final tracking canidates are shown in figure $\ref{fig:c14_cand_sparse}$, illustrated as red dots, overlaid on top of the initial input image.
+ The remaining corners form a boolean selection mask as shown in figure $\ref{fig:c14_cand_dense}$. Finally, to avoid oversampling, we further reduce the number of samplings by only taking every $n-th$ sample location. The final tracking candidates are shown in figure $\ref{fig:c14_cand_sparse}$, illustrated as red dots, overlaid on top of the initial input image.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Input Image]{
@@ -173,10 +202,13 @@ Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that ca
 \end{figure}
 
 
-a set of points is initialized in the first video frame.
-principally, every pixel location could be used. however, homogeneous areas can be problematic for the optical flow. therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
 
-for efficiency reasons, we spatially subsample the initial points.
+
+
+
+% therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
+
+For efficiency reasons, we spatially subsample the initial points.
 factors larger than 12 lose details as there are not enough points to cover small object parts. on the other hand, factors smaller than 6 waste computation time as smaller objects tend to get smoothed away. 
 
 An illustration of different sampling rates is shown in figure $\ref{fig:sampling_rate_candidates}$.
@@ -227,12 +259,6 @@ mention how invalid regions are computed: occluded regions.
 \caption[Strict Dense Candidates]{A visualization of the final dense traceable features.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
-
-
-
-
-
-
 
 \subsection{Occlusion detection}
 idea: stop tracking points as soon as a point gets occluded.
