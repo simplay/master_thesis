@@ -173,16 +173,11 @@ It is possible to describe the average intensity change in any direction $(x,y)$
 as a bilinear from
 \begin{equation}
 \left( x,y \right) M \colvec{x}{y}	
-\end{equation}.
-In the Harris detector, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions thus their measured response should be large and positive. A detailed formulation can given in section $\ref{sec:harris_corner_detector}$ on page $\pageref{sec:harris_corner_detector}$. \\ \\
-% State idea behind the harris detector: briefly, add math. def to background
-
-
-
-
-Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that can be used in the tracking stage of the pipeline. For a given image as shown in subfigure $\ref{fig:c14_f1_cand}$ we initially compute interseting features using by applying a Harris corner detector onto it. The result is shown in figure $\ref{fig:c14_cand_corners}$. We filter weak corner candidates by thresholding too weak corners. A detailed explanation how this thresholding works is described in the appending in section $\ref{sec:corner_thresholding}$ on page $\pageref{sec:corner_thresholding}$.
-
- The remaining corners form a boolean selection mask as shown in figure $\ref{fig:c14_cand_dense}$. Finally, to avoid oversampling, we further reduce the number of samplings by only taking every $n-th$ sample location. The final tracking candidates are shown in figure $\ref{fig:c14_cand_sparse}$, illustrated as red dots, overlaid on top of the initial input image.
+\end{equation}
+Within the Harris detector code, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions thus their measured response should be large and positive. A detailed formulation can be found in section $\ref{sec:harris_corner_detector}$ on page $\pageref{sec:harris_corner_detector}$. \\ \\
+We apply the described Harris corner detector on every dataset image. This procedure yields a sparse set of traceable corner candidates per frame. Additionally, candidates with a too weak corner response are filtered according to a certain threshold value. \\ \\
+Lastly, for efficiency reasons, we spatially subsample the extracted locations. The subsampling is performed by applying a boolean grid with a certain cell size to the candidates, acting as a selection mask. This reduces the number of tracking candidates drastically and makes the sampling sparser. \\
+The image locations of the remaining candidates are then dumped into a file. An example of this tracking candidate extraction procedure is illustrated in figure $\ref{fig:tracable_candidates}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Input Image]{
@@ -206,18 +201,15 @@ Figure $\ref{fig:tracable_candidates}$ illustrates the feature locations that ca
 \caption[Tracking Candidates]{A visualization of the tracking candidates extraction stages. For a given input image as shown in subfigure $\ref{fig:c14_f1_cand}$ we want to compute a sparse set of traceable feature locations as shown in subfigure $\ref{fig:c14_cand_sparse}$.}
 \label{fig:tracable_candidates}
 \end{figure}
+For a given dataset frame as shown in subfigure $\ref{fig:c14_f1_cand}$ we compute its corner candidates as illustrated in figure $\ref{fig:c14_cand_corners}$. As mentioned earlier, too weak corner candidates are rejected by filtering them. The set candidate locations is visualized in figure $\ref{fig:c14_cand_dense}$ as a boolean matrix for which true means a valid traceable candidate and false an invalid tracking location. The subsampled, final output is shown in subfigure $\ref{fig:c14_cand_sparse}$. \\ \\
+So, the remaining question is: what step-size should be used to generate the sparse set of tracking candidates? 
 
-
-
-
-
+To answer this question we have run different sampling rates on our datasets and visualized the resulting tracking candidates. An example illustrating different sampling rates is dipicted in figure $\ref{fig:sampling_rate_candidates}$. 
+% rdy
+%we further reduce the number of samplings by only taking every $n-th$ sample location.
+ 
 
 % therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
-
-For efficiency reasons, we spatially subsample the initial points.
-factors larger than 12 lose details as there are not enough points to cover small object parts. on the other hand, factors smaller than 6 waste computation time as smaller objects tend to get smoothed away. 
-
-An illustration of different sampling rates is shown in figure $\ref{fig:sampling_rate_candidates}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extreme Oversampling]{
@@ -241,16 +233,10 @@ An illustration of different sampling rates is shown in figure $\ref{fig:samplin
 \caption[Density Of Candidates For Different Sampling Rates]{A visualization of different sampling rates of tracking candidates}
 \label{fig:sampling_rate_candidates}
 \end{figure}
-
-
-Traceable candidate locations are obtained by applying a Harris Corner Detector on the input image. 
-Features that are identified as corners are a viable option for starting a trajectory tracking.
-
-in addition, a boolean grid with a certain cell size is applied to the candidates, acting as a selection mask. This reduces the number of tracking candidates (spacial subsampling) drastically and makes the sampling sparser.
-
-
-mention how invalid regions are computed: occluded regions.
-
+After experimenting with this parameter we observed, that setting the cell size larger than 12 pixels causes a lose in detail since there are not enough points to cover small object parts. On the other hand, cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, please not that it is still possible to assign a different value to this parameter. \\ \\
+Finally, there is one optional post-processing stage, removing all candidates that would result in looking up a too weak optical flow value. \\
+This reduction is computed as the follows: We use the tracking candidate of a frame as lookup coordinates in their corresponding forward flow fields and compute their magnitude. Then, every candidate that maps to a magnitude value smaller than the largest 10 percent of the determined flow magnitudes is discarded. We repeat this procedure for every frame. \\ \\
+This drastically reduced the total number of candidates, however may also cancel out useful motion locations. Therefore, this is just optional. Most of the time this removes background pixel locations. An example is shown in figure $\ref{fig:tracable_candidates_strict}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[All Dense Candidates]{
@@ -262,9 +248,12 @@ mention how invalid regions are computed: occluded regions.
    \label{fig:c14_cand_dense_strict}
 }
 \end{center}
-\caption[Strict Dense Candidates]{A visualization of the final dense traceable features.}
+\caption[Strict Dense Candidates]{A visualization of the post-processed traceable candidate locations. On the left, the extracted tracking positions, on the right side, an image of the reduced candidates.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
+Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
+
+In the next section we discus how to find occluded regions.
 
 \subsection{Occlusion detection}
 idea: stop tracking points as soon as a point gets occluded.
@@ -552,6 +541,7 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 
 
 \section{Affinity Matrix}
+% TODO think about mentioning e^{- \lambda d}, where d is the combined distance 
 In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. \\ \\
 Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
 However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. We define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
