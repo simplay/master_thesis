@@ -122,3 +122,62 @@ multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
 
 
 $\cite{Ker70}$
+
+
+\section{Harris Corner Detector}
+\label{sec:harris_corner_detector}
+
+% TODO state idea of an edge
+
+Let us consider a grayscale image $I$. We are going to sweep a window $w(x,y)$ (with displacements u in the x direction and v in the right direction) I and will calculate the variation of intensity. Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:
+\begin{equation}
+	E \left( u, v \right) = \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2
+\label{eq:var_intensitiy_def}
+\end{equation}
+Next, the term $I(x + u, y + v)$ is expressed by the first order taylor series expansion as the follows:
+\begin{equation}
+	I(x + u, y + v) = I(x,y) + u I_x (x, y) + v I_y (x,y) + \text{h.o.t}
+\label{eq:taylor_exp_intensity}
+\end{equation}
+Next, we put the first order approximation of equation $\ref{eq:taylor_exp_intensity}$ into equation $\ref{eq:var_intensitiy_def}$ to simplify the definition of $E$.
+\begin{equation}
+\begin{aligned}
+E \left( u, v \right) 
+&= \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2 \\
+&\approx \sum_{x,y} w \left( x,y \right) \left[ I(x,y) + u I_x (x, y) + v I_y (x,y) - I(x, y) \right]^2 \\
+&= \sum_{x,y} w \left( x,y \right) \left[ u I_x (x, y) + v I_y (x,y) \right]^2 \\
+&= \sum_{x,y} w \left( x,y \right) u^2 I_x^2 + 2 u v I_x I_y v^2 I_y^2 \\
+&= \left( u,v \right) \left( \sum_{x,y} w (x,y)
+\begin{pmatrix}
+I_x^2 & I_x I_y \\
+I_x I_y & I_y^2 \\
+\end{pmatrix}
+\right) \colvec{u}{v}
+\end{aligned}
+\label{eq:var_intensitiy_developed}
+\end{equation}
+Let us define the following substitution
+\begin{equation}
+M = \sum_{x,y} w  (x,y)
+\begin{pmatrix}
+I_x^2 & I_x I_y \\
+I_y^2 & I_x I_y \\
+\end{pmatrix}
+\label{eq:var_intensity_sub}
+\end{equation}
+Putting the substitution from equation $\ref{eq:var_intensity_sub}$ into the final form of equation $\ref{eq:var_intensitiy_developed}$ we obtain the final form
+\begin{equation}
+	E \left( u, v \right) \approx \left( u,v \right) M \colvec{u}{v}
+\end{equation}.
+A score is calculated for each window, to determine if it can possibly contain a corner:
+\begin{equation}
+\begin{aligned}
+& R = \det(M) - \kappa \left(\text{trace}(M)\right)^2 \\
+&\text{where } \det(M) = \lambda_1 \lambda_2 \text{ and } \text{trace}(M) = \lambda_1 + \lambda_2
+\end{aligned}
+\label{eq:harris_response}
+\end{equation}
+
+
+
+
