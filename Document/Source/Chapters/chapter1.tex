@@ -72,44 +72,21 @@ WIRTE MORE MOTIVATION
 % segmenting the moving objects in a video by analysing of its long-term point trajectories.
 
 \section{Goals}
-
-The purpose of this thesis is to describe a motion segmentation method that makes use of visual cues, such as the optical flows. Moreoever, we want to exploit available depth information and illustrate how the quality of the results can be enhanced. In particular, the presented method should fulfill the follwing constraints:
-
+The purpose of this thesis is to describe a robust motion segmentation method that makes use of various visual cues for a given video sequence and the camera calibration. The actual problem statement we want to address is shown in figure $\ref{fig:problem_statement}$. Moreover, various variants of different pipeline components are implemented and their influence is examined. Additionally, the quality of the resulting segmentation is evaluated. 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=1\linewidth] {introduction/problem_statement_ref}
 \end{center}
-\caption[Problem Statement]{ foobar }
+\caption[Problem Statement]{ Graphical representation of the problem statement we want to solve in this thesis. Given a video sequence, its corresponding depth fields and the used camera calibrations, we want to extract the frames locations that mask the moving objects via segmentation.}
 \label{fig:problem_statement}
 \end{figure}
-
-
-
+More precisely, we want to achieve the following three goals:
 \begin{itemize}
-  \item supports a moving camera
-  \item be able to deal with occlusions
-  \item can handle multiple objects
-  \item is robust to nois
-  \item can process a coherent sequence of images (video)
-  \item can deal with missing data
+  \item Implement a pipeline that can segment moving of rigid objects by running a long term analysis of point trajectories by using optical flows and depth cues.
+  \item Examine the influence of the used flows, the method of trajectory analysis and segmentation and how they affect the segmentation quality by varying those components in the pipeline. For that purpose our pipeline implements various state of the art flow generation methods, different analysis approaches and a series of segmentation techniques.
+  \item Quantitatively evaluate the resulting segmentation quality produced by running various pipeline combinations by comparing them against manually drawn ground truth segments.
 \end{itemize}
-
-assumptions: only handles rigid motion
- 
-In addition, this thesis evaluates different flow-and segmentation methods and discusses their shortcomings.
-
-List of main contribution
-
-\begin{itemize}
-  \item Give an introduction into the field of optical flow, motion segmentation and clustering algorithms.
-  \item implement a pipeline that can perform the task of motion segmentation using various visual cues.
-  \item evaluate and compare the different approaches and find their drawbacks and benefits.
-  \item Use the acquired knowledge and tweak the pipeline.
-\end{itemize}
-
-
-clearly formulate the problem statement
-clearly formulate all assumptions
+Additionally, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data and can handle many moving objects. \\ \\
 
 \section{Related Work}
 
