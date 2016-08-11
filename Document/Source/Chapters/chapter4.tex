@@ -167,9 +167,15 @@ Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in
 \subsection{Tracking Candidates}
 In this section we explain our approach how we determine image locations that exhibit meaningful motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position by our point tracker and thus responsible for detecting moving objects. \\ \\
 The simplest idea would be to track every pixel location. On one hand, this would indeed capture every moving object. On the other hand, however, this also would make the motion tracking task highly inefficient, yet infeasible for common image resolutions. Therefore, we want a method which offers us a sparse sampling of the image locations but the same time hits enough meaningful candidates. \\ \\
-Ideally, we want to use a feature detector that ignores points in homogeneous areas but selects points that show structural information in their vicinity. Since image corners exhibit a lot of structural information a Harris detector is a solid choice to approach this task.
-
-% State idea behind the harris detector
+Ideally, we want to use a feature detector that ignores points in homogeneous areas but selects points that show structural information in their vicinity. Since image corners exhibit a lot of structural information a Harris detector is a solid choice to approach this task. \\ \\
+The idea of this detector is the following: A corner defines an intersection of two edges. Therefore, it represents a point in which the directions of these two edges change. For images this means that the gradient has a large variance at that location. \\
+It is possible to describe the average intensity change in any direction $(x,y)$
+as a bilinear from
+\begin{equation}
+\left( x,y \right) M \colvec{x}{y}	
+\end{equation}.
+In the Harris detector, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions thus their measured response should be large and positive. A detailed formulation can given in section FOOBAR on page BARBAZ. \\ \\
+% State idea behind the harris detector: briefly, add math. def to background
 
 
 
