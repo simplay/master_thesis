@@ -2,17 +2,15 @@
 %TODO: where should we use this: problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
 % TODO mention pipeline assumptions
 % TODO mention in which language the individual parts are coded.
+% TODO check where this might belong to: the color values are stored as CIE lab color images.
 
 
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
-The problem statement our pipeline solves is defined as follows: 
-Given a set of images that form a video sequence and their associated depth maps. Our goal is to separate the images into regions that form coherent and independent rigidly moving objects. \\ \\
-%SHOW FIGURE OF PROBLEM STATEMENT
-% INPUT: IMGS, DEPTHS, OUTPUT: SEGMENTATION
-% SHOW LATER A DETAILED PIPELINE
-The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we compute the optical flow on the images and use it as a guide for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. \\ \\
-Our pipeline has the following main stages:
-
+The problem statement our pipeline solves is defined as follows: Given a set of images that form a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. \\ \\
+% TODO: ADD pipeline figure
+The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we first compute the optical flows of the images and use them for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. \\ \\
+As shown in figure FIGURE, our pipeline consists of the following main stages:
+% TODO: checks this list and rework it
 \begin{enumerate}
 \item \textbf{Dataset Preparations}: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions. Optionally, a blurred version of the input images are computed by using a bilateral filter. This filtered images act as an additional, but optional cue, for a later pipeline stage. 
 \item \textbf{Optical Flows}: We compute the forward- and backward-flows on our input sequence using different existing implementations. Our pipeline lets the user select a target method for generating the optical flow fields.
@@ -257,7 +255,6 @@ idea: stop tracking points as soon as a point gets occluded.
 in tracking, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. in contrast, we detect occlusions by verifying the consistency of the forward and the backward flow.
 
 Occlusion is detected by applying the backward flow to a continued tracked point and checking whether that resulting point has the same origin as the actual tracked from position. Figure $\ref{fig:occlusion_detection}$ illustrates this concept of occlusion detection.
-%TODO create figure showing: point in frame 1 gets  tolerance interval
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
@@ -289,8 +286,6 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. to fill th
 \caption[Occluded Regions]{A visualization of the occluded regions. Invalid, occluded regions are colored in white illustrated as shown in subfigure $\ref{fig:c14_invalid_regions}$.}
 \label{fig:invalid_regions}
 \end{figure}
-
-the color values are stored as CIE lab color images.
 
 \subsection{Flow Variance}
 In a later stage in our pipeline, we will compute differences between different optical flow field locations. Since our optical flows may contain noise, especially along motion boundaries, we have to make our pipeline robust to these negative influence of noise. In particular, when taking the difference between two noisy flow locations, the noise level can get amplified. The purpose of this section is to describe a method how to normalize flow differences. 
