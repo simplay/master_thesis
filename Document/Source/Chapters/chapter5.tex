@@ -1,11 +1,34 @@
 % TODO eval all datasets for ldof ped mc, ldof pd sc
-\chapter{Experiments}
 %TODO: explain statistical method: precission, recall, f1, density
-
-
+\chapter{Results}
 Finally, in this last section we describe how we evaluate our generated segmentations. Principally, the quality of a resulting segmentation is measured by comparing it against a manually drawn ground truth segmentation image.
 
+\section{Datasets}
+\label{sec:datasets}
+Our dataset captured by either the Asus Xtion, the Kinect or the Kinect2. Moreover, alley2 is an artificial dataset and a sample from the ADDDATASETCITEHERE dataset. \\ \\
+For producing our motion segmentations we want to use a diverse collection of datasets. This means we want to use datasets that capture different types of motions, are recorded in-and outdoor scenes and are captured by a static or moving cameras. Also, our implementation should be able to generated segmentations for long as well as for short sequences. \\ \\
+The table $\ref{tab:datasets}$ below lists some properties of the used datasets.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Dataset} & \textbf{\#Frames} & \textbf{Resolution} & \textbf{Has Depths} & \textbf{Cameras Aligned} & \textbf{Moving Camera} \\ \hline
+cars & 19 & 480 x 640 & false & false & false \\ \hline
+wh & 104 & 480 x 640 & true & false & false\\ \hline
+bonn\_chairs & 58 & 480 x 640 & true & true & true \\ \hline
+bonn\_watercan & 58 & 480 x 640 & true & true & true\\ \hline
+bonn\_cerealbox & 101 & 480 x 640 & true & true & true \\ \hline
+alley2 & 50 & 512 x 218 & true & true & true\\ \hline
+two\_chairs & 61 & 512 x 424 & true & true & false\\ \hline
+chair & 101 & 512 x 424 & true & true & false\\ \hline
+\end{tabular}
+\caption[Datasets]{Properties of our used datasets.}
+\label{tab:datasets}
+\end{table}
 
+\section{Methodology}
+run different pipeline component combinations on our datasets. According to the run experiment, different pipeline and parameter settings are used. An exact description is given initially stated in the corresponding experiment. To reduce the effect of oversegmentation we post-process the produced motion segmentations via our segment merger. Finally, we qualitatively evaluate the quality of the merged segments by computing different statistical measures. By comparing the segments against their ground truth images, we compute the precision, recall, the f1 score and the fragmentation. 
+% under construction
 For the final quantitative evaluation formulate a series of experiments and then perform a statistical hypothesis testing. 
 We use our resulting segmentations as a prediction and compare it against a predefined ground truth. 
 
@@ -59,46 +82,7 @@ The F1 score can be interpreted as a normalized weighted average of the precisio
 \label{fig:eval_concept_recall_precc}
 \end{figure}
 
-
-
-\section{Datasets}
-\label{sec:datasets}
-
-
-
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|l|}
-\hline
-\textbf{Dataset} & \textbf{\#Frames} & \textbf{Resolution} & \textbf{Has Depths} & \textbf{Cameras Aligned} \\ \hline
-cars & 19 & 480 x 640 & false & false \\ \hline
-wh & 104 & 480 x 640 & true & false \\ \hline
-bonn\_chairs & 58 & 480 x 640 & true & true \\ \hline
-bonn\_watercan & 58 & 480 x 640 & true & true \\ \hline
-bonn\_cerealbox & 101 & 480 x 640 & true & true \\ \hline
-alley2 & 50 & 512 x 218 & true & true \\ \hline
-two\_chairs & 61 & 512 x 424 & true & true \\ \hline
-chair & 101 & 512 x 424 & true & true \\ \hline
-\end{tabular}
-\caption[Datasets]{Properties of our used datasets.}
-\label{tab:datasets}
-\end{table}
-
-
-make table similar to github redme about dataset
-display first,center and last frame per dataset
-
-% \section{Parameterspace Exploration}
-
-
-
-%\section{Qualitative Evaluation}
-%mention available pipeline levels and their main parameters again
-%tracking candidates
-
-\section{Dataset Evaluations}
-
+\section{Experiments}
 
 %TODO: statistics: performance of selected set of methods applied on all datasets: HS_PD_SC, LDOF_PD_SC (classic), LDOF_PED_MC, LDOF_SD, LDOF_SED, SRSF_PED, SRSF_SED
 %TODO: statistics: influence of lambda using LDOF_PD
@@ -1392,5 +1376,10 @@ Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline
 We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using min cut for generating the segmentation is better than running spectral clustering.
 
 Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
+
+
+\section{Discussion}
+
+
 
 

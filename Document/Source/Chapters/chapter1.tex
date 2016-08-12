@@ -82,13 +82,14 @@ The purpose of this thesis is to describe a robust motion segmentation method th
 \end{figure}
 More precisely, we want to achieve the following three goals:
 \begin{itemize}
-  \item Implement a pipeline that can segment moving of rigid objects by running a long term analysis of point trajectories by using optical flows and depth cues.
+  \item Implement a pipeline that can segment moving rigid objects by running a long term analysis of point trajectories by using optical flows and depth cues.
   \item Examine the influence of the used flows, the method of trajectory analysis and segmentation and how they affect the segmentation quality by varying those components in the pipeline. For that purpose our pipeline implements various state of the art flow generation methods, different analysis approaches and a series of segmentation techniques.
   \item Quantitatively evaluate the resulting segmentation quality produced by running various pipeline combinations by comparing them against manually drawn ground truth segments.
 \end{itemize}
 Additionally, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data and can handle many moving objects. \\ \\
 
 \section{Related Work}
+In this thesis we encounter and use many concepts from various fields. In particular we have deal with optical flow estimation methods, motion tracking analysis techniques and different segmentation concepts. In the following we give a brief summary of related work, state which parts are common with respect to our implementation and lastly, we state our contribution.
 
 \subsection{Optical Flow}
 list various existing methods to compute the optical flow

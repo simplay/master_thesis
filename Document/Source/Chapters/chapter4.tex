@@ -5,9 +5,9 @@
 % TODO check where this might belong to: the color values are stored as CIE lab color images.
 
 
+
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
-The problem statement our pipeline solves is defined as follows: Given a set of images that form a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. \\ \\
-% TODO: ADD pipeline figure
+The problem statement our pipeline solves is defined as follows: Given a set of images that form a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. Additionally, the implementation should be robust to noise and missing data, should be able to handle scene captured by a shaking camera and lastly, it should be able to detect several and fast moving rigid object.\\ \\
 The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we first compute the optical flows of the images and use them for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. \\ \\
 As shown in figure FIGURE, our pipeline consists of the following main stages:
 % TODO: checks this list and rework it
