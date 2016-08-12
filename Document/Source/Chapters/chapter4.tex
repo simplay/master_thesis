@@ -120,11 +120,8 @@ The implementation of their method is freely available on the authors website, w
 %Therefore, the segmentation-from-motion problem, which can be particularly useful for scene understanding or human-machine interaction, is not truely addressed by these methods.
 
 \section{Data Extraction}
-
-% TODO formulate basic bla of dataextraction stages
-
-Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in this stage.
-
+In this section we offer the reader a detailed description what data- and how it is extracted. This pipeline stage can be understood as a pre-processing stage. \\ \\
+In particular we will explain how meaningful traceable locations of moving objects are determined, how we handle occlusions develop a technique to normalize the flow fields to dump erroneous flows. Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in this stage.
 \begin{algorithm}[H]
 \caption{Data Extraction}
 \begin{table}[H]
@@ -161,7 +158,7 @@ Algorithm $\ref{alg:data_extraction}$ gives an overview of the involved steps in
   \vskip1.5pt
 \label{alg:data_extraction}
 \end{algorithm}
-
+For every dataset frame we extract potential tracking candidate, the forward-and backward flow to the next frame, the occlusion map and colors in the CIE lab space, the normalized depth fields ranging in meter units and the depth-and flow variances. All this data is then saved to an individual file and used in a later pipeline stage.
 \subsection{Tracking Candidates}
 % TODO: see, where this might fit
 %we further reduce the number of samplings by only taking every $n-th$ sample location.
@@ -393,16 +390,16 @@ y_1 \sim y_2 (0, \sigma_y^2
 \end{aligned}
 \label{eq:flow_variance_formula}	
 \end{equation}
-In the last step of equation $\ref{eq:flow_variance_formula}$ we used the abbreviation $\sigma_x^2$ which denotes the variance of the optical flow along its $x$ direction. In this derivation we exploited the fact that $x_1$ and $x_2$ are independent random variables, $y_1$ and $y_2$ respectively. Hence, the term $\mathbf{E} \left[ x_1 x_2\right]$ yields the value zero.
+In the last step of equation $\ref{eq:flow_variance_formula}$ we used the abbreviation $\sigma_x^2$ which denotes the variance of the optical flow along its $x$ direction. In this derivation we exploited the fact that $x_1$ and $x_2$ are independent random variables, $y_1$ and $y_2$ respectively. Hence, the term $\mathbf{E} \left[ x_1 x_2\right]$ yields the value zero. \\ \\
+We experimentally also have defined an expression for computing depth variances. However, we this special run-mode has only been implemented to demonstrate the limitations of our pipeline. Therefore, the description of this procedure can be found in the appendix. 
 
 
-depth fields
-color values
+
 depth field variances.
 
 
 
-\section{Trajectories}
+\section{Forming Trajectories}
 As discussed earlier, motion is a spatially and temporal coherent visual cue. This key insight tells us that motion is not frame-wise independent. Hence, we have to extract the whole motion history of every frame location and feed it to a particular segmentation method in order to produce viable motion groupings. To build the history of a point we track it to its successor frames using the optical flow. Such a ordered list of tracked to points is called trajectory. Finally, the set of all possible trajectories forms the seeked motion history. In this section we explain in detail the required steps to generate such trajectories and their 3d version using camera calibration data.
 
 \subsection{Point tracking}
