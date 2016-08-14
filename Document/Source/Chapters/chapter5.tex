@@ -1058,10 +1058,7 @@ of number of clusters,eigenvectors. The corresponding statistics are listed in t
 \label{tab:wh_ev_c}
 \end{table}
 
-
-
-
-\subsection{Two Chairs}
+\subsection{Quality Product Affinities}
 
 \begin{figure}[H]
 \begin{center}
@@ -1255,7 +1252,7 @@ PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline
 \label{tab:bonn_cerealbox_performance}
 \end{table}
 
-\subsection{Alley}
+\subsection{Fast Moving Camera}
 
 \begin{figure}[H]
 \begin{center}
@@ -1281,8 +1278,13 @@ PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline
 \label{fix:alley_segmentations}
 \end{figure}
 
-\subsection{Statue}
-
+\subsection{PED MC using different flows}
+This experiment should examine how some of our methods perform when running a particular difficult dataset. For this purpose we use the statue statue. In particular it has the following difficulties:
+\begin{itemize}
+  \item movement, deformation (hands), rotation (spinning statue on rotator), removing parts.
+  \item many invalid regions due to missing depth information
+\end{itemize}
+Some frames of this dataset, as well as their corresponding ground truth images are listed in figure $\ref{fig:statue_ds}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 25]{
@@ -1306,7 +1308,8 @@ PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline
 \caption[Statue Dataset]{foobar}
 \label{fig:statue_ds}
 \end{figure}
-
+We only vary the used flow method and fix the pipeline mode to PED MC. In other words we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
+The achieved performances are listed in table $\ref{tab:statue_performance}$ and visual segmentations are depicted in figure $\ref{fix:alley_segmentations}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[LDOF PED MC]{
