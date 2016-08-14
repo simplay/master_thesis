@@ -99,6 +99,18 @@ method comparison, given a fixed number of clusters
 mention that we use merged clusters for performing the evaluations.
 
 \subsection{Bonn Chairs}
+%START EXPERIMENT SETUP
+chairs dataset
+use only LDOF flows
+affinity generation / segmentation techniques combinations
+pipeline modes: PD SC, PD MC, PED SC, PED MC, SD KL, SED KL.
+solve for 10 fixed clusters and evaluate the resulting segments on two different kinds of masks: real and simple case.
+Which setting is the best?
+
+moreover, evaluate the quality of LDOF SED KL segmentation by altering the number of clusters we want to solve for.
+% END EXPERIMENT SETUP
+
+
 The \textit{Bonn Chairs} dataset is a video sequence consisting of 58 frames. It shows a room containing two chairs and a man. The man is moving the and rotating the right chair. Also, the camera is moving. See figure $\ref{fig:eval_bonn_chairs_frames}$ to get a better understanding of the whole scene.
 \begin{figure}[H]
 \begin{center}
@@ -456,7 +468,14 @@ Please notice that the performance of the $\textit{LDOF\_SED\_KL}$ is very poor 
 
 
 \subsection{Cars Dataset}
+%START EXPERIMENT SETUP
+chairs dataset, has no depth fields
+use only LDOF flows and PD affinities
+vary segmentation technique: SC, MC, KL
 
+since we only use PD affinities, examine the influence of
+$\lambda$ used to compute the affinity values and how it affects the quality of the segments, when running SC.
+% END EXPERIMENT SETUP
 
 \begin{table}[H]
 \centering
@@ -578,6 +597,11 @@ whereas choosing a too small lambda value leads to an oversegmentation.
 
 
 \subsection{Bonn Watercan Dataset}
+%START EXPERIMENT SETUP
+watercan dataset
+run every possible flow-, affinity-,segmentation method pipeline combinations and evaluate their results on the available ground truth frames.
+additionally, have a closer look at LRGBD flows and describe them qualitatively using this dataset.
+% END EXPERIMENT SETUP
 
 \begin{figure}[H]
 \begin{center}
@@ -682,29 +706,9 @@ LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 
 observations
 SRSF outperforms every other flow method
-using depth maps leads too a drasti segmentation improvement.
+using depth maps leads too a drastically improves the segmentation quality.
 HS with depth cues almost achieves the same segmentation performance as when using LDOF flows. However, keep in mind that HS flows are computed about roughly 20 times faster than LDOF flows.
-even though the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation.
-
-
-
-
-
-
-
-explain the assumption of the datasets
-explain what kind of segmentations have been generated and evaluated.
-
-
-
-
-
-
-
-parameterspace exploration
-running different similarity tasks
-
-
+even though the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers.
 
 
 \begin{figure}[H]
@@ -735,6 +739,15 @@ the resulting segmentation when using lrgbd flows separates the layers rather th
 
 
 \subsection{Chair 3 Cast}
+% START EXPERIMENT DESC
+use LDOF flows and run the pipeline modes: PD SC, PD MC, PED SC, PED MC
+vary the number of clusters and evaluate the resulting segmentations
+This experiment should examine 
+This experiment should examine the behaviour of these modes using an increasing number of clusters.
+
+% END EXPERIMENT DESC
+
+
 %TODO: add figure showing segmentation of worst performance: worst/best
 
 \begin{figure}[H]
@@ -928,10 +941,8 @@ avgs
 
 % rotating statue
 
-\subsection{wh1}
-
-6 clusters, 6 eigenvectors
-
+\subsection{Dependence of Eigenvector-Cluster Count on MC}
+In this experiment, we use the \textbf{WH} dataset and again only use LDOF flows. An example frame with its ground truth image is shown in figure $\ref{fig:wh1_dataset}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 40]{
@@ -944,9 +955,14 @@ avgs
 }
 \end{center}
 \caption[Segmentations Waving Hand]{foobar}
-\label{fig:wh1_performance}
+\label{fig:wh1_dataset}
 \end{figure}
+Initially, run the pipeline modes: PD SC, PD MC, PED SC, PED MC. \\ \\
+Afterwards, run the mode PED MC once again for a varying number of used eigenvectors-clusters. \\ \\
+Since the MC both parameters determine the final quality of this method, this should us give a better understanding of this parameters. How does the result change when we fix the cluster count but vary the number of eigenvectors or how does the segmentation quality improve for a fixed number of eigenvectors, when varying the total number of used clusters. Hence, a set of eigenvector-,cluster-count combinations are run their segmentations are evaluated using the available GT images. \\ \\
+This should give us a better understanding of the behaviour of the MC method and the influence of those parameter values. \\ \\
 
+In this first sub-experiment we generate the segmentations running the pipeline modes: PD SC, PD MC, PED SC, PED MC. We fix the number of clusters and eigenvectors and set them equals six. Some segmentations are shown in figure $\ref{fig:wh1_performance}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[PD SC]{
@@ -969,8 +985,7 @@ avgs
 \caption[Segmentations Waving Hand]{foobar}
 \label{fig:wh1_performance}
 \end{figure}
-
-
+The corresponding statistics of those segmentations are listed in table $\ref{tab:wh1_performance}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -985,18 +1000,12 @@ PED MC & 71.47\%   & 67.39\%     & 69.37\%  \\ \hline
 \caption[Cars Varying $\lambda$]{My caption}
 \label{tab:wh1_performance}
 \end{table}
-
-
-experiment 2
-method ped mc
-for 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
-of number of clusters,eigenvectors
-
-experiment 3
-method ped mc
-for number of iters 0...10 evaluate performance of results 
-
-%
+We observe that:
+PED MC achieves a better results than the other methods.
+Additionally, using depths seems to increase the quality of the segmentations. \\ \\
+Next, we perform sub-experiment two. In this we examine the bahaviour of PED MC method for a varying the eigenvalue-cluster count. Additionally, we want to investigate the dependence between these two parameter to better understand them. \\ \\
+For 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
+of number of clusters,eigenvectors. The corresponding statistics are listed in table $\ref{tab:wh_ev_c}$. To give the reader a easier way to understand the results we visualized the resulting statistics. For fixed cluster counts, we plotted the recall-precession and the eigenvector-f1 score graphs. Moreover, for fixed eigenvector counts we plotted the resulting recall-precession and clusters-f1 score graphs. The graphs are given in figure $\ref{fig:wh1_performance_var_ev_c_graphs}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Varying Clusters Recall/Precision Plot]{
@@ -1017,11 +1026,9 @@ for number of iters 0...10 evaluate performance of results
 }
 \end{center}
 \caption[Plot Performance Varying CLuster/Eigenvectors]{foobar}
-\label{fig:wh1_performance_var_ev_c}
+\label{fig:wh1_performance_var_ev_c_graphs}
 \end{figure}
-
-
-%
+% TODO: state observations here: 
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|c|c|}
@@ -1048,7 +1055,7 @@ for number of iters 0...10 evaluate performance of results
 6 & 10.91\% & 34.90\% & 51.30\% & 53.62\% & 69.37\%  \\ \hline
 \end{tabular}
 \caption[Performance Varying Eigenvector-Cluster]{My caption}
-\label{tab:ev_c}
+\label{tab:wh_ev_c}
 \end{table}
 
 
