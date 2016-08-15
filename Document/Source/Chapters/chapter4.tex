@@ -507,15 +507,47 @@ In this section we describe how we compute the so called affinity matrix, which 
 Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
 However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. We define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
 According to the gestalt principle of common fate, we should assign high affinities to pairs of points that move together. \\
-Two persons walking next to each other share the same motion although they are different objects. a person sitting in a chair shares the same motion as the objects in the background. the gestalt principle tells us that these situations should be treated conservatively and objects should not be separated. \\ \\
-Hence, as the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, called label, assigned. Next, every possible trajectory pair combination is formed. Trajectories that are shorter than a user specified are filtered and thus discarded. \\ \\
-For each remaining trajectory pair, different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between overlapping trajectory segments:
+Imagine the situation where two persons are walking next to each other$\footnote{Assume both persons are walking at the same speed in the same direction, ignoring all motions due to deformation.}$. Although they are different objects, both of them share the same motion. Moreover, a not moving person that sits in a chair shares the same motion as the objects in the background. The gestalt principle tells us that these situations should be treated conservatively and the objects from these examples should not be separated. \\ \\
+In the following we describe in detail the steps of algorithm $\ref{alg:computing_affinity_matrix}$ which is used to generate the affinity matrix.
+\begin{algorithm}[H]
+\caption{Generating Affinity Matrix}
+\begin{table}[H]
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Input:} & Extracted Trajectories \bf{T} \\
+		& Forward Flows \bf{OF} \\
+ 		& Dataset Images (\emph{optional}) \bf{F} \\
+    \textbf{Output:} & Affinity Matrix \bf{W} \\
+    & Nearest Trajectory Neighbors \bf{$\mathcal{N}$}\\
+    & Trajectory Labels \bf{$\mathcal{L}$}\\
+  \end{tabular} 
+\end{table}
+\setlength{\fboxrule}{0pt} 
+\begin{boxedminipage}{1.0\textwidth}
+  \begin{algorithmic}[1]
+      \State $\text{Form every possible trajectory pair combination of } \bf{T}$
+      \State $\text{Filter too short trajectories}$
+      \ForAll{$\text{Trajectory pair } \left( \textbf{a}, \textbf{b} \right)$}
+        \State $\left( \textbf{p}^a, \textbf{p}^b \right) \longleftarrow\text{Select all temporal overlapping segments between } \textbf{a} \text{ and } \textbf{b}.$
+        \State $d_{\text{spatial}} = \text{computeSpatialDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{T} \right)$
+        \State $d_{\text{color}} = \text{computeColorDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{F} \right)$
+        \State $d_{\text{motion}} = \text{computeMotionDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{F} \right)$
+        \State $d = \text{combineDistances} \left( d_{\text{spatial}}, d_{\text{color}}, d_{\text{motion}} \right)$
+        \State $W \left( \textbf{a}\text{.label}, \textbf{b}\text{.label} \right) = e^{-\lambda d}$
+        \State $\text{Update nearest neighbors of } \textbf{a} \text{ and } \textbf{b} \text{ using } d_{\text{spatial}}$
+      \EndFor
+  \end{algorithmic}
+  \end{boxedminipage}
+  \vskip1.5pt
+\label{alg:computing_affinity_matrix}
+\end{algorithm}
+As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, every possible trajectory pair combination is formed. Trajectories that are shorter than a user specified are filtered and thus discarded. \\ \\
+For each remaining trajectory pair, different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between temporal overlapping trajectory segments$\footnote{By the term \textit{temporal overlapping} we refer to tracking point in a trajectory pair that share a common frame.}$:
 \begin{itemize}
   \item The \textbf{spatial distance} $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other.
   \item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value.
   \item The \textbf{motion distance} $d_{\text{motion}}$: according to the gestalt principle we can conclude, that for each pair of trajectories at the time instant where the motion is maximally different, the two points do not belong to the same object.
 \end{itemize}
-So the question, how are these distances computed, raises. \\ \\
+So the questions raise: how are these distances computed and how are they combined? \\ \\
 The spatial distance is simply equals to the average distance between the overlapping pair segments according to the euclidean norm as defined in equation $\ref{eq:spatial_distance}$.\\ \\
 For computing the color distance we use the definition of equation $\ref{eq:color_dist}$. For every overlapping tracking point of any pair, we lookup the color value in its corresponding frame. Then, we compute the distance between the looked-up color values by transforming the color values to the $\text{CIE l*a*b}$ colorspace$\footnote{This transformation enables us to use the l2 norm in order to compute color distances.}$ and then applying the l2 norm. We finally compute the average of these color distances which is equals $d_{\text{color}}$. \\ \\
 Lastly, some details about how to compute the motion distance which is formulated in equation $\ref{eq:motion_distance}$. For both trajectories of any pair, we iterate over their overlapping tracking points. The coordinates of those points are used as lookup indices in the corresponding forward flow fields. The idea is to compute the forward difference for every lookup point with a certain step size similar as shown in figure $\ref{fig:motion_dist}$. These forward differences (blue and green arrow) are then assigned to every tracking point. Next, we compute the euclidean norm between the overlapping forward differences. The final motion distance is the average of all these forward difference norms.
@@ -541,7 +573,8 @@ Our pipeline basically supports two distance combination methods: Either it comb
 As shown in figure $\ref{fig:affinity_modes}$, our pipeline offers four different affinity generating modes: PD, SD, PED and SED. \\ \\ 
 When running the mode PD or PED we combine distance by multiplying them. The affinity matrix is computed according to the definition of equation $\ref{eq:prod_dist_affinity}$, the negative weighted exponential of the combined distance value. Please note that this combination function always yields values between zero and one. A value close to one means, that the two trajectories are very similar, whereas a value close to zero or even equals zero means they are very distinct according to the used metrics. \\ \\
 However, when running the mode SD or SED the distances are summed and the corresponding affinity is computed as defined in equation $\ref{eq:sum_dist}$. This combination function yields arbitrary values in the real numbers. This combination strategy returns an affinity measure that is dedicated to the Kernighan-Lin segmentation implementation. \\ \\
-In summary, the affinity is computed between a trajectory and every other trajectory by calculating the distances described above and then combining them in a certain way. Every trajectory instance therefore carries a list of affinities, which is ascendingly ordered by the label of the partner trajectory. \\ \\
+Additionally, our pipeline also offers a mode to compute affinities between shortly disconnected trajectories. The idea is to prepend (extend) one additional tracking point to a predecessor (successor) frame by adding the average motion distance of the next (previous) five frames to the trajectory's starting point (end point). Please note that this run-mode is only is optional and thus has to be invoked manually. Moreover, we could not observe any improvements in the resulting segmentations, when enabling this mode. \\ \\ 
+In summary, the affinity matrix is computed between a trajectory and every other trajectory by calculating the distances described above and then combining them in a certain way. Every trajectory instance therefore carries a list of affinities, which are sorted by their partner trajectory's label in an ascending order. \\ \\
 Therefore, for building the affinity matrix, we fetch all used trajectories, order them by their label value (again, ascending). Then, all we have to do is to traverse these ordered trajectories and then write their ordered affinities (to the other trajectories) into a file. Actually, each trajectory forms a line, where a line consists of the affinity values of the currently visited trajectory. Our writer uses a special file formatter that is able to generate a Matlab readable mat file. The pairwise affinities for $n$ valid trajectories result in an $n \times n$ affinity matrix $W$ as shown in figure $\ref{fig:cars_affinity_matrix}$. \\ \\
 \begin{figure}[H]
 \begin{center}
