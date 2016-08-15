@@ -584,7 +584,15 @@ Therefore, for building the affinity matrix, we fetch all used trajectories, ord
 \caption[Affinity Matrix]{Visualization of affinities among trajectories and the structure of the matrix $W$.}
 \label{fig:cars_affinity_matrix}
 \end{figure}
-To later support queries that allow to fetch affinities by a trajectory label, we also have to write a file containing every valid trajectory label identifiers. The labels are in an ascending order with respect to their label id. \\ \\
+To later support queries that allow to fetch affinities by a trajectory label, we also have to write a file containing every valid trajectory label identifiers. The labels are in an ascending order with respect to their label id. Figure $\ref{fig:affinity_index_label_mapping}$ shows how an affinity lookup by two given trajectory labels can be performed.
+\begin{figure}[H]
+\begin{center}
+   \includegraphics[width=0.85\linewidth] {implementation/affinities/affinity_label_mapping}
+   \label{fig:cars_w}
+\end{center}
+\caption[Affinity Matrix Index Trajectory Label Mapping]{To lookup an affinity value between two trajectories we first have to lookup their matrix indices. This is performed by using the trajectory label / affinity matrix id mapping. In this example, we want to get the affinities between the trajectories with id 18 and 13. We first look those label's matrix indices and then use those indices to lookup the actual affinity value.}
+\label{fig:affinity_index_label_mapping}
+\end{figure}
 Apart from generating the affinity matrix our pipeline also extracts the per trajectory nearest neighboring trajectories. The distance to those neighbors is measured with respect to the average spatial distance. Luckily, we already have computed this spatial distance value while traversing the trajectory pairs. \\ \\
 To conclude this section and offer the reader a better understanding what those affinities actually are and mean, we discuss an affinity visualization, produced by our pipeline, shown in figure $\ref{fig:cars_affinities}$.
 \begin{figure}[H]
