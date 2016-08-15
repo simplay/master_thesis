@@ -78,46 +78,19 @@ In their paper they propose a method how to combine both strategies. They direct
 In summary, LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per 480 x 640 pixel frame.
 
 \subsection{SRSF}
-%
-c++ program that has to be compiled manually
-some code parts are available,
-can only process images with a resolution 480 x 640
-makes use of depth fields 
-produces good quality flow estimations
-takes a fair amount of time to compute a flow field
-%
+In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
+This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation they offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
+They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
+In the following some details according to their implementation
+\begin{itemize}
+  \item they represent motions as a field 3d vector field of twists, which encourages piecewise-smooth solutions of rigid body motions.
+  \item instead of representing the flow vectors in the 3d space, they represent the scene structure in the image domain. Then, color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images. 
+  \item However, scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed. In their work the use an over-parameterization of the scene flow. each scene point is allowed to follow a rigid body motion. this way, the regularization can be done on a field of rigid motion.
+  \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
+  \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
+\end{itemize}
 
-scene flow that exploits the local and piecewise rigidity of real world scene. 
-
-use RGBD images as input for estimating the scene flow
-
-compute the optical flow from RGB images and infer the scene flow from the depth data.
-
-in their work: the scene structure can be represented in the image domain, where color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images.
-
-scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed.
-
-usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
-
-in this work use the fact that most real scenes can be well modeled as locally or piecewise rigid, i.e. the scene is composed of 3d independently rigid components. 
-
-contribution: an over-parameterized framework for estimating scene flows from RGBD images. The scene flow is modeled as a vector field of rigid body motions. 
-
-a method to compute dense scene flow from RGBD images by modeling the motion as a field of rigid motions. This allows for piecewise smooth solutions using a TV regularization on the paramterization. 
-
-The proposed apporach provides an adjustable combination between local and piecewise rigidity, hich in conjunction with a global rigid estimation is able to capture the motion in real world scenes.
-
-%s1 
-propose    a    per-pixel    over-
-parameterized representation using rotation and translation
-to  capture  the  global  rigid  motion  of  the  scene  while
-allowing  local  deviations.    Their  method  is  more  suited
-for  a  single  moving  object.   By  comparison  our  method
-captures the global 3D motion for each individually moving
-object  and  can  handle  multiple  moving  objects
-
-%s2
-overparametrize scene flow and estimate a 6-DoF rigid- body motion at each pixel. They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions
+The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
 
 \subsection{LRGBD}
 In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
