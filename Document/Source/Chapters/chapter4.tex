@@ -529,6 +529,7 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 \end{enumerate}
 
 \section{Affinity Matrix}
+\label{sec:affinity_matrix_impl}
 In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. \\ \\
 Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
 However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. We define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
