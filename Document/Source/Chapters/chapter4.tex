@@ -654,17 +654,12 @@ Our clustering method implements a k-means algorithm that runs on the given eige
 The output of this method is a grouping of vector indices. Please notice that all indices, which belong to the same group, correspond to the same moving object. In particular, it is easily possible to map the group indices to actual trajectories by making use of the label mapping list. This list has been computed in the previous pipeline stage. The mentioned mapping is illustrated in figure $\ref{fig:affinity_index_label_mapping}$. \\ \\
 One important aside about the eigen-decomposition step: Usually, the number of objects is expected to be significant smaller than the number of trajectories. Therefore, an efficient iterative method for computing the eigenvectors and eigenvalues can be used and the whole computation is feasible. \\ \\
 In the following, let us discuss how many eigenvectors should be selected, respectively, what value $m$ should correspond to. \\ \\
-
-
-
-% previousely
-the eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
-underlying assumption: objects in a scene have a certain size.
-
-the min. cost multi-cut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
-
-limitation: only well defined for non-negative affinity values between trajectories. in practise this means it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. 
+We filter all trivial solutions. Those are the eigenvectors that correspond to an eigenvalue equals zero. In our implementation basically allows to manually specify the number of eigenvectors that should be used (i.e. the smallest m ) or to use the default mode, which selects twice as many eigenvectors as the cluster count we want to solve for. We also experimented with finding the optimal value for $m$ by generating all possible segmentations for m equals two to two times the cluster count for a fixed cluster count. Then, by comparing the resulting segmentations against ground truth images, we selected the best assignment for m. However, such a approx yields dataset-dependent values for m. Furthermore, it assumes the presence of ground truth frames. Lastly, this is very time consuming. Therefore, we decided to use the default mode, using twice the cluster count for m. \\ \\
+Analogously, we could ask ourself: what is the best value for the cluster count. Again, we generate all possible segmentations for a fixed value of m by varying the cluster count. However, we found a good heuristic, by using twice the number of expected moving objects. For further information please refer to the chapter results. \\ \\
+The limitation of this approach is that such a clustering is only defined for non-negative affinity values between trajectories. Otherwise the eigenvalue decomposition of the Laplacian would yield complex valued eigenvectors. In practise, this assumption implies that it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. \\ \\
+Spectral clustering is supposed to produce oversegmentations and there is not always smooth transitions between the eigenvectors.
 \subsection{MinCut} 
+the min. cost multi-cut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
 
 \subsection{Kernighan-Lin} 
 formulate trajectory motion segmentation as a minimum cost multi-cut problem on a trajectory graph. In this graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. this approach is supposed to outperform spectral clustering as showing in $\cite{KB15b}$. \\ \\
