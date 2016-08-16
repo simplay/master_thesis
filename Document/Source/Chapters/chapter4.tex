@@ -669,11 +669,10 @@ In the following we describe this energy term, but before doing so, we have to p
 \end{aligned} 
 \label{eq:min_cut_energy_revisited}
 \end{equation}
-The data term models an unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. \\ \\
-The smoothness term acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized for more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
+The $\delta_{\pi^A, \pi^B}$ is a characteristic function which is equals one if the trajectories $A$ and $B$ are assigned to the same cluster and zero otherwise. Similarly, the expression $\delta_{\pi^A, k}$ is a boolean function that is one, if the trajectory $A$ got the label k assigned. \\ \\
+The $\textbf{data term}$ models an unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. Notice that this term makes use of the norm $\norm{.}_{\lambda}$. In this norm each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues. \\ \\
+The $\textbf{smoothness term}$ acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized for more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
 The parameter $\nu$ acts as the tread-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
-When using the norm $\norm{.}_{\lambda}$, then, each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues.
-
 %
 the min. cost multi-cut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
 
