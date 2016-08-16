@@ -586,7 +586,7 @@ Therefore, for building the affinity matrix, we fetch all used trajectories, ord
    \includegraphics[width=0.65\linewidth] {implementation/affinities/cars/cars_w}
    \label{fig:cars_w}
 \end{center}
-\caption[Affinity Matrix]{Visualization of affinities among trajectories and the structure of the matrix $W$.}
+\caption[Affinity Matrix]{Visualization of affinities among trajectories and the structure of the matrix $W$. The affinity is visualized by a grayscale image. The row-and column indices in the matrix determine a trajectory pair and the value at that position their affinity. Bright values indicate a high affinity between two trajectories.}
 \label{fig:cars_affinity_matrix}
 \end{figure}
 To later support queries that allow to fetch affinities by a trajectory label, we also have to write a file containing every valid trajectory label identifiers. The labels are in an ascending order with respect to their label id. Figure $\ref{fig:affinity_index_label_mapping}$ shows how an affinity lookup by two given trajectory labels can be performed.
@@ -595,7 +595,7 @@ To later support queries that allow to fetch affinities by a trajectory label, w
    \includegraphics[width=0.85\linewidth] {implementation/affinities/affinity_label_mapping}
    \label{fig:cars_w}
 \end{center}
-\caption[Affinity Matrix Index Trajectory Label Mapping]{In order to lookup an affinity value between two trajectories we first have to lookup their matrix indices. This is performed loading a file that contains a mapping between the trajectory-labels and affinity matrix-indices. In this example, we want to get the affinities between the trajectories with id 18 and 13. We first look those label's matrix indices and then use those indices to lookup the actual affinity value.}
+\caption[Mapping between Affinity Matrix Indices and Trajectory Labels]{In order to lookup an affinity value between two trajectories we first have to lookup their matrix indices. This is performed loading a file that contains a mapping between the trajectory-labels and affinity matrix-indices. In this example, we want to get the affinities between the trajectories with the label id 18 and id 13. We first look those label's matrix indices and then use those indices to lookup the actual affinity value.}
 \label{fig:affinity_index_label_mapping}
 \end{figure}
 Apart from generating the affinity matrix our pipeline also extracts the per trajectory nearest neighboring trajectories. The distance to those neighbors is measured with respect to the average spatial distance. Luckily, we already have computed this spatial distance value while traversing the trajectory pairs. \\ \\
@@ -620,7 +620,7 @@ To conclude this section and offer the reader a better understanding what those 
    \label{fig:cars_d}
 }
 \end{center}
-\caption[Trajectory Affinities]{Visualization of affinities among trajectories and the structure of the matrix $W$. The affinity is visualized by a grayscale image. The row-and column indices in the matrix determine a trajectory pair and the value at that position their affinity. Bright values indicate a high affinity between two trajectories. }
+\caption[Trajectory Affinities Example]{Visualizing four examples of the affinities between a selected trajectory point (marked in red) and its affinities to any other present trajectory point. The more similar two points are, the more yellowish a dot get. Contrary, the more dissimilar two points are, the more bluish the point gets.}
 \label{fig:cars_affinities}
 \end{figure}
 In this figure, we visualize four examples of the affinity values between a selected point (marked by a red dot) and every other trajectory. The larger the similarity, the more yellow the color becomes and, vice versa,  the smaller the affinity, the more blue is becomes. For example in subfigure $\ref{fig:cars_b}$, we selected a point on the moving car in the background. It has strong affinities to tracked points within the car and small to the front car and to the background. Similar results are shown in the other subfigures. This results hints the potential of our pipeline. \\ \\
