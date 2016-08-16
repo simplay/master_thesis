@@ -50,6 +50,7 @@ Please note that by computing the affinity for every existing trajectory pair co
 Given the pairwise affinity matrix $W$ as computed in section $\ref{sec:trajectory_affinities}$ on page $\pageref{sec:trajectory_affinities}$. An example of such an matrix is shown in figure $\ref{fig:cars_affinity_mat_sub}$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
 \begin{equation}
 	D = \text{diag} \left( d_{A_1}, \dots, d_{A_n} \right)
+\label{eq:def_d_mat}
 \end{equation}
 be the $n \times n$ diagonal matrix with the entries
 \begin{equation}
