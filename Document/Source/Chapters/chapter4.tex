@@ -632,12 +632,8 @@ Every implemented segmentation method returns a file containing a mapping betwee
 In order to draw the segmentation of the $k-th$ frame in a certain dataset, we load all trajectories that are active in that frame. For a trajectory, being active in a certain frame refers to a trajectory which contains a point that was tracked in that particular frame. To draw a segmentation pixel, the determined segment label defines the color and the tracking point its position in the corresponding frame. \\ \\
 In the following we offer a detailed explanation of these motion segmentation methods.
 \subsection{Spectral Clustering}
-% new textual sources
-
 In the previous section we described how the pairwise affinities can be computed. For $n$ trajectories we ended up by a a $n \times n$ affinity matrix $W$. \\ \\ 
-
-One possible way to interpret these matrix entries is to identify them as edge weights of a fully connected graph $G$, where each trajectory represents a node. 
-Following this interpretation, then, the task of extracting the moving objects  corresponds to the task of grouping several similar graph vertices. \\ \\
+One possible way to interpret these matrix entries is to identify them as edge weights of a fully connected graph $G$, where each trajectory represents a node. Following this interpretation, then, the task of extracting the moving objects  corresponds to the task of grouping several similar graph vertices. \\ \\
 An approximately optimal partitioning of $G$ can be obtained via spectral clustering. The idea behind this approach is to decompose a transformed version of W and then cluster only a few of the resulting components to obtain the moving objects. In the following we provide a detailed description how to perform such a clustering. \\ \\
 As the first step, we have to transform the affinity matrix $W$ in a special way to obtain the normalized graph Laplacian $L$. The exact definition of this transformation is given by equation $\ref{eq:def_l_mat}$.
 \begin{equation}
@@ -664,10 +660,8 @@ Spectral clustering is supposed to produce oversegmentations and there is not al
 In this section we describe an alternative method to generate motions segmentation. This approach directly addresses some issues of the previously described spectral clustering approach. \\ \\
 Generally, eigenvectors typically show smooth transitions within a region and more or less clear edges between regions. Unfortunately, the k-means algorithm cannot properly deal with this setting. Its results generally suffer from oversegmentations since it approximates smooth transitions by multiple constant functions. Furthermore, the optimal number of clusters $K$ is by no means obvious, because clusters are represented by many eigenvectors. \\ \\
 To address this issue, we formulate an energy, similar as in $\cite{Bro10c}$, that comprises a spatial regularity term. By minimizing this energy term we obtain the optimal segmentation assignment. \\ \\
-Initially, we again load the affinity matrix $W$, but this time together with the extracted trajectory's nearest neighbors $\mathcal{N}$. Analogously as we did in the spectral clustering section, we transform $W$ to the normalized Laplacian and decompose it into its eigenvalues and eigenvectors. We apply the exact same strategy for choosing an appropriate value for $m$ as well as for the cluster count we want to solve for, as we described previously.
-
-
-
+Initially, we again load the affinity matrix $W$, but this time together with the extracted trajectory's nearest neighbors $\mathcal{N}$. Analogously as we did in the spectral clustering section, we transform $W$ to the normalized Laplacian and decompose it into its eigenvalues and eigenvectors. We apply the exact same strategy for choosing an appropriate value for $m$ as well as for the cluster count we want to solve for, as we described previously. \\ \\
+In the following we describe this energy term, but before doing so, we have to provide the reader some definitions. Let $v_i^a$ denote the $a$-th component of the $i$-th eigenvector and $\textbf{v}^a$ the vector compose of the $a$-th components of all m extracted eigenvalues. Notice that the index a maps to a distinct trajectory. Let $\mathcal{N} \left( a \right)$ denote the neighboring trajectories of trajectory a, which were initially loaded. For a fixed number of clusters $K$, we want to compute the optimal trajectory assignments $\pi^{a} \in \{ 1, \dots , K \}$ such that the energy formulated in equation $\ref{eq:min_cut_energy_revisited}$ is minimized.
 \begin{equation}
 \begin{aligned}
 & E \left( \pi, K \right) = \underbrace{\sum_{A} \sum_{k=1}^K \delta_{\pi^A, k} \norm{\bf{v}^A - \mu_k}_{\lambda}}_\text{data term} + \underbrace{\nu \sum_A \sum_{B \in \mathcal{N}(A)} \frac{1- \delta_{\pi^A, \pi^B}}{\norm{\bf{v}^A - \bf{v}^B}}}_\text{smoothness term} \\
@@ -675,17 +669,10 @@ Initially, we again load the affinity matrix $W$, but this time together with th
 \end{aligned} 
 \label{eq:min_cut_energy_revisited}
 \end{equation}
-
-The data term is the unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. 
-The smoothness term acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. 
-
-%
-If there are clear discontinuities along the boundaries  of two clusters, the penalty for this boundary will be very small. In contrast, boundaries within a smooth area are penalized for more heavily, which avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors.
-
-The parameter $\nu$ acts as the tread-off between the two terms.
-%
-
-Each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues.
+The data term models an unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. \\ \\
+The smoothness term acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized for more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
+The parameter $\nu$ acts as the tread-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
+When using the norm $\norm{.}_{\lambda}$, then, each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues.
 
 %
 the min. cost multi-cut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
