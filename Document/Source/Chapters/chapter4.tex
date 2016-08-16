@@ -536,8 +536,8 @@ In the following we describe in detail the steps of algorithm $\ref{alg:computin
         \State $d_{\text{spatial}} = \text{computeSpatialDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{T} \right)$
         \State $d_{\text{color}} = \text{computeColorDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{F} \right)$
         \State $d_{\text{motion}} = \text{computeMotionDistance}\left( \textbf{p}^a, \textbf{p}^b, \textbf{F} \right)$
-        \State $d = \text{combineDistances} \left( d_{\text{spatial}}, d_{\text{color}}, d_{\text{motion}} \right)$
-        \State $W \left( \textbf{a}\text{.label}, \textbf{b}\text{.label} \right) = e^{-\lambda d}$
+        \State $d^2 = \text{combineDistances} \left( d_{\text{spatial}}, d_{\text{color}}, d_{\text{motion}} \right)$
+        \State $W \left( \textbf{a}\text{.label}, \textbf{b}\text{.label} \right) = e^{-\lambda d^2}$
         \State $\text{Update nearest neighbors of } \textbf{a} \text{ and } \textbf{b} \text{ using } d_{\text{spatial}}$
       \EndFor
   \end{algorithmic}
@@ -661,6 +661,33 @@ Analogously, we could ask ourself: what is the best value for the cluster count.
 The limitation of this approach is that such a clustering is only defined for non-negative affinity values between trajectories. Otherwise the eigenvalue decomposition of the Laplacian would yield complex valued eigenvectors. In practise, this assumption implies that it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. \\ \\
 Spectral clustering is supposed to produce oversegmentations and there is not always smooth transitions between the eigenvectors.
 \subsection{MinCut} 
+In this section we describe an alternative method to generate motions segmentation. This approach directly addresses some issues of the previously described spectral clustering approach. \\ \\
+Generally, eigenvectors typically show smooth transitions within a region and more or less clear edges between regions. Unfortunately, the k-means algorithm cannot properly deal with this setting. Its results generally suffer from oversegmentations since it approximates smooth transitions by multiple constant functions. Furthermore, the optimal number of clusters $K$ is by no means obvious, because clusters are represented by many eigenvectors. \\ \\
+To address this issue, we formulate an energy, similar as in $\cite{Bro10c}$, that comprises a spatial regularity term. By minimizing this energy term we obtain the optimal segmentation assignment. \\ \\
+Initially, we again load the affinity matrix $W$, but this time together with the extracted trajectory's nearest neighbors $\mathcal{N}$. Analogously as we did in the spectral clustering section, we transform $W$ to the normalized Laplacian and decompose it into its eigenvalues and eigenvectors. We apply the exact same strategy for choosing an appropriate value for $m$ as well as for the cluster count we want to solve for, as we described previously.
+
+
+
+\begin{equation}
+\begin{aligned}
+& E \left( \pi, K \right) = \underbrace{\sum_{A} \sum_{k=1}^K \delta_{\pi^A, k} \norm{\bf{v}^A - \mu_k}_{\lambda}}_\text{data term} + \underbrace{\nu \sum_A \sum_{B \in \mathcal{N}(A)} \frac{1- \delta_{\pi^A, \pi^B}}{\norm{\bf{v}^A - \bf{v}^B}}}_\text{smoothness term} \\
+& \text{where } \norm{\bf{v}^A - \bf{\mu}}_\lambda = \sum \frac{v_i^A -  \mu_i}{\lambda_i}
+\end{aligned} 
+\label{eq:min_cut_energy_revisited}
+\end{equation}
+
+The data term is the unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. 
+The smoothness term acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. 
+
+%
+If there are clear discontinuities along the boundaries  of two clusters, the penalty for this boundary will be very small. In contrast, boundaries within a smooth area are penalized for more heavily, which avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors.
+
+The parameter $\nu$ acts as the tread-off between the two terms.
+%
+
+Each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues.
+
+%
 the min. cost multi-cut framework allows to formulate trajectory segmentations as an unbalanced grouping problem. this allows to retrieve very small but reasonable segments.
 
 \subsection{Kernighan-Lin} 

@@ -86,9 +86,8 @@ Where $V$ denotes a matrix containing the column-wise eigenvectors of the Laplac
 \caption[Affinity Matrix W]{Visualization of the affinity matrix $W$ that belongs to the \textit{cars} dataset.}
 \label{fig:cars_affinity_mat_sub}
 \end{figure}
-To obtain a simple segementation, we could run k-means on the first $k$ eigenvectors, that belong to the smallest k-eigenvalues. This approach yields a one-to-one mapping between cluster assignments and trajectory labels. However, the eigenvectors are often not piece-wise constant. Therefore, running k-means directly on the eigenvectors is not the best choice, since then the eigenvectors get approximated by multiple constant functions and thus the clustering yields an oversegementation.
-
-To address this issue we instead formulate a certain energy, containing a spacial regularity term that does not prefer spacial compact clusters. Moreover, it also takes edges in the eigenvectors into account.
+To obtain a simple segementation, we could run k-means on the first $k$ eigenvectors, that belong to the smallest k-eigenvalues. This approach yields a one-to-one mapping between cluster assignments and trajectory labels. However, the eigenvectors are often not piece-wise constant. Therefore, running k-means directly on the eigenvectors is not the best choice, since then the eigenvectors get approximated by multiple constant functions and thus the clustering yields an oversegementation. \\ \\
+To address this issue we instead formulate a certain energy, containing a spacial regularity term that does not prefer spacial compact clusters. Moreover, it also takes edges in the eigenvectors into account. \\ \\
 Let $v_i^A$ denote the $A-th$ component of the $i-th$ eigenvector in $V$ and $\bf{v}^A$ the vector composed of the $A-th$ components of the $m$ eigenvectors. Moreover, let $\mathcal{N}(A)$ denote the set of neighboring trajectories based on the spacial average distance. Then, we want to find the optimal cluster assignments $\pi^A \in {1, \dots, K}$ for a fixed, given number of clusters $K$, such that energy in equation $\ref{eq:min_cut_energy}$ gets minimized.	
 \begin{equation}
 \begin{aligned}
