@@ -1,15 +1,19 @@
-\chapter{Implementation}
 %TODO: where should we use this: problems of optical flow methods yield bad segmentations. known problems: large displacements, sharp discontinuities, accuracy for the occlusion detection.
 % TODO mention pipeline assumptions
 % TODO mention in which language the individual parts are coded.
 % TODO check where this might belong to: the color values are stored as CIE lab color images.
-
-
-
-In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
+\chapter{Implementation}
+In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.9\linewidth] {implementation/pipeline}
+\end{center}
+\caption[Motion Segmentation Pipeline]{A schematic illustration of the structure of our pipeline. Individual pipeline components are drawn as orange boxes. The initial input is drawn as green boxes, the resulting final output as a blue box. Intermediate outputs are drawn as gray boxes. The arrows indicate the data-flow, whereas the white dots indicate a data-flow multiplexing. That means, data that flows through such a dot is used by several pipeline components.}
+\label{fig:pipeline_schematic}
+\end{figure}
 The problem statement our pipeline solves is defined as follows: Given a set of images that form a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. Additionally, the implementation should be robust to noise and missing data, should be able to handle scene captured by a shaking camera and lastly, it should be able to detect several and fast moving rigid object.\\ \\
 The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we first compute the optical flows of the images and use them for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. \\ \\
-As shown in figure FIGURE, our pipeline consists of the following main stages:
+As shown in figure $\ref{fig:pipeline_schematic}$, our pipeline consists of the following main stages:
 % TODO: checks this list and rework it
 \begin{enumerate}
 \item \textbf{Dataset Preparations}: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions. Optionally, a blurred version of the input images are computed by using a bilateral filter. This filtered images act as an additional, but optional cue, for a later pipeline stage. 
