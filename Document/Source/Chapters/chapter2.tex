@@ -5,12 +5,10 @@ In this chapter we give a introduction in various topics and areas which are nec
 \label{sec:optical_flow}
 In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by giving an in intuitive definition, followed by a mathematical definition. Next, we discuss how such flow fields can be visualized. Lastly, we summarize and explain the pioneering formulation of HS used to estimate flow fields.
 
-\subsection{Definition}
-
+\subsection{Motion Example}
 The optical flow is a visual phenomenon that describes the perception of motion.
-By definition, it is the apparent visual motion a moving viewer experiences.
-
-To To give the reader a better, more intuitive understanding of this concept, have a look at figure $\ref{fig:motion_eg}$.
+By definition, it is the apparent visual motion a moving viewer experiences. \\ \\
+To To give the reader a better, more intuitive understanding of this concept motion, have a look at figure $\ref{fig:motion_eg}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[1st Frame]{
@@ -51,9 +49,23 @@ The underlying basis input of our whole approach depicts the optical flow, compu
 
 %TODO: Write mathematical definition of the optical flow
 \subsection{Mathematical Formulation}
+The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image.\\ \\
+The example in figure $\ref{fig:optical_flow_math_def_eg}$ visualizes this concept.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1\linewidth] {background/of/rubiks_cube_frames}
+\end{center}
+\caption[Spinning Rubik's Cube]{An illustration$\footnotemark$ of two frames of a spinning Rubik's Cube. The point-to-point correspondence of s sample point (the orange point) is given by the optical flow, depicted as a red arrow.}
+\label{fig:optical_flow_math_def_eg}
+\end{figure}
+\footnotetext{The shown images have been taken from: \\ \url{http://robotics.eecs.berkeley.edu/~sastry/ee20/vision3/node2.html}}
+In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$, visualized by a red arrow, to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in equation $\ref{eq:of_brightness_const}$.
+\begin{equation}
+	I_{t} \left( x,y \right) = I_{t+dt} \left( x+u, y+v \right)
+\label{eq:of_brightness_const}
+\end{equation}
+Where $I_t$ depticts the brightness at frame $t$.
 
-
-The optical flow is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame.
 \subsection{Visualization of Flowfields}
 
 For visualizing flow fields we use the color encoding shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized flow vectors. The angle in the circle corresponds to the direction and the distance to the center to the velocity. \\ \\
