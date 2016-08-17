@@ -19,76 +19,94 @@
 %
 %overparametrize scene flow and estimate a 6-DoF rigid- body motion at each pixel. They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions
 
-\chapter{Introduction}
-
-describe long-term motion of tracked points by a spatio-temporal curve called trajectory.
-method that generates such point trajectories for a given point sampling rated is presented. 
-based on LDOF all points showing some underlying structure are tracked until they are occluded. the occlusion reasoning is done based on the comparison of the forward and backward optical flow. when trajectroies get lost due to occlusion such that the sampling is sparser than the desidred rate, a new trajectory is started. the result is a set of reliable trajectories, that start in some frame of the sequence and end in another. depending on the data, many trajectories do not have any frame on common. However, the longer the are, the more useful motion information they are expected to carry. 
-
-top-down approach require ground truth prior information.
-thus, use a bottom-up approach.
-
-value of motion and gestalt principle of common fate
-motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
-
-however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
-=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
-tracking the interplay of the articulated parts over longer periods yields the missing information about the overall motion.
-=> hence, motion should be analyzed over longer periods (decreases the intra motion variance relative to the inter-object variance). moreover, motion information can be propagated to frames in which the object is mainly static.
-
-for such long term analysis, a tracking is required.
-point tracking is more reliable than superpixels, as stable features are located at edges and corners, rather than in flat areas.
-
-point trajectories are an informative intermediate representation for the motion of object parts or whole objects.
-
-use a semi-dense point tracker based on optical flow that yields reliable trajectories for hundreds of frames.
-eloberate
-
-due to occlusion and disocclusion, 
-trajectories are usually asynchronous, i.e. they start and end in different frames. 
-
-most existing trajectory clustering methods cannot deal with this problem. 
-
-therefore, we define a distance between all pairs of trajectories that share some common frames.
-
-sparse sampling of the frames with our trajectories, 
-we run spectral clustering on all extracted trajectories.
-
-
-long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
-this requires point trajectories
-
-to increase the quality of the point tracking, especially at very fast moving regions: 
-
-track points based on an optical flow method (lodf). 
-
-video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
-
-
-\section{Motivation}
-
-Motion describes the change in position of an object with respect to time and is one of the most fundamental cue in the human visual system for perceiving the surrounding environment. Particularly, it is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization.
-
-Especially the task of an accurate detection and extraction of moving objects in a video, captured by a moving camera, is nowadays still a difficult task. A common technique to address such motion segmentation tasks is to make use of the optical flow, the apparent visual motion that a moving viewer experiences. 
-
-
-
-Motion segmentation aims at decomposing a video in moving objects and background.
-Motion segmentation is the first fundamental step in many computer vision algorithms.
-Motion segmentation applications: robotics, metrology, video surveillance, traffic monitoring
-
-
-MENTION THAT IT IS USED IN NATURE
-MENTION MOTION discontinuities, which CAN BE exploited as motion object boundaries.
-
-
-ILLUSTRATE BY GIVING AN EXAMPLE: MOVING CAR
-
-WIRTE MORE MOTIVATION
-
+%describe long-term motion of tracked points by a spatio-temporal curve called trajectory.
+%method that generates such point trajectories for a given point sampling rated is presented. 
+%based on LDOF all points showing some underlying structure are tracked until they are occluded. the occlusion reasoning is done based on the comparison of the forward and backward optical flow. when trajectroies get lost due to occlusion such that the sampling is sparser than the desidred rate, a new trajectory is started. the result is a set of reliable trajectories, that start in some frame of the sequence and end in another. depending on the data, many trajectories do not have any frame on common. However, the longer the are, the more useful motion information they are expected to carry. 
+%
+%top-down approach require ground truth prior information.
+%thus, use a bottom-up approach.
+%
+%value of motion and gestalt principle of common fate
+%motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
+%
+%however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
+%=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
+%tracking the interplay of the articulated parts over longer periods yields the missing information about the overall motion.
+%=> hence, motion should be analyzed over longer periods (decreases the intra motion variance relative to the inter-object variance). moreover, motion information can be propagated to frames in which the object is mainly static.
+%
+%for such long term analysis, a tracking is required.
+%point tracking is more reliable than superpixels, as stable features are located at edges and corners, rather than in flat areas.
+%
+%point trajectories are an informative intermediate representation for the motion of object parts or whole objects.
+%
+%use a semi-dense point tracker based on optical flow that yields reliable trajectories for hundreds of frames.
+%eloberate
+%
+%due to occlusion and disocclusion, 
+%trajectories are usually asynchronous, i.e. they start and end in different frames. 
+%
+%most existing trajectory clustering methods cannot deal with this problem. 
+%
+%therefore, we define a distance between all pairs of trajectories that share some common frames.
+%
+%sparse sampling of the frames with our trajectories, 
+%we run spectral clustering on all extracted trajectories.
+%
+%
+%long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
+%this requires point trajectories
+%
+%to increase the quality of the point tracking, especially at very fast moving regions: 
+%
+%track points based on an optical flow method (lodf). 
+%
+%video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
 % Point trajectories are an intermediate representation for the motion of objects.
 % long-term motion is described by a spatio-temporal curve called trajectory
 % segmenting the moving objects in a video by analysing of its long-term point trajectories.
+
+%sources
+% optical flow example: http://cbia.fi.muni.cz/projects/optical-flow-for-live-cell-imaging_3.html
+% motion segmentation example: http://lmb.informatik.uni-freiburg.de/research/segmentation/
+% 
+\chapter{Introduction}
+\section{Motivation}
+In nature one important aspect that determines the odds of survival and thus the individual success is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cues. Particularly, is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization. 
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 1]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/1}
+   \label{fig:motivating_example_a}
+}
+\subfigure[Frame 12]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/12}
+   \label{fig:motivating_example_b}
+}
+\subfigure[Frame 24]{
+   \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_frames/24}
+   \label{fig:motivating_example_c}
+}
+\end{center}
+\caption[Motivating Example]{foobar}
+\label{fig:motivating_example}
+\end{figure}
+Especially the task of an accurate detection and extraction of moving objects in a video, captured by a moving camera, is nowadays still a difficult task. \\ \\
+The field of motion segmentation aims at decomposing a video in moving objects and background and s the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance, traffic monitoring.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Optical Flow Field]{
+   \includegraphics[width=0.47\linewidth] {introduction/motivation/motion_segmentation/optical_flow_visualization}
+   \label{fig:motion_segmentation_motivation_eg_a}
+}
+\subfigure[Motion Segmentation]{
+   \includegraphics[width=0.47\linewidth] {introduction/motivation/motion_segmentation/dense_motion_segmentation}
+   \label{fig:motion_segmentation_motivation_eg_b}
+}
+\end{center}
+\caption[Motion Segmentation Motivation Example]{foobar}
+\label{fig:motion_segmentation_motivation_eg}
+\end{figure}
+A common technique to address such motion segmentation tasks is to make use of the optical flow, the apparent visual motion that a moving viewer experiences. \\ \\
 
 \section{Goals}
 The purpose of this thesis is to describe a robust motion segmentation method
