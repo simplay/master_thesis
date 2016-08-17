@@ -762,76 +762,53 @@ Since our implementation solves for multiple graph segments, we define several i
 \label{alg:kl_multiple_segments}
 \end{algorithm}  
   
-% TODO Explain the algorithm above, the alpha-beta swap, error terms and so forth...
+%TODO: Explain the algorithm above, the alpha-beta swap, error terms and so forth...
 \section{Dense Motion Segmentation}
-%TODO: use the dense segmentation as an input solve the problem of whole filling using a primal-dual convex algorithm. 
-
-
-In this section I describe how I have actually Implemented the so far described dual-primal solver for demosaicing a raw image.
-
-One important note in advance. In the discrete case, the following holds true 
-
-\begin{align}
-	\nabla^* (y^{n+1}) 
-	&= \nabla^{T} (y^{n+1}) \nonumber \\
-	&= div(y^{n+1})
-\end{align}
-
-So we have to omit a minus one factor. This affects the update rule for $x^{n+1}$ derived previously.
-
-In the previous section we have defined explicit update rules. Aggregating all finding, mainly those from equation $\ref{eq:update_x_n_p_1}$ and $\ref{eq:update_rule_y_n_p_1}$, and plugging them into equation $\ref{eq:update_rules_plain}$ we get our update rules
-
-
+In this section we describe a method to produce dense motion segmentations from the previously generate sparse motion segmentations. For this purpose use the derivations of our dual-primal hole-filling formulation from section $\ref{section:hole_filling}$ on page $\pageref{section:hole_filling}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
+In section $\ref{section:hole_filling}$ we defined explicit update rules. Aggregating all findings, mainly those from equation $\ref{eq:update_x_n_p_1}$ and $\ref{eq:update_rule_y_n_p_1}$, and plugging them into equation $\ref{eq:update_rules_plain}$ we obtain the following final update rules:
 \begin{align}
 	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
-	x^{n+1} &= \frac{x^n - \tau div(y^{n+1}) +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \\
+	x^{n+1} &= \frac{x^n - \tau \text{div}(y^{n+1}) +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \\
 	\bar{x}^{n+1} &= x^{n+1} + \theta(x^{n+1} - x^n)
 \label{eq:final_update_rules_plain}	
 \end{align}
+where we used that in the discrete case, the following fact hold true:
+\begin{align}
+	\nabla^* (y^{n+1}) 
+	&= \nabla^{T} (y^{n+1}) \nonumber \\
+	&= \text{div}(y^{n+1})
+\end{align}
+So we have to omit a minus one factor. This affects the update rule for $x^{n+1}$ derived previously
 
-I initialized $x_n$ with the mosaiced image $g$, $y^{n}$ with a zeros \footnote{a tensor of dimension $M \times N \times 2$ filled with zeros, where $(M \times N)$ denotes the dimension of one color channel of $g$.} and $\bar{x}^{n}$ also with the mosaiced image $g$.
-
-For computing $\nabla$ I used a forward difference approximation scheme. For computing the divergence operator of the vector-field $y^{n+1}$ I used backward difference approximation scheme. The reason for using a backward difference using a backward difference is to shift back gradients (remember, the divergence is applied to $y^{n+1}$ which is the result of a forward difference. Otherwise, when not altering between a forward-and backward difference we would end up with shifted gradients.
-
-For computing the divergence, I relied on its mathematical definition. For a given vector-field $v = (v_x, v_y)$ the divergence is defined as the following:
-
+We initialize $x_n$ with the hole image $g$, $y^{n}$ with a zeros \footnote{a tensor of dimension $M \times N \times 2$ filled with zeros, where $(M \times N)$ denotes the dimension of one color channel of $g$.} and $\bar{x}^{n}$ also with the hole image $g$. \\ \\
+For computing $\nabla$ we use a forward difference approximation scheme. For computing the divergence operator of the vector-field $y^{n+1}$ we use a backward difference approximation scheme. The reason for using a backward difference using a backward difference is to shift back gradients (remember, the divergence is applied to $y^{n+1}$ which is the result of a forward difference. Otherwise, when not altering between a forward-and backward difference we would end up with shifted gradients. \\ \\
+For computing the divergence, we rely on its actual mathematical definition. For a given vector-field $v = (v_x, v_y)$ the divergence is defined as the following:
 \begin{align}
 	div(v) = \partial_x v_x + \partial_y v_y
 \end{align}
-
 Since in our case we have $v = y^{n+1}$ and $y^{n+1}$ a vector valued function of the form $y^{n+1} = (y_{x}^{n+1}, (y_{y}^{n+1})$ it follows:
-
 \begin{align}
-	div(y^{n+1}) 
-	&= div((y_{x}^{n+1}) + div((y_{y}^{n+1}) \\
+	\text{div}(y^{n+1}) 
+	&= \text{div}((y_{x}^{n+1}) + \text{div}((y_{y}^{n+1}) \\
 	&= \left( \partial_x y_{x}^{n+1} + \partial_y y_{x}^{n+1} \right) + \left( \partial_x y_{y}^{n+1} + \partial_y y_{y}^{n+1} \right)
 \end{align}
-
-Initially, I used the following parameter setting:
-
-\begin{align}
-	\lambda &= 1000 \\
-	\theta &= 0.5 \\
-	\tau &= 2*10^{-3} \\
-	\sigma &= \frac{1}{\tau * \sqrt{\norm{K}}}
+Initially, we use the following parameter setting:
+\begin{equation}
+\begin{aligned}
+\lambda &= 1000 \\
+\theta &= 0.5 \\
+\tau &= 2*10^{-3} \\
+\sigma &= \frac{1}{\tau * \sqrt{\norm{K}}}
+\end{aligned}
 \label{eq:parameter_set_up}	
-\end{align}
-
-With $\sqrt{\norm{K}} = \sqrt{4}$, a strong upper bound for the function $K$\footnote{A proof for the existence of this upper bound can be found in \cite{chambolle2004algorithm}}.
-
-For consistency, a named all functions in my Matlab code the same as in this report. Furthermore I used a fixed number of iterations for computing my iterative demosaiced images.
-
-the final algorithms I have to perform is the following:
-
-For each color-channel $C \in \{R,G,B\}$ Do: Loop until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough do: use parameter setup as defined in equation $\ref{eq:parameter_set_up}$ and then solve the update rules from equation $\ref{eq:final_update_rules_plain}$. Finally, merge all color iterative color channel solutions to a color image.
-
-When computing the gradient and divergence finite approximation schemes, I used a zero padding boundary condition. Since I also tried out this kind of boundary condition in the first report, comparing the results produced in this project which those from the first project is valid.
-
+\end{equation}
+With $\sqrt{\norm{K}} = \sqrt{4}$, a strong upper bound for the function $K$\footnote{A proof for the existence of this upper bound can be found in \cite{chambolle2004algorithm}}. \\ \\
+The final algorithms our implementation performs is the following: For each color-channel $C \in \{R,G,B\}$ Do: Loop until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough do. Use the same parameter setup as defined in equation $\ref{eq:parameter_set_up}$ and then solve the update rules from equation $\ref{eq:final_update_rules_plain}$. This yields a solution for each color channel. Conclude this by merging all the color solution into one color image. \\ \\
+When computing the gradient and divergence finite approximation schemes, we use a zero padding boundary condition. \\ \\
 One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
 
 \section{Segment Merger}
-In this section we describe our technique to reduce oversegmentations produced by our pipeline. This stage is invoked before running the evalaution program, implemented as a post-processing stage.
-
+In this section we describe our technique to reduce oversegmentations produced by our pipeline. This stage is invoked before running the evaluation program, implemented as a post-processing stage.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Ground Truth Segmentation]{

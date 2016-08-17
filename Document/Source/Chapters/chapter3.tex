@@ -183,16 +183,15 @@ z ( A, B ) = \max (\tilde{\beta_0} & + \beta_1 d_{motion}^{A,B} \\
 If the sum of the spatial and the color distance is large in equation $\ref{eq:sum_dist}$ then only the motion distances are considered. This ensures that trajectories which are far apart but move similarly still end up in the same segment.
 
 \section{Hole Filling}
-In the following section we address the problem of \emph{demosaicing} by formulating it as a convex optimization. For solving the problem we develop and apply a primal-dual approximation. We exploit this demosaicing implementation in order to solve the hole-filling problem, resulting when being interested in generating the dense- from a sparse segmentation. \\ \\
-Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. \\ \\
-More precisely, let $g$ denote the bayer filter camera raw input image. Then we want to solve for $u=(u_r, u_g, u_g)$ (RGB image) minimzating the following energy term (cost function):
-
+\label{section:hole_filling}
+In this section we address the problem of \emph{Hole Filling} by formulating this problem as a convex optimization. This formulation should enable us to generate dense segmentations from sparse segmentations. For solving the problem we develop and apply a primal-dual approximation. 
+Given an image $g$ has missing information in form of holes, we want to find an optimal reconstructed image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. \\ \\
+More precisely, let $g$ denote a color image that exhibits holes. Then we want to solve for $u=(u_r, u_g, u_g)$ (RGB image) by minimzating the following energy term (cost function):
 \begin{align}
 	E(u_c) = \norm{\nabla u_c}_2 + \frac{\lambda}{2} \norm{u_c - g}^2_{\Omega_{c}}
 \label{eq:basis_cost_demosaicing}	
 \end{align}
 with the measure
-
 \begin{equation}
 	\norm{u_C - g}^2_{\Omega_{C}} = \sum_x \sum_y \Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}^2
 \label{eq:measure}
