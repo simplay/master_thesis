@@ -192,7 +192,28 @@ motion segmentation aims at decomposing a video in moving objects and background
 In this section we describe a conceptual approach how the motion segmentation task using optical flows is commonly approached in literature. 
 
 \section{Data Partitioning}
-\subsection{K-Means}
+\subsection{K-Means Clustering}
+The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
+Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\textbf{x}_k \in \mathbb{R}^d$. k-means clustering tries to partition the $n$ observations into $k$ sets $\textbf{S} = \{ S_1, \dots, S_k\}$ to minimize the sum of distance functions of each point in the cluster to the $k$ centers. Mathematically, this can formulated as the follows:
+\begin{equation}
+	\argmin_{\textbf{S}} \sum_{i=1}^k \sum_{\textbf{x} \in S_i} \norm{\textbf{x} - {\boldsymbol {\mu }}_{i}}^2
+\label{eq:k_means_minimzation_formulation}
+\end{equation}
+where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. \\ \\
+The k-means clustering equations $\ref{eq:k_means_minimzation_formulation}$ can be iteratively solved. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
+\begin{itemize}
+\item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least within-cluster sum of squares (WCSS). Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
+\begin{equation}
+  	S_i^{(t)} = \left\{ x_p \mid \forall j: 1 \leq j \leq k: \norm{x_p - m_i^{(t)}}^2 \leq \norm{x_p - m_j^{(t)}}^2 \right\}
+\end{equation} 
+where each $x_p$ is assigned to exactly one $S^{(t)}$.
+\item \textbf{Update step}: Calculate the new means to be the centroids of the observations in the new clusters. 
+\begin{equation}
+	m_i^{(t+1)} = \frac{1}{|S_i^{(t)}|} \sum_{x_j \in S_i^{(t)}} x_j
+\end{equation}
+\end{itemize}
+
+
 \subsection{Spectral Clustering}
 Kernighan-Lin Heuristic, Graph Cut
 multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
