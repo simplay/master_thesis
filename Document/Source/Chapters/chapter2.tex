@@ -122,9 +122,45 @@ By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has
 \end{aligned}
 \label{eq:reordered_flow_eq}
 \end{equation}
-Hence, they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$, the so called $\textit{flow velocity}$. As a consequence, such a flow velocity cannot be computed locally without introducing additional constraints.
-
-
+Hence, they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$, the so called $\textit{flow velocity}$. As a consequence, such a flow velocity cannot be computed locally without introducing additional constraints. \\ \\
+In their formulation they express their additional constraint by stating that the square of the magnitude of the gradient of the optical flow velocity, as defined in equation $\ref{eq:smoothness_constraints}$, should be minimal.
+\begin{equation}
+	\left( \frac{\partial u}{\partial x} \right)^2 + \left( \frac{\partial u}{\partial y} \right)^2 \text{ and } \left( \frac{\partial v}{\partial x} \right)^2 + \left( \frac{\partial v}{\partial y} \right)^2
+\label{eq:smoothness_constraints}
+\end{equation}
+The remaining problem then is to minimize the sum of the energies modelling the rate of image brightness change as stated in equation $\ref{eq:energy_brightness}$
+\begin{equation}
+	E_b = E_x u + E_y v + E_t
+\label{eq:energy_brightness}
+\end{equation}
+and the measure of the departure from smoothness in the velocity flow, as formulated in equation $\ref{eq:energy_constraint}$.
+\begin{equation}
+	E_c^2 = \norm{\nabla u}^2 + \norm{\nabla v}^2
+\label{eq:energy_constraint}
+\end{equation}
+The total error to be minimized is therefore equals to the energy term formulated in equation $\ref{eq:final_hs_energy_term}$.
+\begin{equation}
+	E = \int \int \left( E_b^2 + \alpha^2 E_c^2 \right) dx dy
+\label{eq:final_hs_energy_term}
+\end{equation}
+This flow estimation formulation assumes smoothness in the flow over the whole image. Hence, minimzing this energy results in a minimization of distortions in the flow and thus prefers solutions which exhibit more smoothness. The scalar $\alpha$ acts as a regularization constant, that weights the influence of the smoothness term. Hence, larger values for $\alpha$ lead to soother flow estimations. \\ \\
+This minimization can analytically be solved by formulating its multi-dimensional Euler-Lagrange equations as formulated in $\ref{eq:multi_dim_euler_lagrange}$.
+\begin{equation}
+\begin{aligned}
+ \frac{\partial L}{\partial u} - \frac{\partial}{\partial x} \frac{\partial L}{\partial u_x} - \frac{\partial}{\partial y}\frac{\partial L}{\partial u_y} &= 0 \\
+\frac{\partial L}{\partial v} - \frac{\partial}{\partial x} \frac{\partial L}{\partial v_x} - \frac{\partial}{\partial y}\frac{\partial L}{\partial v_y} &= 0  
+\end{aligned}
+\label{eq:multi_dim_euler_lagrange}
+\end{equation}
+where L denotes the integrand of the energy expression, given by equation $\ref{eq:def_l_euler_lag}$:
+\begin{equation}
+\begin{aligned}
+E_x E_b - \alpha^2 \Delta u &= 0 \\
+E_y E_b - \alpha^2 \Delta v &= 0 \\
+\end{aligned}
+\label{eq:def_l_euler_lag}
+\end{equation}
+Where $\Delta$ denotes the Laplace$\footnote{Definition of the Laplace operator in the two dimensional case: $\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$}$ operator.
 
 \section{General Motion Segmentation Pipeline}
 motion segmentation aims at decomposing a video in moving objects and background by segmenting the objects that undergo different motion patterns.
