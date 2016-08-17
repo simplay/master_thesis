@@ -119,14 +119,21 @@ motion segmentation aims at decomposing a video in moving objects and background
 
 In this section we describe a conceptual approach how the motion segmentation task using optical flows is commonly approached in literature. 
 
-\section{Spectral Clustering}
+\section{Data Partitioning}
+\subsection{K-Means}
+\subsection{Spectral Clustering}
 Kernighan-Lin Heuristic, Graph Cut
 multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
 
 $\cite{Ker70}$
 
 %TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
-\section{Harris Corner Detector}
+
+\section{On Filtering Images}
+\subsection{Gaussian Filter}
+\subsection{Bilateral Filter}
+
+\subsection{Harris Corner Detector}
 \label{sec:harris_corner_detector}
 
 % TODO state idea of an edge
@@ -180,18 +187,10 @@ A score is calculated for each window, to determine if it can possibly contain a
 \label{eq:harris_response}
 \end{equation}
 
-\section{Camera Calibrations}
+\section{Camera Model}
+explain calibration data
 explain pinhole model
 explain from scene to camera-space to image-space
 mention focal length, principal point
 mention how depth could be incooperated
 explain intrinsic,extrinsic calibrations
-
-\section{Bilateral Filter}
-
-\section{K-Means}
-
-
-
-
-
