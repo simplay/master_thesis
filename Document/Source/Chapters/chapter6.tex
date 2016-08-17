@@ -1,17 +1,12 @@
 \chapter{Conclusion}
 \section{Summary}
-
-List of main contribution
-\begin{itemize}
-  \item Give an introduction into the field of optical flow, motion segmentation and clustering algorithms.
-  \item implement a pipeline that can perform the task of motion segmentation using various visual cues.
-  \item evaluate and compare the different approaches and find their drawbacks and benefits.
-  \item Use the acquired knowledge and tweak the pipeline.
-\end{itemize}
-
-shortly summerize the contribution of this work
-mention the limitations and limitations
-mention passible future work
+In this thesis we implemented a pipeline that can successfully perform the task of motion segmentation on RGB-D sequences using optical flows. For this purpose many, commonly known from literature, different techniques for generating the flows, computing affinities between trajectories and for performing the actual segmentation task were implemented and examined. \\ \\
+We statistically evaluated the quality of all possible pipeline combinations on various dataset by comparing the resulting segmentations against manually generated ground truth images. This way we were able to determine the strengths and weaknesses of different techniques and find an optimal setting. \\ \\
+Especially, we were able to show quantitatively, that incorporating depth cues into the individual pipeline components drastically improves the quality of the resulting motion segmentations. Moreover, we observed that the quality of the utilized flows significantly affects the segmentation quality. Hence, we concluded, that when using P-affinities, our best pipeline setup is $\text{SRSF PED MC}$ and when using S-affinities $\textit{SRSF SED KL}$. Both variants achieve best results compared against the other available setups. However, SRSF SED KL achieves better f1 scores but SRSF PED MC runs much faster. Therefore, we denote both methods as winners.  \\ \\
+Moreover, when using our best pipeline setups, we could deal with complex scenes, which exhibit camera shaking, rotational movements and even slight non-rigid movements. Additionally, our pipeline is also capable of dealing with noise in the flow fields by using various filters. Therefore, we conclude that we were able to fulfill our initially stated goals. \\ \\
+Regarding the limitations of this work we can state the following main issues: Our implementation is a over-paramterized pipeline. Many parameter values are chosen according to simple heuristics. For example the number of moving objects we want to solve for in our segmentation methods is assigned manually for each dataset. The same holds true for the number of neighbors that should be used for various stages, the number of eigenvectors and the values of $\lambda$ used to compute P-affinities, as well as the prior cut probability used to compute S-affinities. Another issue is the runtime of several pipeline components. For example the Kernighan Lin implementation has a poor runtime which could drastically be improved State paper REF. Next, our segment merger method requires ground truth images of particular frames to work correctly. However, relying on a sophisticated method as described in $\cite{OB14b}$ would be more reliable. Lastly, we could adapt the pairwise affinity computation model by replacing it by a higher order model, similar as described in $REF$. \\ \\
+Recapturing the stated limitations there is lots of room for future work.  
+The most beneficial extension, however, would be to automatically determine the optimal parameter setup using a learning based approach. Moreover, the pipeline could be adapted in a way to let it run at interactive rates by porting the code to a GPU implementation. Since the quality of the optical flows strongly influences the resulting segmentations, we also could think of adapting the flow variants to have a method that combines the LDOF and SRSF method. This would yield a method that is capable of dealing with large motion as well as utilizing depth cues to deal with rotational movements and deformation. Lastly, we could think of developing a special neuronal network that is capable of estimating depth maps by only using stereo color images. SEE PAPERREF.  
 
 \section{Personal Experience}
 parsing files was exhausting
