@@ -88,7 +88,8 @@ Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visua
 
 \subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
-In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow. Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
+In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothess in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flows where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is is very sensitive to noise. \\ \\
+Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
 Moreover, they already understood the potential of the optical flow and stated the following properties: Can arise from relative motion of objects and the viewer and provide information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
 Sticking to their flow definition they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
 Their formulation is based on the following assumptions:
@@ -161,6 +162,29 @@ E_y E_b - \alpha^2 \Delta v &= 0 \\
 \label{eq:def_l_euler_lag}
 \end{equation}
 Where $\Delta$ denotes the Laplace$\footnote{Definition of the Laplace operator in the two dimensional case: $\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$}$ operator.
+
+When using a finite differences scheme for approximating the laplacian equation
+as defined in equation $\ref{eq:finite_difference_laplacian}$
+\begin{equation}
+	\Delta u(x,y) = \bar{u} (x,y) - u(x,y)
+\label{eq:finite_difference_laplacian}
+\end{equation}
+where $\bar{u} (x,y)$ denotes the weighted average of u computed by visiting the neighborhood around the pixel at location $(x,y)$, equation $\ref{eq:def_l_euler_lag}$ can be simplified to
+\begin{equation}
+\begin{aligned}
+(E_x^2 + \alpha^2) u + E_x E_y v &= \alpha^2 \bar{u} - E_x E_t \\
+(E_x^2 + \alpha^2) v + E_x E_y u &= \alpha^2 \bar{v} - E_y E_t
+\end{aligned}
+\label{eq:def_l_euler_lag_simplified}
+\end{equation}
+The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and $v$. This allows to solve this minimization problem for each pixel in the image. However, keep in mind that the solution depends on the neighboring values of the flow field. Hence, the system must be solved iteratively. The following update rule can therefore be used:
+\begin{equation}
+\begin{aligned}
+ u_{k+1} &= \bar{u}_k - \frac{E_x (E_x \bar{u}_k + E_y \bar{v}_k + E_t)}{\alpha^2 + E_x^2 + E_y^2} \\
+  v_{k+1} &= \bar{v}_k - \frac{E_y (E_x \bar{u}_k + E_y \bar{v}_k + E_t)}{\alpha^2 + E_x^2 + E_y^2}
+\end{aligned}
+\label{eq:hs_iteration}
+\end{equation}
 
 \section{General Motion Segmentation Pipeline}
 motion segmentation aims at decomposing a video in moving objects and background by segmenting the objects that undergo different motion patterns.
