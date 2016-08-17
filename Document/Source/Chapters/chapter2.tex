@@ -202,17 +202,17 @@ Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\t
 where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. \\ \\
 The k-means clustering equations $\ref{eq:k_means_minimzation_formulation}$ can be iteratively solved. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
 \begin{itemize}
-\item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least within-cluster sum of squares (WCSS). Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
+\item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least sum of distance functions of each point in the cluster. Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
 \begin{equation}
   	S_i^{(t)} = \left\{ x_p \mid \forall j: 1 \leq j \leq k: \norm{x_p - m_i^{(t)}}^2 \leq \norm{x_p - m_j^{(t)}}^2 \right\}
 \end{equation} 
 where each $x_p$ is assigned to exactly one $S^{(t)}$.
 \item \textbf{Update step}: Calculate the new means to be the centroids of the observations in the new clusters. 
 \begin{equation}
-	m_i^{(t+1)} = \frac{1}{|S_i^{(t)}|} \sum_{x_j \in S_i^{(t)}} x_j
+	m_i^{(t+1)} = \frac{1}{\left| S_i^{(t)} \right| } \sum_{x_j \in S_i^{(t)}} x_j
 \end{equation}
 \end{itemize}
-
+There are many initialization methods to assign the clusters such as randomly chooses k observations from the data set and uses these as the initial means or define k random clusters. The appropriate way of initializing the clusters depends on the given problem statement which the k-means attempts to address. 
 
 \subsection{Spectral Clustering}
 Kernighan-Lin Heuristic, Graph Cut
