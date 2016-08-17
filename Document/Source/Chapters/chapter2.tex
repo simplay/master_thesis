@@ -76,6 +76,42 @@ Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visua
 
 \subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
+In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow.
+Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
+assumption: the brightness of a particular point in the pattern is constant. \\ \\
+Moreover, in their paper they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
+Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, $\frac{d E}{dt} = 0$ hold true. Using the chain rule for differentiation, they derived the expression in equation $\ref{eq:flow_eq}$.  
+\begin{equation}
+\begin{aligned}
+0 &= \frac{d E}{dt} \\
+&= \frac{\partial E}{\partial x} \frac{x}{dt} + \frac{\partial E}{\partial y} \frac{y}{dt} + \frac{\partial E}{\partial t} \\
+&= E_{x} u + E_{y} v + E_{t}
+\end{aligned}
+\label{eq:flow_eq}	
+\end{equation}
+where we the following substitutions were used to derive the last identity of equation $\ref{eq:flow_eq}$:
+\begin{equation}
+\begin{aligned}
+	u = \frac{dx}{dt} \text{ and } v = \frac{dy}{dt}
+\end{aligned}
+\end{equation}
+By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has been done in equation $\ref{eq:reordered_flow_eq}$:
+\begin{equation}
+\begin{aligned}
+	(E_x, E_y) \cdot (u, v) &= -E_t \\
+	\underbrace{-\frac{1}{E_t}\left( E_x, E_y \right)}_\text{known} \cdot \underbrace{(u, v)}_\text{unknown} &= 1
+\end{aligned}
+\label{eq:reordered_flow_eq}
+\end{equation}
+they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$.
+
+
+
+
+
+%
+
+
 Developed and formulated in Determining Optical Flow by Berthold K.P. Horn and Brian G. Schnunck.
 
 Is the distribution of apparent velocities of movement of brightness patterns in an image.
