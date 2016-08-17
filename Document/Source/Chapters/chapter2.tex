@@ -58,7 +58,7 @@ The example in figure $\ref{fig:optical_flow_math_def_eg}$ visualizes this conce
 \caption[Spinning Rubik's Cube]{An illustration$\footnotemark$ of two frames of a spinning Rubik's Cube. The point-to-point correspondence of s sample point (the orange point) is given by the optical flow, depicted as a red arrow.}
 \label{fig:optical_flow_math_def_eg}
 \end{figure}
-\footnotetext{The shown images have been taken from: \\ \url{http://robotics.eecs.berkeley.edu/~sastry/ee20/vision3/node2.html}}
+\footnotetext{The unprocessed image shown in this figure has been taken from: \\ \url{http://robotics.eecs.berkeley.edu/~sastry/ee20/vision3/node2.html}}
 In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$, visualized by a red arrow, to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in equation $\ref{eq:of_brightness_const}$.
 \begin{equation}
 	I_{t} \left( x,y \right) = I_{t+dt} \left( x+u, y+v \right)
