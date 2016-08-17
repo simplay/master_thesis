@@ -76,10 +76,17 @@ Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visua
 
 \subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
-In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow.
-Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
-assumption: the brightness of a particular point in the pattern is constant. \\ \\
-Moreover, in their paper they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
+In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow. Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
+Moreover, they already understood the potential of the optical flow and stated the following properties: Can arise from relative motion of objects and the viewer and provide information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
+Sticking to their flow definition they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
+Their formulation is based on the following assumptions:
+\begin{itemize}
+  \item The surface is assumed to be flat. This avoids brightness variations due to shading effects.
+  \item The incident illumination is uniform across the surface. Then, the brightness at a point in the image is proportional to the reflectance of the surface at the corresponding point on the object.
+  \item The Reflectance varies smoothly and has no spatial discontinuities. Having no discontinuities assures that the image brightness is differentiable.
+  \item Situations where objects occlude one another are excluded.
+\end{itemize}
+These assumptions allow to conclude, that in their model the brightness of a particular point in the pattern is constant. \\ \\
 Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, $\frac{d E}{dt} = 0$ hold true. Using the chain rule for differentiation, they derived the expression in equation $\ref{eq:flow_eq}$.  
 \begin{equation}
 \begin{aligned}
@@ -103,45 +110,9 @@ By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has
 \end{aligned}
 \label{eq:reordered_flow_eq}
 \end{equation}
-they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$.
+Hence, they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$, the so called $\textit{flow velocity}$. As a consequence, such a flow velocity cannot be computed locally without introducing additional constraints.
 
 
-
-
-
-%
-
-
-Developed and formulated in Determining Optical Flow by Berthold K.P. Horn and Brian G. Schnunck.
-
-Is the distribution of apparent velocities of movement of brightness patterns in an image.
-Can arise from relative motion of objects and the viewer.
-Can give information about the spatial arrangement of the viewed objects and the rate of change in that arrangement.
-Discontinuities in the optical flow can help to perform segmentation tasks.
-
-the optical flow cannot be computed a point in the image independently of neighboring points without introducing additional constraints
-
-reason: the velocity field any image point has two components while its change in image brightness due to motion yields only one constraint.
-
-their example: consider a patch of a pattern where brightness varies as a function of one image coordinate, but not the other. Movement of the pattern in one direction alters the brightness at a particular point, but motion in the other direction yields no change. Thus components of movement in the latter direction cannot be determined locally.
-
-their problem statement:
-they initially assume that 
-
-1. the surface is flat to avoid brightness variations due to shading effects.
-2. the incident illumination is uniform across the surface. Then, the brightness at a point in the image is proportional to the reflectance of the surface at the corresponding point on the object.
-3. reflectance varies smoothly and has no spatial discontinuities. Having no discontinuities assures that the image brightness is differentiable.
-4. Situations where objects occlude one another are excluded.
-
-derive equation that relates the change in image brightness at a point to the motion of the brightness pattern.
-
-point $p(x,y)$, time $t$, brightness at p in the image plane at t $E(x,y,t)$.
-When the pattern moves, the brightness of a particular point in the pattern is constant. 
-$\frac{d E}{dt} = 0 <=> \frac{\partial E}{\partial x} \frac{x}{dt} + \frac{\partial E}{\partial y} \frac{y}{dt} + \frac{\partial E}{\partial t} = 0 <=> E_{x} u + E_{y} v + E_{t} = 0$.
-
-where $u = \frac{dx}{dt}$ and $v = \frac{dy}{dt}$. Hence, we have a single linear equation with two unknowns $u$ and $v$.
-
-solution: introduce a smoothness constraint.
 
 
 \section{Motion Segmentation}
