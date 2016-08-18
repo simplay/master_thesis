@@ -1,8 +1,6 @@
 % On the other hand, assuming purely rigid motions is a strong restriction that is barely fulfilled in organic shapes. When a person moves, there are parts of their body moving rigidly (e.g. upper and lower arms or legs) and others which are transitions between the rigid ones (e.g. the neck). Be- sides, rigid motions within a fine-grained articulated struc- ture may not be observable with the limited resolution of a camera. For these reasons, a sharp segmentation will never be able to estimate the motion of life beings or some other inanimate objects with exactitude.
 
-
 %TODO: think about where to explain the difference between rigid-and deformable motion.
-
 
 % RELATED WORK - OF
 %=> SRSF
@@ -18,52 +16,6 @@
 %source 2:
 %
 %overparametrize scene flow and estimate a 6-DoF rigid- body motion at each pixel. They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions
-
-%describe long-term motion of tracked points by a spatio-temporal curve called trajectory.
-%method that generates such point trajectories for a given point sampling rated is presented. 
-%based on LDOF all points showing some underlying structure are tracked until they are occluded. the occlusion reasoning is done based on the comparison of the forward and backward optical flow. when trajectroies get lost due to occlusion such that the sampling is sparser than the desidred rate, a new trajectory is started. the result is a set of reliable trajectories, that start in some frame of the sequence and end in another. depending on the data, many trajectories do not have any frame on common. However, the longer the are, the more useful motion information they are expected to carry. 
-%
-%top-down approach require ground truth prior information.
-%thus, use a bottom-up approach.
-%
-%value of motion and gestalt principle of common fate
-%motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
-%
-%however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
-%=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
-%tracking the interplay of the articulated parts over longer periods yields the missing information about the overall motion.
-%=> hence, motion should be analyzed over longer periods (decreases the intra motion variance relative to the inter-object variance). moreover, motion information can be propagated to frames in which the object is mainly static.
-%
-%for such long term analysis, a tracking is required.
-%point tracking is more reliable than superpixels, as stable features are located at edges and corners, rather than in flat areas.
-%
-%point trajectories are an informative intermediate representation for the motion of object parts or whole objects.
-%
-%use a semi-dense point tracker based on optical flow that yields reliable trajectories for hundreds of frames.
-%eloberate
-%
-%due to occlusion and disocclusion, 
-%trajectories are usually asynchronous, i.e. they start and end in different frames. 
-%
-%most existing trajectory clustering methods cannot deal with this problem. 
-%
-%therefore, we define a distance between all pairs of trajectories that share some common frames.
-%
-%sparse sampling of the frames with our trajectories, 
-%we run spectral clustering on all extracted trajectories.
-%
-%
-%long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
-%this requires point trajectories
-%
-%to increase the quality of the point tracking, especially at very fast moving regions: 
-%
-%track points based on an optical flow method (lodf). 
-%
-%video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
-% Point trajectories are an intermediate representation for the motion of objects.
-% long-term motion is described by a spatio-temporal curve called trajectory
-% segmenting the moving objects in a video by analysing of its long-term point trajectories.
 
 \chapter{Introduction}
 \section{Motivation}

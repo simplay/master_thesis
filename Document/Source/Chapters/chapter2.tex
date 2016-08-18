@@ -33,8 +33,9 @@ To To give the reader a better, more intuitive understanding of this concept mot
 \label{fig:motion_eg}
 \end{figure}
 \footnotetext{The shown frames have been extracted from the following youtube video: \\ \url{https://www.youtube.com/watch?v=lo-pWLmMagc}}
-Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction.
-
+Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. \\ \\
+Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. \\ \\
+However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction. \\ \\
 In summary, the optical flow has the following key properties:
 \begin{itemize}
   \item Overtaken objects appear to move backwards.
@@ -44,10 +45,8 @@ In summary, the optical flow has the following key properties:
   \item The optical flow is maximal if either the object is moving orthogonally towards the viewer's direction or it is moving directly above or below it.
   \item Objects directly in front of a viewer exhibit no optical flow.
 \end{itemize}
-
 The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
 
-%TODO: Write mathematical definition of the optical flow
 \subsection{Mathematical Formulation}
 The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image.\\ \\
 The example in figure $\ref{fig:optical_flow_math_def_eg}$ visualizes this concept.
@@ -67,7 +66,6 @@ In this figure two frames of a spinning Rubik's cube at different times are show
 Where $I_t$ depticts the brightness at frame $t$.
 
 \subsection{Visualization of Flowfields}
-
 For visualizing flow fields we use the color encoding shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized flow vectors. The angle in the circle corresponds to the direction and the distance to the center to the velocity. \\ \\
 Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes.
 \begin{figure}[H]
@@ -187,9 +185,25 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 \end{equation}
 
 \section{General Motion Segmentation Pipeline}
-motion segmentation aims at decomposing a video in moving objects and background by segmenting the objects that undergo different motion patterns.
-
-In this section we describe a conceptual approach how the motion segmentation task using optical flows is commonly approached in literature. 
+%motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
+%
+%however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
+%=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
+In this section we describe a conceptually how the task of motion segmentation can be approached. \\ \\
+In the following an ordered list of facts that determine our motion segmentation pipeline:
+\begin{itemize}
+  \item motion segmentation aims at decomposing a video in moving objects and into background by segmenting the objects that undergo different motion patterns.
+  \item exploit long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
+  \item describe long-term motion of tracked points by a spatio-temporal curve called trajectory.
+  \item point trajectories are an informative intermediate representation for the motion of object parts or whole objects.
+  \item semi-dense point tracker based on optical flow that yields reliable trajectories for many frames.
+  \item additionally, it increases the quality of the point tracking, especially at very fast moving regions
+  \item all points showing some underlying structure are tracked until they are occluded. the occlusion reasoning is done based on the comparison of the forward and backward optical flow. when trajectroies get lost due to occlusion such that the sampling is sparser than the desidred rate, a new trajectory is started. the result is a set of reliable trajectories, that start in some frame of the sequence and end in another. depending on the data, many trajectories do not have any frame on common. However, the longer the are, the more useful motion information they are expected to carry.
+  \item new problems arise: occlusion and disocclusion
+  \item trajectories are usually asynchronous, i.e. they start and end in different frames.
+  \item define a distance between all pairs of trajectories that share some common frames. 
+  \item video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
+\end{itemize}
 
 \section{Data Partitioning}
 \subsection{K-Means Clustering}
