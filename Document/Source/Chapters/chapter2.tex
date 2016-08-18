@@ -210,6 +210,7 @@ Clustering is a technique for exploratory data analysis and allows to identify g
 In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
 
 \subsection{K-Means Clustering}
+\label{sec:k_means}
 The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
 Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\textbf{x}_k \in \mathbb{R}^d$. k-means clustering tries to partition the $n$ observations into $k$ sets $\textbf{S} = \{ S_1, \dots, S_k\}$ to minimize the sum of distance functions of each point in the cluster to the $k$ centers. Mathematically, this can formulated as the follows:
 \begin{equation}
@@ -270,6 +271,7 @@ For the set of indices $\{ i : v_i \in A \}$ we use the shorthand notation $i \i
 \end{equation}
 
 \subsection{Similarity Graph}
+\label{sec:similarity_graphs}
 Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of data points $x_i$ and $x_j$. Then, our goal is to divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other. To address this task we represent our data by a similarity graph $G = (V, E)$. \\ \\
 Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering problem becomes then to the graph partitioning problem. Find a partition of the graph such that the edges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. \\ \\
 There are several constructions to transform a given set of data points with pairwise similarities $s_{ij}$ or pairwise distances $d_{ij}$ on the graph. The common goal of such a construction is to to model the local neighborhood relationships between the data points. In the following several a list of different construction types.
@@ -293,6 +295,7 @@ When discussing some properties of the eigenvectors of the Laplacian matrix, kee
 The unnormalized graph Laplacian matrix $L$ of the graph $G$ is defined as
 \begin{equation}
 	L = D - W
+\label{eq:unnormalized_graph_laplacian}	
 \end{equation}
 which has the following properties: 
 \begin{itemize}
@@ -308,6 +311,7 @@ The unnormalized graph Laplacian does not depend on the diagonal elements of the
 The symmetric, normalized graph Laplacian matrix $L^{\text{sym}}$ of the graph $G$ is defined as
 \begin{equation}
 	L^{\text{sym}} = D^{-\frac{1}{2}} L D^{-\frac{1}{2}}
+\label{eq:normalized_graph_laplacian}	
 \end{equation}
 which has the following properties: 
 \begin{itemize}
@@ -317,12 +321,39 @@ which has the following properties:
 \item Zero is an eigenvalue of $L^{\text{sym}}$ with the eigenvector $D^{\frac{1}{2}} \mathbbm{1}$
 \item $L^{\text{sym}}$ is positive semi-definite and has $n$ non-negative real-valued eigenvectors.
 \end{itemize}
-Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
-
+Please notice that the definition of equation $\ref{eq:normalized_graph_laplacian}$ relies on the definition of the unnormalized graph Laplacian, stated in equation $\ref{eq:unnormalized_graph_laplacian}$. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
 
 \subsection{Spectral Clustering}
+\label{sec:spectral_clustering_bg}
+Given n data points $x_1, \dots, x_n$ with their pairwise similarities $s_ij$ measured by some similarity function which is symmetric and non-negaitve. Then, the corresponding similarity matrix is equals to the weight matrix $W$, for which $\forall i,j: w_{ij} = s_{ij}$.
 
-
+%
+\begin{algorithm}[H]
+\caption{Spectral Clustering Algorithm}
+\begin{table}[H]
+  \begin{tabular}{@{}lll@{}}
+    \textbf{Input:} & Similarity matrix $S \in \mathbb{R}^{n \times n}$ \\
+		& Number $k$ of clusters to construct \\
+    \textbf{Output:} & Clusters $A_1, \dots, A_k$ with $A_i = \{ j : y_j \in C_i\}$ \\
+  \end{tabular} 
+\end{table}
+\setlength{\fboxrule}{0pt} 
+\begin{boxedminipage}{1.0\textwidth}
+  \begin{algorithmic}[1]
+  	  \State $\text{Construct a similarity graph as described in section }\ref{sec:similarity_graphs}$
+  	  \State $\text{Let } W \text{ denote the corresponding weighted adjacency matrix}.$
+  	  \State $\text{Compute the normalized graph Laplacian } L^{\text{sym}} \text{ as defined in equation } \ref{eq:normalized_graph_laplacian}$
+  	  \State $\text{Compute the first k eigenvectors } u_1,\dots,u_k \text{ of } L^{\text{sym}}$
+  	  \State $\text{Let } U \in \mathbb{R}^{n \times k} \text{ be the matrix containing the vectors } u_1,\dots,u_k \text{ as columns}$
+  	  \State $\text{Form a matrix } T \in \mathbb{R}^{n \times k} \text{ from U by normalizing the rows}$
+  	  \State $\forall i \in \left[ 1, n \right]: \text{ Let } y_i \in \mathbb{R}^k \text{ be the vector corresponding to the t-th row of T.}$
+  	  \State $\text{Cluster the points } (y_i)_{i=1,\dots,n} \text{ via k-means as described in section } \ref{sec:k_means} \text{ into clusters } C_1, \dots, C_k$
+  \end{algorithmic}
+  \end{boxedminipage}
+  \vskip1.5pt
+\label{alg:spectral_clustering_algorithm}
+\end{algorithm}
+The actual choice of similarity graph we want to construct depends on the underlying problem statement.
 
 %TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
 Kernighan-Lin Heuristic, Graph Cut

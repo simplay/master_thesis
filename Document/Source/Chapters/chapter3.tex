@@ -46,12 +46,13 @@ The exact value of $T$ is either the number of overlapping frames between the $A
 Please note that by computing the affinity for every existing trajectory pair combinations, as defined in equation $\ref{eq:prod_dist_affinity}$, we implicitly encode a $n \times n$ affinity matrix $W$, for $n$ given trajectories. 
 
 \section{Eigendecomposition of Graph Laplacians}
+In this section we derive the Eigendecomposition of the graph Laplacian which will be used to implement a motion segmentation based on spectral clustering. The necessary theory can be looked up in section $\ref{sec:spectral_clustering_bg}$. \\ \\
 Given the pairwise affinity matrix $W$ as computed in section $\ref{sec:trajectory_affinities}$ on page $\pageref{sec:trajectory_affinities}$. An example of such an matrix is shown in figure $\ref{fig:cars_affinity_mat_sub}$. An approximated partitioning of the underlying graph can be obtained by running a variant of spectral clustering. Let
 \begin{equation}
 	D = \text{diag} \left( d_{A_1}, \dots, d_{A_n} \right)
 \label{eq:def_d_mat}
 \end{equation}
-be the $n \times n$ diagonal matrix with the entries
+be the $n \times n$ diagonal degree matrix with the entries
 \begin{equation}
 	d_{A_k} = \sum_B w \left( A_k, B \right)
 \end{equation}
