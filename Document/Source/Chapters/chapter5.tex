@@ -40,70 +40,27 @@ chair & 101 & 512 x 424 & true & true & false\\ \hline
 
 \section{Methodology}
 \label{sec:methodology}
-%TODO export definition of those statistics to background: example of infected person.
-run different pipeline component combinations on our datasets. According to the run experiment, different pipeline and parameter settings are used. An exact description is given initially stated in the corresponding experiment. To reduce the effect of oversegmentation we post-process the produced motion segmentations via our segment merger. Finally, we qualitatively evaluate the quality of the merged segments by computing different statistical measures. By comparing the segments against their ground truth images, we compute the precision, recall, the f1 score and the fragmentation. 
-% under construction
-For the final quantitative evaluation formulate a series of experiments and then perform a statistical hypothesis testing. 
-We use our resulting segmentations as a prediction and compare it against a predefined ground truth. 
-
-
-Our random variable 
-
-For this purpose we introduce a binary random variable, indicating whether a particular sampling point is assigned to the correct ground truth segment.
-
-To illustrate the concept of hypothesis testing let discuss the follo
-
-
-X = suffers from deadly infection
-TP: a person suffers from a particular infection and was detected. person can be cured and won't infect other person.
-FN: a person suffers from a infection and was not detected. thus might infect other people. bad scenario
-FP: a person is healthy but was incorrectly diagnosed being ill. person will be treated even though it is healthy. bad scenario
-TN: a person is healthy and was actually diagnosed like that. everything is okay.
-
-
-Sensitivity and specificity are statistical measures of the performance of a binary classification test, also known in statistics as classification function:
-
-  Sensitivity (also called the true positive rate, or the recall in some fields) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
-    Specificity (also called the true negative rate) measures the proportion of negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).
-
-
-    
-\begin{table}[H]
-\centering
-\begin{tabular}{c|c|c|}
-\cline{2-3}
- & \begin{tabular}[c]{@{}l@{}}Prediction\\ Positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}Prediction\\ Negative\end{tabular} \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} $\bf{TP}$ } & \cellcolor[HTML]{CB0000} $\bf{FN}$ \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} $\bf{FP}$ } & \cellcolor[HTML]{34FF34} $\bf{TN}$ \\ \hline
-\end{tabular}
-\caption[Prediction and Sensivity]{My caption}
-\label{tab:prediction_sensitivity}
-\end{table}
-
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\linewidth] {evaluation/prec_recall}
-\end{center}
-\caption[Concept Recall and Precision]{This figure illustrates graphically the concept of Recall (\textbf{R}) and Precision (\textbf{P}). When estimating the sampling of a binary random variable, there are basically four possible outcomes: The we predicted it being true and it is true (\textbf{TP}), we predicted it true but it is false (\textbf{FP}), we predicted it false and it was actually negative (\textbf{FN}) or we predicted it to be true but it was actually false (\textbf{TN}). }
-\label{fig:eval_concept_recall_precc}
-\end{figure}
-
+In this section we give a brief description about the methodology used to perform our experiments. \\ \\
+We want to quantitatively evaluate the quality of segmentations produces by running different pipeline combinations. We use the datasets described in section $\ref{sec:datasets}$. Produced motion segmentations are compared against available ground truth images. \\ \\
+Before evaluating the performance of generated segmentations, we run our segment merger as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in equation $\ref{eq:statistical_measures}$. 
 \begin{equation}
-	\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
-\label{eq:def_precision}
+\begin{aligned}
+	& \text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \\
+	& \text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} \\
+	& F_1 \text{ Score} = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
+\end{aligned}
+\label{eq:statistical_measures}
 \end{equation}
-
+We initially separate the background label from the moving object segmentation labels for every segmentation results. Next, we iterate over all points in every cluster, compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$.
 \begin{equation}
-	\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
-\label{eq:def_recall}
+\begin{aligned}
+	\textbf{TP} &:= \text{Samples correctly classified as foreground.} \\
+	\textbf{FP} &:= \text{Samples classified as foreground but actually belong to the background.} \\
+	\textbf{FN} &:= \text{Samples classified as background but actually belong to foreground.}
+\end{aligned}
+\label{eq:statistical_counts}
 \end{equation}
-For the final quantitative evaluation of our experiments we make use of the \textbf{F1} score. This measure is often used in determining the performance of  classification tasks in machine learning. To compute its score, this measure takes into account both, the precision and the recall of the test. 
- The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
-\begin{equation}
-F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
-\label{eq:f1_score}
-\end{equation}  
-The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
+A detailed explanation of these measures can be found in the background section $\ref{sec:on_statistics_bg}$ on page $\pageref{sec:on_statistics_bg}$.
 
 \section{Experiments}
 In this section we list the results of a series of experiments we performed running our pipeline on the presented dataset from section $\ref{sec:datasets}$ on page $\pageref{sec:datasets}$. The results are evaluated according the previously explained measures from section $\ref{sec:methodology}$ on page $\pageref{sec:methodology}$. \\ \\

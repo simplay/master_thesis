@@ -407,9 +407,6 @@ The bilateral filter is controlled by the two parameters $\sigma_s$ and $\sigma_
 
 \subsection{Harris Corner Detector}
 \label{sec:harris_corner_detector}
-
-% TODO state idea of an edge
-
 Let us consider a grayscale image $I$. We are going to sweep a window $w(x,y)$ (with displacements u in the x direction and v in the right direction) I and will calculate the variation of intensity. Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:
 \begin{equation}
 	E \left( u, v \right) = \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2
@@ -458,6 +455,63 @@ A score is calculated for each window, to determine if it can possibly contain a
 \end{aligned}
 \label{eq:harris_response}
 \end{equation}
+
+\section{On Statistics}
+\label{sec:on_statistics_bg}
+In this section we describe the concept of statistical hypothesis testing. We will make use of this concept for quantitatively evaluation our results. \\ \\
+\begin{table}[H]
+\centering
+\begin{tabular}{c|c|c|}
+\cline{2-3}
+ & \begin{tabular}[c]{@{}l@{}}Prediction\\ Positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}Prediction\\ Negative\end{tabular} \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} $\bf{TP}$ } & \cellcolor[HTML]{CB0000} $\bf{FN}$ \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} $\bf{FP}$ } & \cellcolor[HTML]{34FF34} $\bf{TN}$ \\ \hline
+\end{tabular}
+\caption[Conditional Probability]{The four possible outcomes of a conditional probability}
+\label{tab:prediction_sensitivity}
+\end{table}
+In given population a certain deadly illness is spreading. Luckily, a new detector was developed, which is supposed help to stop the illness from spreading. To evaluate the quality of this detector, we could apply a classical hypothesis thesis. In the following let us define the following random variables.
+\begin{itemize}
+	\item X := The person suffers from deadly infection.
+	\item Y := The person was classified as being infected.
+\end{itemize}
+Then, the following four outcomes exist:
+\begin{itemize}
+	\item The True Positive (TP) case: a person suffers from a particular infection and was detected. person can be cured and will not infect other persons.
+	\item The False Negitive (FN) case: a person suffers from a infection and was not detected. thus might infect other people. Bad scenario
+	\item The False Positive (FP) case: a person is healthy but was incorrectly diagnosed being ill. person will be treated even though it is healthy. bad scenario
+	\item The True negative case (TN): a person is healthy and was actually diagnosed like that. everything is okay.
+\end{itemize} 
+Additional measures are available, such as the sensitivity and specificity.
+\begin{itemize}
+	\item Sensitivity (also denoted recall) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
+	\item Specificity (also called the true negative rate) measures the proportion of negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).
+\end{itemize}
+Figure $\ref{fig:eval_concept_recall_precc}$ visualizes these measures.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.6\linewidth] {evaluation/prec_recall}
+\end{center}
+\caption[Concept Recall and Precision]{This figure illustrates graphically the concept of Recall (\textbf{R}) and Precision (\textbf{P}). When estimating the sampling of a binary random variable, there are basically four possible outcomes: The we predicted it being true and it is true (\textbf{TP}), we predicted it true but it is false (\textbf{FP}), we predicted it false and it was actually negative (\textbf{FN}) or we predicted it to be true but it was actually false (\textbf{TN}). }
+\label{fig:eval_concept_recall_precc}
+\end{figure}
+The precision is defined as
+\begin{equation}
+	\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+\label{eq:def_precision}
+\end{equation}
+and the recall as
+\begin{equation}
+	\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\label{eq:def_recall}
+\end{equation}
+For the final quantitative evaluation of our experiments we make use of the \textbf{F1} score. This measure is often used in determining the performance of  classification tasks in machine learning. To compute its score, this measure takes into account both, the precision and the recall of the test. 
+ The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
+\begin{equation}
+F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
+\label{eq:f1_score}
+\end{equation}  
+The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
 
 \section{Camera Model}
 explain calibration data
