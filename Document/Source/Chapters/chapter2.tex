@@ -269,21 +269,26 @@ For the set of indices $\{ i : v_i \in A \}$ we use the shorthand notation $i \i
 \end{equation}
 
 \subsection{Similarity Graph}
-Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of datapoints $x_i$ and $x_j$.
-goal: divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other.
+Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of data points $x_i$ and $x_j$. Then, our goal is to divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other. To address this task we represent our data by a similarity graph $G = (V, E)$. \\ \\
+Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering problem becomes then to the graph partitioning problem. Find a partition of the graph such that the edges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. \\ \\
+There are several constructions to transform a given set of data points with pairwise similarities $s_{ij}$ or pairwise distances $d_{ij}$ on the graph. The common goal of such a construction is to to model the local neighborhood relationships between the data points. In the following several a list of different construction types.
+\begin{itemize}
+	\item The \textbf{$\epsilon$-neighborhood graph}: All points whose pairwise distances are smaller than a given $\epsilon$ are connected. In that case the distances between connected vertices is at the same scale (at most equals $\epsilon$). Hence, the edge weights do not incorporate additional information about the data on the graph and thus, such a graph is usually considered as an unweighted graph.
+	\item The \textbf{k-nearest neighbor graph}: Vertex $v_i$ is connected with $v_j$ if $v_j$ is among the k-nearest neighbors of $v_i$. This definition usually leads to a directed graph, since this neighborhood relationship is not symmetric. When interested in constructing a undirected graph, we can either ignore the induced edge directions (corresponds to an OR relationship) or connect the vertices if and only if both are nearest neighbors of each other (corresponds to an AND relationship).
+	\item The \textbf{fully connected graph}: All points that exhibit a positive similarity are connected with each other. The edge weight corresponds to their similarity value.
+\end{itemize}
+For measuring the distances between data points several metrics can be used, such as the euclidean distance or other norms. However, when dealing with spectral clustering a prominent distance measure is the is the Gaussian similarity function
+\begin{equation}
+	s(x_i, x_j) = e^{\frac{-\norm{x_i - x_j}^2 }{2 \sigma^2}} 
+\end{equation}
+where $\sigma$ controlls the neighborhood width.
 
-represent such data by a similarity graph $G = (V, E)$.
-Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering problem becomes then to the graph partitioning problem. Find a partion of the graph such taht the eges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. 
-
-
-
-
-Kernighan-Lin Heuristic, Graph Cut
-multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
-
-$\cite{Ker70}$
 \subsection{Spectral Clustering}
 %TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
+Kernighan-Lin Heuristic, Graph Cut
+multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
+$\cite{Ker70}$
+
 
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
