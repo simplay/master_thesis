@@ -1,3 +1,7 @@
+%TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
+%Kernighan-Lin Heuristic, Graph Cut
+%multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
+%$\cite{Ker70}$
 \chapter{Theoretical Background}
 In this chapter we give a introduction in various topics and areas which are necessary in order to understand the implementation of our pipeline and how its generated results were computed. 
 
@@ -325,9 +329,9 @@ Please notice that the definition of equation $\ref{eq:normalized_graph_laplacia
 
 \subsection{Spectral Clustering}
 \label{sec:spectral_clustering_bg}
-Given n data points $x_1, \dots, x_n$ with their pairwise similarities $s_ij$ measured by some similarity function which is symmetric and non-negaitve. Then, the corresponding similarity matrix is equals to the weight matrix $W$, for which $\forall i,j: w_{ij} = s_{ij}$.
-
-%
+In this section we describe a clustering technique for grouping data points by using the spectrum of the points' similarity matrix. More precisely, this method performs a dimensionality reduction and then separates the transformed data representation via k-means. \\ \\
+Given $n$ data points $x_1, \dots, x_n$ with their pairwise similarities $s_ij$ measured by some similarity function which is symmetric and non-negaitve. Then, the corresponding similarity matrix $S$ is defined as $S = (s_{ij})_{i,j=1,\dots,n}$. \\ \\
+The rational of the spectral clustering algorithm is to change the abstract representation of the data points $x_i$ to points $y_i \in \mathbb{R}^k$, which are easy to cluster using k-means. Algorithm $\ref{alg:spectral_clustering_algorithm}$ lists the actual step that have to performed to run the spectral clustering algorithm.
 \begin{algorithm}[H]
 \caption{Spectral Clustering Algorithm}
 \begin{table}[H]
@@ -354,12 +358,6 @@ Given n data points $x_1, \dots, x_n$ with their pairwise similarities $s_ij$ me
 \label{alg:spectral_clustering_algorithm}
 \end{algorithm}
 The actual choice of similarity graph we want to construct depends on the underlying problem statement.
-
-%TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
-Kernighan-Lin Heuristic, Graph Cut
-multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
-$\cite{Ker70}$
-
 
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
