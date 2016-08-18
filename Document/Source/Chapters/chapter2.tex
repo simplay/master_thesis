@@ -205,7 +205,9 @@ In the following an ordered list of facts that determine our motion segmentation
   \item video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
 \end{itemize}
 
-\section{Data Partitioning}
+\section{Data Clustering}
+Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. 
+
 \subsection{K-Means Clustering}
 The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
 Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\textbf{x}_k \in \mathbb{R}^d$. k-means clustering tries to partition the $n$ observations into $k$ sets $\textbf{S} = \{ S_1, \dots, S_k\}$ to minimize the sum of distance functions of each point in the cluster to the $k$ centers. Mathematically, this can formulated as the follows:
@@ -228,12 +230,59 @@ where each $x_p$ is assigned to exactly one $S^{(t)}$.
 \end{itemize}
 There are many initialization methods to assign the clusters such as randomly chooses k observations from the data set and uses these as the initial means or define k random clusters. The appropriate way of initializing the clusters depends on the given problem statement which the k-means attempts to address. 
 
-\subsection{Spectral Clustering}
+\subsection{Graph Definitions}
+In the following we offer the reader some basic graph definitions which are broadly used in this thesis. \\ \\ 
+Let $G = (V, E)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. In this work we work with weighted graphs. This means that each edge between two vertices $v_i$ and $v_j$ has a non-negative weight $w_{ij}$. \\ \\
+The $\textbf{weighted adjacency matrix}$ of the graph is the matrix 
+\begin{equation}
+W = \left( w_{ij} \right)_{i,j=1,\dots, n}	
+\end{equation}
+If $w_{ij} = 0$ then the vertices $v_i$ and $v_j$ are \textbf{not connected} by an edges. \\ \\
+Since $G$ is supposed to be an \textbf{undirected graph}, we require
+\begin{equation}
+	\forall i,j : w_{ij} = w_{ji}
+\end{equation}
+The \textbf{degree} of a vertex $v_i \in V$ is defined as
+\begin{equation}
+	d_i = \sum_{j=1}^n w_{ij}
+\end{equation}
+In fact the sum accumulates only vertices that are adjacent to $v_i$, since all other vertices have a weight equals zero. \\ \\
+The \textbf{degree matrix} $D$ is defined as the diagonal matrix with the degrees $d_1,\dots, d_n$ on the diagonal. \\ \\
+For a given subset of vertices $A \subset V$, its \textbf{complement} is defined as
+\begin{equation}
+	\bar{A} = V \setminus A
+\end{equation}
+The \textbf{indicator function} is defined as
+\begin{equation}
+\begin{aligned}
+& \mathbbm{1}_A = \left( f_1, \dots, f_n \right)^{T} \in \mathbb{R}^n \\
+& \text{where } \forall i: f_i= 
+\begin{cases}
+    1,& \text{if } v_i\in A\\
+    0,              & \text{otherwise}
+\end{cases}
+\end{aligned}
+\end{equation}
+For the set of indices $\{ i : v_i \in A \}$ we use the shorthand notation $i \in A$. For two subsets $A, B \subset V$, which are not necessarily disjoint, we define their \textbf{set sum} as
+\begin{equation}
+	W(A,B) = \sum_{i \in A, j \in B} w_{ij}
+\end{equation}
+
+\subsection{Similarity Graph}
+Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of datapoints $x_i$ and $x_j$.
+goal: divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other.
+
+represent such data by a similarity graph $G = (V, E)$.
+Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering problem becomes then to the graph partitioning problem. Find a partion of the graph such taht the eges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. 
+
+
+
+
 Kernighan-Lin Heuristic, Graph Cut
 multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
 
 $\cite{Ker70}$
-
+\subsection{Spectral Clustering}
 %TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
 
 \section{On Filtering Images}
