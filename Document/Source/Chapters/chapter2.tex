@@ -206,7 +206,8 @@ In the following an ordered list of facts that determine our motion segmentation
 \end{itemize}
 
 \section{On Data Clustering}
-Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. 
+Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. \\ \\
+In this section we offer the reader definitions of various such techniques. For writing content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
 
 \subsection{K-Means Clustering}
 The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
@@ -293,7 +294,7 @@ in the following we assume that $G$ is an undirected, weighted graph with the th
 when using the eigenvectors of a matrix, we will not necessarily assume that they are normalized. Eigenvalues will always be ordered increasingly. Hence, when referring to the first k eigenvectors, we refer to the eigenvectors that correspond to the k smallest eigenvectors.
 
 \paragraph{Unnormalized Graph Laplacian}
-The unnormalized graph Laplacian matrix of G is defined as
+The unnormalized graph Laplacian matrix $L$ of the graph $G$ is defined as
 \begin{equation}
 	L = D - W
 \end{equation}
@@ -308,7 +309,17 @@ which has the following properties:
 The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components in the graph.
 
 %
-
+\paragraph{Normalied Graph Laplacian}
+The symmetric, normalized graph Laplacian matrix $L^{\text{sym}}$ of the graph $G$ is defined as
+\begin{equation}
+	L^{\text{sym}} = D^{-\frac{1}{2}} L D^{-\frac{1}{2}}
+\end{equation}
+which has the following properties: 
+\begin{itemize}
+\item \begin{equation}
+	\forall v \in \mathbb{R}^n: v^T L^{\text{sym}} v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} (\frac{v_i}{\sqrt{d_i}} - \frac{v_j}{\sqrt{d_j}})^2
+\end{equation}	
+\end{itemize}
 
 \subsection{Spectral Clustering}
 
