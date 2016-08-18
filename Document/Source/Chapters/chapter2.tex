@@ -224,12 +224,22 @@ $\cite{Ker70}$
 
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
+
+A Gaussian filter (\textbf{GF}) is a linear operator that reduces noise by smoothing the image. Applying GF corresponds to a low-pass filtering.
+At each position it estimates a local average of the intensities as defined in equation $\ref{eq:gaussian_filtering_def}$.
+\begin{equation}
+	\mathcal{F}^{\text{gf}} \{I \} (p) = \sum_{q \in \Omega_p} G_{\sigma} (\norm{p - q}) I_q
+\label{eq:gaussian_filtering_def}
+\end{equation}
+where $I$ defines the input image and $\Omega_p$ contains all neighboring points within the window that are centered at the image point $p$. Moreover, $G_{\sigma}$ denotes the two dimensional Gaussian kernel, which is defined in equation $\ref{eq:def_g_weight}$.
+\begin{equation}
+	G_{\sigma} (x) = \frac{1}{2 \pi \sigma^2} e^{-\frac{x^2}{2 \sigma^2}}
+\label{eq:def_g_weight}
+\end{equation}
+The Gaussian filtering is the weighted average of the intensity of the adjacent positions with a weight decreasing with the spatial distance to the center position. This distance is defined by $G_{\sigma} (\norm{p - q})$ where $\sigma$ is a parameter that defines the size of the neighborhood. The resulting image is a blurred version of the input image.
+
 \subsection{Bilateral Filter}
-
-% source: 
-
-
-A bilateral filter (\textbf{BF}) is a non-linear operator that reduces noise by smoothing the image but at the same time preserves its edges. \\ \\
+A Bilateral filter (\textbf{BF}) is a non-linear operator that reduces noise by smoothing the image but at the same time preserves its edges. \\ \\
 The rational of this filter is that two pixels are close to each other if not only if their spacial distance is small but also if they are similar regarding their intensity range.
 \begin{figure}[H]
 \begin{center}
