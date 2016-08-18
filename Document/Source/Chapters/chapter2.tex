@@ -283,7 +283,37 @@ For measuring the distances between data points several metrics can be used, suc
 \end{equation}
 where $\sigma$ controlls the neighborhood width.
 
+\subsection{Graph Laplacians}
+
+the main tool for spectral clustering are graph Laplacian matrices.
+In this section we define different graph laplacians and state some of their most important properties.
+
+in the following we assume that $G$ is an undirected, weighted graph with the the positive weight matrix $W$.
+
+when using the eigenvectors of a matrix, we will not necessarily assume that they are normalized. Eigenvalues will always be ordered increasingly. Hence, when referring to the first k eigenvectors, we refer to the eigenvectors that correspond to the k smallest eigenvectors.
+
+\paragraph{Unnormalized Graph Laplacian}
+The unnormalized graph Laplacian matrix of G is defined as
+\begin{equation}
+	L = D - W
+\end{equation}
+which has the following properties: 
+\begin{itemize}
+\item \begin{equation}
+	\forall v \in \mathbb{R}^n: v^T L v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} (v_i - v_j)^2
+\end{equation}
+\item L is symmetric and positive semi-defnite
+\item The smallest eigenvalue of L is equal to zero and the corresponding eigenvector is the constant one vector.
+\end{itemize}
+The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components in the graph.
+
+%
+
+
 \subsection{Spectral Clustering}
+
+
+
 %TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
 Kernighan-Lin Heuristic, Graph Cut
 multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
