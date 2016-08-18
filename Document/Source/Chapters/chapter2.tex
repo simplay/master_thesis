@@ -207,7 +207,7 @@ In the following an ordered list of facts that determine our motion segmentation
 
 \section{On Data Clustering}
 Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. \\ \\
-In this section we offer the reader definitions of various such techniques. For writing content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
+In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
 
 \subsection{K-Means Clustering}
 The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
@@ -303,7 +303,7 @@ which has the following properties:
 \item \begin{equation}
 	\forall v \in \mathbb{R}^n: v^T L v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} (v_i - v_j)^2
 \end{equation}
-\item L is symmetric and positive semi-defnite
+\item L is symmetric and positive semi-defnite$\footnote{A matrix M is called positive semi-definite if and only if $\forall x \in \mathbb{R}^n : x^T M x \geq 0$ holds true.}$.
 \item The smallest eigenvalue of L is equal to zero and the corresponding eigenvector is the constant one vector.
 \end{itemize}
 The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components in the graph.
@@ -317,9 +317,13 @@ The symmetric, normalized graph Laplacian matrix $L^{\text{sym}}$ of the graph $
 which has the following properties: 
 \begin{itemize}
 \item \begin{equation}
-	\forall v \in \mathbb{R}^n: v^T L^{\text{sym}} v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} (\frac{v_i}{\sqrt{d_i}} - \frac{v_j}{\sqrt{d_j}})^2
-\end{equation}	
+	\forall v \in \mathbb{R}^n: v^T L^{\text{sym}} v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} \left( \frac{v_i}{\sqrt{d_i}} - \frac{v_j}{\sqrt{d_j}} \right)^2
+\end{equation}
+\item Zero is an eigenvalue of $L^{\text{sym}}$ with the eigenvector $D^{\frac{1}{2}} \mathbbm{1}$
+\item $L^{\text{sym}}$ is positive semi-definite and has $n$ non-negative real-valued eigenvectors.
 \end{itemize}
+Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
+
 
 \subsection{Spectral Clustering}
 
