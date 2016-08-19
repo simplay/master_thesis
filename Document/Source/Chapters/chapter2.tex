@@ -484,6 +484,28 @@ A score is calculated for each window, to determine if it can possibly contain a
 
 \section{On Statistics}
 \label{sec:on_statistics_bg}
+
+\section{Conditional Probability}
+Given two events $A$ and $B$ with the probability $P(B) > 0$. The conidtional probability of $A$ given $B$ is defined as
+\begin{equation}
+	P(A|B) = \frac{P(A \cap B)}{P(B)}
+\label{eq:conditional_prob}
+\end{equation}
+Furthermore, equation $\ref{eq:conditional_prob}$ gives us an alternative interpretation of the probability of an intersection
+\begin{equation}
+P(A \cap B) = P(A|B)P(B) 	
+\end{equation}
+The probability that two events happen the same time is the same as the Probability of the event A given B times the probability of event B. Sticking to this definition, we can visualize all possible outcomes of two events happening the same time as shown in figure $\ref{fig:prob_tree_diagram}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.45\linewidth] {background/statistics/probability_tree_diagram}
+\end{center}
+\caption[Probability Tree Diagram]{Tree liked representation$\footnotemark$ of the four possible outcomes for a conditional probability.}
+\label{fig:prob_tree_diagram}
+\end{figure}
+\footnotetext{The visualized graphic has been taken from: \url{https://en.wikipedia.org/wiki/File:Probability_tree_diagram.svg}}
+
+\section{Hypothesis Testing}
 In this section we describe the concept of statistical hypothesis testing. We will make use of this concept for quantitatively evaluation our results. \\ \\
 \begin{table}[H]
 \centering
@@ -540,13 +562,6 @@ F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\t
 The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
 
 \section{Camera Model}
-%explain calibration data
-%explain pinhole model
-%explain from scene to camera-space to image-space
-%mention focal length, principal point
-%mention how depth could be incooperated
-%explain intrinsic,extrinsic calibrations
-
 \subsection{Pinhole Camera}
 A camera allows to capture a 3d scene in a 2d image. A common mathematical model to describe such a mapping from the 3d scene space to the 2d image space is the pinhole camera model. This model is conceptually illustrated in figure $\ref{fig:pinhole_camera_model}$.
 \begin{figure}[H]
