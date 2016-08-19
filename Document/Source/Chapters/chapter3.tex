@@ -102,10 +102,8 @@ The expression $\mu_k$ denotes the centroid of cluster $k$.
 
 
 \section{Minimum Cost Multicut Problem}
-
-
-
-The min. cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
+In this section we revisit the problem of finding an optimal graph partition by optimizing a certain energy, which is based on the work of $\cite{KB15b}$. Moreover, this derivation is also based on the concepts formulated in section $\ref{sec:graph_cut}$ on page $\pageref{sec:graph_cut}$. \\ \\
+The minimum cost multicut problem is the problem of decomposing a graph $G = (V, E)$ into an optimal number of segments such that the overall cost in term of of edge weights $c_e$ is minimized. The node labeling problem can equivalently be formulated as a binary edge labeling problem
 \begin{equation}
 \begin{aligned}
 & \min_{y \in \{0,1 \}^{|E|}} \sum_{e \in E} c_e y_e \\

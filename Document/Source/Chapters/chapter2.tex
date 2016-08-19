@@ -1,7 +1,3 @@
-%TODO: maybe we should introduce a section called filtering, containing bilateral filtering, harris corner detector and so forth..
-%Kernighan-Lin Heuristic, Graph Cut
-%multi-label CRF on superpixels for class segmentation $\cite{Fulkerson2009}$
-%$\cite{Ker70}$
 \chapter{Theoretical Background}
 In this chapter we give a introduction in various topics and areas which are necessary in order to understand the implementation of our pipeline and how its generated results were computed. 
 
@@ -370,16 +366,16 @@ The rational of the spectral clustering algorithm is to change the abstract repr
 The actual choice of similarity graph we want to construct depends on the underlying problem statement.
 
 \subsection{Graph Cut}
+\label{sec:graph_cut}
 In this section we relate the problem of clustering to graph partitioning problems. \\ \\
 For a similarity graph, the problem of clustering can be reformulated to the task of finding a partition on the graph such that edges between different groups have low weights and edges within the same group have high weights. \\ \\
 Let $G = (V, E)$ denote a similarity graph and $W$ its corresponding adjacency matrix. Then, one way to obtain a partition of $G$ is to solve the mincut problem. For a given number $k$ of subsets, the mincut tries to find an optimal partition $A_1, \dots, A_k$ of $G$ which minimizes
 \begin{equation}
-\text{cut} \left( A_1, \dots, A_k \right) := \frac{1}{2} \sum_{i=1}^k W \left( A_i, \bar{A_i} \right) 
+\text{cut} \left( A_1, \dots, A_k \right) := \frac{1}{2} \sum_{i=1}^k W \left( A_i, \bar{A_i} \right)
+\label{eq:simple_mincut} 
 \end{equation}
-where $\bar{A}$ denotes the complement of $A$ as defined in equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in equation $\ref{eq:set_sum}$.
-
-The mincut problem can be solved via XYZ
-In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly the resulting partitions should be large enough. 
+where $\bar{A}$ denotes the complement of $A$ as defined in equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in equation $\ref{eq:set_sum}$. \\ \\
+The mincut problem from equation $\ref{eq:simple_mincut}$ can be efficiently solved according to the method described in $\cite{Stoer:1997:SMA:263867.263872}$. In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly the resulting partitions should be large enough. 
 The two common objective functions to encode the notion of size is the ratio cut \textit{Rcut} and the normalized cut \textit{Ncut}. They are defined as
 \begin{equation}
 \begin{aligned}
@@ -387,12 +383,11 @@ The two common objective functions to encode the notion of size is the ratio cut
 &\text{Ncut} = \frac{1}{2} \sum_{i=1}^k \frac{W(A_i, \bar{A_i})}{\text{vol}(A_i)} = \sum_{i=1}^k \frac{\text{cut}(A_i, \bar{A_i})}{\text{vol}(A_i)}
 \end{aligned}
 \end{equation}
-
-
+Both objective functions try to achieve that the clusters are balanced in terms of either the number of vertices (Rcut) or edges (Ncut). The downside of this is that introducing balancing conditions make the previous simple mincut become NP hard, as discussed in $\cite{Jeg09}$. Spectral clustering is a way to solve a relaxed version of those balanced mincut problems. In particular, in $\cite{vonLuxburg2007}$ the authors demonstrated that relaxing Ncut leads to the spectral clustering algorithm we mention in section $\ref{sec:spectral_clustering_bg}$. \\ \\
+In literature, many sophisticated methods exist to optimize relaxed versions of this NP hard problem. Examples are the graph partition heuristic in $\cite{Ker70}$, or by solving the multi-label CRF problem via max-flows as presented in $\cite{Fulkerson2009}$.
 
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
-
 A Gaussian filter (\textbf{GF}) is a linear operator that reduces noise by smoothing the image. Applying GF corresponds to a low-pass filtering.
 At each position it estimates a local average of the intensities as defined in equation $\ref{eq:gaussian_filtering_def}$.
 \begin{equation}
