@@ -546,6 +546,18 @@ The F1 score can be interpreted as a normalized weighted average of the precisio
 %mention focal length, principal point
 %mention how depth could be incooperated
 %explain intrinsic,extrinsic calibrations
+
+\subsection{Pinhole Camera}
+A camera allows to capture a 3d scene in a 2d image. A common mathematical model to describe such a mapping from the 3d scene space to the 2d image space is the pinhole camera model. This model is conceptually illustrated in figure $\ref{fig:pinhole_camera_model}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth] {background/camera_model/pinhole_camera}
+\end{center}
+\caption[Pinhole Camera Model]{Visualizing the pinhole camera model. The camera center C represents an infinitely small aperture hole, is the focal length, p the principal point $\textbf{A} = (X, Y, Z)$ a 3d point in the scene and $\textbf{a} = (f \frac{X}{Z}, f \frac{Y}{Z})$ its projected pixel version mapped onto the image plane.}
+\label{fig:pinhole_camera_model}
+\end{figure}
+The aperture is an infinitely small hole and there is no lens used to focus light. Therefore, lens distorting or depth of field effects are ignored. The intersection point where all rays meet is the center of the perspective projection and usually referred by \textit{camera center}. The principal axis is formed by the line perpendicular to the image plane, which passes though the camera center. Its intersection point with the image plane is called principal point. The distance between the camera center and the principal point is the so called focal length.
+
 \subsection{Camera Parameters}
 \paragraph{Intrinsic Parameters} Let $\textbf{X} = (X,Y,Z,1)^T$ denote a point in a 3D scene and $\textbf{x} = (x,y,1)^T$ its projected version in the image plane. Both points are written in their homogeneous form. The mapping from a scene point to the image plane is defined as
 \begin{equation}
