@@ -210,7 +210,7 @@ In the following an ordered list of facts that determine our motion segmentation
 \end{itemize}
 
 \section{On Data Clustering}
-Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. \\ \\
+Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. This is achieved by separating data points according to their similarities. \\ \\
 In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
 
 \subsection{K-Means Clustering}
@@ -241,7 +241,8 @@ In the following we offer the reader some basic graph definitions which are broa
 Let $G = (V, E)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. In this work we work with weighted graphs. This means that each edge between two vertices $v_i$ and $v_j$ has a non-negative weight $w_{ij}$. \\ \\
 The $\textbf{weighted adjacency matrix}$ of the graph is the matrix 
 \begin{equation}
-W = \left( w_{ij} \right)_{i,j=1,\dots, n}	
+W = \left( w_{ij} \right)_{i,j=1,\dots, n}
+\label{eq:def_adjacency_matrix}
 \end{equation}
 If $w_{ij} = 0$ then the vertices $v_i$ and $v_j$ are \textbf{not connected} by an edges. \\ \\
 Since $G$ is supposed to be an \textbf{undirected graph}, we require
@@ -251,12 +252,14 @@ Since $G$ is supposed to be an \textbf{undirected graph}, we require
 The \textbf{degree} of a vertex $v_i \in V$ is defined as
 \begin{equation}
 	d_i = \sum_{j=1}^n w_{ij}
+\label{eq:vertex_degree}
 \end{equation}
 In fact the sum accumulates only vertices that are adjacent to $v_i$, since all other vertices have a weight equals zero. \\ \\
 The \textbf{degree matrix} $D$ is defined as the diagonal matrix with the degrees $d_1,\dots, d_n$ on the diagonal. \\ \\
 For a given subset of vertices $A \subset V$, its \textbf{complement} is defined as
 \begin{equation}
 	\bar{A} = V \setminus A
+\label{eq:set_complement}
 \end{equation}
 The \textbf{indicator function} is defined as
 \begin{equation}
@@ -272,7 +275,14 @@ The \textbf{indicator function} is defined as
 For the set of indices $\{ i : v_i \in A \}$ we use the shorthand notation $i \in A$. For two subsets $A, B \subset V$, which are not necessarily disjoint, we define their \textbf{set sum} as
 \begin{equation}
 	W(A,B) = \sum_{i \in A, j \in B} w_{ij}
+\label{eq:set_sum}
 \end{equation}
+For measuring the size of a subset $A \subset V$, we either can \textbf{count} the number of vertices in $A$, which is denoted by $\left| A \right|$ or measure the \textbf{volume} of $A$ defined as
+\begin{equation}
+	\text{vol}(A) = \sum_{i \in A} d_i
+\label{eq:set_volume}
+\end{equation}
+The volume is the sum of weights of all edges attached to vertices in $A$.
 
 \subsection{Similarity Graph}
 \label{sec:similarity_graphs}
@@ -358,6 +368,27 @@ The rational of the spectral clustering algorithm is to change the abstract repr
 \label{alg:spectral_clustering_algorithm}
 \end{algorithm}
 The actual choice of similarity graph we want to construct depends on the underlying problem statement.
+
+\subsection{Graph Cut}
+In this section we relate the problem of clustering to graph partitioning problems. \\ \\
+For a similarity graph, the problem of clustering can be reformulated to the task of finding a partition on the graph such that edges between different groups have low weights and edges within the same group have high weights. \\ \\
+Let $G = (V, E)$ denote a similarity graph and $W$ its corresponding adjacency matrix. Then, one way to obtain a partition of $G$ is to solve the mincut problem. For a given number $k$ of subsets, the mincut tries to find an optimal partition $A_1, \dots, A_k$ of $G$ which minimizes
+\begin{equation}
+\text{cut} \left( A_1, \dots, A_k \right) := \frac{1}{2} \sum_{i=1}^k W \left( A_i, \bar{A_i} \right) 
+\end{equation}
+where $\bar{A}$ denotes the complement of $A$ as defined in equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in equation $\ref{eq:set_sum}$.
+
+The mincut problem can be solved via XYZ
+In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly the resulting partitions should be large enough. 
+The two common objective functions to encode the notion of size is the ratio cut \textit{Rcut} and the normalized cut \textit{Ncut}. They are defined as
+\begin{equation}
+\begin{aligned}
+&\text{Rcut} = \frac{1}{2} \sum_{i=1}^k \frac{W(A_i, \bar{A_i})}{\left| A_i\right|} = \sum_{i=1}^k \frac{\text{cut}(A_i, \bar{A_i})}{\left| A_i\right|} \\
+&\text{Ncut} = \frac{1}{2} \sum_{i=1}^k \frac{W(A_i, \bar{A_i})}{\text{vol}(A_i)} = \sum_{i=1}^k \frac{\text{cut}(A_i, \bar{A_i})}{\text{vol}(A_i)}
+\end{aligned}
+\end{equation}
+
+
 
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
