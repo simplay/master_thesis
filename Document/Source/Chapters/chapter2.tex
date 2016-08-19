@@ -540,9 +540,26 @@ F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\t
 The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
 
 \section{Camera Model}
-explain calibration data
-explain pinhole model
-explain from scene to camera-space to image-space
-mention focal length, principal point
-mention how depth could be incooperated
-explain intrinsic,extrinsic calibrations
+%explain calibration data
+%explain pinhole model
+%explain from scene to camera-space to image-space
+%mention focal length, principal point
+%mention how depth could be incooperated
+%explain intrinsic,extrinsic calibrations
+\subsection{Camera Parameters}
+\paragraph{Intrinsic Parameters} Let $\textbf{X} = (X,Y,Z,1)^T$ denote a point in a 3D scene and $\textbf{x} = (x,y,1)^T$ its projected version in the image plane. Both points are written in their homogeneous form. The mapping from a scene point to the image plane is defined as
+\begin{equation}
+\textbf{x} = 
+\begin{pmatrix}
+f & s & p_x & 0 \\
+0 & f & p_y & 0 \\
+0 & 0 & 1 & 0
+\end{pmatrix}
+\textbf{X}
+\end{equation}
+where $f$ denotes the focal length and $p = (p_x, p_y)^T$ the offset to the origin with respect to the principal point. In modern cameras, the skew $s$ is usually equals zero. The parameters $f$, $p_x$, $p_y$ and $s$ are called \textit{intrinsic camera parameters}. Notice, that $\textbf{X}$ is expressed in terms of camera coordinates and similarly, $\textbf{x}$ in pixel coordinates.
+\paragraph{Extrinsic Parameters} Let $\textbf{X}_w$ refer to the same point as $\textbf{X}$ but expressed in different coordinates system, in the world space. In a rigid object model, the points $\textbf{X}$ and $\textbf{X}_w$ can be transformed to one another by applying a linear transformation that consists of a rotational matrix $R$ and a translation $t$. The actual mapping is defined as
+\begin{equation}
+	X = \left[ R | t \right] X_w
+\end{equation}
+The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.
