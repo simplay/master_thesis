@@ -485,7 +485,7 @@ A score is calculated for each window, to determine if it can possibly contain a
 \section{On Statistics}
 \label{sec:on_statistics_bg}
 
-\section{Conditional Probability}
+\subsection{Conditional Probability}
 Given two events $A$ and $B$ with the probability $P(B) > 0$. The conidtional probability of $A$ given $B$ is defined as
 \begin{equation}
 	P(A|B) = \frac{P(A \cap B)}{P(B)}
@@ -505,8 +505,14 @@ The probability that two events happen the same time is the same as the Probabil
 \end{figure}
 \footnotetext{The visualized graphic has been taken from: \url{https://en.wikipedia.org/wiki/File:Probability_tree_diagram.svg}}
 
-\section{Hypothesis Testing}
-In this section we describe the concept of statistical hypothesis testing. We will make use of this concept for quantitatively evaluation our results. \\ \\
+
+
+\subsection{Evaluating Binary Classifiers}
+In this section we explain the mathematical framework we use in our evaluation.
+
+
+The purpose of a binary classifier is to classify given elements into two groups according to a specified classification rule. Think about a binary random variable modelling a certain event. The actual observations of the random variable are then either equals true or false. A classification$\footnote{I.e. the produced output after applying the classifier on the given data.}$ of a given dataset yields two numbers: the number of the positives and negatives, which add up to the size of the set. \\ \\
+In order to evaluate the quality of binary classifier its prediction is compared against a standard reference method or, if existing, against a ground truth assignment and then cross tabulates the data into a $2 \times 2$ contingency table as shown in figure $\ref{tab:prediction_sensitivity}$. 
 \begin{table}[H]
 \centering
 \begin{tabular}{c|c|c|}
@@ -518,24 +524,23 @@ In this section we describe the concept of statistical hypothesis testing. We wi
 \caption[Conditional Probability]{The four possible outcomes of a conditional probability}
 \label{tab:prediction_sensitivity}
 \end{table}
-In given population a certain deadly illness is spreading. Luckily, a new detector was developed, which is supposed help to stop the illness from spreading. To evaluate the quality of this detector, we could apply a classical hypothesis thesis. In the following let us define the following random variables.
+There are four possible outcomes: the classifier prediction, which has either are positive or negative condition, was actually correct or incorrect. \\ \\
+Let us consider the following example where we test some people for the presence of a disease. Some of these people have the disease, and the test correctly detects them. These findings are called true positives (\textbf{TP}). Some have the disease, but the test incorrectly claims that they do not have it. These results are called false negatives (\textbf{FN}). Some people do not suffer from the disease and the test classifies correctly as health. These results are called true negatives (\textbf{TN}). And Lastly, some healthy people who are incorrectly classified as infected. These are the so called false positives (\textbf{FP}) results. \\ \\
+There are many metrics that can be used to measure the performance of a classifier. In the following a listing of some prominent metrics
+%
 \begin{itemize}
-	\item X := The person suffers from deadly infection.
-	\item Y := The person was classified as being infected.
+\item \textbf{Precision}: Tells us what proportion of patients we diagnosed as having the disease actually had that disease. In other words, proportion of TP in the set of positive disease diagnoses. This is given by the rightmost column in the confusion matrix.
+\begin{equation}
+	\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+\label{eq:def_precision}
+\end{equation}
+\item \textbf{Recall}: Tells us what proportion of people that actually had the disease were diagnosed by the test as having the disease. In other words, proportion of TP in the set of true disease states. This is given by the bottom row in the confusion matrix.
+\begin{equation}
+	\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\label{eq:def_recall}
+\end{equation}
 \end{itemize}
-Then, the following four outcomes exist:
-\begin{itemize}
-	\item The True Positive (TP) case: a person suffers from a particular infection and was detected. person can be cured and will not infect other persons.
-	\item The False Negitive (FN) case: a person suffers from a infection and was not detected. thus might infect other people. Bad scenario
-	\item The False Positive (FP) case: a person is healthy but was incorrectly diagnosed being ill. person will be treated even though it is healthy. bad scenario
-	\item The True negative case (TN): a person is healthy and was actually diagnosed like that. everything is okay.
-\end{itemize} 
-Additional measures are available, such as the sensitivity and specificity.
-\begin{itemize}
-	\item Sensitivity (also denoted recall) measures the proportion of positives that are correctly identified as such (e.g., the percentage of sick people who are correctly identified as having the condition).
-	\item Specificity (also called the true negative rate) measures the proportion of negatives that are correctly identified as such (e.g., the percentage of healthy people who are correctly identified as not having the condition).
-\end{itemize}
-Figure $\ref{fig:eval_concept_recall_precc}$ visualizes these measures.
+A visualization of these measures is given in figure $\ref{fig:eval_concept_recall_precc}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.6\linewidth] {evaluation/prec_recall}
@@ -543,18 +548,7 @@ Figure $\ref{fig:eval_concept_recall_precc}$ visualizes these measures.
 \caption[Concept Recall and Precision]{This figure illustrates graphically the concept of Recall (\textbf{R}) and Precision (\textbf{P}). When estimating the sampling of a binary random variable, there are basically four possible outcomes: The we predicted it being true and it is true (\textbf{TP}), we predicted it true but it is false (\textbf{FP}), we predicted it false and it was actually negative (\textbf{FN}) or we predicted it to be true but it was actually false (\textbf{TN}). }
 \label{fig:eval_concept_recall_precc}
 \end{figure}
-The precision is defined as
-\begin{equation}
-	\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
-\label{eq:def_precision}
-\end{equation}
-and the recall as
-\begin{equation}
-	\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
-\label{eq:def_recall}
-\end{equation}
-For the final quantitative evaluation of our experiments we make use of the \textbf{F1} score. This measure is often used in determining the performance of  classification tasks in machine learning. To compute its score, this measure takes into account both, the precision and the recall of the test. 
- The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
+An alternative measure is the $F_1$ score. This measure is often used in determining the performance of classification tasks in machine learning. To compute its score, this measure takes into account both, the precision and the recall of the test. The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
 \begin{equation}
 F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
 \label{eq:f1_score}
