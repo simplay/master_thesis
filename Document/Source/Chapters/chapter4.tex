@@ -552,6 +552,15 @@ For each remaining trajectory pair, different distance values are computed and c
   \item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value.
   \item The \textbf{motion distance} $d_{\text{motion}}$: according to the gestalt principle we can conclude, that for each pair of trajectories at the time instant where the motion is maximally different, the two points do not belong to the same object.
 \end{itemize}
+An example how these distances are computed between two trajectories is shown in figure $\ref{fig:distance_measure}$. 
+\begin{figure}[H]
+\begin{center}
+   \includegraphics[width=1.0\linewidth] {implementation/affinities/distance_measures}
+   \label{fig:cars_w}
+\end{center}
+\caption[Distance Measures]{A graphical example how the mentioned distance metrics can be applied on two trajectories $A$ and $B$. Their\textbf{spatial distance} $d_{\text{spatial}}$ is shown in green, their \textbf{color distance} $d_{\text{color}}$ in orange and their \textbf{motion distance} $d_{\text{motion}}$ in purple.}
+\label{fig:distance_measure}
+\end{figure}
 So the questions raise: how are these distances computed and how are they combined? \\ \\
 The spatial distance is simply equals to the average distance between the overlapping pair segments according to the euclidean norm as defined in equation $\ref{eq:spatial_distance}$.\\ \\
 For computing the color distance we use the definition of equation $\ref{eq:color_dist}$. For every overlapping tracking point of any pair, we lookup the color value in its corresponding frame. Then, we compute the distance between the looked-up color values by transforming the color values to the $\text{CIE l*a*b}$ colorspace$\footnote{This transformation enables us to use the l2 norm in order to compute color distances.}$ and then applying the l2 norm. We finally compute the average of these color distances which is equals $d_{\text{color}}$. \\ \\
