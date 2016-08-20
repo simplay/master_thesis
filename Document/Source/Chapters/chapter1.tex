@@ -87,17 +87,18 @@ In summary, we want to achieve the following three goals:
 Additionally, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data and can handle many moving objects. \\ \\
 
 \section{Related Work}
-In this thesis we encounter and use many concepts from various fields. In particular we have deal with optical flow estimation methods, motion tracking analysis techniques and different segmentation concepts. In the following we give a brief summary of related work, state which parts are common with respect to our implementation and lastly, we state our contribution.
-
-\subsection{Optical Flow}
-list various existing methods to compute the optical flow
-
-a vector motion field which describes the distribution of the apparent velocities of brightness patterns in a sequence. 
-
-first formalized and computed  for  image  sequences  by  Horn  and  Schunck $\cite{Hs81}$ in  the  1980. Since the pioneering work of Horn and Schunck, many other approaches have been proposed:
-
-\subsection{Motion Segmentation}
-In this section we describe different approaches that can be used to address the task of motion segmentation.
+In literature there exist various complementary ideas about how to approach the task of motion segmentation. In this section we summarize the most prominent methods  and compared against them with our model.
+%In this thesis we encounter and use many concepts from various fields. In particular we have deal with optical flow estimation methods, motion tracking analysis techniques and different segmentation concepts. In the following we give a brief summary of related work, state which parts are common with respect to our implementation and lastly, we state our contribution.
+%
+%\subsection{Optical Flow}
+%list various existing methods to compute the optical flow
+%
+%a vector motion field which describes the distribution of the apparent velocities of brightness patterns in a sequence. 
+%
+%first formalized and computed  for  image  sequences  by  Horn  and  Schunck $\cite{Hs81}$ in  the  1980. Since the pioneering work of Horn and Schunck, many other approaches have been proposed:
+%
+%\subsection{Motion Segmentation}
+%In this section we describe different approaches that can be used to address the task of motion segmentation.
 
 \paragraph{Image Difference:} Taking the difference between two frames is a simple technique for detecting changes. By thresholding the intensity difference of two frames, a coarse map of the temporal changes can be obtained. Despite its simplicity, this techniques is limited by the presence of noise, camera movement (everything is changing) and low frame rates (nothing is changing). However, instead of directly using the difference image as the segmentation, the rough map of the changing areas can be used as a guide to extract spatial or temporal information in order to track the regions. Image difference techniques have been used in the work of $\cite{Cav05}$, $\cite{Li07}$ and $\cite{Col07}$.
 
@@ -111,7 +112,10 @@ The idea is to exploit the ability of wavelets to perform analysis of the differ
 \paragraph{Factorization Methods} Allow to recover the structure and motion by using traced features over a the whole image sequence.
 
 \paragraph{Optical Flow}
-track features using the optical flow over the given image sequence, compute affinity matrix based on similarity between the overlapping trajectories, use affinity matrix as an input to solve the segmentation task. LIST work but only shallow and briefly
+The rationale for using optical flows in motion segmentation tasks is that they allow to accurately trace motion trajectories.  By define similarity measure between trajectories allows to run clustering methods which yield a motion segmentation. Our work is inspired by the work of FOOBAR. In their contribution they basically observed that motion can be exploited most effectively by considering it over a larger time window by tracking point feature trajectories. However, the main difference is that we exploit depth data to aid clustering.
+
+motion segmentation from RGB-D videos: 
+Stückler et al: use piecewise-rigid model to 
 
 $\cite{Bro11a}$
 
