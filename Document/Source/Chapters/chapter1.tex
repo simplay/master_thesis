@@ -112,12 +112,8 @@ The idea is to exploit the ability of wavelets to perform analysis of the differ
 \paragraph{Factorization Methods} Allow to recover the structure and motion by using traced features over a the whole image sequence.
 
 \paragraph{Optical Flow}
-The rationale for using optical flows in motion segmentation tasks is that they allow to accurately trace motion trajectories.  By define similarity measure between trajectories allows to run clustering methods which yield a motion segmentation. Our work is inspired by the work of FOOBAR. In their contribution they basically observed that motion can be exploited most effectively by considering it over a larger time window by tracking point feature trajectories. However, the main difference is that we exploit depth data to aid clustering.
-
-motion segmentation from RGB-D videos: 
-Stückler et al: use piecewise-rigid model to 
-
-$\cite{Bro11a}$
+The rationale for using optical flows in motion segmentation tasks is that they allow to accurately trace motion trajectories. Defining a similarity measure between trajectories allows to run clustering methods, which yield a motion segmentation. \\ \\
+This thesis is inspired by the contributions in $\cite{OB14b}$. In this paper the authors observed that motion can be exploited most effectively by considering it over a larger time window by tracking point feature trajectories. In our work we use a similar spectral clustering method. In particular, we use a related similarity measure. However, the main difference is that we exploit depth data to aid our clustering and a different normalization technique. Moreover, our pipeline not only supports one similarity measure but enables to select the best segmentation from a variety of measures. Similar as in $\cite{KB15b}$ our pipeline allows to generate segmentations by finding the minimum multi-lable graph cut. Again, our contribution deviates from that work in a sense that we make use of depth cues as well as that we use different optical flows.
 
 \section{Thesis Structure}
 The reminder of this thesis is organized as follows: Chapter 2 introduces some important definitions about graphs and their properties, how to form Laplacians of similarity graphs, different clustering techniques and some basics about statistics which is later used by our evaluation toolset. Moreover, we introduce the concept of the optical flow and furthermore summarize the pioneering work of Horn and Schunck about estimating motion by using optical flows. \\ \\
