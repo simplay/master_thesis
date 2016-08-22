@@ -185,25 +185,18 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 \end{equation}
 
 \section{General Motion Segmentation Pipeline}
-%motion vectors are typically more homogeneous within an object region than color and texture. consequently, ambiguities in color baed segmentation disappear as soon as objects move.
-%
-%however, most objects do not move permanently (sometimes a moving object stops moving). moreover, articulated objects do not move homogeneously. deformation of body parts.
-%=> causes severe problems in typical motion segmentation approaches based on two-frame optical flow.
-In this section we describe a conceptually how the task of motion segmentation can be approached. \\ \\
-In the following an ordered list of facts that determine our motion segmentation pipeline:
-\begin{itemize}
-  \item motion segmentation aims at decomposing a video in moving objects and into background by segmenting the objects that undergo different motion patterns.
-  \item exploit long term aspect: motion is not considered independently for each frame but regard the whole motion history of a point to make a grouping decision.
-  \item describe long-term motion of tracked points by a spatio-temporal curve called trajectory.
-  \item point trajectories are an informative intermediate representation for the motion of object parts or whole objects.
-  \item semi-dense point tracker based on optical flow that yields reliable trajectories for many frames.
-  \item additionally, it increases the quality of the point tracking, especially at very fast moving regions
-  \item all points showing some underlying structure are tracked until they are occluded. the occlusion reasoning is done based on the comparison of the forward and backward optical flow. when trajectroies get lost due to occlusion such that the sampling is sparser than the desidred rate, a new trajectory is started. the result is a set of reliable trajectories, that start in some frame of the sequence and end in another. depending on the data, many trajectories do not have any frame on common. However, the longer the are, the more useful motion information they are expected to carry.
-  \item new problems arise: occlusion and disocclusion
-  \item trajectories are usually asynchronous, i.e. they start and end in different frames.
-  \item define a distance between all pairs of trajectories that share some common frames. 
-  \item video segmentation approach: based on spectral clustering, where eigenvectors of the normalized graph laplacian are used to generate segmentations that approximate the optimal normalized cut.
-\end{itemize}
+In this section we describe conceptually how the task of motion segmentation can be approached. \\ \\
+As earlier mentioned, motion segmentation is the task of decomposing a video sequence into its moving objects and into its background. The idea is to separate image regions that undergo different motion patterns. Therefore, we want to consider motion not independently for each frame but rather the whole history of a point to make a grouping decision. The history of a point can be represented by point trajectories which are the result of a point tracker. The feature tracking is based on optical flows. \\ \\
+Since point trajectories have a temporal- (via the frames the capture) as well as a spatial (via image location in captured frames via the tracked points) component, they an ideal intermediate representation for the motion of object parts. \\ \\
+In literature, various contributions have already successfully demonstrated that motion segmentations can be cast as the problem of clustering point trajectories from a image sequence with respect to their motion. In order too run such a spectral clustering, an affinity value between the trajectories with respect to a certain similarity metric has to be computed. \\ \\
+In summary, a motion segmentation pipeline which makes use of optical flows has to implement the following main stages:
+\begin{enumerate}
+	\item Compute the optical flows 
+	\item Locate meaningful features and perform a point tracking on them.
+	\item Compute affinities between the traced trajectories.
+	\item Group the trajectories via spectral clustering of the affinities.
+\end{enumerate}
+However, keep in mind that this motion segmentation technique also has some issues. Trajectories usually start and end in different frames do to occlusion and disocclusion. Therefore, it is crucial to know where points get occluded. Furthermore, the are various metrics that can be used to compute distances between trajectories, such as their spatial-,color- or motion-distance. Moreover, there are many mathematical variants how to solve the problem of spectral clustering. Lastly, the used optical flow estimation method should be carefully chosen since it affects the quality of the final segmentation.
 
 \section{On Data Clustering}
 Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. This is achieved by separating data points according to their similarities. \\ \\
