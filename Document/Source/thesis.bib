@@ -287,6 +287,7 @@
   year         = "2012",
   url          = "http://lmb.informatik.uni-freiburg.de//Publications/2012/OB12"
 }
+
 @Article{vonLuxburg2007,
 author="von Luxburg, Ulrike",
 title="A tutorial on spectral clustering",
@@ -325,6 +326,113 @@ url="http://dx.doi.org/10.1007/s11222-007-9033-z"
  acmid = {263872},
  publisher = {ACM},
  address = {New York, NY, USA},
- keywords = {min-cut},
+ keywords = {min-cut}
 } 
+
+@article{Fe08,
+author = { Doron Feldman, Daphna Weinshall},
+title = {Motion Segmentation and Depth Ordering Using an Occlusion Detector},
+journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+volume = {30},
+number = {7},
+month = jul,
+year = {2008},
+issn = {0162-8828},
+pages = {1171-1185 }
+}
+
+@InProceedings{Mi98,
+  author       = "Mingqi Kong, B. K. Ghosh, V. M. Wickerhauser",
+  title        = "Spatio-temporal continuous wavelet transforms for motion-based segmentation in real image sequences",
+  booktitle    = "Image Processing, 1998. ICIP 98. Proceedings.",
+  year         = "1998"
+}
+
+@article{WISKOTT19991751,
+title = "Segmentation from motion: combining Gabor- and Mallat-wavelets to overcome the aperture and correspondence problems",
+journal = "Pattern Recognition",
+volume = "32",
+number = "10",
+pages = "1751 - 1766",
+year = "1999",
+note = "",
+issn = "0031-3203",
+doi = "http://dx.doi.org/10.1016/S0031-3203(98)00179-4",
+url = "http://www.sciencedirect.com/science/article/pii/S0031320398001794",
+author = "Laurenz Wiskott",
+keywords = "Segmentation from motion",
+keywords = "Gabor-wavelet transform",
+keywords = "Mallat-wavelet transform",
+keywords = "Integration",
+keywords = "Motion hypotheses",
+abstract = "A new method for segmentation from motion is presented, which is designed to be part of a general object-recognition system. The key idea is to integrate information from Gabor- and Mallat-wavelet transforms of an image sequence to overcome the aperture and the correspondence problem. It is assumed that objects move fronto-parallel. Gabor-wavelet responses allow accurate estimation of image flow vectors with low spatial resolution. A histogram over this image flow field is evaluated and its local maxima provide a set of motion hypotheses. These serve to reduce the correspondence problem occurring in utilizing the Mallat-wavelet transform, which provides the required high spatial resolution in segmentation. Segmentation reliability is improved by integration over time. The system can segment several small, disconnected, and openworked objects, such as dot patterns. Several examples demonstrate the performance of the system and show that the algorithm behaves reasonably well, even if the assumption of fronto-parallel motion is not met."
+}
+
+@Article{PawanKumar2008,
+author="Pawan Kumar, M.
+and Torr, P. H. S.
+and Zisserman, A.",
+title="Learning Layered Motion Segmentations of Video",
+journal="International Journal of Computer Vision",
+year="2008",
+volume="76",
+number="3",
+pages="301--319",
+abstract="We present an unsupervised approach for learning a layered representation of a scene from a video for motion segmentation. Our method is applicable to any video containing piecewise parametric motion. The learnt model is a composition of layers, which consist of one or more segments. The shape of each segment is represented using a binary matte and its appearance is given by the rgb value for each point belonging to the matte. Included in the model are the effects of image projection, lighting, and motion blur. Furthermore, spatial continuity is explicitly modeled resulting in contiguous segments. Unlike previous approaches, our method does not use reference frame(s) for initialization. The two main contributions of our method are: (i)Â A novel algorithm for obtaining the initial estimate of the model by dividing the scene into rigidly moving components using efficient loopy belief propagation; and (ii)Â Refining the initial estimate using $\alpha$                        $\beta$-swap and $\alpha$-expansion algorithms, which guarantee a strong local minima. Results are presented on several classes of objects with different types of camera motion, e.g. videos of a human walking shot with static or translating cameras. We compare our method with the state of the art and demonstrate significant improvements.",
+issn="1573-1405",
+doi="10.1007/s11263-007-0064-x",
+url="http://dx.doi.org/10.1007/s11263-007-0064-x"
+}
+
+@Article{Tomasi1992,
+author="Tomasi, Carlo
+and Kanade, Takeo",
+title="Shape and motion from image streams under orthography: a factorization method",
+journal="International Journal of Computer Vision",
+year="1992",
+volume="9",
+number="2",
+pages="137--154",
+abstract="Inferring scene geometry and camera motion from a stream of images is possible in principle, but is an ill-conditioned problem when the objects are distant with respect to their size. We have developed a factorization method that can overcome this difficulty by recovering shape and motion under orthography without computing depth as an intermediate step.",
+issn="1573-1405",
+doi="10.1007/BF00129684",
+url="http://dx.doi.org/10.1007/BF00129684"
+}
+
+@Inbook{Yan2006,
+author="Yan, Jingyu
+and Pollefeys, Marc",
+editor="Leonardis, Ale{\v{s}}
+and Bischof, Horst
+and Pinz, Axel",
+title="A General Framework for Motion Segmentation: Independent, Articulated, Rigid, Non-rigid, Degenerate and Non-degenerate",
+bookTitle="Computer Vision -- ECCV 2006: 9th European Conference on Computer Vision, Graz, Austria, May 7-13, 2006, Proceedings, Part IV",
+year="2006",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="94--106",
+isbn="978-3-540-33839-0",
+doi="10.1007/11744085_8",
+url="http://dx.doi.org/10.1007/11744085_8"
+}
+
+@Article{Costeira1998,
+author="Costeira, J. Paulo and Kanade, Takeo",
+title="A Multibody Factorization Method for Independently Moving Objects",
+journal="International Journal of Computer Vision",
+year="1998",
+volume="29",
+number="3",
+pages="159--179",
+abstract="The structure-from-motion problem has been extensively studied in the field of computer vision. Yet, the bulk of the existing work assumes that the scene contains only a single moving object. The more realistic case where an unknown number of objects move in the scene has received little attention, especially for its theoretical treatment. In this paper we present a new method for separating and recovering the motion and shape of multiple independently moving objects in a sequence of images. The method does not require prior knowledge of the number of objects, nor is dependent on any grouping of features into an object at the image level. For this purpose, we introduce a mathematical construct of object shapes, called the shape interaction matrix, which is invariant to both the object motions and the selection of coordinate systems. This invariant structure is computable solely from the observed trajectories of image features without grouping them into individual objects. Once the matrix is computed, it allows for segmenting features into objects by the process of transforming it into a canonical form, as well as recovering the shape and motion of each object. The theory works under a broad set of projection models (scaled orthography, paraperspective and affine) but they must be linear, so it excludes projective ``cameras''.",
+issn="1573-1405",
+doi="10.1023/A:1008000628999",
+url="http://dx.doi.org/10.1023/A:1008000628999"
+}
+
+
+
+
+
+
 
