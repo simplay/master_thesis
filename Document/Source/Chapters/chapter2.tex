@@ -1,14 +1,14 @@
 \chapter{Theoretical Background}
-In this chapter we give a introduction in various topics and areas which are necessary in order to understand the implementation of our pipeline and how its generated results were computed. 
+In this chapter we give a introduction about various mathematical concepts which are necessary in order to understand the implementation of our motion segmentation pipeline and how its results were computed. 
 
 \section{Optical Flow}
 \label{sec:optical_flow}
-In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by giving an in intuitive definition, followed by a mathematical definition. Next, we discuss how such flow fields can be visualized. Lastly, we summarize and explain the pioneering formulation of HS used to estimate flow fields.
+In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by discussing an in intuitive example, followed by stating a mathematical definition. Furthermore, we explain how such a flow field could be visually represented. Lastly, we summarize and elaborate on the pioneering formulation of Horn and Schnunck, which can be used to estimate flow fields.
 
 \subsection{Motion Example}
 The optical flow is a visual phenomenon that describes the perception of motion.
 By definition, it is the apparent visual motion a moving viewer experiences. \\ \\
-To To give the reader a better, more intuitive understanding of this concept motion, have a look at figure $\ref{fig:motion_eg}$.
+To To give the reader a better and more intuitive understanding of this concept motion, please have a look at figure $\ref{fig:motion_eg}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[1st Frame]{
@@ -33,9 +33,7 @@ To To give the reader a better, more intuitive understanding of this concept mot
 \label{fig:motion_eg}
 \end{figure}
 \footnotetext{The shown frames have been extracted from the following youtube video: \\ \url{https://www.youtube.com/watch?v=lo-pWLmMagc}}
-Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. \\ \\
-Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the moving influences the optical flow. if an object travels perpendicular to the train or is directly above or below the it, then the optical flow is maximal. Lastly, an objects directly in front of a viewer will not exhibit any optical flow and thus appear to stand still. \\ \\
-However, since not the whole object silhouette is directly in front of the viewer, its edges appear to move and therefore, the such an object appears to get either get larger or smaller, depending on its moving direction. \\ \\
+Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the observed object affects the optical flow. If an object travels perpendicular to the car or is directly above or below it, then the optical flow is maximal. Lastly, an objects directly in front of the viewer will does not exhibit any optical flow and thus appear to stand still. $\footnote{However, since not the whole silhouette of the object is directly in front of the viewer, its edges appear to move and therefore, such an object appears to get either get larger or smaller, depending on its moving direction.}$ \\ \\
 In summary, the optical flow has the following key properties:
 \begin{itemize}
   \item Overtaken objects appear to move backwards.
@@ -45,11 +43,10 @@ In summary, the optical flow has the following key properties:
   \item The optical flow is maximal if either the object is moving orthogonally towards the viewer's direction or it is moving directly above or below it.
   \item Objects directly in front of a viewer exhibit no optical flow.
 \end{itemize}
-The underlying basis input of our whole approach depicts the optical flow, computed from a given inputs sequence.
 
 \subsection{Mathematical Formulation}
-The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image.\\ \\
-The example in figure $\ref{fig:optical_flow_math_def_eg}$ visualizes this concept.
+The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image. \\ \\
+Figure $\ref{fig:optical_flow_math_def_eg}$ illustrates the idea of the point-to-point correspondence using optical flows.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=1\linewidth] {background/of/rubiks_cube_frames}
@@ -58,16 +55,15 @@ The example in figure $\ref{fig:optical_flow_math_def_eg}$ visualizes this conce
 \label{fig:optical_flow_math_def_eg}
 \end{figure}
 \footnotetext{The unprocessed image shown in this figure has been taken from: \\ \url{http://robotics.eecs.berkeley.edu/~sastry/ee20/vision3/node2.html}}
-In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$, visualized by a red arrow, to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in equation $\ref{eq:of_brightness_const}$.
+In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$ (visualized by a red arrow) to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in equation $\ref{eq:of_brightness_const}$.
 \begin{equation}
 	I_{t} \left( x,y \right) = I_{t+dt} \left( x+u, y+v \right)
 \label{eq:of_brightness_const}
 \end{equation}
-Where $I_t$ depticts the brightness at frame $t$.
+Where $I_t$ depicts the brightness at frame $t$.
 
 \subsection{Visualization of Flowfields}
-For visualizing flow fields we use the color encoding shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized flow vectors. The angle in the circle corresponds to the direction and the distance to the center to the velocity. \\ \\
-Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes.
+For visualizing flow fields we use the color encoding shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized flow vectors. The angle in the circle corresponds to the flow direction and the distance to the center corresponds to the flow velocity. Moreover, figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes. As we can see the cars are moving to the bottom-right direction at a intermediate velocity.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Flow Color Codes]{
@@ -86,8 +82,8 @@ Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visua
 
 \subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
-In the pioneering work of $\cite{Hs81}$ B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothess in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flows where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is is very sensitive to noise. \\ \\
-Back then they defined the optical flow as the distribution of apparent velocities of movement of brightness patterns in an image. \\ \\
+In the pioneering work of $\cite{Hs81}$, B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothness in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flows where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is is very sensitive to noise. \\ \\
+Back then they defined the optical flow as \textit{the distribution of apparent velocities of movement of brightness patterns in an image}. \\ \\
 Moreover, they already understood the potential of the optical flow and stated the following properties: Can arise from relative motion of objects and the viewer and provide information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
 Sticking to their flow definition they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
 Their formulation is based on the following assumptions:
