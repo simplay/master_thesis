@@ -1,13 +1,13 @@
 addpath('../matlab_shared');
 addpath('../segmentation/src')
-clear all
+% clear all
 %%
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-PREFIX_INPUT_FILENAME = 'ped_top_202';
-METHODNAME = 'srsf';
-FRAME_IDX = 4;
+DATASET = 'cars';
+PREFIX_INPUT_FILENAME = 'pd_top_100';
+METHODNAME = 'ldof';
+FRAME_IDX = 1;
 GT_SUFFIX = '';
-FILTER_AMBIGUOUS = true;
+FILTER_AMBIGUOUS = false;
 MUTED = false;
 
 %%
@@ -43,7 +43,7 @@ label_mappings = labelfile2mat(strcat(BASE, DATASET, '_', pr));
 frames = loadAllTrajectoryLabelFrames(DATASET, boundaries(1), boundaries(2), PREFIX_INPUT_FILENAME);
 
 
- frame = frames{FRAME_IDX};
+frame = frames{FRAME_IDX};
 
 [m, n, c] = size(gt_img);
 
@@ -59,7 +59,7 @@ gt_img = double(gt_img);
 gt_sum = gt_img(:,:,1) + 8*gt_img(:,:,2) + 16*gt_img(:,:,3);
 color_values = unique(gt_sum);
 merged_labels = zeros(1, length(label_identifiers));
-%%
+%
 for k=1:length(label_identifiers)
     l_id = label_identifiers(k);
     sub_label_assignments = label_assignments(label_assignments == l_id);

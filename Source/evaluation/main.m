@@ -2,10 +2,10 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-img_index = 4;
+DATASET = 'statue_SRSF';
+img_index = 90;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'ped_top_202';
+PREFIX_INPUT_FILENAME = 'sed_both_1000_final';
 METHODNAME = 'srsf';
 FILTER_AMBIGUOUS = true;
 MUTED = true;
