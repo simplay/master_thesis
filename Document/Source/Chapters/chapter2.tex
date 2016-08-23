@@ -1,50 +1,26 @@
 \chapter{Theoretical Background}
 In this chapter we give a introduction about various mathematical concepts which are necessary in order to understand the implementation of our motion segmentation pipeline and how its results were computed. 
 
+\section{General Motion Segmentation Pipeline}
+In this section we describe conceptually how the task of motion segmentation can be approached. \\ \\
+As earlier mentioned, motion segmentation is the task of decomposing a video sequence into its moving objects and into its background. The idea is to separate image regions that undergo different motion patterns. Therefore, we want to consider motion not independently for each frame but rather the whole history of a point to make a grouping decision. The history of a point can be represented by point trajectories which are the result of a point tracker. The feature tracking is based on optical flows. \\ \\
+Since point trajectories have a temporal- (via the frames the capture) as well as a spatial (via image location in captured frames via the tracked points) component, they an ideal intermediate representation for the motion of object parts. \\ \\
+In literature, various contributions have already successfully demonstrated that motion segmentations can be cast as the problem of clustering point trajectories from a image sequence with respect to their motion. In order too run such a spectral clustering, an affinity value between the trajectories with respect to a certain similarity metric has to be computed. \\ \\
+In summary, a motion segmentation pipeline which makes use of optical flows has to implement the following main stages:
+\begin{enumerate}
+	\item Compute the optical flows 
+	\item Locate meaningful feature points and extract trajectories for them
+	\item Locate meaningful features and perform a point tracking on them.
+	\item Compute affinities between the traced trajectories.
+	\item Group the trajectories via spectral clustering of the affinities.
+\end{enumerate}
+However, keep in mind that this motion segmentation technique also has some issues. Trajectories usually start and end in different frames do to occlusion and disocclusion. Therefore, it is crucial to know where points get occluded. Furthermore, the are various metrics that can be used to compute distances between trajectories, such as their spatial-,color- or motion-distance. Moreover, there are many mathematical variants how to solve the problem of spectral clustering. Lastly, the used optical flow estimation method should be carefully chosen since it affects the quality of the final segmentation.
+
 \section{Optical Flow}
 \label{sec:optical_flow}
 In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by discussing an in intuitive example, followed by stating a mathematical definition. Furthermore, we explain how such a flow field could be visually represented. Lastly, we summarize and elaborate on the pioneering formulation of Horn and Schnunck, which can be used to estimate flow fields.
 
-\subsection{Motion Example}
-The optical flow is a visual phenomenon that describes the perception of motion.
-By definition, it is the apparent visual motion a moving viewer experiences. \\ \\
-To To give the reader a better and more intuitive understanding of this concept motion, please have a look at figure $\ref{fig:motion_eg}$.
-\begin{figure}[H]
-\begin{center}
-\subfigure[1st Frame]{
-   \includegraphics[width=0.47\linewidth] {background/of/ls1}
-   \label{fig:motion_eg_f1}
-}
-\subfigure[2nd Frame]{
-   \includegraphics[width=0.47\linewidth] {background/of/ls2}
-   \label{fig:motion_eg_f2}
-}
-~
-\subfigure[3rd Frame]{
-   \includegraphics[width=0.47\linewidth] {background/of/ls3}
-   \label{fig:motion_eg_f3}
-}
-\subfigure[4th Frame]{
-   \includegraphics[width=0.47\linewidth] {background/of/ls4}
-   \label{fig:motion_eg_f4}
-}
-\end{center}
-\caption[Motion Example]{An example$\footnotemark$ of motion effects illustrated by four frames of a video sequence. Objects far away in the background, such as the mountain or the clouds seems to stand still. Objects being a fair distant apart, but also not too far away can be seen over several frames, such as the tree, that is passed. In addition, we also see observe, that the tree moves along the opposite direction as the driving car. Last, we also see the effect of motion blur for objects that are very close such as the grass.}
-\label{fig:motion_eg}
-\end{figure}
-\footnotetext{The shown frames have been extracted from the following youtube video: \\ \url{https://www.youtube.com/watch?v=lo-pWLmMagc}}
-Imagine you sit in a moving car and you are looking out of its windows. While doing so, you will observe that every overtaken object appear to move backwards. Furthermore, objects far in the background seem to stand still, whereas object close to the train seem to move very fast and thus have a blurry look. Therefore, the optical flow is an indicator for distance and size of an object. Moreover, the angle between the observer's viewing direction and the direction of the observed object affects the optical flow. If an object travels perpendicular to the car or is directly above or below it, then the optical flow is maximal. Lastly, an objects directly in front of the viewer will does not exhibit any optical flow and thus appear to stand still. $\footnote{However, since not the whole silhouette of the object is directly in front of the viewer, its edges appear to move and therefore, such an object appears to get either get larger or smaller, depending on its moving direction.}$ \\ \\
-In summary, the optical flow has the following key properties:
-\begin{itemize}
-  \item Overtaken objects appear to move backwards.
-  \item Distant objects seem to move very slowly and close objects appear to move fast.
-  \item The magnitude of the optical flow is doubles if either the speed of the traveling viewer is doubled or the distance to the observed object is halved.
-  \item The optical flow varies depending on the angle between the viewing direction and and the direction of movement of the observed object.
-  \item The optical flow is maximal if either the object is moving orthogonally towards the viewer's direction or it is moving directly above or below it.
-  \item Objects directly in front of a viewer exhibit no optical flow.
-\end{itemize}
-
-\subsection{Mathematical Formulation}
+\subsection{Motivation}
 The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image. \\ \\
 Figure $\ref{fig:optical_flow_math_def_eg}$ illustrates the idea of the point-to-point correspondence using optical flows.
 \begin{figure}[H]
@@ -180,19 +156,60 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 \label{eq:hs_iteration}
 \end{equation}
 
-\section{General Motion Segmentation Pipeline}
-In this section we describe conceptually how the task of motion segmentation can be approached. \\ \\
-As earlier mentioned, motion segmentation is the task of decomposing a video sequence into its moving objects and into its background. The idea is to separate image regions that undergo different motion patterns. Therefore, we want to consider motion not independently for each frame but rather the whole history of a point to make a grouping decision. The history of a point can be represented by point trajectories which are the result of a point tracker. The feature tracking is based on optical flows. \\ \\
-Since point trajectories have a temporal- (via the frames the capture) as well as a spatial (via image location in captured frames via the tracked points) component, they an ideal intermediate representation for the motion of object parts. \\ \\
-In literature, various contributions have already successfully demonstrated that motion segmentations can be cast as the problem of clustering point trajectories from a image sequence with respect to their motion. In order too run such a spectral clustering, an affinity value between the trajectories with respect to a certain similarity metric has to be computed. \\ \\
-In summary, a motion segmentation pipeline which makes use of optical flows has to implement the following main stages:
-\begin{enumerate}
-	\item Compute the optical flows 
-	\item Locate meaningful features and perform a point tracking on them.
-	\item Compute affinities between the traced trajectories.
-	\item Group the trajectories via spectral clustering of the affinities.
-\end{enumerate}
-However, keep in mind that this motion segmentation technique also has some issues. Trajectories usually start and end in different frames do to occlusion and disocclusion. Therefore, it is crucial to know where points get occluded. Furthermore, the are various metrics that can be used to compute distances between trajectories, such as their spatial-,color- or motion-distance. Moreover, there are many mathematical variants how to solve the problem of spectral clustering. Lastly, the used optical flow estimation method should be carefully chosen since it affects the quality of the final segmentation.
+\subsection{Modern Flow Methods}
+\label{sec:impl_optical_flow}
+In this section we briefly summarize four modern flow methods. In particular we s
+
+In this section we give a brief introduction to the flow methods that can be utilized in our pipeline.
+
+
+In the reminder of this section we summarize the used flow methods.
+
+In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. 
+
+
+
+
+
+\subsubsection{Enhanced H.S. Optical Flows}
+In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
+When using the abbreviation HS we strictly refer to their implementation. \\ \\
+The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
+\begin{itemize}
+  \item The quadratic penalty function is replaced by the Charbonnier penalty $p\left( x \right) = \sqrt{x^2 + \epsilon^2}$. This penalty is supposed to be more error-prone to outliers.
+  \item An incremental multi-resolution technique is applied to estimate flow fields with large displacements. The optical flow estimated at a coarse level is used to warp the second image toward the first at the next finer level and a flow increment is calculated between the first image and the warped second image. Each level is recursively downsampled by applying a Gaussian filter from its nearest lower level.
+  \item An enhanced objective function is used, which including a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
+\end{itemize}
+In summary, this flow estimation method is a tweaked version of HS original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
+
+\subsubsection{Large Displacement Optical Flows}
+Before the work in $\cite{Bro11a}$, there was no accurate method present to estimate fast motions of small objects, i.e. large motions. Most flow methods are based on a combination of HS flow formulation and the concept of coarse-to-fine image warping. However, both approaches have been extended by robust statistics to fight outliers and the same time retain smoothness assumptions. \\ \\
+Two fundamental ideas exist to address the issue of large motions. On on hand there are coarse-to-fine techniques. Such techniques, however, require a downsampling. Unfortunately, this also removes details that may be important for the flow accuracy. consequently, the method cannot refine the flow of structures that are smaller than their displacement, because the structure is smoothed away. Flows produced this way are often close to the motion of the larger scale structures. \\ \\
+On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have limited accuracy and exhibit many outliers to to missing regularity constraints and lastly, there is only pixel-level accuracy. \\ \\
+In their paper they propose a method how to combine both strategies. They direct a variational technique using correspondences from sparse descriptor matching. The correspondences determined by the descriptors are directly integrated into the variational approach. The allows to make use of all image information at every level and smoothly scales down the influence of descriptor keypoints as the grid gets finer. \\ \\
+In summary, LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per 480 x 640 pixel frame.
+
+\subsubsection{Semi Rigid Scene Flows}
+In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
+This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation they offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
+They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
+In the following some details according to their implementation
+\begin{itemize}
+  \item they represent motions as a field 3d vector field of twists, which encourages piecewise-smooth solutions of rigid body motions.
+  \item instead of representing the flow vectors in the 3d space, they represent the scene structure in the image domain. Then, color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images. 
+  \item However, scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed. In their work the use an over-parameterization of the scene flow. each scene point is allowed to follow a rigid body motion. this way, the regularization can be done on a field of rigid motion.
+  \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
+  \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
+\end{itemize}
+
+The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
+
+\subsubsection{Layered RGB-D Flows}
+In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
+The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation. \\ \\
+
+In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
+
 
 \section{On Data Clustering}
 Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. This is achieved by separating data points according to their similarities. \\ \\
@@ -375,201 +392,3 @@ The two common objective functions to encode the notion of size is the ratio cut
 Both objective functions try to achieve that the clusters are balanced in terms of either the number of vertices (Rcut) or edges (Ncut). The downside of this is that introducing balancing conditions make the previous simple mincut become NP hard, as discussed in $\cite{Jeg09}$. Spectral clustering is a way to solve a relaxed version of those balanced mincut problems. In particular, in $\cite{vonLuxburg2007}$ the authors demonstrated that relaxing Ncut leads to the spectral clustering algorithm we mention in section $\ref{sec:spectral_clustering_bg}$. \\ \\
 In literature, many sophisticated methods exist to optimize relaxed versions of this NP hard problem. Examples are the graph partition heuristic in $\cite{Ker70}$, or by solving the multi-label CRF problem via max-flows as presented in $\cite{Fulkerson2009}$.
 
-\section{On Filtering Images}
-\subsection{Gaussian Filter}
-A Gaussian filter (\textbf{GF}) is a linear operator that reduces noise by smoothing the image. Applying GF corresponds to a low-pass filtering.
-At each position it estimates a local average of the intensities as defined in equation $\ref{eq:gaussian_filtering_def}$.
-\begin{equation}
-	\mathcal{F}^{\text{gf}} \{I \} (p) = \sum_{q \in \Omega_p} G_{\sigma} (\norm{p - q}) I_q
-\label{eq:gaussian_filtering_def}
-\end{equation}
-where $I$ defines the input image and $\Omega_p$ contains all neighboring points within the window that are centered at the image point $p$. Moreover, $G_{\sigma}$ denotes the two dimensional Gaussian kernel, which is defined in equation $\ref{eq:def_g_weight}$.
-\begin{equation}
-	G_{\sigma} (x) = \frac{1}{2 \pi \sigma^2} e^{-\frac{x^2}{2 \sigma^2}}
-\label{eq:def_g_weight}
-\end{equation}
-The Gaussian filtering is the weighted average of the intensity of the adjacent positions with a weight decreasing with the spatial distance to the center position. This distance is defined by $G_{\sigma} (\norm{p - q})$ where $\sigma$ is a parameter that defines the size of the neighborhood. The resulting image is a blurred version of the input image.
-
-\subsection{Bilateral Filter}
-A Bilateral filter (\textbf{BF}) is a non-linear operator that reduces noise by smoothing the image but at the same time preserves its edges. \\ \\
-The rational of this filter is that two pixels are close to each other if not only if their spacial distance is small but also if they are similar regarding their intensity range.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\linewidth] {background/filtering/bilat_filter_eg}
-\end{center}
-\caption[Example Bilateral Filter]{A bilateral filtering example$\footnotemark$: On the left side a noisy input image on the right its bilateral filtered version.}
-\label{fig:bilat_filtering_eg}
-\end{figure}
-\footnotetext{The shown images have been extracted from: \\ \url{https://www.uni-due.de/mathematik/krommweh/talk_Gemen_Krommweh.pdf}}
-The filter replaces the intensity values at each pixel in an image by a weighted average of intensity values from nearby pixels. In our formulation we rely on the Gaussian distributions $G$ for defining the weights. Crucially, the weights depend not only on distances between pixels, but also on the intensity difference. That is why, when iterating through each pixel and adjusting weights to the adjacent pixels accordingly, Sharp edges are preserved. A bilateral filtering example is shown in figure $\ref{fig:bilat_filtering_eg}$.\\ \\
-The mathematical definition of this filter is given in equation $\ref{eq:def_bilateral_filter}$. For a given Image $I$ we want to compute its bilateral filtered version by applying the following definition:
-\begin{equation}
-\begin{aligned}
-&\mathcal{F}^{\text{bf}} \{I \} (p) = \frac{1}{W_p} \sum_{q \in \Omega_p} G_{\sigma_s} (\norm{p-q})G_{\sigma_r} (I_p - I_q) I_q \\	
-& \text{where } W_p = \sum_{q \in \Omega_p} G_{\sigma_s} (\norm{p-q})G_{\sigma_r} (I_p - I_q)
-\end{aligned}
-\label{eq:def_bilateral_filter}
-\end{equation}
-The set $\Omega_p$ contains all neighboring points within the window that are centered at the image point $p$. The scalar $W_p$ denotes the normalization factor of the filter and $I_p$ represents the image intensity at the pixel position $p$. Please notice that the definition of the bilateral filter is given per pixel, i.e. gives an representation of the filtered pixel intensity. \\ \\
-The bilateral filter is controlled by the two parameters $\sigma_s$ and $\sigma_r$. The range variance increases $\sigma_r$, the BF becomes closer to the Gaussian blur filter. In other words, the larger $\sigma_r$ the more weight a pixel with a large intensity deviation gets. However, when increasing the spatial variance $\sigma_s$ results in smoothing larger features, i.e more distant pixels get a larger weight and thus influence the result more. Figure $\ref{fig:bfilter_influence_sigmas}$ demonstrates the influence of these parameters.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\linewidth] {background/filtering/bilat_filter_sigmas}
-\end{center}
-\caption[Influence of $\sigma_s$ and $\sigma_r$]{Different filtering results produced by our bilateral filter implementation for varying $\sigma_s$ and $\sigma_r$ values.}
-\label{fig:bfilter_influence_sigmas}
-\end{figure}
-
-\subsection{Harris Corner Detector}
-\label{sec:harris_corner_detector}
-Let us consider a grayscale image $I$. We are going to sweep a window $w(x,y)$ (with displacements u in the x direction and v in the right direction) I and will calculate the variation of intensity. Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:
-\begin{equation}
-	E \left( u, v \right) = \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2
-\label{eq:var_intensitiy_def}
-\end{equation}
-Next, the term $I(x + u, y + v)$ is expressed by the first order taylor series expansion as the follows:
-\begin{equation}
-	I(x + u, y + v) = I(x,y) + u I_x (x, y) + v I_y (x,y) + \text{h.o.t}
-\label{eq:taylor_exp_intensity}
-\end{equation}
-Next, we put the first order approximation of equation $\ref{eq:taylor_exp_intensity}$ into equation $\ref{eq:var_intensitiy_def}$ to simplify the definition of $E$.
-\begin{equation}
-\begin{aligned}
-E \left( u, v \right) 
-&= \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2 \\
-&\approx \sum_{x,y} w \left( x,y \right) \left[ I(x,y) + u I_x (x, y) + v I_y (x,y) - I(x, y) \right]^2 \\
-&= \sum_{x,y} w \left( x,y \right) \left[ u I_x (x, y) + v I_y (x,y) \right]^2 \\
-&= \sum_{x,y} w \left( x,y \right) u^2 I_x^2 + 2 u v I_x I_y v^2 I_y^2 \\
-&= \left( u,v \right) \left( \sum_{x,y} w (x,y)
-\begin{pmatrix}
-I_x^2 & I_x I_y \\
-I_x I_y & I_y^2 \\
-\end{pmatrix}
-\right) \colvec{u}{v}
-\end{aligned}
-\label{eq:var_intensitiy_developed}
-\end{equation}
-Let us define the following substitution
-\begin{equation}
-M = \sum_{x,y} w  (x,y)
-\begin{pmatrix}
-I_x^2 & I_x I_y \\
-I_y^2 & I_x I_y \\
-\end{pmatrix}
-\label{eq:var_intensity_sub}
-\end{equation}
-Putting the substitution from equation $\ref{eq:var_intensity_sub}$ into the final form of equation $\ref{eq:var_intensitiy_developed}$ we obtain the final form
-\begin{equation}
-	E \left( u, v \right) \approx \left( u,v \right) M \colvec{u}{v}
-\end{equation}.
-A score is calculated for each window, to determine if it can possibly contain a corner:
-\begin{equation}
-\begin{aligned}
-& R = \det(M) - \kappa \left(\text{trace}(M)\right)^2 \\
-&\text{where } \det(M) = \lambda_1 \lambda_2 \text{ and } \text{trace}(M) = \lambda_1 + \lambda_2
-\end{aligned}
-\label{eq:harris_response}
-\end{equation}
-
-\section{On Statistics}
-\label{sec:on_statistics_bg}
-
-\subsection{Conditional Probability}
-Given two events $A$ and $B$ with the probability $P(B) > 0$. The conidtional probability of $A$ given $B$ is defined as
-\begin{equation}
-	P(A|B) = \frac{P(A \cap B)}{P(B)}
-\label{eq:conditional_prob}
-\end{equation}
-Furthermore, equation $\ref{eq:conditional_prob}$ gives us an alternative interpretation of the probability of an intersection
-\begin{equation}
-P(A \cap B) = P(A|B)P(B) 	
-\end{equation}
-The probability that two events happen the same time is the same as the Probability of the event A given B times the probability of event B. Sticking to this definition, we can visualize all possible outcomes of two events happening the same time as shown in figure $\ref{fig:prob_tree_diagram}$.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.45\linewidth] {background/statistics/probability_tree_diagram}
-\end{center}
-\caption[Probability Tree Diagram]{Tree liked representation$\footnotemark$ of the four possible outcomes for a conditional probability.}
-\label{fig:prob_tree_diagram}
-\end{figure}
-\footnotetext{The visualized graphic has been taken from: \url{https://en.wikipedia.org/wiki/File:Probability_tree_diagram.svg}}
-
-
-
-\subsection{Evaluating Binary Classifiers}
-In this section we explain the mathematical framework we use in our evaluation.
-
-
-The purpose of a binary classifier is to classify given elements into two groups according to a specified classification rule. Think about a binary random variable modelling a certain event. The actual observations of the random variable are then either equals true or false. A classification$\footnote{I.e. the produced output after applying the classifier on the given data.}$ of a given dataset yields two numbers: the number of the positives and negatives, which add up to the size of the set. \\ \\
-In order to evaluate the quality of binary classifier its prediction is compared against a standard reference method or, if existing, against a ground truth assignment and then cross tabulates the data into a $2 \times 2$ contingency table as shown in figure $\ref{tab:prediction_sensitivity}$. 
-\begin{table}[H]
-\centering
-\begin{tabular}{c|c|c|}
-\cline{2-3}
- & \begin{tabular}[c]{@{}l@{}}Prediction\\ Positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}Prediction\\ Negative\end{tabular} \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condition\\ Positive\end{tabular}} & \cellcolor[HTML]{34FF34}{\color[HTML]{000000} $\bf{TP}$ } & \cellcolor[HTML]{CB0000} $\bf{FN}$ \\ \hline
-\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Condiation\\ Negative\end{tabular}} & \cellcolor[HTML]{CB0000}{\color[HTML]{000000} $\bf{FP}$ } & \cellcolor[HTML]{34FF34} $\bf{TN}$ \\ \hline
-\end{tabular}
-\caption[Conditional Probability]{The four possible outcomes of a conditional probability}
-\label{tab:prediction_sensitivity}
-\end{table}
-There are four possible outcomes: the classifier prediction, which has either are positive or negative condition, was actually correct or incorrect. \\ \\
-Let us consider the following example where we test some people for the presence of a disease. Some of these people have the disease, and the test correctly detects them. These findings are called true positives (\textbf{TP}). Some have the disease, but the test incorrectly claims that they do not have it. These results are called false negatives (\textbf{FN}). Some people do not suffer from the disease and the test classifies correctly as health. These results are called true negatives (\textbf{TN}). And Lastly, some healthy people who are incorrectly classified as infected. These are the so called false positives (\textbf{FP}) results. \\ \\
-There are many metrics that can be used to measure the performance of a classifier. In the following a listing of some prominent metrics
-%
-\begin{itemize}
-\item \textbf{Precision}: Tells us what proportion of patients we diagnosed as having the disease actually had that disease. In other words, proportion of TP in the set of positive disease diagnoses. This is given by the rightmost column in the confusion matrix.
-\begin{equation}
-	\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
-\label{eq:def_precision}
-\end{equation}
-\item \textbf{Recall}: Tells us what proportion of people that actually had the disease were diagnosed by the test as having the disease. In other words, proportion of TP in the set of true disease states. This is given by the bottom row in the confusion matrix.
-\begin{equation}
-	\text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
-\label{eq:def_recall}
-\end{equation}
-\end{itemize}
-A visualization of these measures is given in figure $\ref{fig:eval_concept_recall_precc}$.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\linewidth] {evaluation/prec_recall}
-\end{center}
-\caption[Concept Recall and Precision]{This figure illustrates graphically the concept of Recall (\textbf{R}) and Precision (\textbf{P}). When estimating the sampling of a binary random variable, there are basically four possible outcomes: The we predicted it being true and it is true (\textbf{TP}), we predicted it true but it is false (\textbf{FP}), we predicted it false and it was actually negative (\textbf{FN}) or we predicted it to be true but it was actually false (\textbf{TN}). }
-\label{fig:eval_concept_recall_precc}
-\end{figure}
-An alternative measure is the $F_1$ score. This measure is often used in determining the performance of classification tasks in machine learning. To compute its score, this measure takes into account both, the precision and the recall of the test. The exact definition of the F1 measure is given in equation $\ref{eq:f1_score}$.
-\begin{equation}
-F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
-\label{eq:f1_score}
-\end{equation}  
-The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
-
-\section{Camera Model}
-\subsection{Pinhole Camera}
-A camera allows to capture a 3d scene in a 2d image. A common mathematical model to describe such a mapping from the 3d scene space to the 2d image space is the pinhole camera model. This model is conceptually illustrated in figure $\ref{fig:pinhole_camera_model}$.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.8\linewidth] {background/camera_model/pinhole_camera}
-\end{center}
-\caption[Pinhole Camera Model]{Visualizing the pinhole camera model. The camera center C represents an infinitely small aperture hole, is the focal length, p the principal point $\textbf{A} = (X, Y, Z)$ a 3d point in the scene and $\textbf{a} = (f \frac{X}{Z}, f \frac{Y}{Z})$ its projected pixel version mapped onto the image plane.}
-\label{fig:pinhole_camera_model}
-\end{figure}
-The aperture is an infinitely small hole and there is no lens used to focus light. Therefore, lens distorting or depth of field effects are ignored. The intersection point where all rays meet is the center of the perspective projection and usually referred by \textit{camera center}. The principal axis is formed by the line perpendicular to the image plane, which passes though the camera center. Its intersection point with the image plane is called principal point. The distance between the camera center and the principal point is the so called focal length.
-
-\subsection{Camera Parameters}
-\paragraph{Intrinsic Parameters} Let $\textbf{X} = (X,Y,Z,1)^T$ denote a point in a 3D scene and $\textbf{x} = (x,y,1)^T$ its projected version in the image plane. Both points are written in their homogeneous form. The mapping from a scene point to the image plane is defined as
-\begin{equation}
-\textbf{x} = 
-\begin{pmatrix}
-f & s & p_x & 0 \\
-0 & f & p_y & 0 \\
-0 & 0 & 1 & 0
-\end{pmatrix}
-\textbf{X}
-\end{equation}
-where $f$ denotes the focal length and $p = (p_x, p_y)^T$ the offset to the origin with respect to the principal point. In modern cameras, the skew $s$ is usually equals zero. The parameters $f$, $p_x$, $p_y$ and $s$ are called \textit{intrinsic camera parameters}. Notice, that $\textbf{X}$ is expressed in terms of camera coordinates and similarly, $\textbf{x}$ in pixel coordinates.
-\paragraph{Extrinsic Parameters} Let $\textbf{X}_w$ refer to the same point as $\textbf{X}$ but expressed in different coordinates system, in the world space. In a rigid object model, the points $\textbf{X}$ and $\textbf{X}_w$ can be transformed to one another by applying a linear transformation that consists of a rotational matrix $R$ and a translation $t$. The actual mapping is defined as
-\begin{equation}
-	X = \left[ R | t \right] X_w
-\end{equation}
-The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.

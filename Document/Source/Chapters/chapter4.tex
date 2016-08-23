@@ -16,7 +16,7 @@ The idea of such a segmentation is to identify and extract the meaningful rigid 
 As shown in figure $\ref{fig:pipeline_schematic}$, our pipeline consists of the following main stages:
 % TODO: checks this list and rework it
 \begin{enumerate}
-\item \textbf{Dataset Preparations}: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions. Optionally, a blurred version of the input images are computed by using a bilateral filter. This filtered images act as an additional, but optional cue, for a later pipeline stage. 
+\item \textbf{Dataset Preparations}: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions.
 \item \textbf{Optical Flows}: We compute the forward- and backward-flows on our input sequence using different existing implementations. Our pipeline lets the user select a target method for generating the optical flow fields.
 \item \textbf{Data Extraction}: In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
 \item \textbf{Trajectories}: We use the computed forward flows and the previously extracted traceable feature locations to perform a point tracking. A sequence of traced points form a so called trajectory. In every frame a trajectory can either be started, ended or be continued. The previously computed traceable locations act as the starting points, the forward flow is added to a traceable location and yield the tracked to position, the starting location in the next frame. Tracked to locations that land in an invalid mask location cause the tracking of a trajectory. 
@@ -30,13 +30,11 @@ In the following sections we examine and discuss each individual pipeline stage 
 \section{Dataset Preparations}
 The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. \\ \\
 In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that the value range is in meter units. For further information about the dataset conventions, read section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
-Optionally, a filtered version of the input dataset images can be generated using a Bilateral Filter$\footnote{A Bilateral Filter is a non-linear, edge-preserving blur filter.}$. These filtered images can help improve the process of finding traceable candidate location as well as identifying invalid tracking locations.
 
-\section{Computing Optical Flows}
-\label{sec:impl_optical_flow}
-In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. Flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of the motion segmentation. \\ \\
+\section{Generate Optical Flows}
+In our pipeline we heavily rely on optical flow fields. In particular, flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of th final motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. \\ \\
-Our pipeline strictly relies on existing implementations of the following four flow methods: Large displacement optical flow (\textbf{LDOF}), a tweaked version of the original flow method proposed by Horn and Schunck (\textbf{HS}), Semi-rigid scene flow (\textbf{SRSF}) and Layered RGBD flow (\textbf{LRGB}). \\ \\
+Our pipeline strictly relies on existing implementations of the flow methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. For the reminder of this thesis let us use the following abbreviations: Large displacement optical flow (\textbf{LDOF}), an enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}), Semi-rigid scene flow (\textbf{SRSF}) and Layered RGBD flow (\textbf{LRGB}). \\ \\
 An example output generated by these method when running the same frame sequence is shown in figure $\ref{fig:flow_method_flows}$.  
 \begin{figure}[H]
 \begin{center}
@@ -61,46 +59,7 @@ An example output generated by these method when running the same frame sequence
 \caption[Flow Method Flows]{An visualization of the flow fields produced by our used flow methods when running them on the same frame sequence. Please notice that the color encoding is the same as introduce in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
 \label{fig:flow_method_flows}
 \end{figure}
-In the reminder of this section we summarize the used flow methods.
 
-\subsection{HS}
-In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
-When using the abbreviation HS we strictly refer to their implementation. \\ \\
-The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
-\begin{itemize}
-  \item The quadratic penalty function is replaced by the Charbonnier penalty $p\left( x \right) = \sqrt{x^2 + \epsilon^2}$. This penalty is supposed to be more error-prone to outliers.
-  \item An incremental multi-resolution technique is applied to estimate flow fields with large displacements. The optical flow estimated at a coarse level is used to warp the second image toward the first at the next finer level and a flow increment is calculated between the first image and the warped second image. Each level is recursively downsampled by applying a Gaussian filter from its nearest lower level.
-  \item An enhanced objective function is used, which including a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
-\end{itemize}
-In summary, this flow estimation method is a tweaked version of HS original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
-
-\subsection{LDOF}
-Before the work in $\cite{Bro11a}$, there was no accurate method present to estimate fast motions of small objects, i.e. large motions. Most flow methods are based on a combination of HS flow formulation and the concept of coarse-to-fine image warping. However, both approaches have been extended by robust statistics to fight outliers and the same time retain smoothness assumptions. \\ \\
-Two fundamental ideas exist to address the issue of large motions. On on hand there are coarse-to-fine techniques. Such techniques, however, require a downsampling. Unfortunately, this also removes details that may be important for the flow accuracy. consequently, the method cannot refine the flow of structures that are smaller than their displacement, because the structure is smoothed away. Flows produced this way are often close to the motion of the larger scale structures. \\ \\
-On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have limited accuracy and exhibit many outliers to to missing regularity constraints and lastly, there is only pixel-level accuracy. \\ \\
-In their paper they propose a method how to combine both strategies. They direct a variational technique using correspondences from sparse descriptor matching. The correspondences determined by the descriptors are directly integrated into the variational approach. The allows to make use of all image information at every level and smoothly scales down the influence of descriptor keypoints as the grid gets finer. \\ \\
-In summary, LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per 480 x 640 pixel frame.
-
-\subsection{SRSF}
-In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
-This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation they offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
-They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
-In the following some details according to their implementation
-\begin{itemize}
-  \item they represent motions as a field 3d vector field of twists, which encourages piecewise-smooth solutions of rigid body motions.
-  \item instead of representing the flow vectors in the 3d space, they represent the scene structure in the image domain. Then, color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images. 
-  \item However, scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed. In their work the use an over-parameterization of the scene flow. each scene point is allowed to follow a rigid body motion. this way, the regularization can be done on a field of rigid motion.
-  \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
-  \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
-\end{itemize}
-
-The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
-
-\subsection{LRGBD}
-In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
-The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation. \\ \\
-
-In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
 
 %
 %s1
@@ -816,42 +775,6 @@ The final algorithms our implementation performs is the following: For each colo
 When computing the gradient and divergence finite approximation schemes, we use a zero padding boundary condition. \\ \\
 One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
 
-\section{Segment Merger}
-In this section we describe our technique to reduce oversegmentations produced by our pipeline. This stage is invoked before running the evaluation program, implemented as a post-processing stage.
-\begin{figure}[H]
-\begin{center}
-\subfigure[Ground Truth Segmentation]{
-   \includegraphics[width=0.47\linewidth] {implementation/merger/mask}
-   \label{fig:merger_result_a}
-}
-\subfigure[Generated Segmentation]{
-   \includegraphics[width=0.47\linewidth] {implementation/merger/oversegmentation}
-   \label{fig:merger_result_b}
-}
-~
-\subfigure[Overlay Ground Truth / Segmentation]{
-   \includegraphics[width=0.47\linewidth] {implementation/merger/mask_segments_overlay}
-   \label{fig:merger_result_c}
-}
-\subfigure[Merged Segmentation]{
-   \includegraphics[width=0.47\linewidth] {implementation/merger/merged}
-   \label{fig:merger_result_d}
-}
-
-\end{center}
-\caption[Segmentation Merger]{Visualization of our segment merger's input and output. As an input it expects a ground truth segmentation (see figure $\ref{fig:merger_result_a}$) and a generated oversegmentation (see figure $\ref{fig:merger_result_b}$). As output it yields the merged segmentation as shown in subfigure $\ref{fig:merger_result_c}$.}
-\label{fig:merger_result}
-\end{figure}
-Usually, the results generated by our pipeline exhibit an oversegmentation when comparing them against their ground truth. An example of such an oversegmentation is illustrated in figure $\ref{fig:merger_result_b}$. Ideally, before evaluating the quality, we would like to refine our over-segmented results in a way to reduce the total number of unnecessary segments. Therefore, we initially attempt to merge segments causing an oversegmentation of an ground truth mask. The goal of the merging phase is to lower the number of total segments but the same time retain meaningful segmentation labels. 
-
-Conceptually, our merging approach is visualized in figure $\ref{fig:merger_result}$. Different approaches how to implement such a merging mechanism are described in literature (LIST SOME REFS HERE). However, we use a much simpler approach. 
-
-A segmentation $S$ is basically a set of points in which every point is assigned to a certain segment identifier. In the following let us denote $S_j$ as the subset of points in $S$ that belong to the segmentation label $j$. Similarly, let $M$ denote the set of all ground truth points with their corresponding mask labels and $M_i$ the set of all points that belong to the ground truth mask $i$. To compute the merged segments we do the following: For every segment $S_j$ in $S$ we determine its best matching ground truth segment $M_i$ as defined in equation $\ref{eq:merging_label_formula}$. 
-\begin{equation}
-i = \argmaxl_{M_i \in M} \left\vert{S_j \cap M_i}\right\vert
-\label{eq:merging_label_formula}
-\end{equation}
-The idea is to find the ground truth mask $i$ that yields the most point intersections with the currently considered segment $S_j$. Next, we update every point in $S_j$ by setting their segment label to $i$. After doing so we have computed the merged segmentation version of the initial oversegmentation. An example is shown in figure $\ref{fig:merger_result_c}$.
 
 
 
