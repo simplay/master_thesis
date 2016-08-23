@@ -2,8 +2,8 @@
 % TODO mention pipeline assumptions
 % TODO mention in which language the individual parts are coded.
 % TODO check where this might belong to: the color values are stored as CIE lab color images.
-\chapter{Implementation}
-In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by formulate the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage.
+\chapter{Motion Segmentation Pipeline}
+In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by restating the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.9\linewidth] {implementation/pipeline}
@@ -11,19 +11,22 @@ In this chapter we explain in detail the relevant stages of our motion segmentat
 \caption[Motion Segmentation Pipeline]{A schematic illustration of the structure of our pipeline. Individual pipeline components are drawn as orange boxes. The initial input is drawn as green boxes, the resulting final output as a blue box. Intermediate outputs are drawn as gray boxes. The arrows indicate the data-flow, whereas the white dots indicate a data-flow multiplexing. That means, data that flows through such a dot is used by several pipeline components.}
 \label{fig:pipeline_schematic}
 \end{figure}
-The problem statement our pipeline solves is defined as follows: Given a set of images that form a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. Additionally, the implementation should be robust to noise and missing data, should be able to handle scene captured by a shaking camera and lastly, it should be able to detect several and fast moving rigid object.\\ \\
-The idea of such a segmentation is to identify and extract the meaningful rigid motions from the background. To accomplish this task we first compute the optical flows of the images and use them for grouping pixel regions that belong together. Since the object motion in coherent image sequence is not independent for every frame, the optical flow depicts an ideal cue for making grouping decisions. \\ \\
+The problem statement our pipeline solves is defined as follows: Given a sequence forming a video sequence and their associated depth maps. Then, our goal is to separate the images into regions that form coherent and independent rigidly moving objects. Additionally, the implementation should be robust to noise and missing data, should be able to handle scenes captured by a shaking camera and lastly, it should be able to detect several and fast moving rigid object.\\ \\
+The idea of such a segmentation is to identify and extract meaningful rigid motions from the background. To accomplish this task we first compute the optical flows of the images and use them for grouping pixel regions that belong together. Since the object motion in a coherent image sequence is not independent for every frame, the optical flow is an ideal cue for making grouping decisions. \\ \\
 As shown in figure $\ref{fig:pipeline_schematic}$, our pipeline consists of the following main stages:
 % TODO: checks this list and rework it
 \begin{enumerate}
-\item \textbf{Dataset Preparations}: Initially, the frames of a video have to be extracted and named according to the pipeline naming conventions. If present, also the depth maps have to be named and re-normalized according to the pipeline's conventions.
-\item \textbf{Optical Flows}: We compute the forward- and backward-flows on our input sequence using different existing implementations. Our pipeline lets the user select a target method for generating the optical flow fields.
-\item \textbf{Data Extraction}: In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
-\item \textbf{Trajectories}: We use the computed forward flows and the previously extracted traceable feature locations to perform a point tracking. A sequence of traced points form a so called trajectory. In every frame a trajectory can either be started, ended or be continued. The previously computed traceable locations act as the starting points, the forward flow is added to a traceable location and yield the tracked to position, the starting location in the next frame. Tracked to locations that land in an invalid mask location cause the tracking of a trajectory. 
-\item \textbf{Affinity Matrix}: In this stage we compute the similarities between all trajectory pairs. The similarity is computed according to different metrics, which are basically a combination of various distances among overlapping trajectory parts. 
-\item \textbf{Sparse Motion Segmentation}: Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually 
-\item \textbf{Dense Segmentation}: Our pipeline allows to transform the sparse segmentation into a dense segmentation. For this purpose we consider the hole filling problem, formulating it as a convex problem and then solving it using a primal-dual approach using the sparse segmentation as the initial input.
-\item \textbf{Evaluation}: Our pipeline allows to qualitatively and quantitatively evaluate the generated sparse and dense segmentations. In addition, we also can explore various parameter settings and their outcomes using different visualizers.
+\item \textbf{Dataset Preparations}: Initially, the frames and depth maps of a given RGB-D video have to be extracted and named according to our pipeline naming conventions. Moreover, the depth map range is normalized to be in meter units.
+\item \textbf{Generate Optical Flows}: Next, the forward- and backward-flows on the input sequence is computed.
+\item \textbf{Data Extractor}: During t
+In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
+\item \textbf{Trajectory Tracking}: The previously computed flows are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory. 
+\item \textbf{Affinity Matrix}: In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
+\item \textbf{Segmenter}: Our pipeline offer two types of segmentations, sparse and dense segmentations. 
+	\begin{enumerate}
+	\item \textbf{Sparse Motion Segmentation}: Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually
+	\item \textbf{Dense Segmentation}: Optionally, our pipeline allows to transform the sparse segmentation into a dense segmentation. 	
+	\end{enumerate}
 \end{enumerate}
 In the following sections we examine and discuss each individual pipeline stage in detail. 
 
@@ -32,9 +35,11 @@ The preparation of an input datasets is the very first stage of our pipeline. In
 In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that the value range is in meter units. For further information about the dataset conventions, read section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
 
 \section{Generate Optical Flows}
-In our pipeline we heavily rely on optical flow fields. In particular, flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of th final motion segmentation. \\ \\
+In our pipeline we heavily rely on optical flow fields. In particular, flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the quality of the final motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. \\ \\
-Our pipeline strictly relies on existing implementations of the flow methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. For the reminder of this thesis let us use the following abbreviations: Large displacement optical flow (\textbf{LDOF}), an enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}), Semi-rigid scene flow (\textbf{SRSF}) and Layered RGBD flow (\textbf{LRGB}). \\ \\
+Our pipeline strictly relies on existing implementations of the flow methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. \\ \\
+% TODO: make a table that list properties of used flow methods
+For the reminder of this thesis let us use the following abbreviations: Large displacement optical flow (\textbf{LDOF}), an enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}), Semi-rigid scene flow (\textbf{SRSF}) and Layered RGBD flow (\textbf{LRGB}). \\ \\
 An example output generated by these method when running the same frame sequence is shown in figure $\ref{fig:flow_method_flows}$.  
 \begin{figure}[H]
 \begin{center}
@@ -467,11 +472,10 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 
 \section{Affinity Matrix}
 \label{sec:affinity_matrix_impl}
-In this section we describe how we compute the so called affinity matrix, which is later used to compute the actual motion segmentation. \\ \\
+In this section we describe the corresponding pipeline stage that is responsible for generating the so called $\textit{affinity matrix}$, which is later used to compute the actual motion segmentation. For this purpose we compute the similarities between the previously tracked trajectories according to a certain measure and then form a similarity graph as defined in section $\ref{sec:similarity_graphs}$ on page $\pageref{sec:similarity_graphs}$. The final affinity matrix correspond to the adjacency matrix representation of the similarity graph. The used metrics are adapted version of the metrics presented in $\cite{OB14b}$ and $\cite{KB15b}$. \\ \\
 Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
-However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. We define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
-According to the gestalt principle of common fate, we should assign high affinities to pairs of points that move together. \\
-Imagine the situation where two persons are walking next to each other$\footnote{Assume both persons are walking at the same speed in the same direction, ignoring all motions due to deformation.}$. Although they are different objects, both of them share the same motion. Moreover, a not moving person that sits in a chair shares the same motion as the objects in the background. The gestalt principle tells us that these situations should be treated conservatively and the objects from these examples should not be separated. \\ \\
+However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. In particular, we define affinities between all pairs of trajectories that share at least a common frame. In the following we denote the tracking points in these shared frames as overlapping parts. \\ \\
+According to the gestalt principle of common fate$\footnote{Human tend to group similar objects together that share a common motion.}$, we should assign high affinities to pairs of points that move together. Imagine the situation where two persons are walking next to each other$\footnote{Assume both persons are walking at the same speed in the same direction, ignoring all motions due to deformation.}$. Although they represent different objects, both of them share the same motion. Moreover, person that is sitting stilly in a chair shares the same motion as the objects in the background. The gestalt principle tells us that these situations should be treated conservatively and the objects from these examples should not be separated. \\ \\
 In the following we describe in detail the steps of algorithm $\ref{alg:computing_affinity_matrix}$ which is used to generate the affinity matrix.
 \begin{algorithm}[H]
 \caption{Generating Affinity Matrix}
@@ -504,12 +508,20 @@ In the following we describe in detail the steps of algorithm $\ref{alg:computin
   \vskip1.5pt
 \label{alg:computing_affinity_matrix}
 \end{algorithm}
-As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, every possible trajectory pair combination is formed. Trajectories that are shorter than a user specified are filtered and thus discarded. \\ \\
+As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, every possible trajectory pair combination is formed. Trajectories that are shorter than a user specified threshold are filtered and thus discarded. \\ \\
 For each remaining trajectory pair, different distance values are computed and combined according to an initially by a pre-specified run-mode. More precisely, our pipeline computes the following three distances between temporal overlapping trajectory segments$\footnote{By the term \textit{temporal overlapping} we refer to tracking point in a trajectory pair that share a common frame.}$:
 \begin{itemize}
-  \item The \textbf{spatial distance} $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other.
-  \item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value.
-  \item The \textbf{motion distance} $d_{\text{motion}}$: according to the gestalt principle we can conclude, that for each pair of trajectories at the time instant where the motion is maximally different, the two points do not belong to the same object.
+\item The \textbf{spatial distance} $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other and is defined as
+\begin{equation}
+	d_{spatial}^{A,B} = \frac{1}{\omega - \alpha + 1} \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
+\label{eq:spatial_distance}	
+\end{equation}
+\item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value.
+\item The \textbf{motion distance} $d_{\text{motion}}$: according to the gestalt principle we can conclude, that for each pair of trajectories at the time instant where the motion is maximally different, the two points do not belong to the same object. It is defined as
+\begin{equation}
+	d_{motion}^{A,B} \left( t \right)  = \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t}
+\label{eq:motion_distance}
+\end{equation}
 \end{itemize}
 An example how these distances are computed between two trajectories is shown in figure $\ref{fig:distance_measure}$. 
 \begin{figure}[H]
@@ -595,6 +607,7 @@ In this figure, we visualize four examples of the affinity values between a sele
 In the next section we will discuss methods that use the previously generated output to generate a sparse motion segmentation.
 
 \section{Sparse Motion Segmentation}
+%TODO state: For this purpose we consider the hole filling problem, formulating it as a convex problem and then solving it using a primal-dual approach using the sparse segmentation as the initial input.
 In this section we explain how we generate sparse motion segmentations using the previously calculated affinity matrix. \\ \\
 In fact, our pipeline supports three different segmentation methods, all having their pros and contras. In particular can can perform the task of motion segmentation using spectral clustering of the affinity matrix (SC), building a graph of the affinity matrix and calculating several cuts via min-cut (MC) or lastly, by using the affinities to solve the graph partitioning problem using the Kernighan-Lin Heuristic (KL). \\ \\
 Every implemented segmentation method returns a file containing a mapping between the trajectory label and their segment label. This allows to draw motion segmentations resulting by our segmentation methods. \\ \\
