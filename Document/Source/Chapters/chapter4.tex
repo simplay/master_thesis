@@ -2,6 +2,7 @@
 % TODO mention pipeline assumptions
 % TODO mention in which language the individual parts are coded.
 % TODO check where this might belong to: the color values are stored as CIE lab color images.
+% TODO: keep me: Before going into details, let us first revisit the definition of a trajectory. By the term trajectory we refer to a list of tracking points, which is ordered by the frame index in which each point was traced. Therefore, every points knows to which frame it belongs to.
 \chapter{Motion Segmentation Pipeline}
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. We start by restating the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage.
 \begin{figure}[H]
@@ -712,24 +713,19 @@ In the following, let $G = (E, V)$ denote an undirected graph, where $V$ is the 
 & \text{subject to } y \in \text{MC}
 \end{aligned}
 \end{equation}
-The expression $\text{MC}$ denotes set of all characteristic functions of all multi-cuts and thus corresponds to all $y \in \{0,1 \}^{|E|}$ that form closed boundaries. Hence, such boundaries represent a valid decomposition of the graph. To define these characteristics a series of cycle inequalities, similar as done in $\cite{Chopra1993}$, are formulated as defined in the follows:
+The expression $\text{MC}$ denotes the set of characteristic functions of all multi-cuts and thus corresponds to all $y \in \{0,1 \}^{|E|}$ that form closed boundaries. Hence, such boundaries represent a valid decomposition of the graph. To define these characteristics a series of cycle inequalities, similar as done in $\cite{Chopra1993}$, are formulated as defined in the follows:
 \begin{equation}
 	\forall C \in \text{cycles}(G) \forall e \in C: y_e \leq \sum_{e^{'} \in C \backslash \{e\}} y_{e^{'}}
 \end{equation}
-Furthermore, in $\cite{Chopra1993}$ it was shown, that it is sufficient to only consider those cycles in which each vertex is only connected to its successor and predecessor.
-
-
-
-To avoid trivial solutions, the edge weights are typically chosen to be negative for edges that should be cut and positive for those connection nodes that should be joined. \\ \\
-
-
-Given the cut probabilities $p_e$ of an edge $e \in E$, the negative of the \textit{logit} function 
+Furthermore, in $\cite{Chopra1993}$ it was shown, that it is sufficient to only consider those cycles in which each vertex is only connected to its successor and predecessor. \\ \\
+In order to avoid trivial solutions when optimizing for these characteristics, we employ the following edge weighting strategy: Typically, we chose the weights such that edges which should be cut are negative and positive for those which are connected to vertices that should be joined.
+In the following, let us assume that we know the edge cut probabilities $p_e$. In that case the negative function
 \begin{equation}
 	\text{logit}\left( p_e \right) = \log \left( \frac{p_e}{1 - p_e} \right)
 	\label{eq:logit_function}
 \end{equation}
-provides such a behavior. A plot if the negative logit function defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
-\begin{figure}
+provides such a desired behavior. A plot if the negative logit function defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[trim axis left]
 \begin{axis}[
@@ -754,23 +750,19 @@ provides such a behavior. A plot if the negative logit function defined as in $\
 \label{fig:negative_logit_function}
 \end{figure}
 If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e. \\ \\
-For computing pseudo-probabilities, we use the inverse of the logit function, the so called logistic function
+For computing pseudo-probabilities, we use the inverse of the logit function, the so called \textit{logistic function}
 \begin{equation}
 	f(z) = \frac{1}{1 + \exp \left( -z \right)}.
 	\label{eq:logistic_function}
 \end{equation}
-The input values we put into the function from equation $\ref{eq:logistic_function}$ are computed by the transformed trajectory distances $d$:
+This function can therefore be used to define pseudo cut probabilities. Next we have to determine what the input value $z$ represents. Clearly, $z$ is equals to the result of the logit function applied on the psuedo-probability. However, such a definition is not helpful at all, since we defined $f(z)$ as the inverse of the logit, thus end up with a recursive definition. Another interpretation of the negative logit is that is models distances between edges. If the distances are too large, a cut should be performed. A distance $d$ that can be used is the one resulting when computing S-affinities as stated in equation $\ref{eq:sum_dist}$. The final expression for $z$ is defined as:
 \begin{equation}
-	z \equiv z(d) = \beta_0 + \beta_1 d
+	z = d - \log \left( \frac{p}{1-p} \right) + \log \left( \frac{\tilde{p}}{1-\tilde{p}} \right).
+\label{eq:edge_dist_weights}
 \end{equation}
-The prior probability of cutting two trajectories is defined by the intercept value $\beta_0$. Assuming we learned $\beta_0$ for a certain prior cut probability $p$ and are given a new prior cut probability $\tilde{p}$, we can adapt the value $z$ by
-\begin{equation}
-	z = \beta_0 - \log \left( \frac{p}{1-p} \right) + \log \left( \frac{\tilde{p}}{1-\tilde{p}} \right) + \beta_1 d.
-\end{equation}
-If the cut prior is increased, more edges will be cut and the number of resulting segments increases. Small cut priors results in an undersegmentation. \\ \\
-In such a trajectory graph graph, positive and negative edge weights are computed from motion, position and color clues. positive and negative weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. This approach is supposed to produce more reliable results than the segmentation method described in the section spectral clustering. \\ \\
-In the following, let $G = (E, V)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. 
-The $KL$ algorithm attempts to find a partition of V into Two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
+where $p$ is a fixed cut probability and $\bar{p}$ a parameter denoting the prior cut probability. If $\bar{p}$ is increased, more edges will be cut and the number of resulting segments increases. Choosing a small $\bar{p}$ results in an undersegmentation. \\ \\
+In the following we use discussed formulation to model the similarity graph. In particular we compute its edge weights by using the definition from equation $\ref{eq:edge_dist_weights}$. Using such negative and positive weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. This approach is supposed to produce more reliable results than the segmentation method described in the section spectral clustering. \\ \\
+In the following let use discuss an algorithm that allows to partition the similarity graph discussed before. The Kernighan-Lin heuristic $KL$ is a good candidate for this task. This algorithm attempts to find a partition of $V$ into two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
 \begin{equation}
 	D_a = E_a - I_a
 \label{eq:kl_d_values}
