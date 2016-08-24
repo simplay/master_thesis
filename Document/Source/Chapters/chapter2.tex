@@ -167,7 +167,14 @@ In the reminder of this section we summarize the used flow methods.
 
 In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. 
 
+%
+%s1
+%estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
 
+%s2
+%Other methods do segment the scene to impose rigidity or strong regularization over the regions (or segments). However, these segmentations are only used as tools to improve the accuracy of the estimates, and do not really cor-
+%respond to the underlying/independent motions of the scene => partitions the scene into depth layers
+%Therefore, the segmentation-from-motion problem, which can be particularly useful for scene understanding or human-machine interaction, is not truely addressed by these methods.
 
 
 \subsubsection{Enhanced H.S. Optical Flows}
@@ -190,7 +197,7 @@ In summary, LDOF implements a flow estimation method that is capable to handle l
 
 \subsubsection{Semi Rigid Scene Flows}
 In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
-This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation they offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
+This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
 They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
 In the following some details according to their implementation
 \begin{itemize}
@@ -200,13 +207,11 @@ In the following some details according to their implementation
   \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
   \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
 \end{itemize}
-
 The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
 
 \subsubsection{Layered RGB-D Flows}
 In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
 The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation. \\ \\
-
 In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
 
 
