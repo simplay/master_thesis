@@ -18,7 +18,7 @@ However, keep in mind that this motion segmentation technique also has some issu
 
 \section{Optical Flow}
 \label{sec:optical_flow}
-In this section we explain the principles and the idea behind the optical flow. We emphasize this concept by discussing an in intuitive example, followed by stating a mathematical definition. Furthermore, we explain how such a flow field could be visually represented. Lastly, we summarize and elaborate on the pioneering formulation of Horn and Schnunck, which can be used to estimate flow fields.
+In this section we explain the principles and the idea behind optical flow. We motivate this concept by discussing an in intuitive example, followed by stating a mathematical definition. Furthermore, we explain how such a flow field could be visually represented. Lastly, we summarize and elaborate on the pioneering formulation of Horn and Schnunck, which can be used to estimate flow fields.
 
 \subsection{Motivation}
 The optical flow ($\textbf{OF}$) is a vector field that defines a point-to-point correspondence between two successive frames. Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. In other words, the OF represents the pixel motion field as observed in images and thus answers the question which pixel went where in its successor frame. Ideally, the optical flow is the projection of the three dimensional motion on an image. \\ \\
@@ -60,7 +60,7 @@ For visualizing flow fields we use the color encoding shown in subfigure $\ref{f
 \label{sec:hs_formulation}
 In the pioneering work of $\cite{Hs81}$, B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothness in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flows where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is is very sensitive to noise. \\ \\
 Back then they defined the optical flow as \textit{the distribution of apparent velocities of movement of brightness patterns in an image}. \\ \\
-Moreover, they already understood the potential of the optical flow and stated the following properties: Can arise from relative motion of objects and the viewer and provide information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
+Moreover, they already understood the potential of the optical flow and stated the following properties: It can arise from relative motion between objects and the viewer, provides information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Moreover, the mentioned that discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
 Sticking to their flow definition they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
 Their formulation is based on the following assumptions:
 \begin{itemize}
@@ -94,12 +94,12 @@ By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has
 \label{eq:reordered_flow_eq}
 \end{equation}
 Hence, they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$, the so called $\textit{flow velocity}$. As a consequence, such a flow velocity cannot be computed locally without introducing additional constraints. \\ \\
-In their formulation they express their additional constraint by stating that the square of the magnitude of the gradient of the optical flow velocity, as defined in equation $\ref{eq:smoothness_constraints}$, should be minimal.
+In their formulation they express their additional constraint by stating that the square of the magnitude of the gradient of the optical flow velocity, as defined in equation $\ref{eq:smoothness_constraints}$
 \begin{equation}
-	\left( \frac{\partial u}{\partial x} \right)^2 + \left( \frac{\partial u}{\partial y} \right)^2 \text{ and } \left( \frac{\partial v}{\partial x} \right)^2 + \left( \frac{\partial v}{\partial y} \right)^2
+	\left( \frac{\partial u}{\partial x} \right)^2 + \left( \frac{\partial u}{\partial y} \right)^2 \text{ and } \left( \frac{\partial v}{\partial x} \right)^2 + \left( \frac{\partial v}{\partial y} \right)^2,
 \label{eq:smoothness_constraints}
 \end{equation}
-The remaining problem then is to minimize the sum of the energies modelling the rate of image brightness change as stated in equation $\ref{eq:energy_brightness}$
+should be minimal. The remaining problem is then to minimize the sum of the energies modelling the rate of image brightness change as stated in equation $\ref{eq:energy_brightness}$
 \begin{equation}
 	E_b = E_x u + E_y v + E_t
 \label{eq:energy_brightness}
