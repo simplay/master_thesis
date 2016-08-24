@@ -158,24 +158,7 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 
 \subsection{Modern Flow Methods}
 \label{sec:impl_optical_flow}
-In this section we briefly summarize four modern flow methods. In particular we s
-
-In this section we give a brief introduction to the flow methods that can be utilized in our pipeline.
-
-
-In the reminder of this section we summarize the used flow methods.
-
-In this section we give a brief introduction to the flow methods that can be utilized in our pipeline. 
-
-%
-%s1
-%estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
-
-%s2
-%Other methods do segment the scene to impose rigidity or strong regularization over the regions (or segments). However, these segmentations are only used as tools to improve the accuracy of the estimates, and do not really cor-
-%respond to the underlying/independent motions of the scene => partitions the scene into depth layers
-%Therefore, the segmentation-from-motion problem, which can be particularly useful for scene understanding or human-machine interaction, is not truely addressed by these methods.
-
+In this section we briefly summarize four modern flow methods. Additionally, we state their main properties and their drawbacks. Discussing those methods particularly makes sense since we later use these flow estimation techniques later in our pipeline to generate flow fields.
 
 \subsubsection{Enhanced H.S. Optical Flows}
 In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
@@ -210,6 +193,11 @@ In the following some details according to their implementation
 The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
 
 \subsubsection{Layered RGB-D Flows}
+%s1
+%estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
+%s2
+%Other methods do segment the scene to impose rigidity or strong regularization over the regions (or segments). However, these segmentations are only used as tools to improve the accuracy of the estimates, and do not really cor-
+%respond to the underlying/independent motions of the scene => partitions the scene into depth layers
 In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
 The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation. \\ \\
 In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
@@ -218,18 +206,21 @@ In summary LRGBD segments motion into layers ordered according to the depth rank
 \section{On Data Clustering}
 \label{sec:on_data_clustering}
 Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. This is achieved by separating data points according to their similarities. \\ \\
-In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$.
+Generally, clustering is a hard problem and no yet no perfect method exists. As we show in our evaluation section, the choice of the segmentation method has a big influence on the quality of our motion segmentation pipeline. \\ \\
+In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$. \\ \\
+In the following we start by describing the k-means clustering which is a clustering method applied on point clouds and which is popular because of its speed, relative simplicity and robustness. However, a drawback of k-means is that it only works for relatively low-dimensional datasets. \\ \\ 
+In this thesis, we are mainly working with datasets consisting of point trajectories. This kind of data is not easily embeddable in an euclidean space. Therefore, we present a more general clustering framework targeting at segmenting graphs. Regardless of the dimensionality of the input data, these method are general enough to work with any kind of data as long as it is possible to compute a distance between data point pairs
 
 \subsection{K-Means Clustering}
 \label{sec:k_means}
 The idea of the k-means clustering algorithm is to partition $n$ observations into $k$ clusters in which each observation belongs to the cluster with the nearest mean. \\ \\
-Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\textbf{x}_k \in \mathbb{R}^d$. k-means clustering tries to partition the $n$ observations into $k$ sets $\textbf{S} = \{ S_1, \dots, S_k\}$ to minimize the sum of distance functions of each point in the cluster to the $k$ centers. Mathematically, this can formulated as the follows:
+Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\textbf{x}_k \in \mathbb{R}^d$. k-means clustering tries to partition the $n$ observations into $k$ sets $\textbf{S} = \{ S_1, \dots, S_k\}$ to minimize the sum of distance functions of each point in the cluster to the $k$ centers. Mathematically, this can formulated as follows:
 \begin{equation}
 	\argmin_{\textbf{S}} \sum_{i=1}^k \sum_{\textbf{x} \in S_i} \norm{\textbf{x} - {\boldsymbol {\mu }}_{i}}^2
 \label{eq:k_means_minimzation_formulation}
 \end{equation}
 where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. \\ \\
-The k-means clustering equations $\ref{eq:k_means_minimzation_formulation}$ can be iteratively solved. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
+The k-means clustering equations $\ref{eq:k_means_minimzation_formulation}$ can be iteratively minimized, but without the guarantee of finding a global minimum. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
 \begin{itemize}
 \item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least sum of distance functions of each point in the cluster. Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
 \begin{equation}
@@ -241,8 +232,7 @@ where each $x_p$ is assigned to exactly one $S^{(t)}$.
 	m_i^{(t+1)} = \frac{1}{\left| S_i^{(t)} \right| } \sum_{x_j \in S_i^{(t)}} x_j
 \end{equation}
 \end{itemize}
-There are many initialization methods to assign the clusters such as randomly chooses k observations from the data set and uses these as the initial means or define k random clusters. The appropriate way of initializing the clusters depends on the given problem statement which the k-means attempts to address. 
-
+There are many initialization methods to assign the clusters such as randomly chooses k observations from the data set and uses these as the initial means or define k random clusters. The appropriate way of initializing the clusters depends on the given problem statement which the k-means attempts to address. However, keep in mind that different local minima are found depending on the chosen initialization of the cluster centers. One way to address this problem is to simply run this algorithm several times, using different initialization. Then, the minima with the lowest error is considered as the optimum.  
 \subsection{Graph Definitions}
 In the following we offer the reader some basic graph definitions which are broadly used in this thesis. \\ \\ 
 Let $G = (V, E)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. In this work we work with weighted graphs. This means that each edge between two vertices $v_i$ and $v_j$ has a non-negative weight $w_{ij}$. \\ \\
@@ -252,7 +242,7 @@ W = \left( w_{ij} \right)_{i,j=1,\dots, n}
 \label{eq:def_adjacency_matrix}
 \end{equation}
 If $w_{ij} = 0$ then the vertices $v_i$ and $v_j$ are \textbf{not connected} by an edges. \\ \\
-Since $G$ is supposed to be an \textbf{undirected graph}, we require
+Since $G$ is assumed to be an \textbf{undirected graph}, we require
 \begin{equation}
 	\forall i,j : w_{ij} = w_{ji}
 \end{equation}
@@ -261,7 +251,7 @@ The \textbf{degree} of a vertex $v_i \in V$ is defined as
 	d_i = \sum_{j=1}^n w_{ij}
 \label{eq:vertex_degree}
 \end{equation}
-In fact the sum accumulates only vertices that are adjacent to $v_i$, since all other vertices have a weight equals zero. \\ \\
+In fact the sum accumulates only weights of edges adjacent to $v_i$, since all other vertices have a weight equals zero. \\ \\
 The \textbf{degree matrix} $D$ is defined as the diagonal matrix with the degrees $d_1,\dots, d_n$ on the diagonal. \\ \\
 For a given subset of vertices $A \subset V$, its \textbf{complement} is defined as
 \begin{equation}
@@ -294,21 +284,17 @@ The volume is the sum of weights of all edges attached to vertices in $A$.
 \subsection{Similarity Graph}
 \label{sec:similarity_graphs}
 Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of data points $x_i$ and $x_j$. Then, our goal is to divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other. To address this task we represent our data by a similarity graph $G = (V, E)$. \\ \\
-Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering problem becomes then to the graph partitioning problem. Find a partition of the graph such that the edges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. \\ \\
+Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering reduces to the graph partitioning problem. The goal is then to find a partition of the graph such that the edges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. \\ \\
 There are several constructions to transform a given set of data points with pairwise similarities $s_{ij}$ or pairwise distances $d_{ij}$ on the graph. The common goal of such a construction is to to model the local neighborhood relationships between the data points. In the following several a list of different construction types.
 \begin{itemize}
 	\item The \textbf{$\epsilon$-neighborhood graph}: All points whose pairwise distances are smaller than a given $\epsilon$ are connected. In that case the distances between connected vertices is at the same scale (at most equals $\epsilon$). Hence, the edge weights do not incorporate additional information about the data on the graph and thus, such a graph is usually considered as an unweighted graph.
 	\item The \textbf{k-nearest neighbor graph}: Vertex $v_i$ is connected with $v_j$ if $v_j$ is among the k-nearest neighbors of $v_i$. This definition usually leads to a directed graph, since this neighborhood relationship is not symmetric. When interested in constructing a undirected graph, we can either ignore the induced edge directions (corresponds to an OR relationship) or connect the vertices if and only if both are nearest neighbors of each other (corresponds to an AND relationship).
 	\item The \textbf{fully connected graph}: All points that exhibit a positive similarity are connected with each other. The edge weight corresponds to their similarity value.
 \end{itemize}
-For measuring the distances between data points several metrics can be used, such as the euclidean distance or other norms. However, when dealing with spectral clustering a prominent distance measure is the is the Gaussian similarity function
-\begin{equation}
-	s(x_i, x_j) = e^{\frac{-\norm{x_i - x_j}^2 }{2 \sigma^2}} 
-\end{equation}
-where $\sigma$ controlls the neighborhood width.
+For measuring the distances between data points any kind of metric$\footnote{For example one could use the euclidean distance or other kind of norms}$ can be used. 
 
 \subsection{Graph Laplacians}
-In spectral clustering we are working with the so called graph Laplacian matrices, which are a transformed version of the previously discussed similarity graphs. In this section, we therefore define different graph laplacians and state some of their properties. \\ \\
+In spectral clustering we are working with the so called graph Laplacian matrices, which can be defined based on the previously discussed adjacency matrix formulation. In this section, we therefore define different graph laplacians and state some of their properties. \\ \\
 In the following we assume that $G$ is an undirected, weighted graph with the the positive weight matrix $W$ and $D$ denotes the degree matrix. \\ \\
 When discussing some properties of the eigenvectors of the Laplacian matrix, keep in mind that they do not necessarily have to be normalized. By conventions, we assume the eigenvectors being ordered increasingly. Additionally, when referring to the first $k$ eigenvectors, we mean the eigenvectors that correspond to the $k$ smallest eigenvectors.
 
@@ -318,7 +304,7 @@ The unnormalized graph Laplacian matrix $L$ of the graph $G$ is defined as
 	L = D - W
 \label{eq:unnormalized_graph_laplacian}	
 \end{equation}
-which has the following properties: 
+It has the following properties: 
 \begin{itemize}
 \item \begin{equation}
 	\forall v \in \mathbb{R}^n: v^T L v = \frac{1}{2	} \sum_{i,j=1}^n w_{ij} (v_i - v_j)^2
@@ -326,7 +312,7 @@ which has the following properties:
 \item L is symmetric and positive semi-defnite$\footnote{A $n \times n$ matrix $M$ is called positive semi-definite if and only if $\forall x \in \mathbb{R}^n : x^T M x \geq 0$ holds true.}$.
 \item The smallest eigenvalue of L is equal to zero and the corresponding eigenvector is the constant one vector.
 \end{itemize}
-The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components in the graph.
+The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of $L$ is equals the number of connected components in the graph. A proof of this property can be found in $\cite{Lux07}$.
 
 \paragraph{Normalied Graph Laplacian}
 The symmetric, normalized graph Laplacian matrix $L^{\text{sym}}$ of the graph $G$ is defined as
