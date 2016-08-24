@@ -763,8 +763,15 @@ This function can therefore be used to define pseudo cut probabilities. Next we 
 \label{eq:edge_dist_weights}
 \end{equation}
 where $p$ is a fixed cut probability and set equals $0.5$ and $\bar{p}$ is a parameter denoting the prior cut probability. If $\bar{p}$ is increased, more edges will be cut and the number of resulting segments increases. Choosing a small $\bar{p}$ results in an undersegmentation. \\ \\
-In the following we use discussed formulation to model the similarity graph. In particular we compute its edge weights by using the definition from equation $\ref{eq:edge_dist_weights}$. Using such negative and positive weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. This approach is supposed to produce more reliable results than the segmentation method described in the section spectral clustering. \\ \\
-In the following let use discuss an algorithm that allows to partition the similarity graph discussed before. The Kernighan-Lin heuristic $KL$ is a good candidate for this task. This algorithm attempts to find a partition of $V$ into two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized. For defining the cost, let $I_a$ be the internal cost of the vertex $a$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
+In the following we use discussed formulation to model the similarity graph. In particular we compute its edge weights by using the definition from equation $\ref{eq:edge_dist_weights}$. Using such negative and positive weights allow to optimize for the correct number of moving objects including small objects that show discriminative motion in a small number of frames. This approach is supposed to produce more reliable results than the segmentation method described in the section spectral clustering.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.6\linewidth] {implementation/segmentation/kl_energies}
+\end{center}
+\caption[KL Energy Terms]{Visualization of the internal $I_a$ and external costs $E_a$ of a vertex $a \in A$.}
+\label{fig:kl_partition_energies}
+\end{figure}
+In the following let use discuss an algorithm that allows to partition the similarity graph discussed before. The Kernighan-Lin heuristic $KL$ is a good candidate for this task. This algorithm attempts to find a partition of $V$ into two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized similar as shown in figure $\ref{fig:kl_partition_energies}$. For defining the cost, let $I_a$ be the internal cost of the vertex $a \in A$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
 \begin{equation}
 	D_a = E_a - I_a
 \label{eq:kl_d_values}
