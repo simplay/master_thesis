@@ -25,7 +25,7 @@ In this section we explain the default pipeline parameters which are used to gen
 \caption[Pipeline Combinations]{A listing of all available pipeline combinations. Our pipeline implements a series of flow methods, various affinity computation modes and different segmentation techniques. Please notice that S-affinities can only be used in combination with the Kernighan-Lin Heuristic (KL). }
 \label{fig:pipeline_combinations}
 \end{figure}
-In the following we give a brief description of several defaults used in different pipeline stages. \\ \\
+In the following we give a brief description of several default assignments used in different pipeline stages. \\ \\
 For generating the flow fields we rely on existing implementations offered by the authors. We do not attempt to modify any default settings of the utilized flow methods. For further information about those implementations, please refer to the author's papers or to section $\ref{sec:impl_optical_flow}$. \\ \\
 The very first parameter we have to discuss is the sampling rate of the extracted traceable feature points, determined by a Harris-Corner detector, as discussed in section $\ref{sec:tracking_candidates}$. During our experiments we use every $8th$ pixel location. \\ \\
 When computing a $\textit{P-affinity}$, either by running the mode \textit{PD} or $\textit{PED}$, we have to specify a certain value of $\lambda$. This parameter is used in equation $\ref{eq:prod_dist_affinity}$ to scale the similarity measure between two trajectories. We use$\footnote{We determined the defaults by trying out different values for $\lambda$ and took those which yielded the visually most promising results. Please note that this kind of parameter selection is by no means optimal.}$ $\lambda$ equals $0.1$ when running $PD$ and $\lambda = 10$ when running the affinity mode $PED$. The reason for using different $\lambda$ values is because PED and PD have different scales. \\ \\
@@ -1444,6 +1444,16 @@ We observe the following facts: Methods using SRSF flows achieve better results 
 Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
 
 \section{Runtime Measurements}
+In this section we present actual runtime measurements resulting when running on the specified machine as defined in table $\ref{tab:used_hardware_specs}$. \\ \\
+Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds of 261 measurements (blue dots) to accomplish the task of tracking a varying count of trajectories and generating their corresponding affinity matrix. Moreover, we fit a quadratic polynomial (red curve) on our measurements, since the runtime complexity of this pipeline stage is supposed to be in $\mathcal{O}(n^2)$ and $n$ denotes the trajectory count.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth] {evaluation/runtimes/affinity}
+\end{center}
+\caption[Runtime Trajectory Tracking and Generating Affinity Matrix]{Plotting the runtime (in seconds) of trajectory tracking and affinity matrix generation stage against the utilized trajectory count. The measurements are visualized as blue dots. A reconstructed quadratic curve is shown in red. The runtime of the evaluated stage is supposed to exhibit a quadratic complexity.}
+\label{fig:runtime_tra_track_affinity_gen}
+\end{figure}
+
 %TODO: list runtime performance plots of our pipeline components
 %TODO: list it in a table 
 
