@@ -19,7 +19,7 @@
 
 \chapter{Introduction}
 \section{Motivation}
-In nature one important aspect that determines the odds of survival and thus the individual success is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
+In nature one important aspect that determines the odds of survival and thus the individual success is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, motion is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Sensing Depths and Localization]{
@@ -42,7 +42,7 @@ In nature one important aspect that determines the odds of survival and thus the
 \caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform a self-localization}
 \label{fig:motivating_example}
 \end{figure}
-As natural this tasks might be performed by our brains as hard it becomes to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still an unresolved problem. \\ \\
+As natural this tasks might be performed by our brains as hard it becomes to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
 However, a lot of scientific effort has been put into this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
 \begin{figure}[H]
 \begin{center}
@@ -60,14 +60,14 @@ However, a lot of scientific effort has been put into this problem statement and
 \end{figure}
 \footnotetext{Source figure \ref{fig:motion_segmentation_motivation_eg_a}: \url{http://cbia.fi.muni.cz/projects/optical-flow-for-live-cell-imaging_3.html} \\
  and source figure\ref{fig:motion_segmentation_motivation_eg_b}: \url{http://lmb.informatik.uni-freiburg.de/research/segmentation/}}
-The field of motion segmentation aims at decomposing a video in moving objects and background and s the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance, traffic monitoring. \\ \\
-The idea of using optical flows as an estimate of the motion goes back to the pioneering work of B. Horn and B. Schunck $\cite{Hs81}$. In their recent work $\cite{KB15b}$, T. Brox et all published such a motion segmentation pipeline . \\ \\
+The field of motion segmentation aims at decomposing a video in moving objects and background and is the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance, traffic monitoring. \\ \\
+The idea of using optical flows as an estimate of the motion goes back to the pioneering work of B. Horn and B. Schunck $\cite{Hs81}$. In this thesis we will build upon the body of work from T.Brox $\cite{Bro11a}$, $\cite{OB14b}$ and $\cite{KB15b}$, who promotes an approach based on clustering trajectories extracted via optical flow. \\ \\
 An orthogonal technique to generate motion segmentation is to order the objects according to their depth layer. Unfortunately, this approach requires depth measurements of dataset frames. Until recently, measuring depths in videos was rather unpractical since it required dedicated and expensive capturing devices and additional post-processing. However, due to the success of Microsoft Xbox' Kinect, the competition among these capturing devices has increased and the prices became affordable. \\ \\
 Idially, a motion segmentation pipeline would therefore make use of optical flows and the same time exploit measured depth maps. 
 
 \section{Goals}
-The purpose of this thesis is to describe a robust motion segmentation method
-that uses RGB-D$\footnote{The term \textit{RGB-D} refers to color images with associated depth field measurements.}$ video sequences as well as other visual cues. In particular, our segmentation method should make use of optical flows. In our formulation we assume a piecewise rigid motion model and do not constrain the camera movement. \\ \\
+The purpose of this thesis is to describe and evaluate a robust motion segmentation method
+and to incorporate depth information available in RGB-D$\footnote{The term \textit{RGB-D} refers to color images with associated depth field measurements.}$ video sequences as well as other visual cues. Due to its relative simplicity and extendibility we focus on motion segmentation with a traditional trajectory clustering approach using trajectories established via optical flow. In our formulation we assume a piecewise rigid motion model and do not constrain the camera movement. \\ \\
 The actual problem statement we want to address is shown in figure $\ref{fig:problem_statement}$. 
 \begin{figure}[H]
 \begin{center}
