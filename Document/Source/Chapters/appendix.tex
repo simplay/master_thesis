@@ -175,16 +175,16 @@ An alternative measure is the $F_1$ score. This measure is often used in determi
 F_1 = 2 \left( \frac{\text{precision} \times \text{recall}}{\text{precision} +\text{recall}} \right)
 \label{eq:f1_score}
 \end{equation}  
-The F1 score can be interpreted as a normalized weighted average of the precision and recall test performances. The best possible F1 score is equals 1 and its worst value is 0.
+The F1 score can be interpreted as a normalized weighted average of the precision and recall measures. The best possible F1 score is equals 1 and its worst value is 0.
 
 \section{Camera Model}
 \subsection{Pinhole Camera}
-A camera allows to capture a 3d scene in a 2d image. A common mathematical model to describe such a mapping from the 3d scene space to the 2d image space is the pinhole camera model. This model is conceptually illustrated in figure $\ref{fig:pinhole_camera_model}$.
+A camera projects a 3d scene in a 2d image. A simple mathematical model to describe such a mapping from the 3d scene space to the 2d image space is the pinhole camera model. This model is conceptually illustrated in figure $\ref{fig:pinhole_camera_model}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth] {background/camera_model/pinhole_camera}
 \end{center}
-\caption[Pinhole Camera Model]{Visualizing the pinhole camera model. The camera center C represents an infinitely small aperture hole, is the focal length, p the principal point $\textbf{A} = (X, Y, Z)$ a 3d point in the scene and $\textbf{a} = (f \frac{X}{Z}, f \frac{Y}{Z})$ its projected pixel version mapped onto the image plane.}
+\caption[Pinhole Camera Model]{Visualizing the pinhole camera model. The camera center $C$ represents an infinitely small aperture hole and assumed to be located at $(0,0,0)$, $f$ is the focal length in pixel units, $p$ is the principal point in images coordinates, $\textbf{A} = (X, Y, Z)$ a 3d point in the scene and $\textbf{a} = (f \frac{X}{Z}, f \frac{Y}{Z})$ its projected pixel version mapped onto the image plane.}
 \label{fig:pinhole_camera_model}
 \end{figure}
 The aperture is an infinitely small hole and there is no lens used to focus light. Therefore, lens distorting or depth of field effects are ignored. The intersection point where all rays meet is the center of the perspective projection and usually referred by \textit{camera center}. The principal axis is formed by the line perpendicular to the image plane, which passes though the camera center. Its intersection point with the image plane is called principal point. The distance between the camera center and the principal point is the so called focal length.
@@ -200,13 +200,13 @@ f & s & p_x & 0 \\
 \end{pmatrix}
 \textbf{X}
 \end{equation}
-where $f$ denotes the focal length and $p = (p_x, p_y)^T$ the offset to the origin with respect to the principal point. In modern cameras, the skew $s$ is usually equals zero. The parameters $f$, $p_x$, $p_y$ and $s$ are called \textit{intrinsic camera parameters}. Notice, that $\textbf{X}$ is expressed in terms of camera coordinates and similarly, $\textbf{x}$ in pixel coordinates.
-\paragraph{Extrinsic Parameters} Let $\textbf{X}_w$ refer to the same point as $\textbf{X}$ but expressed in different coordinates system, in the world space. In a rigid object model, the points $\textbf{X}$ and $\textbf{X}_w$ can be transformed to one another by applying a linear transformation that consists of a rotational matrix $R$ and a translation $t$. The actual mapping is defined as
+where $f$ denotes the focal length and $p = (p_x, p_y)^T$ the offset to the origin in image coordinates with respect to the principal point. In modern cameras, the skew $s$ is usually equals zero. The parameters $f$, $p_x$, $p_y$ and $s$ are called \textit{intrinsic camera parameters}. Notice, that $\textbf{X}$ is expressed in terms of camera coordinates and similarly, $\textbf{x}$ in pixel coordinates.
+
+\paragraph{Extrinsic Parameters} In general, a camera is not located at the origin of the world coordinate system and can have an arbitrary orientation. Let $\textbf{X}_w$ denote a point, living in an arbitrary camera coordinate system. To express this point in the regular camera coordinate system, we have to apply a certain transformation. In a rigid object model, the points $\textbf{X}$ and $\textbf{X}_w$ can be transformed to one another by applying a linear transformation that consists of a rotational matrix $R$ and a translation $t$. The actual mapping is defined as
 \begin{equation}
 	X = \left[ R | t \right] X_w
 \end{equation}
 The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.
-
 
 %%%
 \chapter{Hole Filling}
