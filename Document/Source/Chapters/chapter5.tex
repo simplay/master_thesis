@@ -109,7 +109,13 @@ The idea is to find the ground truth mask $i$ that yields the most point interse
 \label{sec:methodology}
 In this section we give a brief description about the methodology used to perform our experiments. \\ \\
 We want to quantitatively evaluate the quality of segmentations produces by running different pipeline combinations. We use the datasets described in section $\ref{sec:datasets}$. Produced motion segmentations are compared against available ground truth images. While running the pipeline we rely on the defaults described in section $\ref{sec:spectral_clustering_parameters}$.\\ \\
-Before evaluating the performance of generated segmentations, we run our segment merger, which is described in section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in equation $\ref{eq:statistical_measures}$. 
+Before evaluating the performance of generated segmentations, we run our segment merger, which is described in section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. 
+%
+erwähne
+nach merger step: jedem gt objekt höchsten ein labeled zugeordnet (ist zugeordnet), darum kann für jedes gt objekt unabhänig die qualität evaluert werden (measures berechnen) 
+
+%
+In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in equation $\ref{eq:statistical_measures}$. 
 \begin{equation}
 \begin{aligned}
 	& \text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \\
@@ -118,12 +124,27 @@ Before evaluating the performance of generated segmentations, we run our segment
 \end{aligned}
 \label{eq:statistical_measures}
 \end{equation}
-We initially separate the background label from the moving object segmentation labels for every segmentation results. Next, we iterate over all points in every cluster, compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$.
+
+
+Prec. recall, f1 are defined for binary classifiers
+
+foreach gt forground object we compute the measures ...
+finally report the avg of p,r
+
+we propose: evaluiere wie gut bewegende objekte segemntiert wurdem
+why not für bg: 
+
+f1 uses these avgs
+
+We iterate over all points in every cluster, compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$.
 \begin{equation}
 \begin{aligned}
-	\textbf{TP} &:= \text{Samples correctly classified as foreground.} \\
-	\textbf{FP} &:= \text{Samples classified as foreground but actually belong to the background.} \\
-	\textbf{FN} &:= \text{Samples classified as background but actually belong to foreground.}
+tp: correctly classified fg samples
+fp: 
+für ein label a, measures defined as follows:
+	\textbf{TP} &:= \text{Samples correctly labeled a} \\
+	\textbf{FP} &:= \text{Samples incorrectly labeled a} \\
+	\textbf{FN} &:= \text{Samples that were labeled a in gt but are attributed to a wrong label}
 \end{aligned}
 \label{eq:statistical_counts}
 \end{equation}
@@ -311,7 +332,7 @@ LDOF SED KL & 0.34/0.36 & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%
 
 
 
-
+% TODO: weg damit mit easy mask
 
 %TODO mention some facts about the qualitative properties of the segmentations.
 
@@ -1300,32 +1321,6 @@ PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline
 \label{tab:bonn_cerealbox_performance}
 \end{table}
 
-\subsection{Fast Moving Camera}
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[Frame 25]{
-   \includegraphics[width=0.47\linewidth] {evaluation/alley/segmentations/25}
-   \label{fig:alley_segmentations_a}
-}
-\subfigure[Frame 30]{
-   \includegraphics[width=0.47\linewidth] {evaluation/alley/segmentations/30}
-   \label{fig:alley_segmentations_b}
-}
-~
-\subfigure[Frame 35]{
-   \includegraphics[width=0.47\linewidth] {evaluation/alley/segmentations/35}
-   \label{fig:alley_segmentations_a}
-}
-\subfigure[Frame 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/alley/segmentations/40}
-   \label{fig:alley_segmentations_b}
-}
-\end{center}
-\caption[Bonn Cerealbox Segmentations]{foobar}
-\label{fix:alley_segmentations}
-\end{figure}
-
 \subsection{PED MC using different flows}
 This experiment should examine how some of our methods perform when running a particular difficult dataset. For this purpose we use the statue statue. In particular it has the following difficulties:
 \begin{itemize}
@@ -1473,4 +1468,103 @@ After running our pipeline the following key observations can be stated:
   \item when comparing our default pipeline setup against Brox' Min-Cut method, we obtain way better results.
   \item choosing the correct number of clusters and segments is a non-trivial task.
 \end{itemize}
+
+
+
+
+
+
+
+% neue exp struktur
+
+
+\section{Experiments 2.0}
+\subsection{Parameter Experiments}
+lediglich veranschauungszweck, untermalen, warum parameter so gewählt wie erklärt
+
+ziel: alle varianten auf allen datasets
+probleme: komplexity, dh alle kreuzkombinationen, so impractical that considering ldof and srsf
+
+hs vergleichbar mit ldof und lrgbd 
+
+zeige ldof sed kl
+plots
+u dessen plots (klein für var cluster)
+% convergence i, ldof ped mc
+
+\subsubsection{Convergence MC}
+In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of the convergence rate of the MC segmentation method. The more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 3 iterations. This matches with our assumption that no more than 5 to 10 iterations have to be run when using the MC segmentation method.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
+\label{fig:two_chairs_ped_mc_iterations_b}
+\end{center}
+\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
+\label{fig:two_chairs_ped_mc_iterations}
+\end{figure}
+
+\subsubsection{Choice for lambda}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Performance Varying $\lambda$}                        \\ \hline
+$\lambda$              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+5 & 0.59 & 99.70\%   & 57.99\%     & 73.33\%  \\ \hline
+0.01 & 0.67 & 91.07\%   & 92.85\%     & 91.95\%  \\ \hline              
+0.0001 & 0.67 & 47.91\%   & 49.62\%     & 48.75\%  \\ \hline
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:cars_varying_lambas}
+\end{table}
+
+\subsubsection{Eigenvector Clustercount default}
+
+\subsection{On exploring flow methods}
+hs und lrgbd rausschmeisen
+
+\subsection{Overall Performance}
+
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Using all datasets}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 63.52 \%   & 41.87\%     & 50.47\%  \\ \hline
+LDOF PD MC & 58.69\%   & 57.86\%     & 58.27\%  \\ \hline
+LDOF PED SC & 66.94\%   & 57.91\%     & 62.10\%  \\ \hline
+LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline                 
+\end{tabular}
+\caption[Overall Performance]{My caption}
+\label{tab:overall_performance}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Using compatible datasets}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 60.04 \%   & 35.99\%     & 45.00\%  \\ \hline
+LDOF PD MC & 54.65\%   & 58.31\%     & 56.42\%  \\ \hline
+LDOF PED SC & 63.85\%   & 59.68\%     & 61.69\%  \\ \hline
+LDOF PED MC & 59.30\%   & 64.79\%     & 61.93\%  \\ \hline
+SRSF PED MC & \textbf{76.52}\%   & \textbf{83.47}\%     & \textbf{79.84}\%  \\ \hline
+SRSF PED SC & 60.23\%   & 49.62\%     & 54.41\%  \\ \hline 
+SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
+SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
+Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
+\end{tabular}
+\caption[Overall Performance]{My caption}
+\label{tab:overall_performance}
+\end{table}
+
+
+
+
+\subsection{Properties}
 

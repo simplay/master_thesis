@@ -46,26 +46,34 @@ In this stage we want to generate the following optical flows on the frames of g
 \end{itemize}
 For the actual computation of the optical flows we rely on existing implementations. In particular we use the freely available implementations of the methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. In the following a short list of the flows integrated in our pipelines and their main properties:
 \begin{itemize}
-\item The enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}): In summary, this flow estimation method is a tweaked version of HS original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
+\item The enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}): This flow estimation method is a tweaked version of H.S. original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
 	\begin{itemize}
 	\item Simple formulation and fast to run.
 	\item Matlab implementation freely available.
 	\item Does not make use of depth fields.
 	\end{itemize}
-\item The large displacement optical flow estimation (\textbf{LDOF}): In summary, LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per 480 x 640 pixel frame.
+\item The large displacement optical flow estimation (\textbf{LDOF}): LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per $480 \times 640$ pixel frame.
 	\begin{itemize}
 	\item Can handle large displacements, i.e. fast moving objects.
 	\item Compiled C program freely available
 	\item Does not make use of depth fields
 	\end{itemize}
-\item The Semi-rigid scene flow (\textbf{SRSF}) method: The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
+\item The Semi-rigid scene flow (\textbf{SRSF}) method: The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their documentation$\footnote{See \url{http://lmb.informatik.uni-freiburg.de/Publications/2014/Bro14/}}$. 
 	\begin{itemize}
 	\item Makes use of depth maps: formulates a local and global motion by jointly using intensity and depth data.
 	\item Models motion as a global rigid motion plus a non-rigid residual
 	\item Free C++ code availbe, some parts are only available as binaries.
 	\item Can only be run on videos with a resolution of 640 by 480 pixels
 	\end{itemize}
-\item The Layered RGBD flow (\textbf{LRGB}) method: In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
+	
+	
+	They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions.
+	solve for the local and global motion by jointly using intensity and depth data
+the model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual
+
+	
+	
+\item The Layered RGBD flow (\textbf{LRGB}) method: The LRGBD method segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
 	\begin{itemize}
 	\item Makes use of depths to handle occlusions
 	\item Layered RGBD scene flow estimation method

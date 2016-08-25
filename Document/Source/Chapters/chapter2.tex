@@ -161,7 +161,7 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 
 \subsection{Modern Flow Methods}
 \label{sec:impl_optical_flow}
-In this section we briefly summarize four modern flow methods. Additionally, we state their main properties and their drawbacks. Discussing those methods particularly makes sense since we later use these flow estimation techniques later in our pipeline to generate flow fields.
+In this section we briefly summarize four modern flow methods. Additionally, we state their main properties and their drawbacks. Discussing those methods particularly makes sense since we make use of these flow estimation techniques later in our pipeline to generate flow fields.
 
 \subsubsection{Enhanced H.S. Optical Flows}
 In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
@@ -172,14 +172,12 @@ The original HS formulation combines a data term that assumes constancy of some 
   \item An incremental multi-resolution technique is applied to estimate flow fields with large displacements. The optical flow estimated at a coarse level is used to warp the second image toward the first at the next finer level and a flow increment is calculated between the first image and the warped second image. Each level is recursively downsampled by applying a Gaussian filter from its nearest lower level.
   \item An enhanced objective function is used, which including a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
 \end{itemize}
-In summary, this flow estimation method is a tweaked version of HS original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
 
 \subsubsection{Large Displacement Optical Flows}
 Before the work in $\cite{Bro11a}$, there was no accurate method present to estimate fast motions of small objects, i.e. large motions. Most flow methods are based on a combination of HS flow formulation and the concept of coarse-to-fine image warping. However, both approaches have been extended by robust statistics to fight outliers and the same time retain smoothness assumptions. \\ \\
 Two fundamental ideas exist to address the issue of large motions. On on hand there are coarse-to-fine techniques. Such techniques, however, require a downsampling. Unfortunately, this also removes details that may be important for the flow accuracy. consequently, the method cannot refine the flow of structures that are smaller than their displacement, because the structure is smoothed away. Flows produced this way are often close to the motion of the larger scale structures. \\ \\
 On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have limited accuracy and exhibit many outliers to to missing regularity constraints and lastly, there is only pixel-level accuracy. \\ \\
 In their paper they propose a method how to combine both strategies. They direct a variational technique using correspondences from sparse descriptor matching. The correspondences determined by the descriptors are directly integrated into the variational approach. The allows to make use of all image information at every level and smoothly scales down the influence of descriptor keypoints as the grid gets finer. \\ \\
-In summary, LDOF implements a flow estimation method that is capable to handle large motions and thus yields a better quality fast moving objects flow estimates. This method, however, does also not make use of depth fields. The authors offer a freely available, compiled C++ program. The program has an intermediate runtime of about 30 seconds per 480 x 640 pixel frame.
 
 \subsubsection{Semi Rigid Scene Flows}
 In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
@@ -193,7 +191,6 @@ In the following some details according to their implementation
   \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
   \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
 \end{itemize}
-The authors offer a partially available code basis that can be compiled to a executable program. The program can only generate motion segmentations for dataset that have a image resolution of 480 by 640 pixels. Since the program makes use of depth fields, corresponding depth maps have to be provided in the pipeline's formatting conventions. A detailed descriptions about their pipeline conventions can be found in their readme. 
 
 \subsubsection{Layered RGB-D Flows}
 %s1
@@ -203,7 +200,6 @@ The authors offer a partially available code basis that can be compiled to a exe
 %respond to the underlying/independent motions of the scene => partitions the scene into depth layers
 In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3d motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3d rigid motion to constraint the motion of each layer. \\ \\
 The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flows produced by their implementation. \\ \\
-In summary LRGBD segments motion into layers ordered according to the depth ranking. The authors offer a freely available Matlab implementation which takes about 10 minutes per 640 x 480 pixel frame to compute its forward and backward flow.
 
 
 \section{On Data Clustering}
