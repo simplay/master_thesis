@@ -39,6 +39,11 @@ In case there are also depth maps$\footnote{In case we are working with depth da
 \label{sec:generate_of}
 In our pipeline we heavily rely on optical flow fields. In particular, flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation of optical flow fields is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. However, in principle, the optical flow represents a displacement field that defines where a certain point in a frame is mapped to in its successor frame. \\ \\
+In this stage we want to generate the following optical flows on the frames of given dataset video:
+\begin{itemize}
+	\item The \textbf{forward flow} fields: Refers to the optical flow between a frame and its successor frame.
+	\item The \textbf{backward flow} fields: Refers to the optical flow between a frame and its predecessor frame.
+\end{itemize}
 For the actual computation of the optical flows we rely on existing implementations. In particular we use the freely available implementations of the methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. In the following a short list of the flows integrated in our pipelines and their main properties:
 \begin{itemize}
 \item The enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}): In summary, this flow estimation method is a tweaked version of HS original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.

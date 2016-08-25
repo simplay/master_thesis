@@ -2,12 +2,12 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'statue_SRSF';
-img_index = 90;
+DATASET = 'cars';
+img_index = 1;
 STEPSIZE_DATA = 8;
-PREFIX_INPUT_FILENAME = 'sed_both_1000_final';
-METHODNAME = 'srsf';
-FILTER_AMBIGUOUS = true;
+PREFIX_INPUT_FILENAME = 'pd_top_100';
+METHODNAME = 'ldof';
+FILTER_AMBIGUOUS = false;
 MUTED = true;
 
 %%
@@ -54,8 +54,11 @@ end
 
 disp(['Running simplified statistics mode: ', num2str(SIMPLIFIED_STATISTICS)])
 
-[FileName, FilePath, ~] = uigetfile('.txt');
-LABELS_FILE_PATH = strcat(FilePath, FileName);
+%[FileName, FilePath, ~] = uigetfile('.txt');
+%LABELS_FILE_PATH = strcat(FilePath, FileName);
+
+LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/cars_ldof_eval_l_0_01_c_3_ev_3/labels.txt';
+
 %LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/wh1_ldof_eval_ev_c_ped_mc_iters_10_c_6_ev_6_nu_1e-07/labels.txt';
 %LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_0_c_12_ev_18_nu_1e-08/labels.txt';
 % LABELS_FILE_PATH = '/Users/simplay/repos/ma_my_pipeline/Source/output/cluster_merges/bonn_watercan_713_3_884_ldof_ped_s_12_ct_1_c_15_ev_15/labels.txt';
@@ -296,6 +299,12 @@ else
         FP = (forgroundSamples == curr_flabel) - (TP > 0);
         FP_Count = sum(sum(FP > 0));
         
+        FNN = (forgroundSamples ~= curr_flabel) & backgroundSamples
+        
+        otherSamples = ((forgroundSamples ~= curr_flabel).*forgroundSamples+backgroundSamples);
+        gtCurrentLabel = (gtImg == colorValueOfCurrentCluster);
+        FN = (otherSamples & gtCurrentLabel);
+        FN_Count = sum(sum((FN > 0)));
         if ~(TP_Count + FP_Count == 0)
             avg_precission = avg_precission + (TP_Count / (TP_Count + FP_Count));
         end
