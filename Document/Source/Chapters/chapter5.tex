@@ -1432,7 +1432,21 @@ Additionally, Kernighan Lin yields the best segmentations among all segmentation
 
 \section{Runtime Measurements}
 In this section we present actual runtime measurements resulting when running on the specified machine as defined in table $\ref{tab:used_hardware_specs}$. \\ \\
-Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds of 261 measurements (blue dots) to accomplish the task of tracking a varying count of trajectories and generating their corresponding affinity matrix. Moreover, we fit a quadratic polynomial (red curve) on our measurements, since the runtime complexity of this pipeline stage is supposed to be in $\mathcal{O}(n^2)$ and $n$ denotes the trajectory count.
+We start with measuring the runtimes of the utilized flow methods. For each method we run 3 dataset$\footnote{The dataset frames used to perform these measurement all exhibit a resolution 640 x 480 pixels.}$ and measured their total time to process their input. Each time measurement was divided by their total number of frames. The resulting timings were then finally averaged. Table $\ref{flow_method_runtimes}$ lists the average time in seconds that our flow methods require to process$\footnote{Here, the term process refers to generating the forward-and backward flow field of a frame.}$ one dataset frame. 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Flow Method} & \textbf{Time per Frame} \\ \hline
+HS & 18s \\ \hline
+LDOF & 24s \\ \hline
+SRSF & 72s \\ \hline
+LRGBD & 674s \\ \hline
+\end{tabular}
+\caption[Flow Method Runtimes]{Listing of the average time of our flow methods required to process one dataset frame}
+\label{flow_method_runtimes}
+\end{table}
+Next let us discuss the timings of the affinity matrix generation. Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds of 261 measurements (blue dots) to accomplish the task of tracking a varying count of trajectories and generating their corresponding affinity matrix. Moreover, we fit a quadratic polynomial (red curve) on our measurements, since the runtime complexity of this pipeline stage is supposed to be in $\mathcal{O}(n^2)$ and $n$ denotes the trajectory count.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth] {evaluation/runtimes/affinity}
@@ -1443,6 +1457,7 @@ Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds o
 
 %TODO: list runtime performance plots of our pipeline components
 %TODO: list it in a table 
+
 
 \section{Discussion}
 After running our pipeline the following key observations can be stated:
