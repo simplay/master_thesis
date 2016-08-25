@@ -71,6 +71,110 @@ chair & 101 & 512 x 424 & true & true & false\\ \hline
 \caption[Datasets]{Properties of our used datasets.}
 \label{tab:datasets}
 \end{table}
+
+\begin{itemize}
+\item \textbf{Cars}: \textbf{frames}: 19, \textbf{resolution}: $480 \times 640$, \textbf{depths}: No 
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 1]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/cars/1}
+}
+\subfigure[Frame 10]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/cars/10}
+}
+\subfigure[Frame 19]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/cars/19}
+}
+\subfigure[GT Frame 1]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/cars/gt1}
+}
+\end{center}
+\caption[Dataset Bonn Cars]{An outdoor scene showing two cars, both moving to the left. One in the front and the other in the background. The camera is static.}
+\label{fig:eval_datasets_cars}
+\end{figure}
+\item \textbf{Bonn Watercan}: \textbf{frames}: 58, \textbf{resolution}: $480 \times 640$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 4]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_watercan/4}
+}
+\subfigure[Frame 31]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_watercan/31}
+}
+\subfigure[Frame 58]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_watercan/58}
+}
+\subfigure[GT Frame 4]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_watercan/gt4}
+}
+\end{center}
+\caption[Dataset Bonn Watercan]{An indoor scene showing two men psuhing different objects on a table. First, the man on the right side moves a water can along the table, then after a while the second man moves a packet from the left side of the table to its center. The camera is slightly shaking.}
+\label{fig:eval_datasets_bonn_watercan}
+\end{figure}
+\item \textbf{Bonn Chairs}: \textbf{frames}: 58, \textbf{resolution}: $480 \times 640$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_chairs/15}
+}
+\subfigure[Frame 30]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_chairs/30}
+}
+\subfigure[Frame 45]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_chairs/45}
+}
+\subfigure[GT Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_chairs/gt15}
+}
+\end{center}
+\caption[Dataset Bonn Chairs]{An indoor scene showing a man moving a chair. First, he moved it to the left, then he rotates it slightly. The camera is slightly shaking.}
+\label{fig:eval_datasets_bonn_chairs}
+\end{figure}
+\item \textbf{Bonn Cerealbox}: \textbf{frames}: 101, \textbf{resolution}: $480 \times 640$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_cerealbox/40}
+}
+\subfigure[Frame 60]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_cerealbox/60}
+}
+\subfigure[Frame 80]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_cerealbox/80}
+}
+\subfigure[GT Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_cerealbox/gt40}
+}
+\end{center}
+\caption[Dataset Bonn Cerealbox]{An indoor scene showing a man moving a cup on table. The camera is slightly moving.}
+\label{fig:eval_datasets_bonn_cerealbox}
+\end{figure}
+\item \textbf{Statue}: \textbf{frames}: 111, \textbf{resolution}: $480 \times 640$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 30]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/statue/30}
+}
+\subfigure[Frame 60]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/statue/60}
+}
+\subfigure[Frame 90]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/statue/90}
+}
+\subfigure[GT Frame 30]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/statue/gt30}
+}
+\end{center}
+\caption[Dataset Statue]{An indoor scene a rotating statue. After a whole a man removes the upper part. We only see the man's hand. The camera is static.}
+\label{fig:eval_datasets_bonn_cerealbox}
+\end{figure}
+\item Waving Arm
+\item One Chair
+\item Two Chairs
+\end{itemize}
+
+
+
 \section{Segment Merger}
 \label{sec:seg_merger}  
 In this section we describe our technique to reduce oversegmentations produced by our pipeline. Our goal is to offer a mechanism that allows to evaluate the maximal potential of pipeline. However, some segmentation results are not clearly defined, such as fast movements resulting from non-rigidly moving objects. An good example of this problem case is when we attempt to segment a video showing a waving hand. That is rationale why we want to merge unclear segments. Moreover, we only allow to merger sparse segmentations, since our dense segmentation approach is basically blurring the sparse segments and thus is not yielding comparable results$\footnote{The more post-processing steps are added the more obfuscated the final segmentation quality gets.}$. This stage is invoked before running the evaluation program, implemented as a post-processing stage. \\ \\
