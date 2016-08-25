@@ -51,27 +51,10 @@ Unless stated otherwise we rely on those parameter default parameter specificati
 
 \section{Datasets}
 \label{sec:datasets}
-Our dataset captured by either the Asus Xtion, the Kinect or the Kinect2. Moreover, alley2 is an artificial dataset and a sample from the ADDDATASETCITEHERE dataset. \\ \\
-For producing our motion segmentations we want to use a diverse collection of datasets. This means we want to use datasets that capture different types of motions, are recorded in-and outdoor scenes and are captured by a static or moving cameras. Also, our implementation should be able to generated segmentations for long as well as for short sequences. \\ \\
-The table $\ref{tab:datasets}$ below lists some properties of the used datasets.
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|}
-\hline
-\textbf{Dataset} & \textbf{\#Frames} & \textbf{Resolution} & \textbf{Has Depths} & \textbf{Cameras Aligned} & \textbf{Moving Camera} \\ \hline
-cars & 19 & 480 x 640 & false & false & false \\ \hline
-wh & 104 & 480 x 640 & true & false & false\\ \hline
-bonn\_chairs & 58 & 480 x 640 & true & true & true \\ \hline
-bonn\_watercan & 58 & 480 x 640 & true & true & true\\ \hline
-bonn\_cerealbox & 101 & 480 x 640 & true & true & true \\ \hline
-alley2 & 50 & 512 x 218 & true & true & true\\ \hline
-two\_chairs & 61 & 512 x 424 & true & true & false\\ \hline
-chair & 101 & 512 x 424 & true & true & false\\ \hline
-\end{tabular}
-\caption[Datasets]{Properties of our used datasets.}
-\label{tab:datasets}
-\end{table}
-
+In this section we introduce the dataset we were using for generating our results. Our dataset are a diverse collection of videos, originating from various source. Some videos were captures by Microsoft's Kinect, some by Asus' Xtion. Some were manually captures and again others are from other authors. In particular the cars dataset is from the Middlebury dataset$\footnote{See \url{http://vision.middlebury.edu/stereo/data/}}$ and datasets prefixed by \textit{Bonn} are from Bonn's RGB-D Rigid Multi-Body Dataset $\footnote{See \url{http://www.ais.uni-bonn.de/download/rigidmultibody/}}$. \\ \\
+We aim to work with a diverse collection of datasets. Meaning that we want to use datasets that capture different types of motions, are recorded in-and outdoor scenes and are captured by a static or moving cameras. Also, our implementation should be able to generated segmentations for long as well as for short sequences. \\ \\
+Regularly, a dataset consists of the frames of a RGB-D video and the corresponding depth-and color camera calibrations. Moreover, for a selected set of frames we manually have drawn$\footnote{To draw these ground truth images using Gimp.}$ ground truth (\textbf{GT}) images. Please notice that all GT images were drawn according to the painter's opinion and thus do probably not truly correspond to the real ground truth. \\ \\
+In the following a listing of our datasets, listing three of its frames, one of its ground truth motion segmentation images, a list of properties and a brief description what is happening in the video:
 \begin{itemize}
 \item \textbf{Cars}: \textbf{frames}: 19, \textbf{resolution}: $480 \times 640$, \textbf{depths}: No 
 \begin{figure}[H]
@@ -166,14 +149,66 @@ chair & 101 & 512 x 424 & true & true & false\\ \hline
 }
 \end{center}
 \caption[Dataset Statue]{An indoor scene a rotating statue. After a whole a man removes the upper part. We only see the man's hand. The camera is static.}
-\label{fig:eval_datasets_bonn_cerealbox}
+\label{fig:eval_datasets_statue}
 \end{figure}
-\item Waving Arm
-\item One Chair
-\item Two Chairs
+\item \textbf{Waving Arm}: \textbf{frames}: 104, \textbf{resolution}: $480 \times 640$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 20]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/wh/20}
+}
+\subfigure[Frame 30]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/wh/30}
+}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/wh/40}
+}
+\subfigure[GT Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/wh/gt40}
+}
+\end{center}
+\caption[Dataset Waving Hand]{An indoor scene showing a waving arm. The camera is static.}
+\label{fig:eval_datasets_waving_hand}
+\end{figure}
+\item \textbf{Two Chairs}: \textbf{frames}: 61, \textbf{resolution}: $512 \times 424$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/two_chairs/15}
+}
+\subfigure[Frame 40]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/two_chairs/40}
+}
+\subfigure[Frame 60]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/two_chairs/60}
+}
+\subfigure[GT Frame 15]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/two_chairs/gt15}
+}
+\end{center}
+\caption[Dataset Two Chairs]{An indoor scene showing two spinning chairs. The camera is static.}
+\label{fig:eval_datasets_two_chairs}
+\end{figure}
+\item \textbf{One Chair}: \textbf{frames}: 101, \textbf{resolution}: $512 \times 424$, \textbf{depths}: Yes
+\begin{figure}[H]
+\begin{center}
+\subfigure[Frame 45]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/one_chair/45}
+}
+\subfigure[Frame 60]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/one_chair/60}
+}
+\subfigure[Frame 75]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/one_chair/75}
+}
+\subfigure[GT Frame 45]{
+   \includegraphics[width=0.22\linewidth] {evaluation/datasets/one_chair/gt45}
+}
+\end{center}
+\caption[Dataset One Chair]{An indoor scene a man lifting a chair and spinning its lower part. The camera is static.}
+\label{fig:eval_datasets_one_chair}
+\end{figure}
 \end{itemize}
-
-
 
 \section{Segment Merger}
 \label{sec:seg_merger}  
