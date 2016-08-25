@@ -4,7 +4,9 @@
 % TODO check where this might belong to: the color values are stored as CIE lab color images.
 % TODO: keep me: Before going into details, let us first revisit the definition of a trajectory. By the term trajectory we refer to a list of tracking points, which is ordered by the frame index in which each point was traced. Therefore, every points knows to which frame it belongs to.
 \chapter{Motion Segmentation Pipeline}
-In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. For this purpose we heavily rely on the definitions of \textit{Optical Flow} and \textit{Spectral Clustering} introduced in the previous chapter. We start by restating the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage.
+In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. For this purpose we heavily rely on the definitions of \textit{Optical Flow} and \textit{Spectral Clustering} introduced in the previous chapter. We start by restating the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
+The problem statement our pipeline solves is defined as follows: Given a sequence of frames that form a video and their associated depth maps. Then, our goal is to segment the images into regions that mask regions of coherent and independent rigidly moving objects. Therefore, we describe implementation of a motion segmentation pipeline that addresses this problem statement by using optical flows. Moreover, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data, should be able to handle many moving objects, and lastly, it should be able to detect several and fast moving rigid object. \\ \\
+The idea of such a segmentation is to identify and extract meaningful rigid motions from a steady background. The motion of an object in a video sequence can usually not be considered as independent in a per frame basis, since typical object motions proceed over a series of frame. From the previous chapter we know that using optical flows enables us to run a consistent tracking of feature points in a video. Hence, the optical flow is an ideal cue for making motion grouping decisions. In our case we use the flows to generate motion point trajectories.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.9\linewidth] {implementation/pipeline}
@@ -12,29 +14,29 @@ In this chapter we explain in detail the relevant stages of our motion segmentat
 \caption[Motion Segmentation Pipeline]{A schematic illustration of the structure of our pipeline. Individual pipeline components are drawn as orange boxes. The initial input is drawn as green boxes, the resulting final output as a blue box. Intermediate outputs are drawn as gray boxes. The arrows indicate the data-flow, whereas the white dots indicate a data-flow multiplexing. That means, data that flows through such a dot is used by several pipeline components.}
 \label{fig:pipeline_schematic}
 \end{figure}
-The problem statement our pipeline solves is defined as follows: Given a sequence of frames that form a video and their associated depth maps. Then, our goal is to segment the images into regions that mask regions of coherent and independent rigidly moving objects. Therefore, we describe implementation of a motion segmentation pipeline that addresses this problem statement by using optical flows. Moreover, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data, should be able to handle many moving objects, and lastly, it should be able to detect several and fast moving rigid object. \\ \\
-The idea of such a segmentation is to identify and extract meaningful rigid motions from a steady background. The motion of an object in a video sequence can usually not be considered as independent in a per frame basis, since typical object motions proceed over a series of frame. From the previous chapter we know that using optical flows enables us to run a consistent tracking of feature points in a video. Hence, the optical flow is an ideal cue for making motion grouping decisions. In our case we use the flows to generate motion point trajectories.\\ \\
-In the following let us briefly outline the main stages of our motion segmentation pipeline, as visualized in figure $\ref{fig:pipeline_schematic}$:
+In the following let us briefly outline the main stages of our motion segmentation pipeline, which is additionally visualized in figure $\ref{fig:pipeline_schematic}$:
 \begin{enumerate}
-\item \textbf{Dataset Preparations}: Initially, the frames and depth maps of a given RGB-D video have to be extracted and named according to our pipeline naming conventions. Moreover, the depth map range is normalized to be in meter units.
-\item \textbf{Generate Optical Flows}: Next, the forward- and backward-flows on the input sequence is computed.
-\item \textbf{Data Extractor}: During t
+\item \textbf{Dataset Preparations} (Sec. $\ref{sec:dataset_preparations}$): Initially, the frames and depth maps of a given RGB-D video have to be extracted and named according to our pipeline naming conventions. Moreover, the depth map range is normalized to be in meter units.
+\item \textbf{Generate Optical Flows} (Sec. $\ref{sec:generate_of}$): Next, the forward- and backward-flows on the input sequence is computed.
+\item \textbf{Data Extractor} (Sec. $\ref{sec:data_extraction}$): During t
 In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
-\item \textbf{Trajectory Tracking}: The previously computed flows are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory. 
-\item \textbf{Affinity Matrix}: In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
+\item \textbf{Trajectory Tracking} (Sec. $\ref{sec:trajectory_tracking}$): The previously computed flows are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory.
+\item \textbf{Affinity Matrix} (Sec. $\ref{sec:affinity_matrix_impl}$): In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
 \item \textbf{Segmenter}: Our pipeline offer two types of segmentations, sparse and dense segmentations. 
 	\begin{enumerate}
-	\item \textbf{Sparse Motion Segmentation}: Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually
-	\item \textbf{Dense Segmentation}: Optionally, our pipeline allows to transform the sparse segmentation into a dense segmentation. 	
+	\item \textbf{Sparse Motion Segmentation} (Sec. $\ref{sec:sparse_motion_segmentation}$): Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually
+	\item \textbf{Dense Segmentation} (Sec. $\ref{sec:dense_motion_segmentation}$): Optionally, our pipeline allows to transform the sparse segmentation into a dense segmentation. 	
 	\end{enumerate}
 \end{enumerate}
 In the following sections we examine and discuss each individual pipeline stage in detail. 
 
 \section{Dataset Preparations}
+\label{sec:dataset_preparations}
 The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. \\ \\
 In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that the value range is in meter units. For further information about the dataset conventions, read section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
 
 \section{Generate Optical Flows}
+\label{sec:generate_of}
 In our pipeline we heavily rely on optical flow fields. In particular, flow fields are used to perform the point tracking to extract motion trajectories, to detect occlusions and for computing the affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation of optical flow fields is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. However, in principle, the optical flow represents a displacement field that defines where a certain point in a frame is mapped to in its successor frame. \\ \\
 For the actual computation of the optical flows we rely on existing implementations. In particular we use the freely available implementations of the methods discussed in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. In the following a short list of the flows integrated in our pipelines and their main properties:
@@ -369,7 +371,8 @@ y_1 \sim y_2 (0, \sigma_y^2
 In the last step of equation $\ref{eq:flow_variance_formula}$ we used the abbreviation $\sigma_x^2$ which denotes the variance of the optical flow along its $x$ direction. In this derivation we exploited the fact that $x_1$ and $x_2$ are independent random variables, $y_1$ and $y_2$ respectively. Hence, the term $\mathbf{E} \left[ x_1 x_2\right]$ yields the value zero. \\ \\
 We experimentally also have defined an expression for computing depth variances. However, we this special run-mode has only been implemented to demonstrate the limitations of our pipeline. Therefore, the description of this procedure can be found in the appendix $\ref{sec:depth_field_variances}$ on page $\pageref{sec:depth_field_variances}$.
 
-\section{Forming Trajectories}
+\section{Trajectory Tracking}
+\label{sec:trajectory_tracking}
 As discussed earlier, motion is a spatially and temporal coherent visual cue. This key insight tells us that motion is not frame-wise independent. Hence, we have to extract the whole motion history of every frame location and feed it to a particular segmentation method in order to produce viable motion groupings. To build the history of a point we track it to its successor frames using the optical flow. Such a ordered list of tracked to points is called trajectory. Finally, the set of all possible trajectories forms the seeked motion history. In this section we explain in detail the required steps to generate such trajectories and their 3d version using camera calibration data.
 
 \subsection{Point tracking}
@@ -650,6 +653,7 @@ In this figure, we visualize four examples of the affinity values between a sele
 In the next section we will discuss methods that use the previously generated output to generate a sparse motion segmentation.
 
 \section{Sparse Motion Segmentation}
+\label{sec:sparse_motion_segmentation}
 %TODO state: For this purpose we consider the hole filling problem, formulating it as a convex problem and then solving it using a primal-dual approach using the sparse segmentation as the initial input.
 In this section we explain how we generate sparse motion segmentations using the previously calculated affinity matrix. \\ \\
 In fact, our pipeline supports three different segmentation methods, all having their pros and contras. In particular can can perform the task of motion segmentation using spectral clustering of the affinity matrix (SC), building a graph of the affinity matrix and calculating several cuts via min-cut (MC) or lastly, by using the affinities to solve the graph partitioning problem using the Kernighan-Lin Heuristic (KL). \\ \\
@@ -864,6 +868,7 @@ Since our implementation solves for multiple graph segments, we define several i
   
 %TODO: Explain the algorithm above, the alpha-beta swap, error terms and so forth...
 \section{Dense Motion Segmentation}
+\label{sec:dense_motion_segmentation}
 In this section we describe a method to produce dense motion segmentations from the previously generate sparse motion segmentations. For this purpose use the derivations of our dual-primal hole-filling formulation from section $\ref{section:hole_filling}$ on page $\pageref{section:hole_filling}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
 In section $\ref{section:hole_filling}$ we defined explicit update rules. Aggregating all findings, mainly those from equation $\ref{eq:update_x_n_p_1}$ and $\ref{eq:update_rule_y_n_p_1}$, and plugging them into equation $\ref{eq:update_rules_plain}$ we obtain the following final update rules:
 \begin{align}
