@@ -676,14 +676,26 @@ In the following we offer a detailed explanation of these motion segmentation me
 \subsection{Spectral Clustering}
 In the previous section we described how the pairwise affinities can be computed. For $n$ trajectories we ended up by a a $n \times n$ affinity matrix $W$. \\ \\ 
 One possible way to interpret these matrix entries is to identify them as edge weights of a fully connected graph $G$, where each trajectory represents a node. Following this interpretation, then, the task of extracting the moving objects  corresponds to the task of grouping several similar graph vertices. \\ \\
-An approximately optimal partitioning of $G$ can be obtained via spectral clustering. The idea behind this approach is to decompose a transformed version of W and then cluster only a few of the resulting components to obtain the moving objects. In the following we provide a detailed description how to perform such a clustering. \\ \\
+An approximately optimal partitioning of $G$ can be obtained via spectral clustering as described in section $\ref{sec:spectral_clustering_bg}$. The idea behind this approach is to decompose the Laplacian matrix $L$ that corresponds to $W$ into its eigenvalues and eigenvectors $V$ and then run k-means on $V$. We used algorithm $\ref{alg:spectral_clustering_algorithm}$ in Matlab to run such a spectral clustering. As the very first step we load the affinity matrix $W$ and compute its normalized Laplacian according to the definition from equation $\ref{eq:normalized_graph_laplacian}$. 
+
+% TODO: remove this redundancy, since it is already covered in chapter clustering.
+Then, we compute the eigen-decomposition of $L$, defined as
+\begin{equation}
+	V^{T} \Lambda V = L^{\text{sym}}
+\end{equation}
+by using Matlab's fast eigen-decomposition $\textit{eigs}$
+% WIP END
+
+In the following we provide a detailed description how to perform such a clustering. \\ \\
 As the first step, we have to transform the affinity matrix $W$ in a special way to obtain the normalized graph Laplacian $L$. The exact definition of this transformation is given by equation $\ref{eq:def_l_mat}$.
 \begin{equation}
 	L = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
 \label{eq:def_l_mat}
 \end{equation}
 $D$ denotes a $n \times n$ diagonal matrix, where the $n-th$ diagonal entry corresponds to the summed elements in W of its $n-th$ row. An exact definition of D is given by equation $\ref{eq:def_d_mat}$. \\ \\
-Next, we perform an eigenvalue decomposition on the Laplacian matrix $L$ as defined in equation $\ref{eq:eigenvalue_decomposition_l}$.
+Next, we perform an e
+
+eigenvalue decomposition on the Laplacian matrix $L$ as defined in equation $\ref{eq:eigenvalue_decomposition_l}$.
 \begin{equation}
 	V^{T} \Lambda V = L
 \label{eq:eigenvalue_decomposition_l}
