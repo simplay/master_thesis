@@ -5,10 +5,10 @@ clc;
 
 addpath('../matlab_shared/')
 
-DATASET = 'c14_filtered';
+DATASET = 'cars';
 METHODNAME = 'ldof';
 PREFIX_OUTPUT_FILENAME = 'pd_top_filtered_flows';
-PREFIX_INPUT_FILENAME = 'pd_top_90';
+PREFIX_INPUT_FILENAME = 'pd_top_100_dense';
 img_index = 1;
 
 % load dataset input file paths
@@ -78,9 +78,30 @@ for k = 1:length(label_values)
     d = demosaicedImg(:,:,1);
     d = d - min(d(:));
     d = d ./ max(d(:));
-    segments(:,:,k) = (d > 0.15);
+    segments(:,:,k) = (d > 0.2);
 
     %% display results
     figure('name', strcat('Segmentation of iteration ', num2str(k)))
     imshow(segments(:,:,k));
+end
+
+%%
+index_of_largest = -1;
+top_count = -1;
+for k=1:size(segments,3)
+    ones_count = sum(sum((segments(:,:,k) == 1)));
+    if ones_count > top_count
+        top_count = ones_count;
+        index_of_largest = k;
+    end
+end
+selection = 1:size(segments,3);
+selection = logical(1-(selection == index_of_largest));
+dense_forground_segments = segments(:,:,selection); 
+
+%% merge dense forground segments
+dense_img = zeros(size(dense_forground_segments, 1), size(dense_forground_segments, 2));
+for k=1:size(dense_forground_segments, 3)
+    current_fg_segment = dense_forground_segments(:,:,k);
+    dense_img = dense_img + dense_forground_segments(:,:,k)*k;
 end
