@@ -872,13 +872,10 @@ Since our implementation solves for multiple graph segments, we define several i
 
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
-In this section we describe a method to produce dense motion segmentations from the previously generated sparse segmentations. 
-
-Can be found in the appendix $\ref{chap:appendix_demosaicing}$.
-
-For this purpose use the derivations of our dual-primal formulation of the problem of demosaicing an image described in section $\ref{sec:primal_dual_form}$ on page $\pageref{sec:primal_dual_form}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
-
-% ok-ish
+In this section we describe a method to produce dense motion segmentations from the previously generated sparse segmentations. \\ \\
+For this purpose we adapted an existing implementation, which address the problem of demosaicing an image by formulating it as convex optimization problem. The problem is reformulated in its primal-dual form and an iterative solver was developed. I developed this program during a semester project in the class \textit{Convex Optimization} in 2015 held by Prof. Dr. P. Favaro at the unversity of Bern. The class is based in the book convex optimization $\cite{BoydVanderberg2004}$. \\ \\
+A detailed derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. The class, as well as the implementation and the derivation assume a certain background in convex problem formulations and how to solve such problems. \\ \\
+The idea is to interpret the sparse segmentation as in image a image with missing data due to its sparsity. Therefore, we want to solve the problem of hole filling, which is the same as finding the demosaiced image, using our formulation. \\ \\
 For a given image with missing data $g$ we want to find its reconstructed image $u$. This can be achieved by minimizing an energy term $E$ which is defined as 
 \begin{equation}
 	E(u) = \underbrace{\norm{\nabla u}_2}_{\text{smoothness term}} + \frac{\lambda}{2} \underbrace{\norm{u - g}^2_{\Omega}}_{\text{data term}}	

@@ -5,7 +5,7 @@ However, please notice that this method has not been implemented while writing t
 The complete report as well as the corresponding source code to run this solver can be found at: $\text{\url{https://github.com/simplay/convex_opt}}$.
 
 \section{Problem Statement}
-\section{sec:demosaicing_problem_statement}
+\label{sec:demosaicing_problem_statement}
 In this work we address the problem of demosaicing by formulating it as a convex optimization problem. Given a mosaiced image $g$ depicting a raw camera production, we want to find an optimal demosaiced image $u$. For describing the optimality property we take into account a cost function that describes the color smoothness and also that the resulting image $u$ should be close to the given raw input image $g$. \\ \\
 More precisely, let $g$ denote the bayer filter camera raw input image. Then we want to solve for $u=(u_r, u_g, u_g)$ (RGB image) minimzating the following energy term (cost function):
 \begin{align}
@@ -37,7 +37,7 @@ Where we still rely on the measure defined in equation $\ref{eq:measure}$ but C 
 In the next section we will describe how to solve the stated minimization problems from equation $\ref{eq:our_convex_probelm}$ numerically. \\ \\
 
 \section{Primal-Dual Form}
-\section{sec:primal_dual_form}
+\label{sec:primal_dual_form}
 In this section we derive the primal-dual form of the stated convex demosaicing problem. But first off, let us consider an initial problem of the form 
 \begin{align}
 	\min_{x \in X} F(K x) + G(x)
