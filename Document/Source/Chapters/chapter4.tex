@@ -676,31 +676,11 @@ In the following we offer a detailed explanation of these motion segmentation me
 \subsection{Spectral Clustering}
 In the previous section we described how the pairwise affinities can be computed. For $n$ trajectories we ended up by a a $n \times n$ affinity matrix $W$. \\ \\ 
 One possible way to interpret these matrix entries is to identify them as edge weights of a fully connected graph $G$, where each trajectory represents a node. Following this interpretation, then, the task of extracting the moving objects  corresponds to the task of grouping several similar graph vertices. \\ \\
-An approximately optimal partitioning of $G$ can be obtained via spectral clustering as described in section $\ref{sec:spectral_clustering_bg}$. The idea behind this approach is to decompose the Laplacian matrix $L$ that corresponds to $W$ into its eigenvalues and eigenvectors $V$ and then run k-means on $V$. We used algorithm $\ref{alg:spectral_clustering_algorithm}$ in Matlab to run such a spectral clustering. As the very first step we load the affinity matrix $W$ and compute its normalized Laplacian according to the definition from equation $\ref{eq:normalized_graph_laplacian}$. 
-
-% TODO: remove this redundancy, since it is already covered in chapter clustering.
-Then, we compute the eigen-decomposition of $L$, defined as
+An approximately optimal partitioning of $G$ can be obtained via spectral clustering as described in section $\ref{sec:spectral_clustering_bg}$. The idea behind this approach is to decompose the Laplacian matrix $L$ that corresponds to $W$ into its eigenvalues and eigenvectors $V$ and then run k-means on $V$. We used algorithm $\ref{alg:spectral_clustering_algorithm}$ in Matlab to run such a spectral clustering. As the very first step we load the affinity matrix $W$ and compute its normalized Laplacian according to the definition from equation $\ref{eq:normalized_graph_laplacian}$. Next, we compute the eigen-decomposition of $L$, defined as
 \begin{equation}
 	V^{T} \Lambda V = L^{\text{sym}}
 \end{equation}
-by using Matlab's fast eigen-decomposition $\textit{eigs}$
-% WIP END
-
-In the following we provide a detailed description how to perform such a clustering. \\ \\
-As the first step, we have to transform the affinity matrix $W$ in a special way to obtain the normalized graph Laplacian $L$. The exact definition of this transformation is given by equation $\ref{eq:def_l_mat}$.
-\begin{equation}
-	L = D^{-\frac{1}{2}} \left( D - W \right) D^{-\frac{1}{2}}
-\label{eq:def_l_mat}
-\end{equation}
-$D$ denotes a $n \times n$ diagonal matrix, where the $n-th$ diagonal entry corresponds to the summed elements in W of its $n-th$ row. An exact definition of D is given by equation $\ref{eq:def_d_mat}$. \\ \\
-Next, we perform an e
-
-eigenvalue decomposition on the Laplacian matrix $L$ as defined in equation $\ref{eq:eigenvalue_decomposition_l}$.
-\begin{equation}
-	V^{T} \Lambda V = L
-\label{eq:eigenvalue_decomposition_l}
-\end{equation}
-The decomposition yields the matrix $V$, which contains the row-wise eigenvectors of $L$ and the diagonal matrix $\Lambda$, which contains the eigenvalues. In figure $\ref{fig:cars_eigenvectors_laplacian}$ exemplary eigenvector visualisations are shown.\\ \\
+by using Matlab's fast eigen-decomposition $\textit{eigs}$. In figure $\ref{fig:cars_eigenvectors_laplacian}$ we visualize how some of these eigenvectors might look like.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Eigenvector Front-Car]{
@@ -715,15 +695,12 @@ The decomposition yields the matrix $V$, which contains the row-wise eigenvector
 \caption[Eigenvectors of the Laplacian]{Visualizing the contribution of two significant eigenvectors of the Laplacian of the affinity matrix that belong to the \textit{cars} dataset.}
 \label{fig:cars_eigenvectors_laplacian}
 \end{figure}
-The actual clustering is performed on the eigenvectors of $L$. In fact, we further assume that we only need some of the eigenvectors for the clustering. Therefore, we chose those eigenvectors that correspond to the $m$ smallest eigenvectors $\lambda \in \Lambda$. \\ \\
-Our clustering method implements a k-means algorithm that runs on the given eigenvectors, where k corresponds to a pre-specified number of clusters. To ensure numerical stability, we initially normalize the given eigenvectors to the range $\left[ 0,1 \right]$. \\ \\
-The output of this method is a grouping of vector indices. Please notice that all indices, which belong to the same group, correspond to the same moving object. In particular, it is easily possible to map the group indices to actual trajectories by making use of the label mapping list. This list has been computed in the previous pipeline stage. The mentioned mapping is illustrated in figure $\ref{fig:affinity_index_label_mapping}$. \\ \\
-One important aside about the eigen-decomposition step: Usually, the number of objects is expected to be significant smaller than the number of trajectories. Therefore, an efficient iterative method for computing the eigenvectors and eigenvalues can be used and the whole computation is feasible. \\ \\
-In the following, let us discuss how many eigenvectors should be selected, respectively, what value $m$ should correspond to. \\ \\
-We filter all trivial solutions. Those are the eigenvectors that correspond to an eigenvalue equals zero. In our implementation basically allows to manually specify the number of eigenvectors that should be used (i.e. the smallest m ) or to use the default mode, which selects twice as many eigenvectors as the cluster count we want to solve for. We also experimented with finding the optimal value for $m$ by generating all possible segmentations for m equals two to two times the cluster count for a fixed cluster count. Then, by comparing the resulting segmentations against ground truth images, we selected the best assignment for m. However, such a approx yields dataset-dependent values for m. Furthermore, it assumes the presence of ground truth frames. Lastly, this is very time consuming. Therefore, we decided to use the default mode, using twice the cluster count for m. \\ \\
-Analogously, we could ask ourself: what is the best value for the cluster count. Again, we generate all possible segmentations for a fixed value of m by varying the cluster count. However, we found a good heuristic, by using twice the number of expected moving objects. For further information please refer to the chapter results. \\ \\
-The limitation of this approach is that such a clustering is only defined for non-negative affinity values between trajectories. Otherwise the eigenvalue decomposition of the Laplacian would yield complex valued eigenvectors. In practise, this assumption implies that it is easy to specify which trajectories should be in the same segment but it is impossible to impose that they should be separated. \\ \\
-Spectral clustering is supposed to produce oversegmentations and there is not always smooth transitions between the eigenvectors.
+The actual clustering is performed on the eigenvectors of $L$. In fact, we further assume that we only need some of the eigenvectors for the clustering. Actually, it can be proven, that at least $k$ eigenvectors are required if there are $k$ segments$\footnote{In fact, the background is also counted as a segment. The actual proof shows, that to extract the k connected components in a graph, we need to run a spectral clustering on the k smallest eigenvectors.}$. Therefore, we select the $m$ smallest eigenvectors $V_m$ according to their $\lambda \in \Lambda$. \\ \\
+The final clustering is performed by running k-means, similar as described in section $\ref{sec:k_means}$, on $V_m$ using a pre-specified number of clusters. To run k-means, we use a random initialization. Since we might end up at a local minima, we run the k-means algorithm 200 times and take the result with the smallest error$\footnote{The error is measured in terms of the distance between the resulting cluster centers and their assigned feature points.}$
+The output of this method is a grouping of vector indices of the eigenvectors $V_m$. Each index that belong to the same group correspond to the same moving object. To obtain the corresponding trajectory label that maps to a certain vector index, we perform a query similar as shown figure $\ref{fig:affinity_index_label_mapping}$ by using the \textit{index-label-mapping} list. \\ \\ 
+The actual choice for the number of $m$ and the clusters we want to solve for can be specified by the user. \\ \\
+The limitation of this approach is that such a clustering is only defined for non-negative affinity values between trajectories. Otherwise the eigenvalue decomposition of the Laplacian would yield complex valued eigenvectors. In practise, this assumption means that it is easy to specify which trajectories should be in the same cluster but it is impossible to impose that they should be separated. Moreover, the described spectral clustering is supposed to produce oversegmentations and there is not always smooth a transitions between the eigenvectors produced, when clustering them.
+
 \subsection{Minimum Cut} 
 In this section we describe an alternative method to generate motions segmentation. This approach directly addresses some issues of the previously described spectral clustering approach. \\ \\
 Generally, eigenvectors typically show smooth transitions within a region and more or less clear edges between regions. Unfortunately, the k-means algorithm cannot properly deal with this setting. Its results generally suffer from oversegmentations since it approximates smooth transitions by multiple constant functions. Furthermore, the optimal number of clusters $K$ is by no means obvious, because clusters are represented by many eigenvectors. \\ \\
