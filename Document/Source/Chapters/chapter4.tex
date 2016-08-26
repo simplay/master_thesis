@@ -872,8 +872,13 @@ Since our implementation solves for multiple graph segments, we define several i
 
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
-In this section we describe a method to produce dense motion segmentations from the previously generate sparse motion segmentations. For this purpose use the derivations of our dual-primal hole-filling formulation from section $\ref{section:hole_filling}$ on page $\pageref{section:hole_filling}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
+In this section we describe a method to produce dense motion segmentations from the previously generated sparse segmentations. 
 
+Can be found in the appendix $\ref{chap:appendix_demosaicing}$.
+
+For this purpose use the derivations of our dual-primal formulation of the problem of demosaicing an image described in section $\ref{sec:primal_dual_form}$ on page $\pageref{sec:primal_dual_form}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
+
+% ok-ish
 For a given image with missing data $g$ we want to find its reconstructed image $u$. This can be achieved by minimizing an energy term $E$ which is defined as 
 \begin{equation}
 	E(u) = \underbrace{\norm{\nabla u}_2}_{\text{smoothness term}} + \frac{\lambda}{2} \underbrace{\norm{u - g}^2_{\Omega}}_{\text{data term}}	
