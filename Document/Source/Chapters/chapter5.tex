@@ -395,11 +395,19 @@ Next let us discuss the timings of the affinity matrix generation. Figure $\ref{
 \label{fig:runtime_tra_track_affinity_gen}
 \end{figure}
 Unfortunately, we have not performed detailed measurements for the $\textit{P-affinity}$ segmentation methods. In our pipeline we implemented the SC and MD segmentation methods in Matlab. Generally, loading an affinity matrix that represents the similarity of 1000 affinities takes 5 seconds, 3000 approximately 20 seconds and 6000 about 90 seconds. For solving the eigenvalue decomposition in our Matlab implementations, we rely on the fast numerical approximation of $\textit{eigs}$. The final k-means run in SC takes about 30 seconds when using 6000 trajectoires and performing 200 repetitions. So, the runtime of SC, using our specs takes at most two minutes. In MC the most outer loop runs a k-means step and a graph-cut step. The k-means takes about the same time as in SC. Again, when using about 6000 trajectories, then calling graph-cut in this loop takes about 3 minutes. When using the default neighborhood assignment as discussed in section $\ref{sec:spectral_clustering_parameters}$. \\ \\
-In contrast, we measured the timings of several Kerninghan-Lin runs.
-
-%TODO: list runtime performance plots of our pipeline components
-%TODO: list it in a table 
-
+In contrast, we measured the timings of several Kerninghan-Lin runs. For a fixed number of neighbors, the overall runtime of the KL algorithm depends on on the number of trajectories and the number of iterations. The number of iterations is determined by the number of clusters CC we want to solve for and is defined as
+\begin{equation}
+	\text{Iters} = \sum_{k=1}^{\text{CC}-1} k
+\end{equation}
+which corresponds to the number of all possible distinct pair formations. The resulting measurement graph is shown in figure $\ref{fig:runtime_kl_graph_part}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth] {evaluation/runtimes/kl}
+\end{center}
+\caption[Runtime KL Graph Partitioning]{Visualizing of the runtimes in seconds of KL vs. the product between the number of the used trajectories times the number of iterations. As we can see, KL is takes a lot of time when trying to solve for many clusters and many trajectories the same time.}
+\label{fig:runtime_kl_graph_part}
+\end{figure}
+As we can see, running KL is very time consuming. For instance, when we use a large number of clusters, say 10 clusters, and using approximately 5000 trajectories, then this algorithm takes about 7000 seconds to finish.
 
 \section{Discussion}
 After running our pipeline the following key observations can be stated:
