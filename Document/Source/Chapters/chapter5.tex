@@ -247,14 +247,8 @@ The idea is to find the ground truth mask $i$ that yields the most point interse
 \section{Methodology}
 \label{sec:methodology}
 In this section we give a brief description about the methodology used to perform our experiments. \\ \\
-We want to quantitatively evaluate the quality of segmentations produces by running different pipeline combinations. We use the datasets described in section $\ref{sec:datasets}$. Produced motion segmentations are compared against available ground truth images. While running the pipeline we rely on the defaults described in section $\ref{sec:spectral_clustering_parameters}$.\\ \\
-Before evaluating the performance of generated segmentations, we run our segment merger, which is described in section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. 
-%
-erwähne
-nach merger step: jedem gt objekt höchsten ein labeled zugeordnet (ist zugeordnet), darum kann für jedes gt objekt unabhänig die qualität evaluert werden (measures berechnen) 
-
-%
-In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in equation $\ref{eq:statistical_measures}$. 
+We want to quantitatively evaluate the quality of segmentations produces by running different pipeline combinations. In particular we propose to evaluate the quality of how well moving objects were segmented. We use the datasets described in section $\ref{sec:datasets}$. Produced motion segmentations are compared against available ground truth images. While running the pipeline we rely on the defaults described in section $\ref{sec:spectral_clustering_parameters}$.\\ \\
+Before evaluating the performance of generated segmentations, we run our segment merger, which is described in section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. After running the merger, each GT object is assigned to at most one label. Therefore, the evaluation measures can be computed independently per object. In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in equation $\ref{eq:statistical_measures}$. 
 \begin{equation}
 \begin{aligned}
 	& \text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \\
@@ -263,27 +257,13 @@ In particular, for each segmentation result we compute their precession, recall 
 \end{aligned}
 \label{eq:statistical_measures}
 \end{equation}
-
-
-Prec. recall, f1 are defined for binary classifiers
-
-foreach gt forground object we compute the measures ...
-finally report the avg of p,r
-
-we propose: evaluiere wie gut bewegende objekte segemntiert wurdem
-why not für bg: 
-
-f1 uses these avgs
-
-We iterate over all points in every cluster, compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$.
+The final reported outputs is the average value of these measured over all foreground objects. \\ \\
+Finally some words about how we determined the quantities $TP$, $FP$ and $FN$. We only have to iterate over all points in every cluster and compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$. For a given label $\alpha$ these measures are defined as:
 \begin{equation}
 \begin{aligned}
-tp: correctly classified fg samples
-fp: 
-für ein label a, measures defined as follows:
-	\textbf{TP} &:= \text{Samples correctly labeled a} \\
-	\textbf{FP} &:= \text{Samples incorrectly labeled a} \\
-	\textbf{FN} &:= \text{Samples that were labeled a in gt but are attributed to a wrong label}
+	\textbf{TP} &:= \text{Samples correctly labeled $\alpha$} \\
+	\textbf{FP} &:= \text{Samples incorrectly labeled $\alpha$} \\
+	\textbf{FN} &:= \text{Samples that were labeled $\alpha$ in GT but are attributed to a wrong label.}
 \end{aligned}
 \label{eq:statistical_counts}
 \end{equation}
