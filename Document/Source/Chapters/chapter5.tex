@@ -30,8 +30,15 @@ Our motion segmentation pipeline exhibits many parameters since it consists of s
 In the following we give a brief description of several default assignments used in different pipeline stages. \\ \\
 For generating the flow fields we rely on existing implementations as described in section $\ref{sec:generate_of}$. We do not attempt to modify any parameter settings while utilizing those flow methods and thus strictly rely on their default settings. A summary about these flow methods can be found in section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$. \\ \\
 Before tracking trajectories as described in section $\ref{sec:trajectory_tracking}$, we initially have to extract their feature locations (Sec. $\ref{sec:tracking_candidates}$). The resulting feature extraction is determined by a parameter defining the sparsity of the sampling rate, indicating to use only every $k-th$ feature. Throughout performing our experiments we will be using $k$ equals to 8. This choice is justified by the fact that using a smaller sampling rate would not enhance the result's quality and negatively influence the overall runtime, whereas larger values would cause the opposite. \\ \\
-When computing a $\textit{P-affinity}$, either by running the mode \textit{PD} or $\textit{PED}$, we have to specify a certain value of $\lambda$. This parameter is used in equation $\ref{eq:prod_dist_affinity}$ to scale the similarity measure between two trajectories. We use$\footnote{We determined the defaults by trying out different values for $\lambda$ and took those which yielded the visually most promising results. Please note that this kind of parameter selection is by no means optimal.}$ $\lambda$ equals $0.1$ when running $PD$ and $\lambda = 10$ when running the affinity mode $PED$. The reason for using different $\lambda$ values is because PED and PD have different scales. \\ \\
-For every segmentation methods, we specified the cluster count they are supposed to solve for equals to two times the number of an estimated number of moving objects present in the target dataset. In other words the cluster count $CC$ is an personal estimate and defined as
+Next some words about choosing defaults for the affinity matrix generation stage. Before computing a $\textit{P-affinity}$, either by running the mode \textit{PD} or $\textit{PED}$, we have to specify a certain value $\lambda$. This parameter is used in equation $\ref{eq:prod_dist_affinity}$ and acts as a scale of the similarity between two trajectories. In the follows we use$\footnote{We determined the defaults by trying out different values for $\lambda$ and took those which yielded the visually most promising results. Please note that this kind of parameter selection is by no means optimal.}$ $\lambda$ equals $0.1$ when running $PD$ and $\lambda = 10$ when running the affinity mode $PED$. The reason for using different $\lambda$ values is because PED and PD have different scales. As we can see $\lambda$ takes different powers to ten. However the exact choice of this scale does not matter$\footnote{Meaning, that it \textit{does not matter} regarding using a different mantissa, since it will not affect the final outcome of the affinity matrix drastically.}$ that much as long as it close to the same power to ten value as its corresponding default. \\ \\
+In order to generate S-affinities we rely on the definition of equation $\ref{eq:sum_dist}$, which is used to compute distances between trajectories. However, this equation is parameterized by several weights $\beta$. In this work we use the exactly the same $\beta$ values as defined in the paper $\cite{KB15b}$, which are equal to
+\begin{equation}
+\begin{aligned}
+\bar{\beta}_0 = 6 \text{, } \beta_0 = 2 \text{, } \beta_1 = \beta_3 = -0.02 \text{ and } \beta_2 = -4
+\end{aligned}
+\end{equation}
+In our experiments we set the dummy vertex count in the Kernighan-Lin partitioning method always equals zero. \\ \\
+For every segmentation methods, we specified the \textit{cluster count} they are supposed to solve for equals to two times the number of an estimated number of moving objects present in the target dataset. In other words the cluster count $CC$ is an personal estimate and defined as
 \begin{equation}
 	\text{CC} = 2 \times \text{Estimated Moving Objects in Dataset}
 \label{eq:cc_def} 
@@ -41,15 +48,8 @@ Segmentation methods that rely on P-affinities are utilizing a certain number of
 \begin{equation}
 	\text{EV} = 2 \times \text{CC}
 \end{equation}
-Moreover, we set the relaxion parameter $\nu$ in our min-cut energy term defined in equation $\ref{eq:min_cut_energy_revisited}$ equals to the dimension of the affinity matrix times $10^-6$. \\ \\
-In order to generate S-affinities we rely on the definition of equation $\ref{eq:sum_dist}$ to compute distances between trajectories. However, this equation is parameterized by several parameters $\beta$. We use the same $\beta$ values as defined in the paper $\cite{KB15b}$, which are equal to
-\begin{equation}
-\begin{aligned}
-\bar{\beta}_0 = 6 \text{, } \beta_0 = 2 \text{, } \beta_1 = \beta_3 = -0.02 \text{ and } \beta_2 = -4
-\end{aligned}
-\end{equation}
-The Kernighan-Lin partitioning method is always assigned with zero dummy vertices. \\ \\
-Unless stated otherwise we rely on those parameter default parameter specifications to generate out results.
+Moreover, when using the MC segmentation, we set the default of its data- and smoothness relaxation parameter $\nu$ used by its energy term (defined in equation $\ref{eq:min_cut_energy_revisited}$) equals to the dimension of the affinity matrix times $10^{-6}$. Again, this value has been determined by simply trying out various assignments. Furthermore, we observed that it is sufficient to run about 10-20 iterations until MC converges. Therefore, we conservatively assign the number of iterations $\text{MC}_i$ equals 20. \\ \\
+Unless stated otherwise we rely on those parameter default parameter specifications to generate out results. Moreover, in section $\ref{sec:parameter_experiments}$, we offer a statistical justification for the default choices of $\lambda$, $\text{CC}$, $\text{EV}$ and $\text{MC}_i$.
 
 \section{Datasets}
 \label{sec:datasets}
@@ -274,6 +274,7 @@ One last note: During our evaluations we want to determine the quality of segmen
 
 \section{Experiments}
 \subsection{Parameter Experiments}
+\label{sec:parameter_experiments}
 In this section we describe a series of experiments that address our default parameter selection choice. In particular it acts as a justification of our choices and should demonstrate its legitimization.
 
 Ideally, we would run every dataset on every possible pipeline combination. However, this würde den rahmen sprengen.
