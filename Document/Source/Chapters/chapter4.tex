@@ -869,51 +869,34 @@ Since our implementation solves for multiple graph segments, we define several i
 \end{algorithm}  
   
 %TODO: Explain the algorithm above, the alpha-beta swap, error terms and so forth...
+
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
 In this section we describe a method to produce dense motion segmentations from the previously generate sparse motion segmentations. For this purpose use the derivations of our dual-primal hole-filling formulation from section $\ref{section:hole_filling}$ on page $\pageref{section:hole_filling}$. We implemented this formulation in Matlab and added it as an optional stage to our pipeline. \\ \\
-In section $\ref{section:hole_filling}$ we defined explicit update rules. Aggregating all findings, mainly those from equation $\ref{eq:update_x_n_p_1}$ and $\ref{eq:update_rule_y_n_p_1}$, and plugging them into equation $\ref{eq:update_rules_plain}$ we obtain the following final update rules:
-\begin{align}
-	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
-	x^{n+1} &= \frac{x^n - \tau \text{div}(y^{n+1}) +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \\
-	\bar{x}^{n+1} &= x^{n+1} + \theta(x^{n+1} - x^n)
-\label{eq:final_update_rules_plain}	
-\end{align}
-where we used that in the discrete case, the following fact hold true:
-\begin{align}
-	\nabla^* (y^{n+1}) 
-	&= \nabla^{T} (y^{n+1}) \nonumber \\
-	&= \text{div}(y^{n+1})
-\end{align}
-So we have to omit a minus one factor. This affects the update rule for $x^{n+1}$ derived previously
 
-We initialize $x_n$ with the hole image $g$, $y^{n}$ with a zeros \footnote{a tensor of dimension $M \times N \times 2$ filled with zeros, where $(M \times N)$ denotes the dimension of one color channel of $g$.} and $\bar{x}^{n}$ also with the hole image $g$. \\ \\
-For computing $\nabla$ we use a forward difference approximation scheme. For computing the divergence operator of the vector-field $y^{n+1}$ we use a backward difference approximation scheme. The reason for using a backward difference using a backward difference is to shift back gradients (remember, the divergence is applied to $y^{n+1}$ which is the result of a forward difference. Otherwise, when not altering between a forward-and backward difference we would end up with shifted gradients. \\ \\
-For computing the divergence, we rely on its actual mathematical definition. For a given vector-field $v = (v_x, v_y)$ the divergence is defined as the following:
-\begin{align}
-	div(v) = \partial_x v_x + \partial_y v_y
-\end{align}
-Since in our case we have $v = y^{n+1}$ and $y^{n+1}$ a vector valued function of the form $y^{n+1} = (y_{x}^{n+1}, (y_{y}^{n+1})$ it follows:
-\begin{align}
-	\text{div}(y^{n+1}) 
-	&= \text{div}((y_{x}^{n+1}) + \text{div}((y_{y}^{n+1}) \\
-	&= \left( \partial_x y_{x}^{n+1} + \partial_y y_{x}^{n+1} \right) + \left( \partial_x y_{y}^{n+1} + \partial_y y_{y}^{n+1} \right)
-\end{align}
-Initially, we use the following parameter setting:
+For a given image with missing data $g$ we want to find its reconstructed image $u$. This can be achieved by minimizing an energy term $E$ which is defined as 
+\begin{equation}
+	E(u) = \underbrace{\norm{\nabla u}_2}_{\text{smoothness term}} + \frac{\lambda}{2} \underbrace{\norm{u - g}^2_{\Omega}}_{\text{data term}}	
+\end{equation}
+where we defined the data term as
 \begin{equation}
 \begin{aligned}
-\lambda &= 1000 \\
-\theta &= 0.5 \\
-\tau &= 2*10^{-3} \\
-\sigma &= \frac{1}{\tau * \sqrt{\norm{K}}}
+& \norm{u - g}^2_{\Omega_{C}} = \sum_x \sum_y \Omega_{C}(x,y)\norm{u(x,y) - g(x,y)}^2 \\
+& \text{where } \Omega_{C}(x,y)= 
+\begin{cases}
+    0,& \text{if } $g(x,y)$ \text{ is missing}\\
+    1,              & \text{otherwise}
+\end{cases}
 \end{aligned}
-\label{eq:parameter_set_up}	
 \end{equation}
-With $\sqrt{\norm{K}} = \sqrt{4}$, a strong upper bound for the function $K$\footnote{A proof for the existence of this upper bound can be found in \cite{chambolle2004algorithm}}. \\ \\
-The final algorithms our implementation performs is the following: For each color-channel $C \in \{R,G,B\}$ Do: Loop until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough do. Use the same parameter setup as defined in equation $\ref{eq:parameter_set_up}$ and then solve the update rules from equation $\ref{eq:final_update_rules_plain}$. This yields a solution for each color channel. Conclude this by merging all the color solution into one color image. \\ \\
-When computing the gradient and divergence finite approximation schemes, we use a zero padding boundary condition. \\ \\
-One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
-
-
-
-
+First let us have a look at the \textbf{data term}. It ensures that the reconstructed image does not deviate too much from the given input $g$ w.r.t the norm $\norm{\cdot}_\Omega$. The reason for introducing this kind of norm is that we want to define a meaningful measure that captures the sense of meaningful. Therefore, we have to skip every invalid image location in $g$, when applying this norm on the difference between $u$ and $g$. The \textbf{smoothness term} ensures a smooth transition between the colors in the image. \\ \\
+In AAA describe how to solve this optimization problem by formulating its primal-dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix AAA. One iteration of our solver runs the following steps:
+\begin{equation}
+\begin{aligned}
+	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
+	x^{n+1} &= \frac{x^n - \tau \left[ \left( \partial_x y_{x}^{n+1} + \partial_y y_{x}^{n+1} \right) + \left( \partial_x y_{y}^{n+1} + \partial_y y_{y}^{n+1} \right) \right] +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \\
+	\bar{x}^{n+1} &= x^{n+1} + \theta(x^{n+1} - x^n)
+\end{aligned}
+\end{equation}
+For computing $\nabla$ we use a forward difference approximation scheme.
+We repeat this update rule until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough. Moreover, we use the parameter assignment listed in equation $\ref{eq:parameter_set_up}$.
