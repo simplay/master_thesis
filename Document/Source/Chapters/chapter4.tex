@@ -892,7 +892,7 @@ where we defined the data term as
 \end{aligned}
 \end{equation}
 First let us have a look at the \textbf{data term}. It ensures that the reconstructed image does not deviate too much from the given input $g$ w.r.t the norm $\norm{\cdot}_\Omega$. The reason for introducing this kind of norm is that we want to define a meaningful measure that captures the sense of meaningful. Therefore, we have to skip every invalid image location in $g$, when applying this norm on the difference between $u$ and $g$. The \textbf{smoothness term} ensures a smooth transition between the colors in the image. \\ \\
-In AAA describe how to solve this optimization problem by formulating its primal-dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix AAA. One iteration of our solver runs the following steps:
+In section $\ref{sec:primal_dual_form}$ describe how to solve this optimization problem by formulating its primal-dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. One iteration of our solver runs the following steps:
 \begin{equation}
 \begin{aligned}
 	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
