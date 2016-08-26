@@ -702,6 +702,7 @@ The actual choice for the number of $m$ and the clusters we want to solve for ca
 The limitation of this approach is that such a clustering is only defined for non-negative affinity values between trajectories. Otherwise the eigenvalue decomposition of the Laplacian would yield complex valued eigenvectors. In practise, this assumption means that it is easy to specify which trajectories should be in the same cluster but it is impossible to impose that they should be separated. Moreover, the described spectral clustering is supposed to produce oversegmentations and there is not always smooth a transitions between the eigenvectors produced, when clustering them.
 
 \subsection{Minimum Cut} 
+\label{sec:min_cut_seg}
 In this section we describe an alternative method to generate motions segmentation. This approach directly addresses some issues of the previously described spectral clustering approach. \\ \\
 Generally, eigenvectors typically show smooth transitions within a region and more or less clear edges between regions. Unfortunately, the k-means algorithm cannot properly deal with this setting. Its results generally suffer from oversegmentations since it approximates smooth transitions by multiple constant functions. Furthermore, the optimal number of clusters $K$ is by no means obvious, because clusters are represented by many eigenvectors. \\ \\
 To address this issue, we formulate an energy, similar as in $\cite{Bro10c}$, that comprises a spatial regularity term. By minimizing this energy term we obtain the optimal segmentation assignment. \\ \\
@@ -719,13 +720,39 @@ The $\delta_{\pi^A, \pi^B}$ is a characteristic function which is equals one if 
 The $\textbf{data term}$ models an unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. Notice that this term makes use of the norm $\norm{.}_{\lambda}$. In this norm each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues. \\ \\
 The $\textbf{smoothness term}$ acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized for more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
 The parameter $\nu$ acts as the tread-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
-Minimizing the energy formulated energy in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibit many local minima. However, when using a fixed number of clusters $K$, then minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids. \\ \\
+Minimizing the energy formulated energy in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibit many local minima. However, when using a fixed number of clusters $K$, then minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Initialization]{
+   \includegraphics[width=0.15\linewidth] {implementation/mc/0}
+   \label{fig:convergence_mc_seg_0}
+}
+\subfigure[Iteration 1]{
+   \includegraphics[width=0.15\linewidth] {implementation/mc/1}
+   \label{fig:convergence_mc_seg_1}
+}
+\subfigure[Iteration 2]{
+   \includegraphics[width=0.15\linewidth] {implementation/mc/2}
+   \label{fig:convergence_mc_seg_2}
+}
+\subfigure[Iteration 3]{
+   \includegraphics[width=0.15\linewidth] {implementation/mc/3}
+   \label{fig:convergence_mc_seg_3}
+}
+\subfigure[Iteration 4]{
+   \includegraphics[width=0.15\linewidth] {implementation/mc/4}
+   \label{fig:convergence_mc_seg_4}
+}
+\end{center}
+\caption[Convergence MC]{Visualizing the convergence of MC applied on the cars dataset.}
+\label{fig:convergence_mc_seg}
+\end{figure}
 In our Matlab implementation we optimize this minimization problem by using an iterative solver. But before starting this iteration, we initialize the cluster centroids with an equidistant labeling defined as
 \begin{equation}
 	\forall k \in \{ 1, \dots, K \} \forall A_i : (k - 1) \frac{n}{K} \leq i \leq k \frac{n}{K} : \pi^{A_i} = k
 \label{eq:initialization_min_cut}
 \end{equation}
-An loop iteration consists of two main steps: In the first step, we fix the label assignments and solve for the cluster centroids by running k-means. In the second step, we fix the centroids by using the previously computed centers and optimize for the assignments by running a multi-label graph cut energy minimization. For this purpose we rely on $\cite{Fulkerson2009}$'s $\textit{GCMex}$ framework$\footnote{This frameworks offers some handy methods to compute the multi-label graph cut.}$, which is a freely available Matlab implementation. We repeat this iteration until the labels assignments have converged. The resulting assignment is the motion segmentation. 
+An loop iteration consists of two main steps: In the first step, we fix the label assignments and solve for the cluster centroids by running k-means. In the second step, we fix the centroids by using the previously computed centers and optimize for the assignments by running a multi-label graph cut energy minimization. For this purpose we rely on $\cite{Fulkerson2009}$'s $\textit{GCMex}$ framework$\footnote{This frameworks offers some handy methods to compute the multi-label graph cut.}$, which is a freely available Matlab implementation. We repeat this iteration until the labels assignments have converged. The resulting assignment is the motion segmentation. An example of the MC segmentation method is shown in figure $\ref{fig:convergence_mc_seg}$. 
 
 \subsection{Kernighan-Lin Heuristic} 
 In this section we describe a method that addresses the problem of motion segmentation by formulating it as a minimum cost multi-cut problem on a trajectory similarity graph as defined in section $\ref{sec:similarity_graphs}$. The energy term we optimize to find an optimal graph partition is based on the work presented in $\cite{KB15b}$. To solve this graph cut problem numerically we implemented the $\textit{Kernighan-Lin}$ heuristic ($\textbf{KL}$) described in $\cite{Ker70}$. \\ \\
