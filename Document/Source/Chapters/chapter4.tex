@@ -276,40 +276,13 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. To fill th
 \subsection{Flow Variance}
 \label{sec:flow_variance}
 So far, we were assuming that the generated flow fields are good estimates in as sense that they do not exhibit an enormous amount of noise. However, especially along motion boundaries, this assumption is very dangerous. For instance, when taking the difference between two noisy flow vectors, then the noise level can get amplified on the resulting vector. This is especially problematic while computing similarities between trajectories based on the motion distance. In that case, utilizing repeatedly noisy flow differences will negatively affect resulting segmentation quality. \\ \\
-In this section we therefore propose a normalization factor that reduces the influence of potential noise present in the estimated flow fields. The rationale behind our approach is that the variance on the weights of a low-pass filter are a reliable local indicator for the strength of noise and thus may be used to damp flows differences. \\ \\
+In this section we therefore propose a normalization factor that reduces the influence of potential noise present in the estimated flow fields. A simple, first idea would be to smooth the flows by applying a low-pass filter$\footnote{The purpose of a low pass filter is to damp high frequencies such as noise.}$, such as a Gaussian kernel. On one hand, it surely would reduce the noise level along the motion boundaries, but on the other hand, it also would wash out many relevant motion details. Therefore, filtering the flows directly is not the way to go. \\ \\
+The rationale behind our approach is that the variance on the weights of a low-pass filter are a reliable local indicator for the strength of noise and thus may be used to damp flows differences. \\ \\
+Another prominent low-pass filter is the Bilateral Filter $\textbf{BF}$. Similar to a Gaussian filter, this filter also computes a weighed average of the input, but the same time takes into account the variation of intensities to preserve details, such as edges. In particular, using such a filter would preserve motion boundaries. More details about this filter can be found in the appendix in section $\ref{sec:bilateral_filter}$ on page $\pageref{sec:bilateral_filter}$. \\ \\
 % WIP
+% Instead of using a filtered flow field, we go for another, more robust idea. 
 
-
-An simple, but initial first idea would be to smooth the computed flow fields, to reduce the noise level along the boundaries. A commonly used approach to blur an image is to convolve the image with a Gaussian kernel as defined in equation $\ref{eq:gaussian_filter}$.
-\begin{equation}
-	G_{\sigma}\left( x \right) = \frac{1}{2 \pi \sigma^2} e^{-\frac{x^2}{2 \sigma^2}}
-\label{eq:gaussian_filter}
-\end{equation}
-However, filtering the flows directly is not the best choice. The reason for this is based on the fact that a Gaussian filter acts as a low-pass filter. Thus, after applying this kernel, many details in the flow, such as motion boundaries, will be washed out or will be removed completely. \\ \\
-
-
-% WIP 2
-Another blur filter, which addresses the issue of smoothing out edges, is the so called Bilateral Filter $\textbf{BF}$. Similar to the Gaussian Convolution, this filter also computes a weighed average of an image, but the same time takes into account the variation of intensities to preserve edges. 
-
-Let $\bf{I}$ denote an image and $\bf{p}$ one of its pixels. The neighborhood pixels of $\bf{p}$ are denoted by $\mathcal{N}_p$. Then, the Bilateral filter $\textbf{BF}$ can be defined as described in equation $\ref{eq:bilateral_filter}$.
-\begin{equation}
-	\textbf{BF} \left\{ \bf{I}_{\bf{p}} \right\} = \frac{1}{W_{\bf{p}}} \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right) \bf{I}_{\bf{q}}
-\label{eq:bilateral_filter}
-\end{equation}
-Note that $w_{\bf{p}, \bf{q}}$ denotes the weight between the pixels $\bf{p}$ and $\bf{q}$, whereas the term $W_{\bf{p}}$ defined in equation $\ref{eq:bilateral_filter_weights}$ is the sum of all weights between a fixed pixel $\bf{p}$ and its neighbors.
-
-\begin{equation}
-	w_{\bf{p}, \bf{q}} \left( \bf{I} \right) = G_{\sigma_s} (\norm{\bf{p} - \bf{q}}) G_{\sigma_r} (\bf{I}_{\bf{p}} - \bf{I}_{\bf{q}}) 
-\label{eq:bilateral_filter_neighbor_weight}
-\end{equation}
-
-The weight in equation $\ref{eq:bilateral_filter_neighbor_weight}$ has a spatial component $G_{\sigma_s} (\norm{\bf{p} - \bf{q}})$ as well as it considers the intensity range $G_{\sigma_r} (\bf{I}_{\bf{p}} - \bf{I}_{\bf{q}})$.
-
-\begin{equation}
-	W_{\bf{p}} \left( \bf{I} \right) = \sum_{\bf{q} \in \mathcal{N}_p} w_{\bf{p}, \bf{q}} \left( \bf{I} \right)
-\label{eq:bilateral_filter_weights}
-\end{equation}
-Instead of using a filtered flow field, we go for another, more robust idea. Imagine we would know the error of the computed flows. Then, by using the variance of the field, we directly could address the error by normalizing the flow value by its corresponding variance value. Since we do not know the actual error, we have to define a good estimator of the flow variance. \\ \\
+So, how could we make use of this filter to implement our idea? Imagine we would know the error of the computed flows. Then, by using the variance of the field, we directly could address the error by normalizing the flow value by its corresponding variance value. Since we do not know the actual error, we have to define a good estimator of the flow variance. \\ \\
 Let $\bf{q}_p$ denote a vector containing all neighbors of pixel $\bf{p}$ and $\bf{w}_p$ is the vector consisting of all weights computed using equation $\ref{eq:bilateral_filter_neighbor_weight}$. Mathematically, this can be formulated as the follows:
 \begin{equation}
 \begin{aligned}

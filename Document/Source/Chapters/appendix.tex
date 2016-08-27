@@ -24,6 +24,7 @@ where $I$ defines the input image and $\Omega_p$ contains all neighboring points
 The Gaussian filtering is the weighted average of the intensity of the adjacent positions with a weight decreasing with the spatial distance to the center position. This distance is defined by $G_{\sigma} (\norm{p - q})$ where $\sigma$ is a parameter that defines the size of the neighborhood. The resulting image is a blurred version of the input image.
 
 \subsection{Bilateral Filter}
+\label{sec:bilateral_filter}
 A Bilateral filter (\textbf{BF}) is a non-linear operator that reduces noise by smoothing the image but at the same time preserves its edges. \\ \\
 The rational of this filter is that two pixels are close to each other if not only if their spacial distance is small but also if they are similar regarding their intensity range.
 \begin{figure}[H]
