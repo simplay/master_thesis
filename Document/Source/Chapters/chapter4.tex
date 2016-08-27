@@ -546,10 +546,25 @@ In the following we describe in detail the steps of algorithm $\ref{alg:computin
 As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, we discarded every trajectory that is shorter than a user specified threshold to reduce the effect of noisy and invalid tracings. From the remaining trajectories we form every possible pair combination and compute certain distances between them similar as shown in figure $\ref{fig:distance_measure}$.
 \begin{figure}[H]
 \begin{center}
-   \includegraphics[width=1.0\linewidth] {implementation/affinities/distance_measures}
-   \label{fig:cars_w}
+\subfigure[Overlapping Trajectories]{
+   \includegraphics[width=0.7\linewidth] {implementation/affinities/overlapping_tra}
+   \label{fig:overlapping_tra}
+}
+~
+\subfigure[Color Distance]{
+   \includegraphics[width=0.3\linewidth] {implementation/affinities/d_co}
+   \label{fig:tra_distance_measures_co}
+}
+\subfigure[Motion Distance]{
+   \includegraphics[width=0.3\linewidth] {implementation/affinities/d_mo}
+   \label{fig:tra_distance_measures_mo}
+}
+\subfigure[Spatial Distance]{
+   \includegraphics[width=0.3\linewidth] {implementation/affinities/d_sp}
+   \label{fig:tra_distance_measures_sp}
+}
 \end{center}
-\caption[Distance Measures]{A graphical example how the mentioned distance metrics can be applied on two trajectories $A$ and $B$. Their$\textbf{spatial distance}$ $d_{\text{spatial}}$ is shown in green, their $\textbf{color distance}$ $d_{\text{color}}$ in orange and their $\textbf{motion distance}$ $d_{\text{motion}}$ in purple.}
+\caption[Distance Measures]{A graphical example how the mentioned distance metrics can be applied on two trajectories $A$ and $B$. Their $\textbf{spatial distance}$ $d_{\text{spatial}}$ is shown in green, their $\textbf{color distance}$ $d_{\text{color}}$ in orange and their $\textbf{motion distance}$ $d_{\text{motion}}$ in purple.}
 \label{fig:distance_measure}
 \end{figure}
 For any two given trajectories $A$ and $B$ that form a pair, our pipeline computes the following three distances between their temporal overlapping segments$\footnote{By the term \textit{temporal overlapping segments} we refer to tracking point in a trajectory pair that share a common frame.}$:
