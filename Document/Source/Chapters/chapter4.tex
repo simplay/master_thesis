@@ -820,7 +820,7 @@ In the following we use discussed formulation to model the similarity graph. In 
 \caption[KL Energy Terms]{Visualization of the internal $I_a$ and external costs $E_a$ of a vertex $a \in A$.}
 \label{fig:kl_partition_energies}
 \end{figure}
-In the following let use discuss an algorithm that allows to partition the similarity graph discussed before. The Kernighan-Lin heuristic $KL$ is a good candidate for this task. This algorithm attempts to find a partition of $V$ into two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized similar as shown in figure $\ref{fig:kl_partition_energies}$. For defining the cost, let $I_a$ be the internal cost of the vertex $a \in A$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
+Next, let us discuss an algorithm that allows to partition the similarity graph discussed before. The Kernighan-Lin heuristic $KL$ is a good candidate for this task. This algorithm attempts to find a partition of $V$ into two disjoint subsets $A$ and $B$ of equal size, such that the sum $T$ of edge weights between the vertices in $A$ and $B$ is minimized similar as shown in figure $\ref{fig:kl_partition_energies}$. For defining the cost, let $I_a$ be the internal cost of the vertex $a \in A$, which is defined as the sum of the costs of the edges between $a$ and other nodes in $A$. Furthermore, let $E_a$ denote the external cost of $a$, which is defined as the sum of the costs of edges between $a$ and the vertices in $B$. The balance of a vertex is given by the difference defined in equation $\ref{eq:kl_d_values}$.
 \begin{equation}
 	D_a = E_a - I_a
 \label{eq:kl_d_values}
@@ -832,7 +832,7 @@ If $a$ and $b$ are interchanged, then the reduction in cost is equals.
 \end{equation}
 Note that $c_{a,b}$ in equation $\ref{eq:kl_difference_ext_int_costs}$ defines the cost of the possible edge between $a$ and $b$. \\ \\
 The $KL$ algorithms attempts to find an optimal series of interchange operations between the elements in $A$ and $B$, which maximizes the value of equation $\ref{eq:kl_difference_ext_int_costs}$. The determined optimal operation sequence is then executed to compute the partition of the graph into the sets $A$ and $B$. \\ \\
-In the following we describe the \emph{Kernighan-Lin} heursistic, which is formulated in algorithm $\ref{alg:kernighan_lin}$. 
+In the following we offer reader some details about the \emph{Kernighan-Lin} heuristic formulated in algorithm $\ref{alg:kernighan_lin}$. 
 \begin{algorithm}[H]
 \caption{Kernighan-Lin}
 \begin{table}[H]
@@ -864,8 +864,11 @@ In the following we describe the \emph{Kernighan-Lin} heursistic, which is formu
   \vskip1.5pt
 \label{alg:kernighan_lin}
 \end{algorithm}
-Our implementation initially loads the corresponding $\textit{S-affinity}$ matrix and its corresponding nearest neighbor list. Then, an internal undirected graph $G = \left( V, E \right)$ is constructed. Its vertices represent thereby individual trajectories and two vertices are connected if their are actual neighbors. The edge weights are the actual affinity values between two vertices. Usually, the full neighborhood the is loaded into the pipeline and thus the complete graph is formed, i.e. every vertex is interconnected with any other vertex. However, the number of neighbors per trajectory, that should be loaded into the pipeline, can be directly specified by a user via a neighborhood size parameter. \\ \\
-Since our implementation solves for multiple graph segments, we define several initial sets and then apply an alpha-beta expansion heuristics by running the algorithm $\ref{alg:kernighan_lin}$ on every distinct pair of vertex set. Our final $KL$ algorithm we use to solve the multi-cut problem is listed in algorithm $\ref{alg:kl_multiple_segments}$.
+In this algorithm, we initialize two vertex sets according to some rule. In the inner loop, we determine a ranking of the vertices according to their gain. First, we compute equation $\ref{eq:kl_d_values}$ on every vertex. Then, we compute the gain between all vertices $a \in A$ and $b \in B$ according to the formulation in equation $\ref{eq:kl_difference_ext_int_costs}$ and select the vertices $a$ and $b$ that produces the largest gain value. Please notice that this can yield negative values. Next, we remember their gain value, mark them as dirty and put each of these vertices into special sets $av$ and $bv$. Afterwards the D values of every all vertices that are not dirty are updated. We have to repeat this procedure $|V|/2$ times since the each set $A$ and $B$ contains that many vertices. \\ \\
+In the list of gains we look for the maximal partial sum of gains. The index in the gain list that produced the maximum sum is used as the permutation index for performing a series of interchange operation. Working with this partial sums makes sense, since, as long as the sum increases, the gain in the next iteration got bigger. Permuting till the max partial sum would result in having a lower gain in the next outer iteration. We repeat the steps of the most outer loop until there is no more gain. \\ \\
+Our Java implementation initially loads the corresponding $\textit{S-affinity}$ matrix and its corresponding nearest neighbor list. Then, an internal undirected graph $G = \left( V, E \right)$ is constructed. Its vertices represent thereby individual trajectories and two vertices are connected if their are actual neighbors. The edge weights are the actual affinity values between two vertices. Usually, the full neighborhood the is loaded into the pipeline and thus the complete graph is formed, i.e. every vertex is interconnected with any other vertex. However, the number of neighbors per trajectory, that should be loaded into the pipeline, can be directly specified by a user via a neighborhood size parameter. \\ \\ 
+So far, our KL method is only capable to perform a binary partition on a graph. However, we would like to extend it in a way, such that it can partition a graph into an arbitrary number of labels. \\ \\
+To address this problem we apply a greedy strategy. Let us assume we want to solve for $k$ clusters and we are working with $n$ vertices. Then, we distribute the n vertices according to some initialzation rule among k empty sets. Then, for each possible pair of subsets we sequentially run algorithm $\ref{alg:kernighan_lin}$ giving us the pairwise optima. We repeat this procedure until the solution has converged. Our final $KL$ algorithm we use to solve the multi-cut problem is listed in algorithm $\ref{alg:kl_multiple_segments}$.
 \begin{algorithm}[H]
 \caption{Kernighan-Lin Multicut Heuristic}
 \begin{table}[H]
@@ -893,9 +896,8 @@ Since our implementation solves for multiple graph segments, we define several i
   \end{boxedminipage}
   \vskip1.5pt
 \label{alg:kl_multiple_segments}
-\end{algorithm}  
-  
-%TODO: Explain the algorithm above, the alpha-beta swap, error terms and so forth...
+\end{algorithm}
+In our implementation we want to use the following initialization: One set among the k sets is initialized with all n vertices and the other sets are empty. This will give every set the same change to get some vertices in a fair amount of time. However, this also violates our restriction that \textit{the subsets have to be of equal size}. The solution to this problem is to introduce so called dummy vertices, which are basically placeholders and exhibit zero similarities. Meaning, that they do not affect the cost terms used during the optimization.
 
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
