@@ -21,7 +21,7 @@ In the following let us briefly outline the main stages of our motion segmentati
 \item \textbf{Data Extractor} (Sec. $\ref{sec:data_extraction}$): During t
 In this stage we extract traceable feature locations in our images. Also, a mask containing all invalid tracking locations per image is computed by checking whether the the forward and backward flow correspond to each other. Optionally, depth data, flow and depth variances and color maps are extracted that are used within a later pipeline stage. 
 \item \textbf{Trajectory Tracking} (Sec. $\ref{sec:trajectory_tracking}$): The previously computed flows are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory.
-\item \textbf{Affinity Matrix} (Sec. $\ref{sec:affinity_matrix_impl}$): In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
+\item \textbf{Affinity Matrix Generation} (Sec. $\ref{sec:affinity_matrix_impl}$): In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
 \item \textbf{Segmenter}: Our pipeline offer two types of segmentations, sparse and dense segmentations. 
 	\begin{enumerate}
 	\item \textbf{Sparse Motion Segmentation} (Sec. $\ref{sec:sparse_motion_segmentation}$): Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. Usually
@@ -436,7 +436,7 @@ Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\le
 \end{equation}
 \end{enumerate}
 
-\section{Affinity Matrix}
+\section{Affinity Matrix Generation}
 \label{sec:affinity_matrix_impl}
 In this section we describe the corresponding pipeline stage that is responsible for generating the so called $\textit{affinity matrix}$, which is later used to compute the actual motion segmentation. For this purpose we compute the similarities between the previously tracked trajectories according to a certain measure and then use those values to form a similarity graph as defined in section $\ref{sec:similarity_graphs}$ on page $\pageref{sec:similarity_graphs}$. The final affinity matrix correspond to the adjacency matrix representation of the similarity graph. The used metrics are adapted version of the metrics presented in $\cite{OB14b}$ and $\cite{KB15b}$. \\ \\
 Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
