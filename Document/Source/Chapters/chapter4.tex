@@ -32,8 +32,23 @@ In the following sections we examine and discuss each individual pipeline stage 
 
 \section{Dataset Preparations}
 \label{sec:dataset_preparations}
-The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. \\ \\
-In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that the value range is in meter units. For further information about the dataset conventions, read section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
+The preparation of an input datasets is the very first stage of our pipeline. Initially, we have to either capture a video using one of our capturing devices or use an existing video sequence. Next, we extract all the frames from the considered video. In case there are also depth maps$\footnote{In case we are working with depth data, we assume that there exists one depth map per frame. Our pipeline assumes, that the values in the depth images are in meter units}$ available, they are transformed such that their value range is in meter units. An example of a color frame and its depth field is shown in figure $\ref{fig:color_and_depth_image}$.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Color Frame]{
+   \includegraphics[width=0.48\linewidth] {implementation/preproc/18}
+   \label{fig:color_and_depth_image_a}
+}
+\subfigure[Depth Field]{
+   \includegraphics[width=0.48\linewidth] {implementation/preproc/depth_18}
+   \label{fig:color_and_depth_image_b}
+}
+\end{center}
+\caption[Color and Depth Image]{An example of a color image / depth field pair.}
+\label{fig:color_and_depth_image}
+\end{figure}
+A depth filed has the same name as its corresponding video frame. Moreover, our pipeline assumes a well-enumeration of its video frames, meaning that the frame, which corresponds to the $k-th$ frame is referenced by the name \textit{k}. \\ \\
+A listing of our datasets can be fond in section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
 
 \section{Generate Optical Flows}
 \label{sec:generate_of}
