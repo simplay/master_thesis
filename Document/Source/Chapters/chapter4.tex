@@ -221,8 +221,8 @@ This reduction is computed as the follows: We use the tracking candidate of a fr
 This drastically reduced the total number of candidates, however may also cancel out useful motion locations. Therefore, this is just optional. Most of the time this removes background pixel locations. An example is shown in figure $\ref{fig:tracable_candidates_strict}$.
 \begin{figure}[H]
 \begin{center}
-\subfigure[All Dense Candidates]{
-   \includegraphics[width=0.48\linewidth] {implementation/candidates/c14_f1_candidates}
+\subfigure[Subselection of all Dense Candidates]{
+   \includegraphics[width=0.48\linewidth] {implementation/candidates/subsel_flow_mags}
    \label{fig:c14_f1_cand_dense_2}
 }
 \subfigure[Strict Dense Candidates]{
@@ -230,7 +230,7 @@ This drastically reduced the total number of candidates, however may also cancel
    \label{fig:c14_cand_dense_strict}
 }
 \end{center}
-\caption[Strict Dense Candidates]{A visualization of the post-processed traceable candidate locations. On the left, the extracted tracking positions, on the right side, an image of the reduced candidates.}
+\caption[Strict Dense Candidates]{A visualization of the post-processed traceable candidate locations. On the left, all extracted candidate locations overlaid by the flow magnitudes (in blue), on the right side, an image of the reduced candidates.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
@@ -269,7 +269,7 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. To fill th
    \label{fig:c14_invalid_regions}
 }
 \end{center}
-\caption[Occluded Regions]{A visualization of the occluded regions. Invalid, occluded regions are colored in white illustrated as shown in subfigure $\ref{fig:c14_invalid_regions}$.}
+\caption[Occluded Regions]{A visualization of the occluded regions. In the left, an color frame and on the right its occluded regions (white pixels).}
 \label{fig:invalid_regions}
 \end{figure}
 
