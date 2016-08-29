@@ -253,6 +253,9 @@ The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.
 \chapter{Experiment Statistics}
 \label{sec:appendix_varying_lambda}
 
+\section{Additional Parameter Experiments}
+
+\subsection{Measurements PD SC On Cars}
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -269,6 +272,64 @@ $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 \caption[Cars Varying $\lambda$]{My caption}
 \label{tab:cars_varying_lambas}
 \end{table}
+
+\subsection{Additional Varying Number of CC/EV experiment}
+\label{sec:additional_cc_ev_exp}
+In this we examine the bahaviour of PED MC method for a varying the eigenvalue-cluster count. Additionally, we want to investigate the dependence between these two parameter to better understand them. \\ \\
+For 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
+of number of clusters,eigenvectors. The corresponding statistics are listed in table $\ref{tab:wh_ev_c}$. To give the reader a easier way to understand the results we visualized the resulting statistics. For fixed cluster counts, we plotted the recall-precession and the eigenvector-f1 score graphs. Moreover, for fixed eigenvector counts we plotted the resulting recall-precession and clusters-f1 score graphs. The graphs are given in figure $\ref{fig:wh1_performance_var_ev_c_graphs}$.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Varying Clusters Recall/Precision Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_rec_prec}
+   \label{fig:wh1_performance_var_ev_a}
+}
+\subfigure[Varying Clusters EV/F1 Score Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_ev_f1}
+   \label{fig:wh1_performance_var_ev_b}
+}
+\subfigure[Varying EV Recall/Precision Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_rec_prec}
+   \label{fig:wh1_performance_var_ev_c}
+}
+\subfigure[Varying EV Clusters/F1 Score Plot]{
+   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_c_f1}
+   \label{fig:wh1_performance_var_ev_d}
+}
+\end{center}
+\caption[Plot Performance Varying CLuster/Eigenvectors]{foobar}
+\label{fig:wh1_performance_var_ev_c_graphs}
+\end{figure}
+% TODO: state observations here: 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\multicolumn{6}{|c|}{Performance Varying Eigenvectors/Clusters PED MC} \\ \hline
+\multicolumn{6}{|c|}{Precision} \\ \hline
+\textbf{Eigenvectors / Clusters} & 2 & 3 & 4 & 5 & 6 \\ \hline
+2 & 7.03\% & 29.28\% & 33.80\% & 59.61\% & 48.63\%  \\ \hline
+3 & 6.95\% & 28.62\% & 40.45\% & 57.17\% & 45.59\%  \\ \hline
+4 & 6.99\% & 30.28\% & 46.90\% & 43.53\% & 65.60\%  \\ \hline
+5 & 7.05\% & 30.28\% & 49.35\% & 53.55\% & 70.23\%  \\ \hline
+6 & 7.05\% & 30.28\% & 50.11\% & 53.81\% & 71.47\%  \\ \hline
+\multicolumn{6}{|c|}{Recall} \\ \hline
+2 & 23.64\% & 40.45\% & 36.28\% & 79.73\% & 50.27\%  \\ \hline
+3 & 23.64\% & 41.17\% & 40.45\% & 57.17\% & 61.04\%  \\ \hline
+4 & 23.64\% & 41.17\% & 57.20\% & 60.50\% & 79.28\%  \\ \hline
+5 & 24.09\% & 41.17\% & 52.55\% & 54.29\% & 71.71\%  \\ \hline
+6 & 24.09\% & 41.17\% & 52.55\% & 53.42\% & 67.39\%  \\ \hline
+\multicolumn{6}{|c|}{F1 Score} \\ \hline
+2 & 10.83\% & 33.97\% & 35.00\% & 68.22\% & 49.43\%  \\ \hline
+3 & 10.74\% & 33.77\% & 32.97\% & 50.94\% & 52.20\%  \\ \hline
+4 & 10.79\% & 34.90\% & 51.54\% & 50.63\% & 71.79\%  \\ \hline
+5 & 10.91\% & 34.90\% & 50.90\% & 53.92\% & 70.97\%  \\ \hline
+6 & 10.91\% & 34.90\% & 51.30\% & 53.62\% & 69.37\%  \\ \hline
+\end{tabular}
+\caption[Performance Varying Eigenvector-Cluster]{My caption}
+\label{tab:wh_ev_c}
+\end{table}
+
 
 
 

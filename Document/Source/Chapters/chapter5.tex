@@ -412,24 +412,12 @@ In this experiment we make use of the cars dataset, since it has a static camera
    \includegraphics[width=0.505\linewidth] {evaluation/exploring_params/free_cc}
 }
 \end{center}
-\caption[Varying number of Clusters / Eigenvectors]{}
+\caption[Varying number of Clusters / Eigenvectors]{Two graphs that show the f1 score for a varying number of clusters and eigenvectors on the cars dataset. The graph on the left shows plots for fixed cluster numbers and the graph on the right plots the f1 score for a fixed eigenvalue count and varying cluster counts.}
 \label{fig:cc_ev_combinations}
 \end{figure}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+when Considering the graph produced by fixed clusters, then we observe, that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
+However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations produce top results according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster count and eigenvector count produce good results and thus we will rely on these cluster-and eigenvector-count assignment heuristic. \\ \\
+Addition experiments for varying cluster-eigenvalue count and the numeric values of the evaluation can be found in the appendix in section $\ref{sec:additional_cc_ev_exp}$.
 
 
 \subsection{On exploring flow methods}
