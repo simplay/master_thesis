@@ -298,6 +298,7 @@ u dessen plots (klein für var cluster)
 
 \subsubsection{Convergence MC}
 In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of the convergence rate of the MC segmentation method. The more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 3 iterations. This matches with our assumption that no more than 5 to 10 iterations have to be run when using the MC segmentation method.
+
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
@@ -305,6 +306,24 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 \end{center}
 \caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
 \label{fig:two_chairs_ped_mc_iterations}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+\subfigure[1 Iteration]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/iters/iter_1}
+}
+\subfigure[2 Iterations]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/iters/iter_2}
+}
+\subfigure[3 Iterations]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/iters/iter_3}
+}
+\subfigure[5 Iterations]{
+   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/iters/iter_5}
+}
+\end{center}
+\caption[Convergence Segmentations Two Chairs]{Visualizing the convergence of the MC segmentation method.}
+\label{fig:two:chairs_segmentations_ped_mc_iters}
 \end{figure}
 
 \subsubsection{Choice for $\lambda$}
