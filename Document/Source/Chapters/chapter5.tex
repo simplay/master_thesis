@@ -309,39 +309,36 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 
 \subsubsection{Choice for lambda}
 
-
-
 \begin{figure}[H]
 \begin{center}
 
 \subfigure[$\lambda$ = 5]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/5}
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/5}
    \label{fig:cars_dataset_lambdas_a}
 }
-\subfigure[Undersegmented]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_5}
-   \label{fig:cars_dataset_lambdas_a}
-}
-~
 \subfigure[$\lambda$ = 0.01]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_01}
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/0_01}
    \label{fig:cars_dataset_lambdas_b}
 }
-\subfigure[Ideal]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_01}
-   \label{fig:cars_dataset_lambdas_b}
-}
-~
 \subfigure[$\lambda$ = 0.0001]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_0001}
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/0_0001}
    \label{fig:cars_dataset_lambdas_c}
 }
+~
+\subfigure[Undersegmented]{
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/seg_5}
+   \label{fig:cars_dataset_lambdas_a}
+}
+\subfigure[Ideal]{
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/seg_0_01}
+   \label{fig:cars_dataset_lambdas_b}
+}
 \subfigure[Oversegmented]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_0001}
+   \includegraphics[width=0.31\linewidth] {evaluation/cars/lambdas/seg_0_0001}
    \label{fig:cars_dataset_lambdas_c}
 }
 \end{center}
-\caption[Influence varying $\lambda$]{Illustration of the influence of the $\lambda$ parameter used for computing trajectory affinities. A plot of the affinity transformation function is shown in figure $\ref{fig:exp_effect_lambda}$. }
+\caption[Influence varying $\lambda$]{Illustration of the influence of the parameter $\lambda$ used to scale P-affinities.}
 \label{fig:cars_dataset_lambdas}
 \end{figure}
 
