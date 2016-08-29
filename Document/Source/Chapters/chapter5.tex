@@ -296,9 +296,8 @@ plots
 u dessen plots (klein für var cluster)
 % convergence i, ldof ped mc
 
-\subsubsection{Convergence MC}
+\subsubsection{Examine Convergence of MC}
 In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of the convergence rate of the MC segmentation method. The more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 3 iterations. This matches with our assumption that no more than 5 to 10 iterations have to be run when using the MC segmentation method.
-
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
@@ -326,7 +325,7 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 \label{fig:two:chairs_segmentations_ped_mc_iters}
 \end{figure}
 
-\subsubsection{Choice for $\lambda$}
+\subsubsection{Examine $\lambda$ Default}
 In this experiment we examine the influence of the parameter $\lambda$, which is used to scale P-affinities. In particular, we legitimize its described standard parameter choices. For different values of $\lambda$ we generate P-affinity matrices for both of its run-modes, PD and PED. In this experiment, the trajectories tracking uses LDOF flows, since other authors (e.g. in $\cite{OB14b}$) have reported its effectiveness. Our results are listed in table $\ref{tab:varying_lambda_experiment}$.
 \begin{table}[H]
 \centering
@@ -400,7 +399,7 @@ As we can see, the optimal determined $\lambda$ value produces the best visual r
 These results allow us to conclude that our $\lambda$ defaults are reliable enough to use them during our experiments.
 
 
-\subsubsection{Eigenvector Clustercount default}
+\subsubsection{Examine Eigenvector-/Cluster-Count Defaults}
 In section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters-and eigenvectors when either running the SC or MD segmentation method. We stated, that will use twice the estimated count of the moving objects present in the video for the cluster count and twice the cluster count for the number of eigenvalues. In order to legitimize the usage of those defaults, we create a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
 In this experiment we make use of the cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs shown in figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of the used eigenvectors but keeps the cluster count as a free variable.
 \begin{figure}[H]
