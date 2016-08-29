@@ -347,19 +347,36 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{Performance Varying $\lambda$}                        \\ \hline
+\multicolumn{4}{|c|}{Varying $\lambda$ on PD} \\ \hline
 $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 5 & 99.70 & 57.99\% & 73.33\%  \\ \hline
 1 & 99.01 & 68.06\% & 80.66\%  \\ \hline
 0.1 & 80.38 & 96.67\% & 87.78\%  \\ \hline
-0.01 & 88.71 & 98.87\% & 93.51\%  \\ \hline
+\textbf{0.01} & \textbf{88.71} & \textbf{98.87}\% & \textbf{93.51}\%  \\ \hline
 0.001 & 46.58 & 49.12\% & 47.82\%  \\ \hline
 0.0001 & 46.27 & 49.37\% & 47.77\%  \\ \hline
 \end{tabular}
 \caption[Cars Varying $\lambda$]{My caption}
-\label{tab:cars_varying_lambas}
+\label{tab:cars_varying_lambas_pd}
 \end{table}
 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Varying $\lambda$ on PED}                        \\ \hline
+$\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+100 & 36.60\% & 35.11\% & 35.84\%  \\ \hline
+\textbf{50} & \textbf{52.44}\% & \textbf{59.28}\% & \textbf{55.65}\%  \\ \hline
+10 & 45.33\% & 52.22\% & 48.53\%  \\ \hline
+5 & 53.50\% & 51.02\% & 52.23\%  \\ \hline
+1 & 47.58\% & 43.50\% & 45.45\%  \\ \hline
+0.1 & 44.75\% & 41.00\% & 42.79\%  \\ \hline
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:cars_varying_lambas_ped}
+\end{table}
 
 
 
