@@ -401,9 +401,55 @@ These results allow us to conclude that our $\lambda$ defaults are reliable enou
 
 
 \subsubsection{Eigenvector Clustercount default}
+In section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters-and eigenvectors when either running the SC or MD segmentation method. We stated, that will use twice the estimated count of the moving objects present in the video for the cluster count and twice the cluster count for the number of eigenvalues. In order to legitimize the usage of those defaults, we create a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
+In this experiment we make use of the cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs shown in figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of the used eigenvectors but keeps the cluster count as a free variable.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Fixed Clusters and Varying Eigenvectors]{
+   \includegraphics[width=0.444\linewidth] {evaluation/exploring_params/free_ev}
+}
+\subfigure[Fixed Eigenvectors and Varying CC]{
+   \includegraphics[width=0.505\linewidth] {evaluation/exploring_params/free_cc}
+}
+\end{center}
+\caption[Varying number of Clusters / Eigenvectors]{}
+\label{fig:cc_ev_combinations}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{On exploring flow methods}
 hs und lrgbd rausschmeisen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Overall Performance}
 
