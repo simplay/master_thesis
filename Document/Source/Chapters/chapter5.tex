@@ -420,11 +420,97 @@ Addition experiments for varying cluster-eigenvalue count and the numeric values
 
 
 \subsection{On exploring flow methods}
-In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two.
+In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
+In the first sub-experiment we compare the segmentations produced on LDOF-and HS flows. In the second experiment we examine the quality of segmentations produced by LRGBD flows.
 
+\subsubsection{LDOF vs. HS Flows}
+Both flow estimation methods, LDOF and HS, are not making use of depth fields. Therefore, we would like to determine whether one of these two methods is significantly better. \\ \\
+In the following experiment we compute P-affinities using LDOF and HS flows on the bonn datasets. The examine the quality of the flows, we evaluate SC segmentations using these affinities. The average statistics are listed in table $\ref{tab:hs_vs_ldof}$.
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{LDOF vs. HS on Bonn-Datasets}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 42.98\%   & 55.06\%     & 48.28\%  \\ \hline
+HS PD SC MC & 40.19\%   & 52.33\%     & 45.47\%  \\ \hline
+LDOF PED SC & 69.34\%   & 54.13\%     & 60.80\%  \\ \hline
+HS PED SC MC & 55.61\%   & 53.15\%     & 54.35\%  \\ \hline             
+\end{tabular}
+\caption[LDOF vs. HS Flows]{Comparison of Bonn-Dataset segmentations produced by running PD SC and PED SC on LDOF- and HS flows. Segmentations using ldof flows seems to be more }
+\label{tab:hs_vs_ldof}
+\end{table}
+From the data in the table we can see that segmentations produced using LDOF flows yield higher f1 scores than those produced by HS flows. Apparently, pipeline combinations that use LDOF flows are producing qualitatively better segmentations. Therefore, we decide to drop HS flows and only use LDOF flows instead.
 
+\subsubsection{On LRGBD Flows}
+In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flows on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. In other words we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
+The achieved performances are listed in table $\ref{tab:statue_performance}$ and visual segmentations are depicted in figure $\ref{fig:alley_segmentations}$.
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Performance Statue dataset}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PED MC & 69.93\%   & 38.23\%     & 49.44\%  \\ \hline
+SRSF PED MC & 72.47\%   & 70.68\%     & 71.56\%  \\ \hline
+LRGBD PED MC & 61.46\%   & 8.37\%     & 14.73\%  \\ \hline              
+\end{tabular}
+\caption[Performance Statue]{Comparing the segmentation quality produced by LDOF, SRSF and LRGBD flows.}
+\label{tab:statue_performance}
+\end{table}
+We observe that segmentations using SRSF score good, and segmentations using LDOF score intermediate quality results. However, pipeline combinations based on LRGBD flows produce visually, as well as statistically very poor segmentations. Apparently, this flow method is a bad choice for the task of motion segmentation. Therefore, we drop it from our pipeline. 
+\begin{figure}[H]
+\begin{center}
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f30/ldof_ped_mc}
+   \label{fix:alley_segmentations_a}
+}
+\subfigure[SRSF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f30/srsf_ped_mc}
+   \label{fix:alley_segmentations_b}
+}
+\subfigure[LGBDR PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f30/lrgbd_ped_mc}
+   \label{fix:alley_segmentations_c}
+}
+~
+\subfigure[LDOF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/ldof_ped_mc}
+   \label{fix:alley_segmentations_d}
+}
+\subfigure[SRSF PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/srsf_ped_mc}
+   \label{fix:alley_segmentations_e}
+}
+\subfigure[LGBDR PED MC]{
+   \includegraphics[width=0.31\linewidth] {evaluation/statue/segmentations/f60/lrgbd_ped_mc}
+   \label{fix:alley_segmentations_f}
+}
+\end{center}
+\caption[Bonn Cerealbox Segmentations]{Visualization of the segmentation that belong to the results listed in table $\ref{tab:statue_performance}$.}
+\label{fig:alley_segmentations}
+\end{figure}
+Altough the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers.
+\begin{figure}[H]
+\begin{center}
 
-
+\subfigure[Extracted Layers Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/layers_30}
+   \label{fig:issues_lrgbd_flows_a}
+}
+\subfigure[Forward Flow Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/fw_flow_30}
+   \label{fig:issues_lrgbd_flows_b}
+}
+\subfigure[Segmentation PED MC Frame 30]{
+   \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/seg_30}
+   \label{fig:issues_lrgbd_flows_c}
+}
+\end{center}
+\caption[Issue with LRGBD Flows]{Comparing the a LRGBD based segmentation against its flow field.}
+\label{fig:issues_lrgbd_flows}
+\end{figure}
+When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flows cluster the objects according to their depth layers rather by their motion.
 
 \subsection{Overall Performance}
 
