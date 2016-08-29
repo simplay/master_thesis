@@ -318,12 +318,12 @@ In this experiment we examine the influence of the parameter $\lambda$, which is
 \hline
 \multicolumn{4}{|c|}{Varying $\lambda$ on PD} \\ \hline
 $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-5 & 99.70 & 57.99\% & 73.33\%  \\ \hline
-1 & 99.01 & 68.06\% & 80.66\%  \\ \hline
-0.1 & 80.38 & 96.67\% & 87.78\%  \\ \hline
-\textbf{0.01} & \textbf{88.71} & \textbf{98.87}\% & \textbf{93.51}\%  \\ \hline
-0.001 & 46.58 & 49.12\% & 47.82\%  \\ \hline
-0.0001 & 46.27 & 49.37\% & 47.77\%  \\ \hline
+5 & 11.68 & 10.73\% & 11.18\%  \\ \hline
+1 & 15.68 & 11.51\% & 13.28\%  \\ \hline
+0.1 & 34.05 & 30.08\% & 31.94\%  \\ \hline
+\textbf{0.01} & \textbf{46.37} & \textbf{52.94}\% & \textbf{49.44}\%  \\ \hline
+0.001 & 43.00 & 45.67\% & 44.29\%  \\ \hline
+0.0001 & 25.11 & 25.78\% & 25.44\%  \\ \hline
 \end{tabular}
 \end{minipage}%
 \hfill
@@ -345,7 +345,7 @@ $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 \label{tab:varying_lambda_experiment}
 \end{table}
 We observe that $\lambda$ equals $0.01$ is produces best results for PD affinities and when using PED affinities, the best choice for $\lambda$ is the value 50. \\ \\
-Additionally, we visually demonstrate the influence of $\lambda$ on the segmentation quality. The segmentations shown in figure $\ref{fig:cars_dataset_lambdas}$ were based on PD affinities for varying $\lambda$ values on the cars dataset.
+Additionally, we visually demonstrate the influence of $\lambda$ on the segmentation quality. The segmentations shown in figure $\ref{fig:cars_dataset_lambdas}$ were based on PD affinities for varying $\lambda$ values on the cars dataset. The actual statistical measurements of this dataset can be found in the appendix section $\ref{sec:appendix_varying_lambda}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[$\lambda$ = 5]{

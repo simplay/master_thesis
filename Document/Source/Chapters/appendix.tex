@@ -250,6 +250,28 @@ The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.
 
 
 %%% CLEAN UP
+\chapter{Experiment Statistics}
+\label{sec:appendix_varying_lambda}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{PD Varying $\lambda$ on PD cars}                        \\ \hline
+$\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+5 & 11.68 & 10.73\% & 11.18\%  \\ \hline
+1 & 15.68 & 11.51\% & 13.28\%  \\ \hline
+0.1 & 34.05 & 30.08\% & 31.94\%  \\ \hline
+\textbf{0.01} & \textbf{46.37} & \textbf{52.94}\% & \textbf{49.44}\%  \\ \hline
+0.001 & 43.00 & 45.67\% & 44.29\%  \\ \hline
+0.0001 & 25.11 & 25.78\% & 25.44\%  \\ \hline
+\end{tabular}
+\caption[Cars Varying $\lambda$]{My caption}
+\label{tab:cars_varying_lambas}
+\end{table}
+
+
+
 \chapter{Experiments}
 In this section we list the results of a series of experiments we performed running our pipeline on the presented dataset from section $\ref{sec:datasets}$ on page $\pageref{sec:datasets}$. The results are evaluated according the previously explained measures from section $\ref{sec:methodology}$ on page $\pageref{sec:methodology}$. \\ \\
 For performing our experiments we used MacBook Pro. The hardware specifications of this machine are listed in table $\ref{tab:used_hardware_specs}$. 
