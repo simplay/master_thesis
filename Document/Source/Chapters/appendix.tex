@@ -685,64 +685,9 @@ LDOF SD & 0.69987 & 79.2541 \%   & 92.709 \%     & 85.4551 \%  \\ \hline
 \label{fig:cars_dataset}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[trim axis left]
-\begin{axis}[
-  axis x line=center,
-  axis y line=center,
-  grid=both,
-  xtick={-1,...,10},
-  ytick={-1,...,10},
-  xlabel={$x$},
-  ylabel={$e^{-\lambda d}$},
-  xlabel style={below right},
-  ylabel style={above left},
-  no markers,
-  xmin=-0.5,
-  xmax=1.5,
-  ymin=-1.5,
-  ymax=1.5]
-\addplot +[thick, domain=0:10] {exp(-x)};
-\end{axis}
-\end{tikzpicture}
-\caption[Affinity Function]{A plot of the affinity transformation function. We observe that the smaller the $\lambda$ paramter gets, the larger the affinities become and wise versa.}
-\label{fig:exp_effect_lambda}
-\end{figure}
 
-\begin{figure}[H]
-\begin{center}
 
-\subfigure[$\lambda$ = 5]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/5}
-   \label{fig:cars_dataset_lambdas_a}
-}
-\subfigure[Undersegmented]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_5}
-   \label{fig:cars_dataset_lambdas_a}
-}
-~
-\subfigure[$\lambda$ = 0.01]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_01}
-   \label{fig:cars_dataset_lambdas_b}
-}
-\subfigure[Ideal]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_01}
-   \label{fig:cars_dataset_lambdas_b}
-}
-~
-\subfigure[$\lambda$ = 0.0001]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_0001}
-   \label{fig:cars_dataset_lambdas_c}
-}
-\subfigure[Oversegmented]{
-   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_0001}
-   \label{fig:cars_dataset_lambdas_c}
-}
-\end{center}
-\caption[Influence varying $\lambda$]{Illustration of the influence of the $\lambda$ parameter used for computing trajectory affinities. A plot of the affinity transformation function is shown in figure $\ref{fig:exp_effect_lambda}$. }
-\label{fig:cars_dataset_lambdas}
-\end{figure}
+
 %dsf
 
 

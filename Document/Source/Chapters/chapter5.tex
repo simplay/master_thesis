@@ -30,7 +30,7 @@ Our motion segmentation pipeline exhibits many parameters since it consists of s
 In the following we give a brief description of several default assignments used in different pipeline stages. \\ \\
 For generating the flow fields we rely on existing implementations as described in section $\ref{sec:generate_of}$. We do not attempt to modify any parameter settings while utilizing those flow methods and thus strictly rely on their default settings. A summary about these flow methods can be found in section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$. \\ \\
 Before tracking trajectories as described in section $\ref{sec:trajectory_tracking}$, we initially have to extract their feature locations (Sec. $\ref{sec:tracking_candidates}$). The resulting feature extraction is determined by a parameter defining the sparsity of the sampling rate, indicating to use only every $k-th$ feature. Throughout performing our experiments we will be using $k$ equals to 8. This choice is justified by the fact that using a smaller sampling rate would not enhance the result's quality and negatively influence the overall runtime, whereas larger values would cause the opposite. \\ \\
-Next some words about choosing defaults for the affinity matrix generation stage. Before computing a $\textit{P-affinity}$, either by running the mode \textit{PD} or $\textit{PED}$, we have to specify a certain value $\lambda$. This parameter is used in equation $\ref{eq:prod_dist_affinity}$ and acts as a scale of the similarity between two trajectories. In the follows we use$\footnote{We determined the defaults by trying out different values for $\lambda$ and took those which yielded the visually most promising results. Please note that this kind of parameter selection is by no means optimal.}$ $\lambda$ equals $0.1$ when running $PD$ and $\lambda = 10$ when running the affinity mode $PED$. The reason for using different $\lambda$ values is because PED and PD have different scales. As we can see $\lambda$ takes different powers to ten. However the exact choice of this scale does not matter$\footnote{Meaning, that it \textit{does not matter} regarding using a different mantissa, since it will not affect the final outcome of the affinity matrix drastically.}$ that much as long as it close to the same power to ten value as its corresponding default. \\ \\
+Next some words about choosing defaults for the affinity matrix generation stage. Before computing a $\textit{P-affinity}$, either by running the mode \textit{PD} or $\textit{PED}$, we have to specify a certain value $\lambda$. This parameter is used in equation $\ref{eq:prod_dist_affinity}$ and acts as a scale of the similarity between two trajectories. In the follows we use$\footnote{We determined the defaults by trying out different values for $\lambda$ and took those which yielded the visually most promising results. Please note that this kind of parameter selection is by no means optimal.}$ $\lambda$ equals $0.01$ when running $PD$ and $\lambda = 10$ when running the affinity mode $PED$. The reason for using different $\lambda$ values is because PED and PD have different scales. As we can see $\lambda$ takes different powers to ten. However the exact choice of this scale does not matter$\footnote{Meaning, that it \textit{does not matter} regarding using a different mantissa, since it will not affect the final outcome of the affinity matrix drastically.}$ that much as long as it close to the same power to ten value as its corresponding default. \\ \\
 When having a closer look at the computed affinities, we observe, that approximately one third of the trajectory neighbors have similarity large enough to have a big influence on it. Therefore, we decided to set the number of closest neighbors per trajectory equals one third of the total neighbors. An example is shown of such affinities is shown in figure $\ref{fig:cars_w}$. A dark pixel indicates a low affinity between two trajectories and bright regions indicate large affinities. \\ \\
 In order to generate S-affinities we rely on the definition of equation $\ref{eq:sum_dist}$, which is used to compute distances between trajectories. However, this equation is parameterized by several weights $\beta$. In this work we use the exactly the same $\beta$ values as defined in the paper $\cite{KB15b}$, which are equal to
 \begin{equation}
@@ -308,19 +308,66 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 \end{figure}
 
 \subsubsection{Choice for lambda}
+
+
+
+\begin{figure}[H]
+\begin{center}
+
+\subfigure[$\lambda$ = 5]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/5}
+   \label{fig:cars_dataset_lambdas_a}
+}
+\subfigure[Undersegmented]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_5}
+   \label{fig:cars_dataset_lambdas_a}
+}
+~
+\subfigure[$\lambda$ = 0.01]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_01}
+   \label{fig:cars_dataset_lambdas_b}
+}
+\subfigure[Ideal]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_01}
+   \label{fig:cars_dataset_lambdas_b}
+}
+~
+\subfigure[$\lambda$ = 0.0001]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/0_0001}
+   \label{fig:cars_dataset_lambdas_c}
+}
+\subfigure[Oversegmented]{
+   \includegraphics[width=0.47\linewidth] {evaluation/cars/lambdas/seg_0_0001}
+   \label{fig:cars_dataset_lambdas_c}
+}
+\end{center}
+\caption[Influence varying $\lambda$]{Illustration of the influence of the $\lambda$ parameter used for computing trajectory affinities. A plot of the affinity transformation function is shown in figure $\ref{fig:exp_effect_lambda}$. }
+\label{fig:cars_dataset_lambdas}
+\end{figure}
+
+
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{5}{|c|}{Performance Varying $\lambda$}                        \\ \hline
-$\lambda$              & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-5 & 0.59 & 99.70\%   & 57.99\%     & 73.33\%  \\ \hline
-0.01 & 0.67 & 91.07\%   & 92.85\%     & 91.95\%  \\ \hline              
-0.0001 & 0.67 & 47.91\%   & 49.62\%     & 48.75\%  \\ \hline
+\multicolumn{4}{|c|}{Performance Varying $\lambda$}                        \\ \hline
+$\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+5 & 99.70 & 57.99\% & 73.33\%  \\ \hline
+1 & 99.01 & 68.06\% & 80.66\%  \\ \hline
+0.1 & 80.38 & 96.67\% & 87.78\%  \\ \hline
+0.01 & 88.71 & 98.87\% & 93.51\%  \\ \hline
+0.001 & 46.58 & 49.12\% & 47.82\%  \\ \hline
+0.0001 & 46.27 & 49.37\% & 47.77\%  \\ \hline
 \end{tabular}
 \caption[Cars Varying $\lambda$]{My caption}
 \label{tab:cars_varying_lambas}
 \end{table}
+
+
+
+
+
+
 
 \subsubsection{Eigenvector Clustercount default}
 
