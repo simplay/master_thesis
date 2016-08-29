@@ -307,26 +307,11 @@ In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of
 \label{fig:two_chairs_ped_mc_iterations}
 \end{figure}
 
-\subsubsection{Choice for lambda}
+\subsubsection{Choice for $\lambda$}
 In this experiment we examine the influence of the parameter $\lambda$, which is used to scale P-affinities. In particular, we legitimize its described standard parameter choices. For different values of $\lambda$ we generate P-affinity matrices for both of its run-modes, PD and PED. In this experiment, the trajectories tracking uses LDOF flows, since other authors (e.g. in $\cite{OB14b}$) have reported its effectiveness. Our results are listed in table $\ref{tab:varying_lambda_experiment}$.
 \begin{table}[H]
 \centering
 \setlength\tabcolsep{4pt}
-\begin{minipage}{0.48\textwidth}
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Varying $\lambda$ on PED}                        \\ \hline
-$\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-100 & 36.60\% & 35.11\% & 35.84\%  \\ \hline
-\textbf{50} & \textbf{52.44}\% & \textbf{59.28}\% & \textbf{55.65}\%  \\ \hline
-10 & 45.33\% & 52.22\% & 48.53\%  \\ \hline
-5 & 53.50\% & 51.02\% & 52.23\%  \\ \hline
-1 & 47.58\% & 43.50\% & 45.45\%  \\ \hline
-0.1 & 44.75\% & 41.00\% & 42.79\%  \\ \hline
-\end{tabular}
-\end{minipage}%
-\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -339,6 +324,21 @@ $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 \textbf{0.01} & \textbf{88.71} & \textbf{98.87}\% & \textbf{93.51}\%  \\ \hline
 0.001 & 46.58 & 49.12\% & 47.82\%  \\ \hline
 0.0001 & 46.27 & 49.37\% & 47.77\%  \\ \hline
+\end{tabular}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Varying $\lambda$ on PED}                        \\ \hline
+$\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+100 & 36.60\% & 35.11\% & 35.84\%  \\ \hline
+\textbf{50} & \textbf{52.44}\% & \textbf{59.28}\% & \textbf{55.65}\%  \\ \hline
+10 & 45.33\% & 52.22\% & 48.53\%  \\ \hline
+5 & 53.50\% & 51.02\% & 52.23\%  \\ \hline
+1 & 47.58\% & 43.50\% & 45.45\%  \\ \hline
+0.1 & 44.75\% & 41.00\% & 42.79\%  \\ \hline
 \end{tabular}
 \end{minipage}
 \caption[Experiment Varying $\lambda$]{The averaged statistics of a varying $\lambda$ on P-affinities applied on the bonn datasets. On the left table, the results when using PED affinities, on the right, when using PD affinities. The best determined choices for $\lambda$ are marked in bold face.}
@@ -374,7 +374,7 @@ Additionally, we visually demonstrate the influence of $\lambda$ on the segmenta
    \label{fig:cars_dataset_lambdas_c}
 }
 \end{center}
-\caption[Influence varying $\lambda$]{Illustration of the influence of the parameter $\lambda$ used to scale P-affinities.}
+\caption[Influence varying $\lambda$]{Illustration of the influence of the parameter $\lambda$ used to scale PD-affinities. On the first row the affinities of a certain trajectory on the car in the back (marked by a red circle) to its neighbors. The second row shows the corresponding segmentations.}
 \label{fig:cars_dataset_lambdas}
 \end{figure}
 As we can see, the optimal determined $\lambda$ value produces the best visual results. Using a too large value results in producing undersegmentations, and when using a too small value we will obtain an undersegmentation. \\ \\
