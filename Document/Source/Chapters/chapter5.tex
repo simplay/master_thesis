@@ -420,19 +420,7 @@ Addition experiments for varying cluster-eigenvalue count and the numeric values
 
 
 \subsection{On exploring flow methods}
-hs und lrgbd rausschmeisen
-
-
-
-
-
-
-
-
-
-
-
-
+In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two.
 
 
 
@@ -460,7 +448,7 @@ LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|}
 \hline
 \multicolumn{4}{|c|}{Using compatible datasets}                        \\ \hline
 Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
@@ -532,7 +520,7 @@ After running our pipeline the following key observations can be stated:
   \item LRGBD flows are a very bad choice and yield poor motion segmentations
   \item using depth fields improves the quality of the segmentation results drastically
   \item when comparing our default pipeline setup against Brox' Min-Cut method, we obtain way better results.
-  \item choosing the correct number of clusters and segments is a non-trivial task.
+  \item although our cluster/eigenvector choice has been proven as reliable, choosing the correct number of clusters and segments is a non-trivial task.
 \end{itemize}
 
 
