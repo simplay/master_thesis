@@ -165,12 +165,7 @@ In particular we will explain how meaningful image locations of moving objects a
 For every dataset frame we extract potential tracking candidate, the forward-and backward flow to the next frame, the occlusion map and colors in the CIE lab space, the normalized depth fields ranging in meter units and the depth-and flow variances. All this data is then saved to an individual file and used in a later pipeline stage.
 \subsection{Tracking Candidates}
 \label{sec:tracking_candidates}
-% TODO: see, where this might fit
-%we further reduce the number of samplings by only taking every $n-th$ sample location.
-% therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
 In this section we explain our approach how we determine image locations that exhibit meaningful motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position by our point tracker and thus responsible for detecting moving objects. \\ \\
-
-%
 Our implementation determines moving object regions by performing a grouping on motion trajectories. However, to form such trajectories we need to run a tracing on reliable motion features over the given video sequence. So, what are these features and how are they detected? \\ \\
 In this section we therefore explain how to determine reliable and meaningful image locations that exhibit motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position to trace features. Therefore, the quality of the candidates affects the detection of the moving objects. \\ \\
 The simplest idea would be to simply track every pixel location. On one hand, this would indeed capture every moving object. On the other hand, however, this also would make the motion tracking task highly inefficient, yet infeasible for common image resolutions. Therefore, we want a method which offers us a sparse sampling of the image locations but the same time hits enough meaningful candidates. \\ \\
@@ -254,6 +249,7 @@ Both moving objects in the shown example are preserved and only background pixel
 Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flows we know where the extracted features have to be tracked to in their successor frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find occluded regions.
 
 \subsection{Occlusion detection}
+\label{sec:occlusion_det}
 In this section we discuss how to determine when we should stop tracking a particular tracking candidate. This is particularly important since otherwise groupings on motion trajectories would be very erroneous and thus would negatively affect the motion segmentation quality. \\ \\
 The previously determined tracking candidates are used as starting points for out point tracking. For every tracking candidate we determine its tracked to position by adding the appropriate forward flow. However, this approach is very error prone because of using incorrect flow estimations or occluded regions. \\ \\
 Occlusion may occur whenever a previously visible object gets covered by another object. For instance when a object close to a camera gets directly in front of an object in the background. Continuing to trace a occluded point yields an incorrect tracking, since two distinct objects are tracked by the same trajectory. Thus, we have to stop tracking points as soon as they get occluded.
@@ -333,10 +329,16 @@ A detailed derivation of equation $\ref{eq:flow_var_opt_flow}$ can be found in t
 
 \section{Trajectory Tracking}
 \label{sec:trajectory_tracking}
-As discussed earlier, motion is a spatially and temporal coherent visual cue. This key insight tells us that motion is not frame-wise independent. Hence, we have to extract the whole motion history of every frame location and feed it to a particular segmentation method in order to produce viable motion groupings. To build the history of a point we track it to its successor frames using the optical flow. Such a ordered list of tracked to points is called trajectory. Finally, the set of all possible trajectories forms the seeked motion history. In this section we explain in detail the required steps to generate such trajectories and their 3d version using camera calibration data.
+As mentioned previously, motion is a spatially and temporally coherent visual cue. This implies that motion is not frame-wise independent and thus it represents the history of every image location. In particular the motion history of a tracking candidate can be formed by tracing them to their successor frames using the optical flow. Another commonly used term for a point history is \textit{motion trajectory}. A trajectory is an ordered list of points produced by tracking an initial feature location over a series of frames. We conclude that every trajectory has a temporal aspect (the frames its tracking points correspond to) and a spatial aspect (the image locations its tracking positions map to). \\ \\
+So far we have discussed how to obtain starting positions of trajectories (sec. $\ref{sec:tracking_candidates}$ and when we have to stop them (sec. $\ref{sec:occlusion_det}$). Moreover, by relying on the generated optical flow (sec. $\ref{sec:generate_of}$) we are able to determine the location a point gets tracked to in its successor frame. Therefore, at this moment, we are ready to discuss how to track motion trajectories. \\ \\
+In this section we explain in detail the required steps to track motion trajectories. Moreover we discuss a transformation that allows us to obtain 3d world coordinates from the traced 2d trajectory points. For this purpose we will make use of the depth field.
 
 \subsection{Point tracking}
-Every point in frame $t$ can be tracked to the next frame $t+1$ by using the optical flow field $w_t$ that belongs to frame $t$. 	In principle, any optical flow method can be used. Our implementation supports various flow methods$\footnote{In general, our pipeline supports any flow method that can produce .flo files. However, the follwoing methods are directly supported: the \textit{ldof}, \textit{hs}, \textit{srsf} and \textit{lrgbd} flow methods}$. Please refer to section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$ to get a detailed list and description. The algorithm $\ref{alg:point_tracking}$ describes the required step to perform the points tracking. \\ \\
+Every point in frame $t$ can be tracked to a position in its successor frame $t+1$ by using the forward flow field $w_t$ that belongs to frame $t$. 
+
+In principle, any optical flow method can be used. Our implementation supports various flow methods$\footnote{In general, our pipeline supports any flow method that can produce .flo files. However, the follwoing methods are directly supported: the \textit{ldof}, \textit{hs}, \textit{srsf} and \textit{lrgbd} flow methods}$. Please refer to section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$ to get a detailed list and description. 
+
+The algorithm $\ref{alg:point_tracking}$ describes the required step to perform the points tracking. \\ \\
 \begin{algorithm}[H]
 \caption{Point Tracking}
 \begin{table}[H]
