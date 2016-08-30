@@ -683,13 +683,28 @@ SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 We observe, that regardless of the choice of segmentation method, affinities produced using depths achieve higher f1 scores.
 
 \subsubsection{SC vs. MC}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Comparison one chair dataset on LDOF}                        \\ \hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
+PD SC & 56.23\% & 47.82\% & 51.68\% \\ \hline
+PD MC & 53.64\% & 48.50\% & 50.94\% \\ \hline
+PED SC & 54.14\% & 53.75\% & 53.94\% \\ \hline
+PED MC & 56.23\% & 55.07\% & 55.64\% \\ \hline              
+\end{tabular}
+\caption[SC vs. MC]{Comparing the segmentation methods SC and MC} 
+\label{tab:one_chair_sc_vs_mc}
+\end{table}
+
 
 \section{Runtime Measurements}
 In this section we present actual runtime measurements resulting when running on the specified machine as defined in table $\ref{tab:used_hardware_specs}$. Please notice that by no means these measurements can be considered as statistical evident. The sole purpose of this section is to give the reader some further understanding about the pipeline and its usability in terms of \textit{how handy is this whole pipeline to use w.r.t. its runtime}. \\ \\
 We start with measuring the runtimes of the utilized flow methods. For each method we run 3 dataset$\footnote{The dataset frames used to perform these measurement all exhibit a resolution 640 x 480 pixels.}$ and measured their total time to process their input. Each time measurement was divided by their total number of frames. The resulting timings were then finally averaged. Table $\ref{flow_method_runtimes}$ lists the average time in seconds that our flow methods require to process$\footnote{Here, the term process refers to generating the forward-and backward flow field of a frame.}$ one dataset frame. 
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|c|}
 \hline
 \textbf{Flow Method} & \textbf{Time per Frame} \\ \hline
 HS & 18s \\ \hline
