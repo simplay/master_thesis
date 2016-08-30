@@ -334,43 +334,39 @@ So far we have discussed how to obtain starting positions of trajectories (sec. 
 In this section we explain in detail the required steps to track motion trajectories. Moreover we discuss a transformation that allows us to obtain 3d world coordinates from the traced 2d trajectory points. For this purpose we will make use of the depth field.
 
 \subsection{Point tracking}
-Every point in frame $t$ can be tracked to a position in its successor frame $t+1$ by using the forward flow field $w_t$ that belongs to frame $t$. 
-
-In principle, any optical flow method can be used. Our implementation supports various flow methods$\footnote{In general, our pipeline supports any flow method that can produce .flo files. However, the follwoing methods are directly supported: the \textit{ldof}, \textit{hs}, \textit{srsf} and \textit{lrgbd} flow methods}$. Please refer to section $\ref{sec:impl_optical_flow}$ on page $\pageref{sec:impl_optical_flow}$ to get a detailed list and description. 
-
-The algorithm $\ref{alg:point_tracking}$ describes the required step to perform the points tracking. \\ \\
+Every point $p_t$ in frame $t$ can be tracked to a position $p_{t+1}$ in its successor frame $t+1$ by using the corresponding forward flow field $w_t$ that belongs to frame $t$. This is achieved by adding $w_t$ to $p_t$, which yields $p_{t+1}$. We repeat this procedure until the points gets either occluded or has reached the last video frame. Algorithm $\ref{alg:point_tracking}$ offers a detailed description of the involved steps to run the point tracking. \\ \\
 \begin{algorithm}[H]
 \caption{Point Tracking}
 \begin{table}[H]
   \begin{tabular}{@{}lll@{}}
-    \textbf{Input:} & Tracking candidates $\textbf{TC}$ \\
+    \textbf{Input:} & Tracking candidates \\
     	& Forward Flow fields $\textbf{F}$ \\
-        & Occluded Regions $\textbf{OR}$ \\
-	\textbf{Output:} & Trajectories $\textbf{TC}$
+        & Occluded Regions \\
+	\textbf{Output:} & Trajectories $\textbf{T}$
   \end{tabular} 
 \end{table}
 \setlength{\fboxrule}{0pt} 
 \begin{boxedminipage}{1.0\textwidth}
   \begin{algorithmic}[1]
-  	\State $\text{Load tracking candidates TC of first frame} f_1$
-  	\State $\text{Load forward flow } \text{ff}_1 \text{ of first frame } f_1.$
-  	\State $\text{Initalize a PointList } \bf{PL} \text{ containing all tracked to positions}.$
-  	\ForAll{$\text{trackingCandidate.position } p \in TC\left( f_1 \right)$}
-  		\State $\text{Fetch flow vector fv} = \textbf{F} \left( f_1, p \right)$
-  		\State $\text{Compute the tracked to position: } tp = p + fv$
-  		\State $\text{Append tp to TC}$
-    \EndFor
-    \State $\text{Append TC to the Tracking Candidates that belong to Frame 2}.$
-  	\ForAll{$\text{Frame } f \in \{ \text{Frame}_2,\dots, \text{Frame}_n\}$}
-  	  	\State $\text{Load tracking candidates TC of first frame} f$
-  		\State $\text{Load forward flow } \text{ff} \text{ of frame } f.$
-  		\State $\text{Initalize a PointList } \bf{PL} \text{ containing all tracked to positions}.$
-  		\ForAll{$\text{trackingCandidate.position } p \in TC\left( f \right)$}
-  			\State $\text{Fetch flow vector fv} = \textbf{F} \left( f, p \right)$
+  	\State $T \leftarrow \text{Initialize an empty list of trajectories}$
+  	\State $\bar{T} \leftarrow \text{Initialize an empty list of trajectories}$
+  	\For{$k=1 \text{ TO FrameCount}$}
+  		\State $C \leftarrow \text{load all tracking candidates that belong to frame } k$
+  		\State $\text{Start a new trajectory for each candidate and append it to T}$
+
+  		\ForAll{$\text{Trajectory } t \in T \text{ that has not ended yet}$}
+  			\State $p \leftarrow \text{getPointAtFrame(k)}$
+  		  	\State $\text{Fetch forward flow vector fv} = \textbf{F} \left(k, p \right)$
   			\State $\text{Compute the tracked to position: } tp = p + fv$
-  			\State $\text{Append tp to TC}$
-    	\EndFor
-    	\State $\text{Append TC to the Tracking Candidates that belong to next frame}.$
+  			\If{$tp \text{ lands in occluded region}$} 
+  				\State $\text{End tracking of trajectory } t $
+  				\State $\bar{t} \leftarrow \text{Start a new trajectory using tp as starting position}$
+  				\State $\text{Append } \bar{t} \text{ to } \bar{T}$
+  			\Else 
+  				\State $\text{Append tp to trajectory t}$
+  			\EndIf
+  		\EndFor
+  		\State $\text{Move all trajectories in } \bar{T} \text{ to T}$
     \EndFor
   \end{algorithmic}
   \end{boxedminipage}
@@ -378,11 +374,13 @@ The algorithm $\ref{alg:point_tracking}$ describes the required step to perform 
 \label{alg:point_tracking}
 \end{algorithm}
 $\newline$
-Initially, we load all the extracted Harris corner feature locations that belong to the first dataset frame and its corresponding forward flow field. For each such feature location, we lookup its value in the flow field. Next, we add this looked-up flow vector to currently considered feature image coordinate. The result is the \textit{tracked to} position within the second frame. If this computed tracked to position is not occluded, we keep it. Otherwise we discard it. Deciding whether or not a location is occluded is done by performing a lookup in the occlusion mask. Moreover, points that land outside valid image locations are discarded. \\ \\
-After processing the first frame, we continue with tracking points in the next frame. This time we not only have to track the extracted Harris features, but we also have to continue every \textit{tracked to} position from the previous iteration. To fill disoccluded areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame. \\ \\
-The set of all these locations is processed the same way as described as the points in the initial stage. We repeat this procedure until we visited every dataset frame. \\ \\
-Again, please note that tracking data has to be stopped as soon as a point gets occluded. otherwise, the point trajectory will share the motion of two different objects. \\ \\
-Finally, we conclude this section by offering an example of an actual point tracking applied on the cars dataset. The resulting trajectories, as well as their tracking points, are shown in figure $\ref{fig:cars_trajectories}$. In this visualization we see different trajectories, tracked over four frames. Tracking points that belong to the same trajectory have the same color as their trajectory. As we can see, points that were tracked in the same moving objects exhibit coherent and consistent trajectories. In other words, our flow field based tracker produces reliable and meaningful results in this example.
+The point tracker algorithm consists of two main loops. The other loop iterates over the number of frames present in the selected dataset and the inner loop runs over the set of all trajectories. Initially, we load all corner candidates, the occlusion maps and generated flow fields into our pipeline. Then, we initialize an empty trajectory set. \\ \\
+In every outer loop iteration we load all tracking candidates that correspond to the current frame index and use them to start new trajectories. Starting a new trajectory by a point means that use that point as the first tracking point of the trajectory plus, we store the frame index of this first point. Moreover, every new started trajectory is marked as not closed, meaning that it can be used to continue its tracking. Only trajectories that were tracked to occluded regions get marked as closed. \\ \\
+Next, we proceed with the in the inner loop, which runs the actual point tracking. We select every trajectory that is currently not marked as closed. For each such trajectory we first load its last appended tracking point. Moreover, the flow vector that matches the current trajectory point is loaded. Next, we compute potential tracked to position by addition the forward flow vector to the tracking point. We use the wording \textit{potential}, because we have to check first, whether this point was tracked to an occluded region. \\ \\
+In case the point was not occluded we append the computed tracked to position to the trajectory and continue to track the next trajectory. Otherwise, if the point was traced to an occluded region, we have to end the tracking of the currently considered trajectory and mark it as closed. The tracking has to be stopped soon as a point gets occluded, since otherwise the trajectory will share the motion of two different objects. \\ \\
+In the occluded case, the computed tracked to position is then used to start a new trajectory. Doing so handles the problem of disocclusion, because empty areas not covered by trajectory yet get filled. \\ \\
+This procedure is repeated until we have processed every frame and trajectory. \\ \\
+Finally, we conclude this section by offering an example of an actual point tracking applied on the cars dataset. The resulting trajectories, as well as their tracking points, are shown in figure $\ref{fig:cars_trajectories}$. In this visualization we see different trajectories, tracked over four frames. Tracking points that belong to the same trajectory have the same color as their trajectory. As we can see, points that were tracked along the same moving objects exhibit consistent trajectories. In other words, our flow field based tracker produces reliable and meaningful results in this example.
 \begin{figure}[H]
 \begin{center}
 
