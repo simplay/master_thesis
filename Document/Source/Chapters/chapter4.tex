@@ -169,7 +169,11 @@ For every dataset frame we extract potential tracking candidate, the forward-and
 %we further reduce the number of samplings by only taking every $n-th$ sample location.
 % therefore, only reliable points are kept and we remove points that doe not show any structure in their vicinity based on the smaller eigenvalue of the structure tensor. 
 In this section we explain our approach how we determine image locations that exhibit meaningful motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position by our point tracker and thus responsible for detecting moving objects. \\ \\
-The simplest idea would be to track every pixel location. On one hand, this would indeed capture every moving object. On the other hand, however, this also would make the motion tracking task highly inefficient, yet infeasible for common image resolutions. Therefore, we want a method which offers us a sparse sampling of the image locations but the same time hits enough meaningful candidates. \\ \\
+
+%
+Our implementation determines moving object regions by performing a grouping on motion trajectories. However, to form such trajectories we need to run a tracing on reliable motion features over the given video sequence. So, what are these features and how are they detected? \\ \\
+In this section we therefore explain how to determine reliable and meaningful image locations that exhibit motion information and thus are good candidates to track. The found tracking candidates are later used as the staring position to trace features. Therefore, the quality of the candidates affects the detection of the moving objects. \\ \\
+The simplest idea would be to simply track every pixel location. On one hand, this would indeed capture every moving object. On the other hand, however, this also would make the motion tracking task highly inefficient, yet infeasible for common image resolutions. Therefore, we want a method which offers us a sparse sampling of the image locations but the same time hits enough meaningful candidates. \\ \\
 Ideally, we want to use a feature detector that ignores points in homogeneous areas but selects points that show structural information in their vicinity. Since image corners exhibit a lot of structural information a Harris detector is a solid choice to approach this task. \\ \\
 The idea of this detector is the following: A corner defines an intersection of two edges. Therefore, it represents a point in which the directions of these two edges change. For images this means that the gradient has a large variance at that location. \\ \\
 It is possible to describe the average intensity change in any direction $(x,y)$
@@ -177,9 +181,9 @@ as a bilinear from
 \begin{equation}
 \left( x,y \right) M \colvec{x}{y}	
 \end{equation}
-Within the Harris detector code, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions thus their measured response should be large and positive. A detailed formulation can be found in section $\ref{sec:harris_corner_detector}$ on page $\pageref{sec:harris_corner_detector}$. \\ \\
-We apply the described Harris corner detector on every dataset image. This procedure yields a sparse set of traceable corner candidates per frame. Additionally, candidates with a too weak corner response are filtered according to a certain threshold value. \\ \\
-Lastly, for efficiency reasons, we spatially subsample the extracted locations. The subsampling is performed by applying a boolean grid with a certain cell size to the candidates, acting as a selection mask. This reduces the number of tracking candidates drastically and makes the sampling sparser. \\ \\
+Within the Harris detector code, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions thus their measured response should be large and positive. A detailed formulation of the Harris corner detector can be found in section $\ref{sec:harris_corner_detector}$ on page $\pageref{sec:harris_corner_detector}$. \\ \\
+We apply the described Harris corner detector on every dataset image. This procedure yields a sparse set of traceable corner candidates per frame. Additionally, candidates with a too weak corner response are filtered according to a certain threshold value. This ensures to only track strong edges and reliable features. \\ \\
+Lastly, for efficiency reasons, we spatially subsample the extracted locations. The subsampling is performed by applying a boolean grid with a certain cell size on the candidates, which acts as a selection mask. This reduces the number of tracking candidates drastically and makes the sampling even more sparse. Hence, we have to track fewer features and the overall runtime decreases. \\ \\
 The image locations of the remaining candidates are then dumped into a file. An example of this tracking candidate extraction procedure is illustrated in figure $\ref{fig:tracable_candidates}$. \\ \\
 \begin{figure}[H]
 \begin{center}
@@ -201,12 +205,11 @@ The image locations of the remaining candidates are then dumped into a file. An 
    \label{fig:c14_cand_dense}
 }
 \end{center}
-\caption[Tracking Candidates]{A visualization of the tracking candidates extraction stages. For a given input image as shown in subfigure $\ref{fig:c14_f1_cand}$ we want to compute a sparse set of traceable feature locations as shown in subfigure $\ref{fig:c14_cand_sparse}$.}
+\caption[Tracking Candidates]{A visualization of the tracking candidates extraction stages. For a given input image as shown in subfigure $\ref{fig:c14_f1_cand}$ we want to compute a sparse set of traceable feature locations as shown in subfigure $\ref{fig:c14_cand_sparse}$. The candidates are visualized as a boolean matrix for which true means a valid traceable candidate and false an invalid tracking location.}
 \label{fig:tracable_candidates}
 \end{figure}
-For a given dataset frame as shown in subfigure $\ref{fig:c14_f1_cand}$ we compute its corner candidates as illustrated in figure $\ref{fig:c14_cand_corners}$. As mentioned earlier, too weak corner candidates are rejected by filtering them. The set candidate locations is visualized in figure $\ref{fig:c14_cand_dense}$ as a boolean matrix for which true means a valid traceable candidate and false an invalid tracking location. The subsampled, final output is shown in subfigure $\ref{fig:c14_cand_sparse}$. \\ \\
-So, the remaining question is: what step-size should be used to generate the sparse set of tracking candidates? \\ \\
-To answer this question we have run different sampling rates on our datasets and visualized the resulting tracking candidates. An example illustrating different sampling rates is dipicted in figure $\ref{fig:sampling_rate_candidates}$. \\ \\
+For any given dataset frame (fig. $\ref{fig:c14_f1_cand}$) we compute its corners (fig. $\ref{fig:c14_cand_sparse}$) by applying a Harris corner detector. By thresholding the resulting corners we reject too week candidates and thus obtain a dense sampling of candidate locations (fig. $\ref{fig:c14_cand_dense}$). Lastly, by subsampling the candidates, we further can reduce their number and obtain the final sparse list of candidates (fig. $\ref{fig:c14_cand_sparse}$). \\ \\
+So, the remaining question is: what step-size should be used to generate the sparse set of tracking candidates? To answer this question we have run different sampling rates on our datasets and visualized the resulting tracking candidates. An example illustrating different sampling rates is dipicted in figure $\ref{fig:sampling_rate_candidates}$. \\ \\
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extreme Oversampling]{
