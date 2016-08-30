@@ -6,17 +6,17 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'statue_SRSF';
-METHODNAME = 'srsf';
+DATASETNAME = 'bonn_chairs_263_3_434_HS';
+METHODNAME = 'hs';
 STEP_SIZE = 12;
 PRECISSION = 12;
 
-COMPUTE_TRACKING_DATA = false; % compute tracking candidates, valid regions, flows
+COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
 RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
-COMPUTE_CIE_LAB = true; % compute cie lab colors from given input seq
+COMPUTE_CIE_LAB = false; % compute cie lab colors from given input seq
 EXTRACT_DEPTH_FIELDS = false; % add check: only if depth fields do exist
 COMPUTE_DEPTH_VARIANCE = false;
 

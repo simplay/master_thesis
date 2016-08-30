@@ -3,12 +3,12 @@ clc
 addpath('src');
 addpath('../matlab_shared');
 
-DATASET = 'cars';
-METHODNAME = 'ldof';
-PREFIX_INPUT_FILENAME = 'sd_both_4000';
+DATASET = 'statue_SRSF';
+METHODNAME = 'srsf';
+PREFIX_INPUT_FILENAME = 'sed_both_1000_final';
 
 graph_cuts_dir = '../output/graph_part/';
-PART_DS_PREF = 'test_cars_1';
+PART_DS_PREF = 'final_sed_statue_a';
 
 PART_DS = strcat(DATASET, '_', PREFIX_INPUT_FILENAME);
 if ~isempty(PART_DS_PREF)
@@ -18,7 +18,7 @@ end
 
 LABELS_FILE_PATH = strcat(graph_cuts_dir, PART_DS, '_part.txt');
 
-PREFIX_OUTPUT_FILENAME = 'sed_kl_c_9_2';
+PREFIX_OUTPUT_FILENAME = 'bonn_statue_150_3_450_sed_both_1000_final';
 COMPUTE_FULL_RANGE = true;
 CLUSTER_CENTER_COUNT = 5;
 
@@ -64,7 +64,7 @@ range = frame_idx:frame_idx;
 if COMPUTE_FULL_RANGE
     range = boundaries(1):1:boundaries(2);
 end
-range = 1:1;
+range = 40:40;
 write_label_clustering_file(label_assignments, label_mappings, path);
 rgb_values = rgb_list(CLUSTER_CENTER_COUNT);
 for img_index = range

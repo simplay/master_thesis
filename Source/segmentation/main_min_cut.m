@@ -2,24 +2,35 @@ clc;
 %clear all;
 %close all;
 
+
+% manual rescaling of W
+% WW = W;
+% w = log(W);
+% w = -w;
+% inv = isinf(w);
+% w(logical(inv)) = 0.000000001;
+% t = exp(-w*5);
+% t(logical(inv)) = 0;
+% W = t;
+
 addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'bonn_watercan_713_3_884_LRGBD';
-METHODNAME = 'lrgbd';
-PREFIX_OUTPUT_FILENAME = 'knorke';
-PREFIX_INPUT_FILENAME = 'ped_top_202';
+DATASET = 'cars';
+METHODNAME = 'ldof';
+PREFIX_OUTPUT_FILENAME = 'dense_pd_top_100_dense_6';
+PREFIX_INPUT_FILENAME = 'pd_top_100_dense';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % should we use simple coloring scheme
 USE_SIMPLE_COLORS = true;
 
 % Should the label assignment be re-used
-REUSE_LABEL_ASSIGNMENT = false;
+REUSE_LABEL_ASSIGNMENT = true;
 
 
 
@@ -29,7 +40,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 18;
+FORCE_EW_COUNT = 5;
 
 THRESH = 0.0000;
 
@@ -42,9 +53,9 @@ NU = 0.00000001;
 %NU = 0.000001;
 
 NU = 0.00000001;
-NU = 0.00000001
+NU = 0.0000001
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 12;
+CLUSTER_CENTER_COUNT = 5;
 
 SHOULD_EXCLUDE_U_IDXS = false;
 EXCLUDED_U_IDXS = [3];
@@ -65,15 +76,15 @@ SHOW_SEGMENTATION = true;
 SAVE_FIGURES = true;
 
 % filter all eigenvectors that belong to eigenvalues <= 0
-FILTER_ZERO_EIGENVALUES = false;
+FILTER_ZERO_EIGENVALUES = true;
 
 SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 64;
 SELECTED_ENTITY_IDX = 1;
-frame_idx = 4;
+frame_idx = 1;
 
 % number of iterations that should be performed for computing the approx.
-num_of_iters = 30;
+num_of_iters = 1;
 
 
 

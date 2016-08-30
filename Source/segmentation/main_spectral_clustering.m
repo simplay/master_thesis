@@ -6,21 +6,21 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'cars';
+DATASET = 'bonn_chairs_263_3_434';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'merge_example3';
-PREFIX_INPUT_FILENAME = 'pd_top_100';
+BASE_PREFIX_OUTPUT_FILENAME = 'pd_top_100_flows';
+PREFIX_INPUT_FILENAME = 'pd_top_100_flows';
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
 % or the EW count won't have any effect.
-REUSE_ASSIGNMENTS = true;
+REUSE_ASSIGNMENTS = false;
 
 % should all eigenvectors that belong to eigenvalues <= 0 be filtered.
-FILTER_ZERO_EIGENVALUES = true;
+FILTER_ZERO_EIGENVALUES = false;
 
 % iterate over all existing images in sequence
 COMPUTE_FULL_RANGE = false;
@@ -30,10 +30,10 @@ USE_SIMPLE_COLORS = true;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 6;
+FORCE_EW_COUNT = 10;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 6;
+CLUSTER_CENTER_COUNT = 10;
 
 %
 % RUN_MODE = 1 => vis segmentation
@@ -54,11 +54,14 @@ SELECT_AFFINITY_IDX = false;
 SELECTED_ENTITY_IDX = 1;
 frame_idx = 1;
 
+for CLUSTER_CENTER_COUNT=10:10
+for FORCE_EW_COUNT=10:10
 
-
-PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
+        
+    
+PREFIX_OUTPUT_FILENAME = strcat(BASE_PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT));
 if USE_CLUSER_EW_COUNT
-    PREFIX_OUTPUT_FILENAME = strcat(PREFIX_OUTPUT_FILENAME, '_ev_', num2str(FORCE_EW_COUNT));
+    PREFIX_OUTPUT_FILENAME = strcat(BASE_PREFIX_OUTPUT_FILENAME, '_c_', num2str(CLUSTER_CENTER_COUNT), '_ev_', num2str(FORCE_EW_COUNT));
 end
 %%
 if exist('W','var') == 0
@@ -76,3 +79,6 @@ USE_EIGS = true;
 THRESH = 0.0000;
 
 [W, U, S, U_full, S_full, label_assignments] = run_clustering(DATASET, METHODNAME, RUN_MODE, CLUSTER_CENTER_COUNT, THRESH, COMPUTE_EIGS, USE_EIGS, W, SELECTED_ENTITY_IDX, frame_idx, USE_CLUSER_EW_COUNT, SELECT_AFFINITY_IDX, FORCE_EW_COUNT, U_full, S_full, COMPUTE_FULL_RANGE, SAVE_FIGURES, SHOW_SEGMENTATION, PREFIX_OUTPUT_FILENAME, PREFIX_INPUT_FILENAME, FILTER_ZERO_EIGENVALUES, REUSE_ASSIGNMENTS, label_assignments, USE_SIMPLE_COLORS);
+
+end
+end
