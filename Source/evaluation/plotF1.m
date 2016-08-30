@@ -6,19 +6,13 @@
 % f = [f1; f2; f3; f4]
 % plotF1(f, [5, 10, 15, 20], {'pd sc', 'pd mc', 'ped sc', 'ped mc'})
 function plotF1(fs, range, plotLabels)
+addpath('../libs/flow-code-matlab');
     skip = false;
     if nargin < 3
         skip = true;
     end
     
-    colors = [
-        1 0 0;
-        0 1 0;
-        0 0 1;
-        1 0 1;
-        0.5 1 1;
-        0.5 0.5 0.5;
-    ];
+    colors = rgb_list(12, true);
 
     [count, ~] = size(fs);
     as = [];
@@ -32,14 +26,14 @@ function plotF1(fs, range, plotLabels)
         as = [as, a];
     end
     
-    xlabel('Cluster Count', 'fontsize', 20)
-    xlabel('Clusters', 'fontsize', 20)
+    xlabel('Eigenvector Count', 'fontsize', 20)
+    %xlabel('Clusters', 'fontsize', 20)
     ylabel('F1 Score', 'fontsize', 20)
-    set(gca,'xtick',0:10)
+    set(gca,'xtick',0:12)
     grid on
     if ~skip
         leg = legend(as, plotLabels);
-        set(leg,'location','northwest', 'fontsize', 15);
+        set(leg,'location','southwest', 'fontsize', 15);
     end
     
 end

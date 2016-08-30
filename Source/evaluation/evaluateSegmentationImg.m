@@ -1,7 +1,7 @@
 % evaluates graphically segmenation results, given the graphical
 % segmentation, the gt mask and the amb. mask.
 
-DATASET = 'statue_SRSF';
+DATASET = 'cars';
 FRAME_IDX = 90;
 FILTER_AMBIGUOUS = true;
 
