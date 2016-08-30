@@ -42,7 +42,10 @@ In nature one important aspect that determines the odds of survival and thus the
 \caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform a self-localization}
 \label{fig:motivating_example}
 \end{figure}
-As natural this tasks might be performed by our brains as hard it becomes to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
+Even despite its apparent simplicity, motion is a very general and powerful cue to segment objects or even to determine logical object parts. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. 
+% state focus of thesis: There is a plentitude of semantic information in how things move and this is why this thesis focusses on
+\\ \\
+As natural such tasks might be performed by our brains the harder they become to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
 However, a lot of scientific effort has been put into this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
 \begin{figure}[H]
 \begin{center}
@@ -63,7 +66,7 @@ However, a lot of scientific effort has been put into this problem statement and
 The field of motion segmentation aims at decomposing a video in moving objects and background and is the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance, traffic monitoring. \\ \\
 The idea of using optical flows as an estimate of the motion goes back to the pioneering work of B. Horn and B. Schunck $\cite{Hs81}$. In this thesis we will build upon the body of work from T.Brox $\cite{Bro11a}$, $\cite{OB14b}$ and $\cite{KB15b}$, who promotes an approach based on clustering trajectories extracted via optical flow. \\ \\
 An orthogonal technique to generate motion segmentation is to order the objects according to their depth layer. Unfortunately, this approach requires depth measurements of dataset frames. Until recently, measuring depths in videos was rather unpractical since it required dedicated and expensive capturing devices and additional post-processing. However, due to the success of Microsoft Xbox' Kinect, the competition among these capturing devices has increased and the prices became affordable. \\ \\
-Idially, a motion segmentation pipeline would therefore make use of optical flows and the same time exploit measured depth maps. 
+Ideally, a motion segmentation pipeline would therefore make use of optical flows and the same time exploit measured depth maps. 
 
 \section{Goals}
 The purpose of this thesis is to describe and evaluate a robust motion segmentation method
