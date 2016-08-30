@@ -274,6 +274,24 @@ A detailed explanation of these measures can be found in the background section 
 One last note: During our evaluations we want to determine the quality of segmentations and the influence of design choices regardless of additional post-processing steps. Since our dense motion segmentation method basically performs a blurring on the sparse segmentation, and thus the quality is arbitrary influenced, we disallow using dense segmentations in our quantitative evaluation.
 
 \section{Experiments}
+In this section we list the results of a series of experiments we performed running our pipeline on the presented dataset from section $\ref{sec:datasets}$ on page $\pageref{sec:datasets}$. The results are evaluated according the previously explained measures from section $\ref{sec:methodology}$ on page $\pageref{sec:methodology}$. \\ \\
+For performing our experiments we used MacBook Pro. The hardware specifications of this machine are listed in table $\ref{tab:used_hardware_specs}$. 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\multicolumn{2}{|c|}{\textbf{Hardware Specifications}} \\ \hline
+\textbf{CPU} & 2.5 GHz Intel Core i7 \\ \hline
+\textbf{Threads} & 8 \\ \hline
+\textbf{MEMORY} & 16 GB 1600 MHz DDR3 \\ \hline
+\textbf{GPU} & Intel Iris Pro 1536 MB \\ \hline
+\end{tabular}
+\caption{A listing of the hardware specifications of the used machine to produce the results.}
+\label{tab:used_hardware_specs}
+\end{table}
+
+
+
 \subsection{Parameter Experiments}
 \label{sec:parameter_experiments}
 In this section we describe a series of experiments that address our default parameter selection choice. In particular it acts as a justification of our choices and should demonstrate its legitimization.
@@ -490,10 +508,29 @@ We observe that segmentations using SRSF score good, and segmentations using LDO
 \caption[Bonn Cerealbox Segmentations]{Visualization of the segmentation that belong to the results listed in table $\ref{tab:statue_performance}$.}
 \label{fig:alley_segmentations}
 \end{figure}
-Altough the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers.
+Although the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers. \\ \\
+In order to verify that LRGBD flows are indeed not suitable for our motion segmentation pipeline we performed a second experiment. For thus purpose we evaluated the segmentation quality on the watercan dataset. This time we used all existing flow methods and produced segmentations using PED-affinities. The results are listed in table $\ref{tab:bonn_wc_flwo_methods}$.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|r|l|l|}
+\hline
+\multicolumn{4}{|c|}{Flow Comparison on Bonn Watercan Dataset} \\ \hline
+& \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline            
+HS PED SC  & 71.59\%   & 71.96\%     & 71.77\%  \\ \hline
+HS PED MC  & 71.84\%   & 72.59\%     & 72.21\%  \\ \hline                        
+LDOF PED SC  & 94.30\%   & 58.20\%     & 71.98\%  \\ \hline
+LDOF PED MC  & 67.50\%   & 81.06\%     & 73.66\%  \\ \hline
+SRSF PED SC & 90.00 \%   & 96.25\%     & 93.02\%  \\ \hline
+SRSF PED MC & 94.23 \%   & 95.04\%     & 94.63\%  \\ \hline
+LRGBD PED SC & 30.00\%   & 16.68\%     & 21.43\%  \\ \hline
+LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
+\end{tabular}
+\caption[Flow Method Comparission Bonn Watercan]{Comparing the quality of our flow methods on the Bonn Watercan dataset.}
+\label{tab:bonn_wc_flwo_methods}
+\end{table}
+Again, we observe, that LRGBD flows produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by running the mode LRGBD PED MC. The segmentation of frame 30 is shown in figure $\ref{fig:issues_lrgbd_flow_methods}$. 
 \begin{figure}[H]
 \begin{center}
-
 \subfigure[Extracted Layers Frame 30]{
    \includegraphics[width=0.31\linewidth] {evaluation/lrgbd_issues/layers_30}
    \label{fig:issues_lrgbd_flows_a}
@@ -508,12 +545,15 @@ Altough the LRGBD flows are supposed to be competitive against SRSF flows, using
 }
 \end{center}
 \caption[Issue with LRGBD Flows]{Comparing the a LRGBD based segmentation against its flow field.}
-\label{fig:issues_lrgbd_flows}
+\label{fig:issues_lrgbd_flow_methods}
 \end{figure}
 When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flows cluster the objects according to their depth layers rather by their motion.
 
 \subsection{Overall Performance}
-
+evaluating the segmentation quality of some of our methods using five our datasets and three of their ground truth frames. We use LDOF and SRSF flows. \\ \\
+In this last experiment we perform an overall evaluation of our main methods using their standard parameter setup. For this evaluation we use five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). \\ \\
+For generating motion segmentations we run a subset of the cross-combinations between the used flow methods, two-and tree d motions, and the segmentation method. In particular we want to compare the quality of the two pipeline methods LDOF PC SC and SRSF PED MC. The first mostly resembles Brox' original implementation, whereas the former corresponds to an adapted, enhanced version making use of depth cues, more robust flow fields and a reliable segmentation method. Moreover, we also run weaker versions of our enhanced version to demonstrate that by reducing one particular pipeline component, the overall segmentation suffers. Moreover, we also run a strong graph-partitioning algorithm called KL which yields a superior segmentation quality. Lastly, To have a better comparison we also run T. Brox' Graphcut method on our datasets and evaluate its quality. \\ \\
+Each method computes the segmentation on every dataset. For each dataset we use three ground-truth images, which we use to evaluate the quality of the resulting segmentations. The averaged performance is listed in table \ref{tab:overall_performance}.
 
 
 \begin{table}[H]
@@ -551,6 +591,8 @@ Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline
 \caption[Overall Performance]{My caption}
 \label{tab:overall_performance}
 \end{table}
+We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using min cut for generating the segmentation is better than running spectral clustering. \\ \\
+Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
 
 
 \subsection{Properties}
