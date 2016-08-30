@@ -209,7 +209,7 @@ The image locations of the remaining candidates are then dumped into a file. An 
 \label{fig:tracable_candidates}
 \end{figure}
 For any given dataset frame (fig. $\ref{fig:c14_f1_cand}$) we compute its corners (fig. $\ref{fig:c14_cand_sparse}$) by applying a Harris corner detector. By thresholding the resulting corners we reject too week candidates and thus obtain a dense sampling of candidate locations (fig. $\ref{fig:c14_cand_dense}$). Lastly, by subsampling the candidates, we further can reduce their number and obtain the final sparse list of candidates (fig. $\ref{fig:c14_cand_sparse}$). \\ \\
-So, the remaining question is: what step-size should be used to generate the sparse set of tracking candidates? To answer this question we have run different sampling rates on our datasets and visualized the resulting tracking candidates. An example illustrating different sampling rates is dipicted in figure $\ref{fig:sampling_rate_candidates}$. \\ \\
+So, the remaining question is: What grid size should be used to generate the sparse set of tracking candidates? To answer this question we run different sampling rates on the tracking candidates and evaluated which size was able to produced the best motion segmentations. An visualization of tracking candidates produced by using different sampling rates is shown in figure $\ref{fig:sampling_rate_candidates}$. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extreme Oversampling]{
@@ -233,10 +233,8 @@ So, the remaining question is: what step-size should be used to generate the spa
 \caption[Density Of Candidates For Different Sampling Rates]{A visualization of different sampling rates of tracking candidates}
 \label{fig:sampling_rate_candidates}
 \end{figure}
-After experimenting with this parameter we observed, that setting the cell size larger than 12 pixels causes a lose in detail since there are not enough points to cover small object parts. On the other hand, cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, please not that it is still possible to assign a different value to this parameter. \\ \\
-Finally, there is one optional post-processing stage, removing all candidates that would result in looking up a too weak optical flow value. \\ \\
-This reduction is computed as the follows: We use the tracking candidate of a frame as lookup coordinates in their corresponding forward flow fields and compute their magnitude. Then, every candidate that maps to a magnitude value smaller than the largest 10 percent of the determined flow magnitudes is discarded. We repeat this procedure for every frame. \\ \\
-This drastically reduced the total number of candidates, however may also cancel out useful motion locations. Therefore, this is just optional. Most of the time this removes background pixel locations. An example is shown in figure $\ref{fig:tracable_candidates_strict}$.
+After tinkering with this parameter during our experiments we observed, that setting the cell size larger than 12 pixels causes a lose in detail since there are not enough points to cover small object parts. On the other hand, cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, please note that it is still possible to manually assign a different value to this parameter. \\ \\
+Finally, there is one optional post-processing stage, which removes all candidates that map to a too weak optical flow vector. This reduction is implemented as the follows: We use the tracking candidate of a frame as lookup coordinates in their corresponding forward flow fields and compute their magnitude. Then, every candidate that maps to a magnitude value smaller than the largest 10 percent of the determined flow magnitudes is discarded. We repeat this procedure for every frame. Doing so drastically reduced the total number of candidates. However this procedure may also cancel out useful motion locations. Nevertheless, most of the time this post-processing only removes candidates that belong to the background$\footnote{By \textit{background} we refer to pixel locations that do not map to a moving object.}$. Additionally, figure $\ref{fig:tracable_candidates_strict}$ graphically illustrates the idea behind this filtering approach.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Subselection of all Dense Candidates]{
@@ -251,8 +249,9 @@ This drastically reduced the total number of candidates, however may also cancel
 \caption[Strict Dense Candidates]{A visualization of the post-processed traceable candidate locations. On the left, all extracted candidate locations overlaid by the flow magnitudes (in blue), on the right side, an image of the reduced candidates.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
+In the image on the left (fig. $\ref{fig:c14_f1_cand_dense_2}$) we see the set of all dense tracking candidates overlaid by their flow magnitudes (the bluish masks). The stronger the magnitude, the more bluish the mask is colored. We trivially observe, that the moving objects themselves correspond to the top flow magnitudes. Hence, applying a filtering the tracking candidates by their flow magnitudes yields tracking candidates on the moving objects (fig. $\ref{fig:c14_cand_dense_strict}$). \\ \\
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
-In the next section we discus how to find occluded regions.
+Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flows we know where the extracted features have to be tracked to in their successor frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find occluded regions.
 
 \subsection{Occlusion detection}
 In this section we discuss how to determine when we should stop tracking a particular tracking candidate. \\ \\
