@@ -392,9 +392,9 @@ Finally, we conclude this section by offering an example of an actual point trac
 
 \subsection{Transformation to 3d points}
 \label{subsection:transform_to_3d_points}
-Ultimately, our pipeline should be able to work with 3d data. To enable this, we have to make use of the extracted depth map and use their information in order to transform the 2d trajectory points to 3d points in space. Ideally, the distances, computed to define an affinity measure between trajectories, should be more accurate. 
-
-Given the principal point $p = \left(p_x, p_y \right)$ and the focal lengths $\left(f_x, f_y \right)$ we can compute the following homogeneous transformation:
+In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flows and our tracking candidates are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories such that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
+In the following section we explain how such a transformation from 2d image space to 3d world space can be implemented. We assume, that the utilized RGBD-video sequences were captured using two cameras, a color-and depth camera. To be as general as possible, we further assume that these cameras are not aligned. Having a formulation based on this assumptions allows to support a broad series of video sequences captured by various devices. \\ \\
+Let us model the two cameras by a pinhole camera as described in the appendix section $\ref{sec:pinhole_camera}$. The pinhole camera model is a simple mathematical model to define a projection from the world space to the 2d image space using a homogeneous transformation defined as 
 \begin{equation}
 \colvec[f_x X + Z p_x]{f_y Y + Z p_y}{Z} =
 \begin{bmatrix}
@@ -408,26 +408,22 @@ Y \\
 Z \\
 1
 \end{pmatrix}
+\label{eq:homogen_camera_mat_transf}
 \end{equation}
-
-In the following, let us assume $d \equiv z$. Then
-
+where given the  $p = \left(p_x, p_y \right)$ denotes the principal point and the focal lengths $\left(f_x, f_y \right)$ of the camera. \\ \\
+So far we have exactly the opposite of what we would like to get. We defined a transformation that allows to project a 3d point onto the 2d image space. However, by deriving the inverse transformation of the definition of equation $\ref{eq:homogen_camera_mat_transf}$ allows us to define points in the 3d space. In the following, let us assume the the measured depth $d \equiv z$. Then
 \begin{equation}
 	\colvec[X]{X}{Z} \mapsto \left( \frac{f_x x}{d} + p_x, \frac{f_y y}{d} + p_y \right)^T
 \end{equation}
-
 since
-
 \begin{equation}
 \begin{aligned}
 	d \left( \frac{x - p_x}{f_x} \right) = \hat{x} \Leftrightarrow \frac{\hat{x}}{d} f_x + p_x = x \\
 	d \left( \frac{y - p_y}{f_y} \right) = \hat{y} \Leftrightarrow \frac{\hat{y} f_y}{d} + p_y = y 
 \end{aligned}
 \label{eq:depth_tranfomation}
-\end{equation}.
-For given pixel coorinates $\left( x,y \right)$ that indicate image locations, we want to transform them into camera coordinates, using depth maps, by applying equation $\ref{eq:depth_tranfomation}$. \\ \\
-
-Given the extrinsic and intrinsic camera calibration data,
+\end{equation}
+The aspect that the color-and depth cameras are not aligned can be modeled by defining an extrinsic calibration matrix $E$. Such a matrix defines how a camera has to be shifted and rotated to align with another camera. Given the extrinsic and intrinsic camera calibration data this is defined as
 \begin{equation}
 \begin{aligned}
 	\text{Camera}^{depth} : \left( p^d = (p_x^d, p_y^d), f^d = (f_x^d, f_y^d)\right) \\
@@ -436,7 +432,7 @@ Given the extrinsic and intrinsic camera calibration data,
 \end{aligned}
 \label{eq:calib_data}
 \end{equation}.
-Steps to transform 2d image locations $\left( u, v \right)$ to 3d positions $\left( x, y, z \right)$ using the camera calibration data defined as in equation $\ref{eq:calib_data}$. Furthermore, let the depth value d $\in$ $\bf{D}$. Then we have to perform the following transformations steps:
+In order to transform a 2d pixel coordinate $\left( u, v \right)$ (in image space) to a 3d world coordinate $\left( x, y, z \right)$ we have run the following steps:
 \begin{enumerate}
 \item Transform image location onto depth camera space
 \begin{equation}
