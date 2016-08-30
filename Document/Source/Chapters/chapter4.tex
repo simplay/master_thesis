@@ -254,27 +254,10 @@ Both moving objects in the shown example are preserved and only background pixel
 Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flows we know where the extracted features have to be tracked to in their successor frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find occluded regions.
 
 \subsection{Occlusion detection}
-In this section we discuss how to determine when we should stop tracking a particular tracking candidate. \\ \\
+% why is this important
+In this section we discuss how to determine when we should stop tracking a particular tracking candidate. This is particularly important since otherwise groupings on motion trajectories would be very erroneous and thus would negatively affect the motion segmentation quality. \\ \\
 The previously determined tracking candidates are used as starting points for out point tracking. For every tracking candidate we determine its tracked to position by adding the appropriate forward flow. However, this approach is very error prone because of using incorrect flow estimations or occluded regions. \\ \\
-Occlusion may occur whenever a previously visible object gets covered by another object, e.g. a camera captures a scene, during some frames, the observed objects in the background get occluded by another object that is closer to the camera and directly in front of them. \\
-So, especially the case of continuing a tracking when a point lands in a occluded regions yields a incorrect tracking. Thus, we have to stop tracking points as soon as those points gets occluded. \\ \\
-In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. In contrast, we detect occlusions by verifying the consistency of the forward and the backward flow. In our pipeline such a verification is performed by applying the backward flow $\hat{w}_t$ to a continued tracked point $p_{t+1}$ and checking whether that resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Figure $\ref{fig:occlusion_detection}$ illustrates this concept of occlusion detection.
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
-\end{center}
-\caption[Occlusion Detection]{Conceptual illustration of occlusion detection. For any tracking candidate we apply its corresponding forward flow to find its position in the next frame. From there, we look-up its backward flow and apply it on the tracked to position. If we land close to the point in the original tracked from frame, we say, that the point is not occluded and otherwise we call the point occluded.}
-\label{fig:occlusion_detection}
-\end{figure}
-In the non-occluded case, the backward flow vector $\hat{w}_t$ is supposed to point to the inverse direction of its corresponding forward flow vector $w_t$. Hence, adding $w_t$ to the backward flow vector looked up at the location the forward vector points to should yield approximately the zero vector. If this required consistency is not satisfied, then the point $p_t$ is either getting occluded at frame $t+1$ (the next frame) or the flow was not correctly estimated. Both outcomes are good reasons to stop tracking this point at frame $t$. Since there are always some small estimation errors in the optical flow, there is a small tolerance interval granted. The formula used to decide when a point is not occluded is given in equation $\ref{eq:occlussion_error_tol}$.
-\begin{equation}
-\begin{aligned}
-& \forall p_t \in \text{Frame t}:	\norm{\hat{p_t}-p_t}_2^2 < \epsilon \norm{\hat{w}_t + w_t}_2^2 + b \\
-& \text{where } \hat{p_t} = p_{t+1} + \hat{w_t} \text{ with } p_{t+1} = p_t + w_t
-\end{aligned}
-\label{eq:occlussion_error_tol}
-\end{equation} \\
-Occlusion comes with the opposite phenomenon disocclision or scaling. To fill these areas not covered by trajectory yet, new trajectories are initialized, in empty areas in each new frame using the same strategy as for the first frame.
+Occlusion may occur whenever a previously visible object gets covered by another object. For instance when a object close to a camera gets directly in front of an object in the background. Continuing to trace a occluded point yields an incorrect tracking, since two distinct objects are tracked by the same trajectory. Thus, we have to stop tracking points as soon as they get occluded.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Input Image]{
@@ -289,6 +272,23 @@ Occlusion comes with the opposite phenomenon disocclision or scaling. To fill th
 \caption[Occluded Regions]{A visualization of the occluded regions. In the left, an color frame and on the right its occluded regions (white pixels).}
 \label{fig:invalid_regions}
 \end{figure}
+In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. In contrast, we detect occlusions by verifying a consistency check between the forward- and backward flows. Such a verification is performed applying the backward flow $\hat{w}_t$ to a continued tracked point $p_{t+1}$ and then checking whether the resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Figure $\ref{fig:occlusion_detection}$ illustrates this occlusion detection concept.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
+\end{center}
+\caption[Occlusion Detection]{Conceptual illustration of occlusion detection. For any tracking candidate we apply its corresponding forward flow to find its position in the next frame. From there, we look-up its backward flow and apply it on the tracked to position. If we land close to the point in the original tracked from frame, we say, that the point is not occluded and otherwise we call the point occluded.}
+\label{fig:occlusion_detection}
+\end{figure}
+In the non-occluded case, the backward flow vector $\hat{w}_t$ is supposed to point to the inverse direction of its corresponding forward flow vector $w_t$. Hence, adding $w_t$ to the backward flow vector looked up at the location the forward vector points to should yield approximately the zero vector. If this required consistency is not satisfied, then the point $p_t$ is either getting occluded at frame $t+1$ (the next frame) or the flow was not correctly estimated. Both outcomes are good reasons to stop tracking this point at frame $t$. Since there are always some small estimation errors in the optical flow, there is a small tolerance interval granted. The formula used to decide when a point is not occluded is given in equation $\ref{eq:occlussion_error_tol}$.
+\begin{equation}
+\begin{aligned}
+& \forall p_t \in \text{Frame t}:	\norm{\hat{p_t}-p_t}_2^2 < \epsilon \norm{\hat{w}_t + w_t}_2^2 + b \\
+& \text{where } \hat{p_t} = p_{t+1} + \hat{w_t} \text{ with } p_{t+1} = p_t + w_t
+\end{aligned}
+\label{eq:occlussion_error_tol}
+\end{equation}
+Whenever a trajectory got occluded then this also means that an new moving object appeared. In that case the occluded regions represent empty areas yet not covered by any trajectories that belong to the occluding objects. Hence, in every such empty area, new trajectories are initialized. This urge of having to starting new trajectories in occluded regions is also known as \textit{disocclision}.
 
 \subsection{Flow Variance}
 \label{sec:flow_variance}
