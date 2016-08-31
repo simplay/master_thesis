@@ -8,21 +8,29 @@ addpath('../matlab_shared');
 LABELS_FILE_NAME = 'labels.txt';
 
 DATASET = 'cars';
-DATASET = 'bonn_chairs_263_3_434'
+%DATASET = 'bonn_chairs_263_3_434'
 %DATASET = 'bonn_cerealbox_150_3_450';
+DATASET = 'bonn_watercan_713_3_884';
+
 %DATASET = 'bonn_watercan_713_3_884'
-IMG_IDXS = [15, 30, 45]; % bonn_chairs_263_3_434
+%IMG_IDXS = [15, 30, 45]; % bonn_chairs_263_3_434
 %IMG_IDXS = [40, 60, 80]; % bonn_cerealbox_150_3_450
-%IMG_IDXS = [4, 30, 54]; % bonn_watercan_713_3_884
+IMG_IDXS = [4, 30, 54]; % bonn_watercan_713_3_884
 %IMG_IDXS = [1]
 STEPSIZE_DATA = 8;
 %PREFIX_INPUT_FILENAME = 'ped_top_100_lambda_5';
-METHODNAME = 'hs';
+METHODNAME = 'ldof';
 FILTER_AMBIGUOUS = true;
 MUTED = true;
 
-%DS_PREFIX = 'pd_top_100_lambda_'
-DS_PREFIX = 'pd_top_100_flows';
+USE_3d = true;
+if USE_3d
+DS_PREFIX = 'ped_top_100_lambda_50';
+else
+DS_PREFIX = 'pd_top_100_lambda_0_01';
+end
+
+%DS_PREFIX = 'pd_top_100_flows';
 
 %[FileName, FilePath, ~] = uigetfile('.txt');
 %LABELS_FILE_PATH = strcat(FilePath, FileName);
@@ -31,15 +39,18 @@ OUT_PATH = '../output/cluster_merges/';
 %lambdas = {'1', '0_1', '0_01', '0_001', '0_0001'};
 %lambdas = {'1'};
 %lambdas = {'100', '50', '10', '5', '1', '0_1'};
+%lambdas = {'50'};
 FileName = 'labels.txt';
 %stats = zeros(length(lambdas), 3);
 stats = zeros(1, 3);
- %for t=1:length(lambdas)
+%for t=1:length(lambdas)
 %lambda = lambdas{t};
 %PREFIX_INPUT_FILENAME = [DS_PREFIX, lambda];
+
 PREFIX_INPUT_FILENAME = [DS_PREFIX];
 %FilePath = strcat('../output/clustering/', DATASET, '_', METHODNAME, '_', DS_PREFIX,lambda, '_c_10_ev_10/');
-FilePath = strcat('../output/clustering/', DATASET, '_', METHODNAME, '_', DS_PREFIX, '_c_10_ev_10/');
+% 'bonn_watercan_713_3_884_SRSF_srsf_ped_top_100_lambda_50_mc_iters_20_c_10_ev_20_nu_1e-07'
+FilePath = strcat('../output/clustering/', DATASET, '_', METHODNAME, '_', DS_PREFIX, '_mc','_iters_20', '_c_10_ev_20_','nu_1e-07', '/');
 LABELS_FILE_PATH = [FilePath, FileName];
 
 t = 1;
@@ -56,4 +67,5 @@ end
 
 %end
 
-stats = stats / length(IMG_IDXS);
+stats = (stats / length(IMG_IDXS))*100;
+stats

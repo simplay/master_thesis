@@ -6,10 +6,10 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'bonn_chairs_263_3_434';
-METHODNAME = 'ldof';
-BASE_PREFIX_OUTPUT_FILENAME = 'pd_top_100_flows';
-PREFIX_INPUT_FILENAME = 'pd_top_100_flows';
+DATASET = 'bonn_watercan_713_3_884_SRSF';
+METHODNAME = 'srsf';
+BASE_PREFIX_OUTPUT_FILENAME = 'pd_top_100_lambda_0_01';
+PREFIX_INPUT_FILENAME = 'pd_top_100_lambda_0_01';
 
 % should the eigendecomposition be computed
 COMPUTE_EIGS = true;

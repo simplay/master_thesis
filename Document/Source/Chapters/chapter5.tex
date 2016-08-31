@@ -661,14 +661,30 @@ Additionally, Kernighan Lin yields the best segmentations among all segmentation
 \subsection{Pipeline Combination Comparisons}
 
 \subsubsection{LDOF vs. SRSF}
-\subsubsection{2d vs 3d}
-In this section we want to illustrate the dominance of affinities that use depth cues. 
-For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use LDOF flows and generated segmentations for every possible pipeline mode. The results are listed in table $\ref{tab:bonn_datasets_2d_vs_3d}$.
+In this section we want to illustrate the dominance of SRSF flows. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{Comparison bonn dataset on LDOF}                        \\ \hline
+\multicolumn{4}{|c|}{Comparison flows bonn dataset using MC}                        \\ \hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
+LDOF PD & 35.76\% & 46.90\% & 40.58\% \\ \hline
+SRSF PD & 48.32\% & 48.99\% & 48.65\% \\ \hline
+LDOF PED & 44.22\% & 50.92\% & 47.34\% \\ \hline
+SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
+\end{tabular}
+\caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flows using MC}
+\label{tab:bonn_datasets_ldof_vs_srsf}
+\end{table}
+We observe, that segmentations based on SRSF flows always obtain higher f1 scores.
+
+\subsubsection{2d vs 3d}
+In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flows and generated segmentations for every possible pipeline mode. The results are listed in table $\ref{tab:bonn_datasets_2d_vs_3d}$.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Comparison Bonn Chairs on LDOF}                        \\ \hline
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
 PD SC & 47.48\% & 54.88\% & 50.91\% \\ \hline
 PED SC & 56.86\% & 55.35\% & 55.35\% \\ \hline

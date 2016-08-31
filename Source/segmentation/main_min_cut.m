@@ -18,19 +18,26 @@ addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 addpath('../libs/GCMex/');
 
-DATASET = 'cars';
+DATASET = 'bonn_watercan_713_3_884';
 METHODNAME = 'ldof';
-PREFIX_OUTPUT_FILENAME = 'dense_pd_top_100_dense_6';
-PREFIX_INPUT_FILENAME = 'pd_top_100_dense';
+
+USE_3d = false;
+if USE_3d
+PREFIX_OUTPUT_FILENAME = 'ped_top_100_lambda_50_mc';
+PREFIX_INPUT_FILENAME = 'ped_top_100_lambda_50';
+else
+PREFIX_OUTPUT_FILENAME = 'pd_top_100_lambda_0_01_mc';
+PREFIX_INPUT_FILENAME = 'pd_top_100_lambda_0_01';
+end
 
 % should the eigendecomposition be computed
-COMPUTE_EIGS = false;
+COMPUTE_EIGS = true;
 
 % should we use simple coloring scheme
 USE_SIMPLE_COLORS = true;
 
 % Should the label assignment be re-used
-REUSE_LABEL_ASSIGNMENT = true;
+REUSE_LABEL_ASSIGNMENT = false;
 
 
 
@@ -40,7 +47,7 @@ COMPUTE_FULL_RANGE = false;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 5;
+FORCE_EW_COUNT = 20;
 
 THRESH = 0.0000;
 
@@ -55,7 +62,7 @@ NU = 0.00000001;
 NU = 0.00000001;
 NU = 0.0000001
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 5;
+CLUSTER_CENTER_COUNT = 10;
 
 SHOULD_EXCLUDE_U_IDXS = false;
 EXCLUDED_U_IDXS = [3];
@@ -84,7 +91,7 @@ SELECTED_ENTITY_IDX = 1;
 frame_idx = 1;
 
 % number of iterations that should be performed for computing the approx.
-num_of_iters = 1;
+num_of_iters = 20;
 
 
 
