@@ -289,34 +289,14 @@ For performing our experiments we used MacBook Pro. The hardware specifications 
 \caption{A listing of the hardware specifications of the used machine to produce the results.}
 \label{tab:used_hardware_specs}
 \end{table}
-
-
+The first series of experiments examines the influence of certain pipeline parameters. In particular we legitimize the choice for our default parameter assignments. Next, we have study the behaviour and quality of segmentations when altering our flow estimation methods. The main experiment is the evaluation of some strong pipeline combinations applied on all of our datasets. Finally, we try to find the best pipeline combinations for each stage.
 
 \subsection{Parameter Experiments}
 \label{sec:parameter_experiments}
-In this section we describe a series of experiments that address our default parameter selection choice. In particular it acts as a justification of our choices and should demonstrate its legitimization.
-
-Ideally, we would run every dataset on every possible pipeline combination. However, this würde den rahmen sprengen.
-
-to justify
-
-For illustration purp
-
-lediglich veranschauungszweck, untermalen, warum parameter so gewählt wie erklärt
-
-ziel: alle varianten auf allen datasets
-probleme: komplexity, dh alle kreuzkombinationen, so impractical that considering ldof and srsf
-
-hs vergleichbar mit ldof und lrgbd 
-
-zeige ldof sed kl
-plots
-u dessen plots (klein für var cluster)
-% convergence i, ldof ped mc
+In this section we describe a series of experiments that address our default parameter selection choice. In particular it acts as a justification of our choices and should demonstrate their legitimization.
 
 \subsubsection{Examine Influence of Cluster Merger}
-
-For the following experiment we examine the influence of our cluster merger. In particular we visually and statistically evaluate the influence of this merging step. In this experiment we only use LDOF flows. The visual results are shown in figure $\ref{fig:eval_raw_vs_merged}$ and their corresponding statistical performances in table $\ref{tab:eval_stat_raw_merged}$.
+For the following experiment we examine the influence of our cluster merger. In particular we visually evaluate the influence of this merging step. In this experiment we only use LDOF flows. The visual results are shown in figure $\ref{fig:eval_raw_vs_merged}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Raw PD SC]{
@@ -370,22 +350,7 @@ For the following experiment we examine the influence of our cluster merger. In 
 \label{fig:eval_raw_vs_merged}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|}
-\hline
-\multicolumn{4}{|c|}{Comparison bonn chairs dataset using LDOF flows}                        \\ \hline
-\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-PD SC & 49.98/47.48 \%   & 61.88/61.88 \%     & 55.29/53.73 \%  \\ \hline
-PD MC & 45.30/42.46 \%   & 66.10/66.10 \%     & 53.75/51.70 \%    \\ \hline
-PED SC & 59.54/56.86 \%   & 47.35/47.35 \%     & 52.75/51.67 \%    \\ \hline
-PED MC & 59.30/56.68 \%   & 50.56/50.56 \%     & 54.58/53.44 \%     \\ \hline              
-SD KL & 48.46/46.34 \%   & 63.44/63.44 \%     & 54.95/53.56 \%     \\ \hline
-SED KL & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%    \\ \hline
-\end{tabular}
-\caption[Statistics Bonn Chairs Frame 30]{}
-\label{tab:eval_stat_raw_merged}
-\end{table}
+The statistical measurements are listed in table $\ref{tab:eval_stat_raw_merged}$
 
 
 
@@ -575,6 +540,7 @@ Addition experiments for varying cluster-eigenvalue count and the numeric values
 
 
 \subsection{On exploring flow methods}
+Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
 In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
 In the first sub-experiment we compare the segmentations produced on LDOF-and HS flows. In the second experiment we examine the quality of segmentations produced by LRGBD flows.
 
