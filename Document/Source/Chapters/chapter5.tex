@@ -520,8 +520,8 @@ These results allow us to conclude that our $\lambda$ defaults are reliable enou
 
 
 \subsubsection{Examine Eigenvector-/Cluster-Count Defaults}
-In section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters-and eigenvectors when either running the SC or MD segmentation method. We stated, that will use twice the estimated count of the moving objects present in the video for the cluster count and twice the cluster count for the number of eigenvalues. In order to legitimize the usage of those defaults, we create a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
-In this experiment we make use of the cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs shown in figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of the used eigenvectors but keeps the cluster count as a free variable.
+In section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters-and eigenvectors when either running the SC or the MD segmentation method. We stated, that will use twice the estimated count of the moving objects present in the video for the cluster count and twice the cluster count for the number of eigenvalues. In order to legitimize the usage of those defaults, we create a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
+In this experiment we evaluate the Cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs shown in figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of the used eigenvectors but keeps the cluster count as a free variable.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Fixed Clusters and Varying Eigenvectors]{
@@ -534,13 +534,13 @@ In this experiment we make use of the cars dataset, since it has a static camera
 \caption[Varying number of Clusters / Eigenvectors]{Two graphs that show the f1 score for a varying number of clusters and eigenvectors on the cars dataset. The graph on the left shows plots for fixed cluster numbers and the graph on the right plots the f1 score for a fixed eigenvalue count and varying cluster counts.}
 \label{fig:cc_ev_combinations}
 \end{figure}
-when Considering the graph produced by fixed clusters, then we observe, that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
+At first glance the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the f1 scores when increasing the number of clusters, which seems to be counterintuitive. The optimal cluster/eigenvalue count selection seems to more complex than our simple heuristic. However, when Considering the fixed clusters graph we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
 However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations produce top results according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster count and eigenvector count produce good results and thus we will rely on these cluster-and eigenvector-count assignment heuristic. \\ \\
 Addition experiments for varying cluster-eigenvalue count and the numeric values of the evaluation can be found in the appendix in section $\ref{sec:additional_cc_ev_exp}$.
 
 
 \subsection{On exploring flow methods}
-Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
+Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many cross-combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
 In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
 In the first sub-experiment we compare the segmentations produced on LDOF-and HS flows. In the second experiment we examine the quality of segmentations produced by LRGBD flows.
 
@@ -564,7 +564,7 @@ HS PED SC MC & 55.61\%   & 53.15\%     & 54.35\%  \\ \hline
 From the data in the table we can see that segmentations produced using LDOF flows yield higher f1 scores than those produced by HS flows. Apparently, pipeline combinations that use LDOF flows are producing qualitatively better segmentations. Therefore, we decide to drop HS flows and only use LDOF flows instead.
 
 \subsubsection{On LRGBD Flows}
-In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flows on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. In other words we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
+In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flows on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. Hence, we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
 The achieved performances are listed in table $\ref{tab:statue_performance}$ and visual segmentations are depicted in figure $\ref{fig:alley_segmentations}$.
 \begin{table}[H]
 \centering
@@ -611,8 +611,9 @@ We observe that segmentations using SRSF score good, and segmentations using LDO
 \caption[Bonn Cerealbox Segmentations]{Visualization of the segmentation that belong to the results listed in table $\ref{tab:statue_performance}$.}
 \label{fig:alley_segmentations}
 \end{figure}
-Although the LRGBD flows are supposed to be competitive against SRSF flows, using them yields a poor segmentation. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers. \\ \\
-In order to verify that LRGBD flows are indeed not suitable for our motion segmentation pipeline we performed a second experiment. For thus purpose we evaluated the segmentation quality on the watercan dataset. This time we used all existing flow methods and produced segmentations using PED-affinities. The results are listed in table $\ref{tab:bonn_wc_flwo_methods}$.
+Although the LRGBD flows are supposed to be competitive against SRSF flows, using them for segmentation tasks yield poor segmentations. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers instead according to their motion. \\ \\
+
+In order to verify that LRGBD flows are indeed not suitable for our motion segmentation pipeline we performed a second experiment. This time we evaluated the watercan segmentations. We used all existing flow methods and produced segmentations using PED-affinities. The results are listed in table $\ref{tab:bonn_wc_flwo_methods}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|r|l|l|}
@@ -631,7 +632,7 @@ LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \caption[Flow Method Comparission Bonn Watercan]{Comparing the quality of our flow methods on the Bonn Watercan dataset.}
 \label{tab:bonn_wc_flwo_methods}
 \end{table}
-Again, we observe, that LRGBD flows produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by running the mode LRGBD PED MC. The segmentation of frame 30 is shown in figure $\ref{fig:issues_lrgbd_flow_methods}$. 
+Again, we observe, that LRGBD flows produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by LRGBD PED MC. The corresponding segmentation of frame 30 is visualized in figure $\ref{fig:issues_lrgbd_flow_methods}$. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extracted Layers Frame 30]{
