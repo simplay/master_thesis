@@ -402,91 +402,11 @@ of number of clusters,eigenvectors. The corresponding statistics are listed in t
 
 \subsection{Varying Pipeline Combinations for LDOF flows}
 For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
-\begin{figure}[H]
-\begin{center}
-\subfigure[LDOF PD SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_sc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_a}
-}
-\subfigure[LDOF PD MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_mc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_b}
-}
-~
-\subfigure[LDOF PED SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_sc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_c}
-}
-\subfigure[LDOF PED MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_mc}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_d}
-}
-~
-\subfigure[LDOF SD KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sd_kl}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_e}
-}
-\subfigure[LDOF SED KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sed_kl}
-   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_f}
-}
-\end{center}
-\caption[Bonn Chairs Segmentations Frame 30]{Segmentations produced by our pipeline when running the Bonn Chairs dataset, using 10 clusters.}
-\label{fig:eval_bonn_chairs_raw_segmentations_frame_30}
-\end{figure}
 
-% new bonn chairs fig
-\begin{figure}[H]
-\begin{center}
-\subfigure[LDOF PD SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_sc}
-   \label{fig:bonn_chairs_c_10_b}
-}
-\subfigure[LDOF PD MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_mc}
-   \label{fig:bonn_chairs_c_10_c}
-}
-~
-\subfigure[LDOF PED SC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_sc}
-   \label{fig:bonn_chairs_c_10_d}
-}
-\subfigure[LDOF PED MC]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_mc}
-   \label{fig:bonn_chairs_c_10_e}
-}
-~
-\subfigure[LDOF SD KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sd_kl}
-   \label{fig:bonn_chairs_c_10_d}
-}
-\subfigure[LDOF SED KL]{
-   \includegraphics[width=0.48\linewidth] {evaluation/bonn_chairs_c_10/ldof_sed_kl}
-   \label{fig:bonn_chairs_c_10_e}
-}
-\end{center}
-\caption[Merged Segments Bonn Chairs]{Final, merged segmentation results of frame 30 when running our pipeline on the bonn dataset. The quantitive measures of these segmentations are listed in table $\ref{tab:eval_bonn_chairs}$.}
-\label{fig:eval_bonn_chairs_c_10}
-\end{figure}
 % end new bonn chairs fig
 
 % new bc table
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|l|l|}
-\hline
-\multicolumn{6}{|c|}{Comparison bonn chairs dataset using 10 clusters}                        \\ \hline
-\textbf{Method} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} & \textbf{Fragmentation} \\ \hline
-LDOF PD SC & 0.41/0.43 & 49.98/47.48 \%   & 61.88/61.88 \%     & 55.29/53.73 \%  & x \% \\ \hline
-LDOF PD MC & 0.41/0.43 & 45.30/42.46 \%   & 66.10/66.10 \%     & 53.75/51.70 \%  & x \%   \\ \hline
-LDOF PED SC & 0.34/0.35& 59.54/56.86 \%   & 47.35/47.35 \%     & 52.75/51.67 \%  & x \%   \\ \hline
-LDOF PED MC & 0.34/0.35 & 59.30/56.68 \%   & 50.56/50.56 \%     & 54.58/53.44 \%  & x \%   \\ \hline              
-LDOF SD KL & 0.41/0.43 & 48.46/46.34 \%   & 63.44/63.44 \%     & 54.95/53.56 \%  & x \%   \\ \hline
-LDOF SED KL & 0.34/0.36 & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%    & x \%  \\ \hline
-\end{tabular}
-\caption[Bonn Chairs Merged 10 Clusters]{}
-\label{tab:eval_bonn_chairs_c_10}
-\end{table}
+
 % end new bc table
 
 

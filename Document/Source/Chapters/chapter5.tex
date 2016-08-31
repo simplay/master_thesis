@@ -314,6 +314,80 @@ plots
 u dessen plots (klein für var cluster)
 % convergence i, ldof ped mc
 
+\subsubsection{Examine Influence of Cluster Merger}
+
+For the following experiment we examine the influence of our cluster merger. In particular we visually and statistically evaluate the influence of this merging step. In this experiment we only use LDOF flows. The visual results are shown in figure $\ref{fig:eval_raw_vs_merged}$ and their corresponding statistical performances in table $\ref{tab:eval_stat_raw_merged}$.
+\begin{figure}[H]
+\begin{center}
+\subfigure[Raw PD SC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_sc}
+}
+\subfigure[Merged PD SC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_sc}
+}
+\subfigure[Raw PD MC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_pd_mc}
+}
+\subfigure[Merged PD MC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_pd_mc}
+}
+~
+\subfigure[Raw PED SC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_sc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_c}
+}
+\subfigure[Merged PED SC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_sc}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[Raw PED MC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_ped_mc}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_d}
+}
+\subfigure[Merged PED MC]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_ped_mc}
+   \label{fig:bonn_chairs_c_10_e}
+}
+~
+\subfigure[Raw SD KL]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sd_kl}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_e}
+}
+\subfigure[Merged SD KL]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_sd_kl}
+   \label{fig:bonn_chairs_c_10_d}
+}
+\subfigure[Raw SED KL]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10_segmentations_f_30/ldof_sed_kl}
+   \label{fig:eval_bonn_chairs_raw_segmentations_frame_30_f}
+}
+\subfigure[Merged SED KL]{
+   \includegraphics[width=0.2\linewidth] {evaluation/bonn_chairs_c_10/ldof_sed_kl}
+   \label{fig:bonn_chairs_c_10_e}
+}
+\end{center}
+\caption[Bonn Chairs Segmentations Frame 30]{Raw-and merged segmentations produced by our pipeline when running all modes on the Bonn Chairs dataset using LDOF flows.}
+\label{fig:eval_raw_vs_merged}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{4}{|c|}{Comparison bonn chairs dataset using LDOF flows}                        \\ \hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 49.98/47.48 \%   & 61.88/61.88 \%     & 55.29/53.73 \%  \\ \hline
+PD MC & 45.30/42.46 \%   & 66.10/66.10 \%     & 53.75/51.70 \%    \\ \hline
+PED SC & 59.54/56.86 \%   & 47.35/47.35 \%     & 52.75/51.67 \%    \\ \hline
+PED MC & 59.30/56.68 \%   & 50.56/50.56 \%     & 54.58/53.44 \%     \\ \hline              
+SD KL & 48.46/46.34 \%   & 63.44/63.44 \%     & 54.95/53.56 \%     \\ \hline
+SED KL & 91.34/64.42 \%   & 81.60/64.63 \%     & 86.20/64.52 \%    \\ \hline
+\end{tabular}
+\caption[Statistics Bonn Chairs Frame 30]{}
+\label{tab:eval_stat_raw_merged}
+\end{table}
+
+
 
 \subsubsection{Examine Varying Cluster Count}
 
