@@ -653,28 +653,8 @@ Again, we observe, that LRGBD flows produce poor segmentations. So, what is goin
 When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flows cluster the objects according to their depth layers rather by their motion.
 
 \subsection{Overall Performance}
-evaluating the segmentation quality of some of our methods using five our datasets and three of their ground truth frames. We use LDOF and SRSF flows. \\ \\
-In this last experiment we perform an overall evaluation of our main methods using their standard parameter setup. For this evaluation we use five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). \\ \\
-For generating motion segmentations we run a subset of the cross-combinations between the used flow methods, two-and tree d motions, and the segmentation method. In particular we want to compare the quality of the two pipeline methods LDOF PC SC and SRSF PED MC. The first mostly resembles Brox' original implementation, whereas the former corresponds to an adapted, enhanced version making use of depth cues, more robust flow fields and a reliable segmentation method. Moreover, we also run weaker versions of our enhanced version to demonstrate that by reducing one particular pipeline component, the overall segmentation suffers. Moreover, we also run a strong graph-partitioning algorithm called KL which yields a superior segmentation quality. Lastly, To have a better comparison we also run T. Brox' Graphcut method on our datasets and evaluate its quality. \\ \\
-Each method computes the segmentation on every dataset. For each dataset we use three ground-truth images, which we use to evaluate the quality of the resulting segmentations. The averaged performance is listed in table \ref{tab:overall_performance}.
-
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Using all datasets}                        \\ \hline
-Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-LDOF PD SC & 63.52 \%   & 41.87\%     & 50.47\%  \\ \hline
-LDOF PD MC & 58.69\%   & 57.86\%     & 58.27\%  \\ \hline
-LDOF PED SC & 66.94\%   & 57.91\%     & 62.10\%  \\ \hline
-LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline                 
-\end{tabular}
-\caption[Overall Performance]{My caption}
-\label{tab:overall_performance}
-\end{table}
-
-
+So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flows can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
+In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is listed in table $\ref{tab:overall_performance}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -691,12 +671,27 @@ SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
 SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
 Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
 \end{tabular}
-\caption[Overall Performance]{My caption}
+\caption[Overall Performance]{Evaluation of LDOF and SRSF flows using all pipeline combinations on a subset of our datasets.}
 \label{tab:overall_performance}
 \end{table}
-We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using min cut for generating the segmentation is better than running spectral clustering. \\ \\
-Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
-
+We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using MC for generating the segmentation is better than running spectral clustering. \\ \\
+Overall, KL yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we just used its standard parameters but used specifically good parameters in our pipeline (determined for our datasets).
+Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are in table $\ref{tab:overall_performance_ldof}$.
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{LDOF on every datasets}                        \\ \hline
+Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+LDOF PD SC & 63.52 \%   & 41.87\%     & 50.47\%  \\ \hline
+LDOF PD MC & 58.69\%   & 57.86\%     & 58.27\%  \\ \hline
+LDOF PED SC & 66.94\%   & 57.91\%     & 62.10\%  \\ \hline
+LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline                 
+\end{tabular}
+\caption[Overall Performance LDOF P-Affinities]{Evaluation of all LDOF-P-affinity pipeline combinations on every dataset. }
+\label{tab:overall_performance_ldof}
+\end{table}
+We again observe, that among the LDOF/P-affinity variants, using depths yields better results than not using them and MC achieves higher scores than SC.  
 
 \subsection{Pipeline Combination Comparisons}
 
@@ -809,6 +804,8 @@ After running our pipeline the following key observations can be stated:
   \item although our cluster/eigenvector choice has been proven as reliable, choosing the correct number of clusters and segments is a non-trivial task.
 \end{itemize}
 
+
+Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
 
 
 
