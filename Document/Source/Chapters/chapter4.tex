@@ -682,7 +682,7 @@ The $\delta_{\pi^A, \pi^B}$ is a characteristic function that is equals one, if 
 The $\textbf{data term}$ models a unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. Notice that this term makes use of the norm $\norm{.}_{\lambda}$. In this norm each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors \enquote{that separate more distinct clusters} correspond to smaller eigenvalues. \\ \\
 The $\textbf{smoothness term}$ acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
 The parameter $\nu$ acts as the trade-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
-Minimizing the energy formulated in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibits many local minima. However, when using a fixed number of clusters $K$, minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids.
+Minimizing the energy formulated in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibits many local minima. However, when using a fixed number of clusters $K$, minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids (see $\cite{TsaiBMVC10}$).
 \begin{figure}[H]
 \begin{center}
 \subfigure[Initialization]{
@@ -718,25 +718,25 @@ A loop iteration consists of two main steps: First, we fix the label assignments
 
 \subsection{Kernighan-Lin Heuristic} 
 In this section we describe a method that addresses the problem of motion segmentation by formulating it as a minimum cost multi-cut problem on a trajectory similarity graph as defined in section $\ref{sec:similarity_graphs}$. The energy term \enquote{we optimized to find an optimal graph partition} is based on the work presented in $\cite{KB15b}$. To solve this graph cut problem numerically we implemented the $\textit{Kernighan-Lin}$ heuristic ($\textbf{KL}$) described in $\cite{Ker70}$. \\ \\
-In the following, let $G = (E, V)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. Moreover, every edges in $E$ has a certain weight $e_c$ assigned. Then, the minimum cost multi-cut problem decomposes the graph $G$ into an optimal number of segments such that the overall edge weights cost is minimized. Equivalently, this vertex labeling problem can be formulated as a binary edge labeling problem, which is defined as
+In the following, let $G = (E, V)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. Moreover, every edge in $E$ has a certain weight $e_c$ assigned. Then, the minimum cost multi-cut problem decomposes the graph $G$ into an optimal number of segments such that the overall edge weights cost is minimized. Equivalently, this vertex labeling problem can be formulated as a binary edge labeling problem, which is defined as
 \begin{equation}
 \begin{aligned}
 & \min_{y \in \{0,1 \}^{|E|}} \sum_{e \in E} c_e y_e \\
 & \text{subject to } y \in \text{MC}
 \end{aligned}
 \end{equation}
-The expression $\text{MC}$ denotes the set of characteristic functions of all multi-cuts and thus corresponds to all $y \in \{0,1 \}^{|E|}$ that form closed boundaries. Hence, such boundaries represent a valid decomposition of the graph. To define these characteristics a series of cycle inequalities, similar as done in $\cite{Chopra1993}$, are formulated as defined in the follows:
+The expression $\text{MC}$ denotes the set of characteristic functions of all multi-cuts and thus corresponds to all $y \in \{0,1 \}^{|E|}$ that form closed boundaries. Hence, such boundaries represent a valid decomposition of the graph. To define these characteristics a series of cycle inequalities, similar as done in $\cite{Chopra1993}$, are formulated and defined as follows:
 \begin{equation}
 	\forall C \in \text{cycles}(G) \forall e \in C: y_e \leq \sum_{e^{'} \in C \backslash \{e\}} y_{e^{'}}
 \end{equation}
 Furthermore, in $\cite{Chopra1993}$ it was shown, that it is sufficient to only consider those cycles in which each vertex is only connected to its successor and predecessor. \\ \\
-In order to avoid trivial solutions when optimizing for these characteristics, we employ the following edge weighting strategy: Typically, we chose the weights such that edges which should be cut are negative and positive for those which are connected to vertices that should be joined.
+In order to avoid trivial solutions when optimizing for these characteristics, we employ the following edge weighting strategy: We chose the weights in such a way that edges, which should be cut, are negative and positive for those which are connected to vertices that should be joined.
 In the following, let us assume that we know the edge cut probabilities $p_e$. In that case the negative function
 \begin{equation}
 	\text{logit}\left( p_e \right) = \log \left( \frac{p_e}{1 - p_e} \right)
 	\label{eq:logit_function}
 \end{equation}
-provides such a desired behavior. A plot if the negative logit function defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
+provides such a desired behavior. A plot of the negative logit function is defined as in $\ref{eq:logit_function}$ is shown in figure $\ref{fig:negative_logit_function}$.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[trim axis left]
@@ -761,7 +761,7 @@ provides such a desired behavior. A plot if the negative logit function defined 
 \caption[Logit Function Plot]{A plot of the negative logit function applied on the domain [0,1].}
 \label{fig:negative_logit_function}
 \end{figure}
-If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the according edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e. \\ \\
+If $p_e < 0.5$ then $\text{logit}\left( p_e \right) > 0$ and thus the corresponding edge cost $c_e$ is positive and therefore the edge $e$ is expensive to be cut out from the graph. Conversely, in case that $p_e > 0.5$ the negative logit function of $p_e$ is smaller than zero and thus it is beneficial to cut e. \\ \\
 For computing pseudo-probabilities, we use the inverse of the logit function, the so called \textit{logistic function}
 \begin{equation}
 	f(z) = \frac{1}{1 + \exp \left( -z \right)}.
