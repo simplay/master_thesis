@@ -50,7 +50,7 @@ Our pipeline assumes a well-enumeration of its video frames, meaning that the im
 
 \section{Generate Optical Flows}
 \label{sec:generate_of}
-In our pipeline we rely heavily on optical flow fields. In particular, flow fields are used to perform the point tracking, which is required to extract motion trajectories, to detect occlusions and to compute affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
+In our pipeline we rely heavily on optical flow fields. In particular, flow fields are used to perform the point tracking required to extract motion trajectories, to detect occlusions and to compute affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation of optical flow fields is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. However, in principle, the optical flow represents a displacement field that defines where a certain point in a frame is mapped to in its successive frame. \\ \\
 In this stage we want to generate the following optical flows on the frames of a given dataset video:
 \begin{itemize}
@@ -166,7 +166,7 @@ as a bilinear from
 \end{equation}
 Within the Harris detector code, every image location is then described in terms of the eigenvalues of $M$. Moreover, the detector uses the pixel-wise eigenvectors to measure the corner response. Good corners have a large intensity change in all directions and thus their measured response should be large and positive. A detailed formulation of the Harris corner detector can be found in section $\ref{sec:harris_corner_detector}$ on page $\pageref{sec:harris_corner_detector}$. \\ \\
 We apply the described Harris corner detector on every dataset image. This procedure yields a sparse set of traceable corner candidates per frame. Additionally, candidates with a too weak corner response are filtered according to a certain threshold value. This ensures that only strong edges and reliable features are being tracked. \\ \\
-Lastly, for efficiency reasons, we spatially subsample the extracted locations. The subsampling is performed by applying a boolean grid with a certain cell size on the candidates, which acts as a selection mask to make subsequent pipeline steps tractable. This reduces the number of tracking candidates drastically and makes the sampling even more sparse. Hence, we have to track fewer features and the overall runtime decreases. \\ \\
+Lastly, for efficiency reasons, we spatially subsample the extracted locations. The subsampling is performed by applying a boolean grid with a specific cell size on the candidates, which acts as a selection mask to make subsequent pipeline steps tractable. This reduces the number of tracking candidates drastically and makes the sampling even more sparse. Hence, we have to track fewer features and the overall runtime decreases. \\ \\
 The image locations of the remaining candidates are then dumped into a file. An example of this tracking candidate extraction procedure is illustrated in figure $\ref{fig:tracable_candidates}$. \\ \\
 \begin{figure}[H]
 \begin{center}
@@ -217,7 +217,7 @@ In general it is always a trade-off between complexity and resolution. On one ha
 \caption[Density Of Candidates For Different Sampling Rates]{A visualization of different sampling rates of tracking candidates}
 \label{fig:sampling_rate_candidates}
 \end{figure}
-After tinkering with this parameter during our experiments we observed, that setting the cell size larger than 12 pixels causes a loss of details since there are not enough points to cover parts with small objects. Also, we observe that cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, note that it is still possible to manually assign a different value to this parameter. \\ \\
+After tinkering with this parameter during our experiments we observed, that setting the cell size larger than 12 pixels causes a loss of details since there are not enough points to cover small object parts. Also, we observe that cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, note that it is still possible to manually assign a different value to this parameter. \\ \\
 Finally, there is one optional post-processing stage, which removes all candidates that map to a too weak optical flow vector. This reduction is implemented as following: We use the tracking candidate of a frame as lookup coordinates in their corresponding forward flow fields and compute their magnitude. Then, every candidate that maps to a magnitude value smaller than the largest 10 percent of the determined flow magnitudes is discarded. We repeat this procedure for every frame. Doing so drastically reduces the total number of candidates. However this procedure may also cancel out useful motion locations. Nevertheless, most of the time this post-processing only removes candidates that belong to the background$\footnote{By \textit{background} we refer to pixel locations that do not map to a moving object.}$. Additionally, figure $\ref{fig:tracable_candidates_strict}$ graphically illustrates the idea behind this filtering approach.
 \begin{figure}[H]
 \begin{center}
@@ -381,9 +381,9 @@ Finally, we conclude this section by offering an example of an actual point trac
 
 \subsection{Transformation to 3d points}
 \label{subsection:transform_to_3d_points}
-In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flows and our tracking candidates are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories such that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
-In the following section we explain how such a transformation from 2d image space to 3d world space can be implemented. We assume, that the utilized RGBD-video sequences were captured using two cameras, a color-and depth camera. To be as general as possible, we further assume that these cameras are not aligned. Having a formulation based on this assumptions allows to support a broad series of video sequences captured by various devices. \\ \\
-Let us model the two cameras by a pinhole camera as described in the appendix section $\ref{sec:pinhole_camera}$. The pinhole camera model is a simple mathematical model to define a projection from the world space to the 2d image space using a homogeneous transformation defined as 
+In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flows and our tracking candidates, are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories so that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
+In the following section we explain how such a transformation from 2d image space to 3d world space can be implemented. We assume, that the utilized RGBD-video sequences were captured using two cameras, a color and depth camera. To be as general as possible, we further assume that these cameras are not aligned. Having a formulation based on this assumptions allows us to support a broad series of video sequences captured by various devices. \\ \\
+Let us model the two cameras by a pinhole camera as described in the appendix section $\ref{sec:pinhole_camera}$. The pinhole camera model is a simple mathematical model to define a projection from the world space to the 2d image space using a homogeneous transformation defined as: 
 \begin{equation}
 \colvec[f_x X + Z p_x]{f_y Y + Z p_y}{Z} =
 \begin{bmatrix}
@@ -400,7 +400,7 @@ Z \\
 \label{eq:homogen_camera_mat_transf}
 \end{equation}
 where given the  $p = \left(p_x, p_y \right)$ denotes the principal point and the focal lengths $\left(f_x, f_y \right)$ of the camera. \\ \\
-So far we have exactly the opposite of what we would like to get. We defined a transformation that allows to project a 3d point onto the 2d image space. However, by deriving the inverse transformation of the definition of equation $\ref{eq:homogen_camera_mat_transf}$ allows us to define points in the 3d space. In the following, let us assume the the measured depth $d \equiv z$. Then
+So far we have exactly the opposite of what we would like to get: We defined a transformation that allows to project a 3d point onto the 2d image space. However, deriving the inverse transformation of the definition of equation $\ref{eq:homogen_camera_mat_transf}$ allows us to define points in the 3d space. In the following, let us assume the the measured depth $d \equiv z$. Then
 \begin{equation}
 	\colvec[X]{X}{Z} \mapsto \left( \frac{f_x x}{d} + p_x, \frac{f_y y}{d} + p_y \right)^T
 \end{equation}
@@ -412,7 +412,7 @@ since
 \end{aligned}
 \label{eq:depth_tranfomation}
 \end{equation}
-The aspect that the color-and depth cameras are not aligned can be modeled by defining an extrinsic calibration matrix $E$. Such a matrix defines how a camera has to be shifted and rotated to align with another camera. Given the extrinsic and intrinsic camera calibration data this is defined as
+The aspect that color and depth cameras are not aligned can be modeled by defining an extrinsic calibration matrix $E$. Such a matrix defines how a camera has to be shifted and rotated to align with another camera. Given the extrinsic and intrinsic camera calibration data this is defined as
 \begin{equation}
 \begin{aligned}
 	\text{Camera}^{depth} : \left( p^d = (p_x^d, p_y^d), f^d = (f_x^d, f_y^d)\right) \\
@@ -420,18 +420,18 @@ The aspect that the color-and depth cameras are not aligned can be modeled by de
 	\textbf{E} : \text{Camera}^{depth} \rightarrow \text{Camera}^{color}
 \end{aligned}
 \label{eq:calib_data}
-\end{equation}.
+\end{equation}
 In order to transform a 2d pixel coordinate $\left( u, v \right)$ (in image space) to a 3d world coordinate $\left( x, y, z \right)$ we have run the following steps:
 \begin{enumerate}
-\item Transform image location onto depth camera space
+\item Transform image location onto depth camera space:
 \begin{equation}
 	\forall (u, v), \forall d = \textbf{D}(u,v): \colvec[\frac{u - p_x^d}{f_x^d} d]{\frac{v - p_y^d}{f_y^d} d}{d} = \colvec[x]{y}{z} \equiv \bf{p}
 \end{equation}
-\item Align depth camera on color camera by appling the extrinsic matrix $E$:
+\item Align depth camera with the color camera by applying the extrinsic matrix $E$:
 \begin{equation}
 	\forall p: \hat{p} \equiv \colvec[\hat{x}]{\hat{y}}{\hat{z}} =  E p
 \end{equation}
-\item transform onto color camera
+\item transform the points onto color camera
 \begin{equation}
 	\forall \hat{p} : \left( \hat{u}, \hat{v}\right) = \colvec{\frac{\hat{x}}{\hat{z}} f_x^c + p_x^c}{\frac{\hat{y}}{\hat{z}} f_y^c + p_y^c}
 \end{equation}
@@ -439,11 +439,10 @@ In order to transform a 2d pixel coordinate $\left( u, v \right)$ (in image spac
 
 \section{Affinity Matrix Generation}
 \label{sec:affinity_matrix_impl}
-In this section we describe the corresponding pipeline stage that is responsible for generating the so called $\textit{affinity matrix}$, which is later used to compute the actual motion segmentation. For this purpose we compute the pairwise similarities between the previously tracked trajectories according to a certain measure and then use those values to form a similarity graph as defined in section $\ref{sec:similarity_graphs}$ on page $\pageref{sec:similarity_graphs}$. However, computing affinities based on pairwise trajectory distances corresponds to assuming a translational motion model. Especially in real world examples object usually form affine motions $\footnote{An affine motion requires to compute distances on trajectories at a time to verify if it belongs to the a certain motion group.}$ and thus this assumption is imposing a certain error. Despite this limitation we will present a robust solution to this issue. \\ \\
-The final affinity matrix correspond to the adjacency matrix representation of the similarity graph. The used metrics are adapted version of the metrics presented in $\cite{OB14b}$ and $\cite{KB15b}$. \\ \\
-Generally, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. \\ \\
-However, there is a remedy to this issue. We instead compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. In particular, we define affinities between all pairs of trajectories that share at least a common frame. \\ \\
-According to the gestalt principle of common fate$\footnote{Human tend to group similar objects together that share a common motion.}$, we should assign high affinities to pairs of points that move together. Imagine the situation where two persons are walking next to each other$\footnote{Assume both persons are walking at the same speed in the same direction, ignoring all motions due to deformation.}$. Although they represent different objects, both of them share the same motion. Moreover, person that is sitting stilly in a chair shares the same motion as the objects in the background. The gestalt principle tells us that these situations should be treated conservatively and the objects from these examples should not be separated. \\ \\
+In this section we describe the corresponding pipeline stage that is responsible for generating the so called $\textit{affinity matrix}$, which is later used to compute the actual motion segmentation. For this purpose we compute the pairwise similarities between the previously tracked trajectories according to a certain measure and then use those values to form a similarity graph as defined in section $\ref{sec:similarity_graphs}$ on page $\pageref{sec:similarity_graphs}$. However, computing affinities based on pairwise trajectory distances corresponds to assuming a translational motion model. Especially in real world examples objects usually form affine motions $\footnote{An affine motion requires to compute distances on trajectories at a time to verify if it belongs to the a certain motion group.}$ and thus this assumption is imposing a certain error. Despite this limitation we will present a robust solution to this issue. \\ \\
+The final affinity matrix correspond to the adjacency matrix representation of the similarity graph. The used metrics are adapted versions of the metrics presented in $\cite{OB14b}$ and $\cite{KB15b}$. \\ \\
+In general, trajectories of longer videos are asynchronous, i.e. they cover different temporal windows in a shot. Furthermore, the number of points that are tracked across the whole image sequence is small or even empty due to occlusion, disocclusion or the sampling rate. Hence, a measurement matrix that utilizes the coordinates of the tracked points, as used by the multi-body factorization and subspace methods, will have many missing entries and thus is a bad choice. However, there is a remedy to this issue. We, instead, compute pairwise affinities between trajectories, because this only requires some trajectories to have some temporal overlap. In particular, we define affinities between all pairs of trajectories that share at least a common frame. \\ \\
+According to the gestalt principle of common fate$\footnote{Human tend to group similar objects together that share a common motion.}$, we should assign high affinities to pairs of points that move together. Imagine the situation where two persons are walking next to each other$\footnote{Assume both persons are walking at the same speed in the same direction, ignoring all motions due to deformation.}$. Although they represent different objects, both of them share the same motion. Moreover, a person that sits still in a chair shares the same motion as the objects in the background. The gestalt principle tells us that these situations should be treated conservatively and the objects from these examples should not be separated. \\ \\
 In the following we describe in detail the steps of algorithm $\ref{alg:computing_affinity_matrix}$ which is used to generate the affinity matrix.
 \begin{algorithm}[H]
 \caption{Generating Affinity Matrix}
@@ -476,7 +475,7 @@ In the following we describe in detail the steps of algorithm $\ref{alg:computin
   \vskip1.5pt
 \label{alg:computing_affinity_matrix}
 \end{algorithm}
-As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, we discarded every trajectory that is shorter than a user specified threshold to reduce the effect of noisy and invalid tracings. From the remaining trajectories we form every possible pair combination and compute certain distances between them similar as shown in figure $\ref{fig:distance_measure}$.
+As the very first step, our pipeline loads the previously extracted trajectories into its memory. Each loaded trajectory gets a unique identifier, which is called $\textit{label}$, assigned. Next, we discard every trajectory that is shorter than a user specified threshold to reduce the effect of noisy and invalid tracings. From the remaining trajectories we form every possible pair combination and compute certain distances between them as illustrated in figure $\ref{fig:distance_measure}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Overlapping Trajectories]{
@@ -497,37 +496,37 @@ As the very first step, our pipeline loads the previously extracted trajectories
    \label{fig:tra_distance_measures_sp}
 }
 \end{center}
-\caption[Distance Measures]{A graphical example how the mentioned distance metrics can be applied on two trajectories $A$ and $B$. Their $\textbf{spatial distance}$ $d_{\text{spatial}}$ is shown in green, their $\textbf{color distance}$ $d_{\text{color}}$ in orange and their $\textbf{motion distance}$ $d_{\text{motion}}$ in purple.}
+\caption[Distance Measures]{For a given trajectory pair $(A,B)$ we compute their spatial (Fig. $\ref{fig:tra_distance_measures_sp}$), color (Fig. $\ref{fig:tra_distance_measures_co}$), and motion (Fig. $\ref{fig:tra_distance_measures_mo}$) distances between their overlapping segments.}
 \label{fig:distance_measure}
 \end{figure}
 For any two given trajectories $A$ and $B$ that form a pair, our pipeline computes the following three distances between their temporal overlapping segments$\footnote{By the term \textit{temporal overlapping segments} we refer to tracking point in a trajectory pair that share a common frame.}$:
 \begin{itemize}
-\item The \textbf{spatial distance} $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other and is defined as
+\item The \textbf{spatial distance} $d_{\text{spatial}}$: Trajectories that belong to the same object are usually spatially close to each other and are defined as
 \begin{equation}
 	d_{spatial}^{A,B} = \frac{1}{\omega - \alpha + 1} \sum_{k=\alpha}^\omega \norm{A(k) - B(k)}
 \label{eq:spatial_distance}	
 \end{equation}
 where $\alpha$ is the first- and $\omega$ is the last- overlapping frame index between the two given trajectories $A$ and $B$.
-\item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value. This distance is defined as
+\item The \textbf{color distance} $d_{\text{color}}$: Within a certain object region, associated trajectories are tracked at locations that have a similar color value. This distance is defined as:
 \begin{equation}
 	d_{color}^{A,B} = \frac{1}{\omega - \alpha + 1} \sum_{k=\alpha}^\omega \norm{\text{ColorAt}(k, A(k)) - \text{ColorAt}(k, B(k))}_2
 	\label{eq:color_dist}
 \end{equation}
-where $\text{ColorAt}(k, A(k))$ yields a color in CieLab color space$\footnote{Using CieClab colors enables us to use the l2 norm in order to compute color distances.}$ value in frame $k$ at the image location $A(k)$.
+where $\text{ColorAt}(k, A(k))$ yields a color in \textit{Cielab} color space$\footnote{Using Cielab colors enables us to use the l2 norm in order to compute color distances.}$ value in frame $k$ at the image location $A(k)$.
 \item The \textbf{motion distance} $d_{\text{motion}}$: The rationale of this measure is to exploit$\footnote{Again, thanks to the gestalt principle of common fate we know that for each pair of trajectories at the time instant where their motion is maximally different, the two points do not belong to the same object,}$ the maximal dissimilarity of the two given trajectories via their maximal motion difference among all overlapping frames. The motion distance is defined as
 \begin{equation}
 	d_{motion}^{A,B}  = \max_t \left( \frac{\norm{\partial_t A - \partial_t B}}{\sigma_t} \right)
 \label{eq:motion_distance}
 \end{equation}
-where the expression $\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$. Furthermore, the resulting motion distance is normalized by its corresponding flow variance value $\sigma_t$. The idea is reduce the influence of noise, which is present in the estimated flow fields. Especially, when taking differences between flow vectors the noise level could get even more amplified. Additional information about this normalization, as well as about the definition of this variance can be found in section $\ref{sec:flow_variance}$ on page $\pageref{sec:flow_variance}$.
+where the expression $\partial_t A$ denotes the averaged motion over time, which is computed by approximating the derivatives $\partial_t A$, $\partial_t B$ using forward differences with a certain timestep $T$. Furthermore, the resulting motion distance is normalized by its corresponding flow variance value $\sigma_t$. The idea is to reduce the influence of noise, which is present in the estimated flow fields. Especially, when taking differences between flow vectors, the noise level could get even more amplified. Additional information about this normalization, as well as the definition of this variance can be found in section $\ref{sec:flow_variance}$ on page $\pageref{sec:flow_variance}$.
 \begin{equation}
 	\partial_t A = \frac{A(t+T)-A(t)}{T} 
 \end{equation}
-The exact value of $T$ is the minimum of the number of overlapping frames between the $A$ and $B$ and a fixed threshold. In our pipeline we use $T$ equals 3.
+The exact value of $T$ is the minimum of the number of overlapping frames between $A$ and $B$ and a fixed threshold. In our pipeline we use $T$ equals 3.
 \end{itemize}
-where $A(k)$ denotes the tracking position of trajectory $A$ in frame $k$. The final similarity between two trajectories the combination of these distances according to a user-specified combination method. Therefore, let us introduce these combination method that are supported by our pipeline. \\ \\
-There are two main setting a user has to specify preliminarily. Whether or not depth cues should be used and how the computed distances should be combined to define an affinity value between trajectories. Both options have a large impact on the final outcome of the affinity matrix. \\ \\
-First, when enabling depth cues, all available depth fields are loaded into the pipeline. In combination with the depth- and color-camera calibration data, this enables the pipeline to compute the three dimensional version of each traced trajectory point, analogous as described in the previous subsection $\ref{subsection:transform_to_3d_points}$ on page $\pageref{subsection:transform_to_3d_points}$. As a direct consequence, when using depths, the spatial distance computation is altered. Instead of using the 2d tracking points their 3d transformed versions are used. \\ \\
+Note that $A(k)$ denotes the tracking position of trajectory $A$ in frame $k$. The final similarity between two trajectories is the combination of these distances according to a user-specified combination methods. Therefore, let us introduce these combination method that are supported by our pipeline. \\ \\
+There are two main settings a user has to specify preliminarily: Whether or not depth cues should be used and how the computed distances should be combined to define an affinity value between trajectories. Both options have a large impact on the final outcome of the affinity matrix. \\ \\
+First, when enabling depth cues, all available depth fields are loaded into the pipeline. In combination with the depth- and color-camera calibration data, this enables the pipeline to compute the three dimensional version of each traced trajectory point, analogous as described in the previous subsection $\ref{subsection:transform_to_3d_points}$ on page $\pageref{subsection:transform_to_3d_points}$. As a direct consequence, when using depths, the spatial distance computation is altered. Instead of using the 2d tracking points, we use their 3d transformed versions, computed in section $\ref{subsection:transform_to_3d_points}$). \\ \\
 Furthermore, our pipeline supports two distance combination methods: Either it combines them by calculating the weighted sum of the distance values or it multiplies all the distances. Depending on the used combination strategy, different segmentation methods have to be use later on. Summed distances can only be used in combination together with the $\textit{Kernighan-Lin}$ segmentation method, whereas the product of distances can be either used in our spectral clustering- or min-cut segmentation method$\footnote{The reason for this limitation is due to the fact that similarity matrices used by spectral clustering algorithms are supposed to have non-negative entries. However, the summed distances combination method may yield negative weights and thus some entries in the similarity matrix might be negative. Further information about this limitation can be found in $\cite{Lux07}$}$. \\ \\
 In the beginning of this section, we stated, that our pipeline assumes a translation motion model. This is due to the fact that we compute pairwise distances between trajectory. However, affine motions can locally be approximated by a translation. Therefore, our idea is to damp the effect of model noise by damping the affinities by their spatial distances. The further two trajectories are apart from each other, the less reliable their local approximation is. Both distance combination method will implement this damping idea in a certain way. \\ \\
 In the following in depth explanation these combination variants:
