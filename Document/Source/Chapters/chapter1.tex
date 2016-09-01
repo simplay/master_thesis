@@ -19,7 +19,7 @@
 
 \chapter{Introduction}
 \section{Motivation}
-In nature one important aspect that determines the odds of survival and thus the individual success is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, motion is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
+In nature one important aspect that determines the odds of survival and thus the individual success to reproduce is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, motion is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Sensing Depths and Localization]{
@@ -39,12 +39,12 @@ In nature one important aspect that determines the odds of survival and thus the
    \label{fig:motivating_example_c}
 }
 \end{center}
-\caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform a self-localization}
+\caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform self-localization}
 \label{fig:motivating_example}
 \end{figure}
-Even despite its apparent simplicity, motion is a very general and powerful cue to segment objects or even to determine logical object parts. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. \\ \\
+Despite its apparent simplicity, motion is a very general and powerful cue to detect moving objects or to even partition them into its logical parts. This kind of partitioning is also known as \textit{motion segmentation}. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. \\ \\
 As natural such tasks might be performed by our brains the harder they become to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
-However, a lot of scientific effort has been put into this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
+However, a lot of scientific effort has been put into solving this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Optical Flow Field]{
@@ -56,20 +56,20 @@ However, a lot of scientific effort has been put into this problem statement and
    \label{fig:motion_segmentation_motivation_eg_b}
 }
 \end{center}
-\caption[Motion Segmentation Motivation Example]{An example$\footnotemark$ of an optical flow field and a notion Segmentation. }
+\caption[Motion Segmentation Motivation Example]{An example$\footnotemark$ of an optical flow field and a motion segmentation. }
 \label{fig:motion_segmentation_motivation_eg}
 \end{figure}
 \footnotetext{Source figure \ref{fig:motion_segmentation_motivation_eg_a}: \url{http://cbia.fi.muni.cz/projects/optical-flow-for-live-cell-imaging_3.html} \\
- and source figure\ref{fig:motion_segmentation_motivation_eg_b}: \url{http://lmb.informatik.uni-freiburg.de/research/segmentation/}}
-The field of motion segmentation aims at decomposing a video in moving objects and background and is the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance, traffic monitoring. \\ \\
-The idea of using optical flows as an estimate of the motion goes back to the pioneering work of B. Horn and B. Schunck $\cite{Hs81}$. In this thesis we will build upon the body of work from T.Brox $\cite{Bro11a}$, $\cite{OB14b}$ and $\cite{KB15b}$, who promotes an approach based on clustering trajectories extracted via optical flow. \\ \\
+ and source figure \ref{fig:motion_segmentation_motivation_eg_b}: \url{http://lmb.informatik.uni-freiburg.de/research/segmentation/}}
+The field of motion segmentation aims at decomposing a video into moving objects and background and is the first fundamental step in many computer vision algorithms. It has many applications in the fields of robotics, metrology, video surveillance and traffic monitoring. \\ \\
+The idea of using optical flows as an estimate of the motion goes back to the pioneering work of B. Horn and B. Schunck $\cite{Hs81}$. In this thesis we will build upon the body of work $\cite{Bro11a}$, $\cite{OB14b}$ and $\cite{KB15b}$ from T.Brox, who promotes an approach based on clustering trajectories extracted via optical flow. \\ \\
 In combination with color, depth is another powerful visual clue that can be used to generate motion segmentations. A common technique is to segment objects according to their depth layer as described in $\cite{Dahan2012}$. However, most such techniques assume the presence of depth measurements. \\ \\
- Until recently, measuring depths in videos was rather unpractical since it required dedicated and expensive capturing devices and additional post-processing. However, with the advent of Microsoft's Kinect and other low price devices RGB-D$\footnote{The term \textit{RGB-D} refers to color images with associated depth field measurements.}$ videos have become readily available. \\ \\
+ Until recently, measuring depths in videos was rather unpractical since it required dedicated and expensive capturing devices and additional post-processing. However, with the advent of Microsoft's Kinect and other low price devices, RGB-D$\footnote{The term \textit{RGB-D} refers to color images with associated depth field measurements.}$ videos have become readily available. \\ \\
 While combining RGB-D data with optical flow estimation has gained a lot of attention recently $\cite{Bro14}$, $\cite{PawanKumar2008}$ standard motion segmentation approaches have not yet been extended to benefit optimally from additional depth information. Therefore this thesis investigates this particular problem in detail and provides a solution for segmenting moving objects using optical flows on RGB-D videos.
 
 \section{Goals}
 The purpose of this thesis is to describe and evaluate a robust motion segmentation method and to incorporate depth information available in RGB-D video sequences as well as other visual cues. Due to its relative simplicity and extendibility we focus on motion segmentation with a traditional trajectory clustering approach using trajectories established via optical flow. In our formulation we assume a piecewise rigid motion model and do not constrain the camera movement. \\ \\
-The actual problem statement we want to address is shown in figure $\ref{fig:problem_statement}$. For a given RGB-D video sequence and the camera calibration data, we want to detect and extract the individual moving objects. We therefore develop a pipeline that is capable of generating such motion segmentations by using optical flows. \\ \\
+The actual problem we want to address is shown in figure $\ref{fig:problem_statement}$. For a given RGB-D video sequence and the camera calibration data, we want to detect and extract the individual moving objects. We therefore develop a pipeline that is capable of generating such motion segmentations by using optical flows. \\ \\
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=1.05\linewidth] {introduction/problem_statement_ref}
@@ -77,20 +77,20 @@ The actual problem statement we want to address is shown in figure $\ref{fig:pro
 \caption[Problem Statement]{ Graphical representation of the problem statement we want to solve in this thesis. Given a video sequence, its corresponding depth fields and the used camera calibrations, we want to extract the frames locations that mask the moving objects via segmentation.}
 \label{fig:problem_statement}
 \end{figure}
-Moreover, we want to examine the influence of the utilized pipeline components. Hence, we integrate various segmentation-and flow-techniques into our implementation. We then quantitatively evaluate segmentations generated by all possible pipeline combinations. \\ \\
+Moreover, we want to examine the influence of the utilized pipeline components. Hence, we integrate various segmentation- and flow-techniques into our implementation. We then quantitatively evaluate segmentations generated by all possible pipeline combinations. \\ \\
 In summary, we want to achieve the following three goals:
 \begin{itemize}
-  \item Implement a pipeline that can segment moving objects by clustering trajectories established via optical flow and depth cues
+  \item Implement a pipeline that can segment moving objects by clustering trajectories established via optical flow and depth cues.
   \item Examine the influence of the used flows, the method of trajectory analysis and segmentation and how they affect the segmentation quality by varying those components in the pipeline. For that purpose our pipeline implements various state of the art flow generation methods, different analysis approaches and a series of segmentation techniques.
-  \item Do an in-depth qualitative and quantitative analysis to describe and understand the effect of various pipeline components. For this purpose we establish a methodology to analyse the implemented segmentation pipeline and prepare data with ground truth segmentations 
+  \item Do an in-depth qualitative and quantitative analysis to describe and understand the effect of various pipeline components. For this purpose we establish a methodology to analyse the implemented segmentation pipeline and prepare data with ground truth segmentations. 
 \end{itemize}
 
 \section{Related Work}
-In literature there exist various complementary ideas about how to approach the task of motion segmentation. In this section we summarize the most prominent methods  and compared against them with our model.
+In literature there exist various complementary ideas about how to approach the task of motion segmentation. In this section we summarize the most prominent methods and compare them with our model.
 
 \paragraph{Image Difference:} Taking the difference between two frames is a simple technique for detecting changes. By thresholding the intensity difference of two frames, a coarse map of the temporal changes can be obtained. Despite its simplicity, this techniques is limited by the presence of noise, camera movement (everything is changing) and low frame rates (nothing is changing). However, instead of directly using the difference image as the segmentation, the rough map of the changing areas can be used as a guide to extract spatial or temporal information in order to track the regions. Image difference techniques have been used in the work of $\cite{Cav05}$, $\cite{Li07}$ and $\cite{Col07}$.
 
-\paragraph{Statistical Approach} Motion segmentation can be related to a classification problem, identifying whether a particular pixel belongs to either the background or the foreground. In $\cite{Cre05}$ the authors present a variational approach for segmenting an image into a set of regions of parametric motions using a model based on a conditional probability for the spatio-temporal image gradient. By exploiting Bayesian theory, they derive a cost functional which depends on parametric motion models for each  of a set of regions and on the boundary separating these regions.
+\paragraph{Statistical Approach} Motion segmentation can be related to a classification problem, identifying whether a particular pixel belongs to either the background or the foreground. In $\cite{Cre05}$, the authors present a variational approach for segmenting an image into a set of regions of parametric motions using a model based on a conditional probability for the spatio-temporal image gradient. By exploiting Bayesian theory, they derive a cost functional which depends on parametric motion models for each  of a set of regions and on the boundary separating these regions.
 
 \paragraph{Wavelets}
 The idea is to exploit the ability of wavelets to perform analysis of the different frequency components of the images and then study each component with a resolution matched to its scale. Usually wavelet multi-scale decomposition is used in order to reduce the noise and in conjunction with other approaches, such as optical flow. In $\cite{Mi98}$ the authors present a motion segmentation method based on the continuous wavelet transform. An alternative method is presented in $\cite{WISKOTT19991751}$ where the authors combine the Optical Flow with Gabor-wavelets to overcome the aperture problem. 
