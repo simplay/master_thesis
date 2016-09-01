@@ -685,6 +685,7 @@ We again observe, that among the LDOF/P-affinity variants, using depths yields b
 
 \subsection{Pipeline Combination Comparisons}
 \label{sec:pipeline_combination_cmp}
+Our pipeline allows to alter between many different flow estimation-, affinity matrix computation- and segmentation methods. In this section we want to determine an optimal pipeline combination by comparing the methods of each stage and choosing the best one.
 
 \subsubsection{LDOF vs. SRSF}
 In this section we want to illustrate the dominance of SRSF flows. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
@@ -702,7 +703,7 @@ SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
 \caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flows using MC}
 \label{tab:bonn_datasets_ldof_vs_srsf}
 \end{table}
-We observe, that segmentations based on SRSF flows always obtain higher f1 scores.
+We observe, that segmentations based on SRSF flows always obtain higher f1 scores. Therefore, using SRSF flows seems to be beneficial.
 
 \subsubsection{2d vs 3d}
 In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flows and generated segmentations for every possible pipeline mode. The results are listed in table $\ref{tab:bonn_datasets_2d_vs_3d}$.
@@ -722,27 +723,28 @@ SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 \caption[2D vs. 3D: Bonn Datasets]{Comparing affinities computed by 3d trajectories against 2d trajectories.}
 \label{tab:bonn_datasets_2d_vs_3d}
 \end{table}
-We observe, that regardless of the choice of segmentation method, affinities produced using depths achieve higher f1 scores.
+We observe, that regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
 
 \subsubsection{SC vs. MC}
+In this experiment we compare our two P-affinity segmentation methods. For this purpose we evaluated the segmentations of the One Chair dataset. For this experiment we strictly use LDOF flows and then generated segmentations for the modes PD SC, PD MC, PED SC and PED MC. The results are listed in table $\ref{tab:one_chair_sc_vs_mc}$
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
 \multicolumn{4}{|c|}{Comparison one chair dataset on LDOF}                        \\ \hline
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
-PD SC & 56.23\% & 47.82\% & 51.68\% \\ \hline
-PD MC & 53.64\% & 48.50\% & 50.94\% \\ \hline
-PED SC & 54.14\% & 53.75\% & 53.94\% \\ \hline
-PED MC & 56.23\% & 55.07\% & 55.64\% \\ \hline              
+PD SC & 54.23\% & 47.82\% & 50.82\% \\ \hline
+PD MC & 55.64\% & 49.50\% & 52.39\% \\ \hline
+PED SC & 56.14\% & 53.75\% & 54.92\% \\ \hline
+PED MC & 62.23\% & 58.07\% & 60.08\% \\ \hline              
 \end{tabular}
 \caption[SC vs. MC]{Comparing the segmentation methods SC and MC} 
 \label{tab:one_chair_sc_vs_mc}
 \end{table}
-
+We observe, that segmentations produced by MC always obtain higher f1 scores than SC methods. It seems benefical to use the MC segmentation method when using P-affinities.
 
 \section{Runtime Measurements}
-In this section we present actual runtime measurements resulting when running on the specified machine as defined in table $\ref{tab:used_hardware_specs}$. Please notice that by no means these measurements can be considered as statistical evident. The sole purpose of this section is to give the reader some further understanding about the pipeline and its usability in terms of \textit{how handy is this whole pipeline to use w.r.t. its runtime}. \\ \\
+In this section we present a series of runtime measurements produced when using the machine described in table $\ref{tab:used_hardware_specs}$. Note that by no means, these measurements can be considered as statistical evident. The sole purpose of this section is to give the reader some further understanding about the pipeline and its usability in terms of \textit{how handy is this whole pipeline to use w.r.t. its runtime}. \\ \\
 We start with measuring the runtimes of the utilized flow methods. For each method we run 3 dataset$\footnote{The dataset frames used to perform these measurement all exhibit a resolution 640 x 480 pixels.}$ and measured their total time to process their input. Each time measurement was divided by their total number of frames. The resulting timings were then finally averaged. Table $\ref{flow_method_runtimes}$ lists the average time in seconds that our flow methods require to process$\footnote{Here, the term process refers to generating the forward-and backward flow field of a frame.}$ one dataset frame. 
 \begin{table}[H]
 \centering
@@ -757,7 +759,7 @@ LRGBD & 674s \\ \hline
 \caption[Flow Method Runtimes]{Listing of the average time of our flow methods required to process one dataset frame}
 \label{flow_method_runtimes}
 \end{table}
-Next let us discuss the timings of the affinity matrix generation. Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds of 261 measurements (blue dots) to accomplish the task of tracking a varying count of trajectories and generating their corresponding affinity matrix. Moreover, we fit a quadratic polynomial (red curve) on our measurements, since the runtime complexity of this pipeline stage is supposed to be in $\mathcal{O}(n^2)$ and $n$ denotes the trajectory count.
+Next, let us discuss the timings of the affinity matrix generation. Figure $\ref{fig:runtime_tra_track_affinity_gen}$ shows the timings in seconds of 261 measurements (blue dots) to accomplish the task of tracking a varying count of trajectories and generating their corresponding affinity matrix. Moreover, we fit a quadratic polynomial (red curve) on our measurements, since the runtime complexity of this pipeline stage is supposed to be in $\mathcal{O}(n^2)$ and $n$ denotes the trajectory count.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth] {evaluation/runtimes/affinity}
@@ -765,7 +767,8 @@ Next let us discuss the timings of the affinity matrix generation. Figure $\ref{
 \caption[Runtime Trajectory Tracking and Generating Affinity Matrix]{Plotting the runtime (in seconds) of trajectory tracking and affinity matrix generation stage against the utilized trajectory count. The measurements are visualized as blue dots. A reconstructed quadratic curve is shown in red. The runtime of the evaluated stage is supposed to exhibit a quadratic complexity.}
 \label{fig:runtime_tra_track_affinity_gen}
 \end{figure}
-Unfortunately, we have not performed detailed measurements for the $\textit{P-affinity}$ segmentation methods. In our pipeline we implemented the SC and MD segmentation methods in Matlab. Generally, loading an affinity matrix that represents the similarity of 1000 affinities takes 5 seconds, 3000 approximately 20 seconds and 6000 about 90 seconds. For solving the eigenvalue decomposition in our Matlab implementations, we rely on the fast numerical approximation of $\textit{eigs}$. The final k-means run in SC takes about 30 seconds when using 6000 trajectoires and performing 200 repetitions. So, the runtime of SC, using our specs takes at most two minutes. In MC the most outer loop runs a k-means step and a graph-cut step. The k-means takes about the same time as in SC. Again, when using about 6000 trajectories, then calling graph-cut in this loop takes about 3 minutes. When using the default neighborhood assignment as discussed in section $\ref{sec:spectral_clustering_parameters}$. \\ \\
+Unfortunately, we have not performed detailed measurements for the $\textit{P-affinity}$ segmentation methods. In our pipeline, we implemented the SC and MD segmentation methods in Matlab. Generally, loading an affinity matrix that represents the similarity of 1000 affinities takes 5 seconds, 3000 approximately 20 seconds and 6000 about 120 seconds. For solving the eigenvalue decomposition in our Matlab implementations, we rely on the fast numerical approximation of $\textit{eigs}$. The final k-means run in SC takes about 30 seconds when applied on 6000 trajectories and running 200 repetitions. \\ \\
+In MC implementation the most outer loop runs a k-means step and a graph-cut step. The k-means takes about the same time as in SC. Again, when using about 6000 trajectories, then calling graph-cut in this loop takes about 3 minutes. When using the default neighborhood assignment as discussed in section $\ref{sec:spectral_clustering_parameters}$. \\ \\
 In contrast, we measured the timings of several Kerninghan-Lin runs. For a fixed number of neighbors, the overall runtime of the KL algorithm depends on on the number of trajectories and the number of iterations. The number of iterations is determined by the number of clusters CC we want to solve for and is defined as
 \begin{equation}
 	\text{Iters} = \sum_{k=1}^{\text{CC}-1} k
