@@ -784,29 +784,8 @@ which corresponds to the number of all possible distinct pair formations. The re
 As we can see, running KL is very time consuming. For instance, when we use a large number of clusters, say 10 clusters, and using approximately 5000 trajectories, then this algorithm takes about 7000 seconds to finish.
 
 \section{Discussion}
-After running our pipeline the following key observations can be stated:
-\begin{itemize}
-  \item Our pipeline can handle complex scenes: moving cameras, rotational movement.
-  \item SRSF flows achieve the best segmentation results
-  \item however, LDOF flows are still a solid choice and yield competitive results.
-  \item when using P-affinities, then use Min-cut segmentation
-  \item SED KL achieves the best results
-  \item the best pipeline combination is SRSF SED KL 
-  \item LRGBD flows are a very bad choice and yield poor motion segmentations
-  \item using depth fields improves the quality of the segmentation results drastically
-  \item when comparing our default pipeline setup against Brox' Min-Cut method, we obtain way better results.
-  \item although our cluster/eigenvector choice has been proven as reliable, choosing the correct number of clusters and segments is a non-trivial task.
-\end{itemize}
-
-
-Additionally, Kernighan Lin yields the best segmentations among all segmentation methods. In fact is superior compared with the other methods. However, segmenting trajectories via KL takes a very long time (about 20 hours per 5000 Trajectories) and has in fact a runtime complexity number of trajectories to the power of three. Interestingly, Brox's GraphCut, using its standard parameter setup does not generate very good segmentation results. To be fair, however, we have to mention, that we use a competitive parameter setting dedicated for our pipeline and also, GraphCut does not make use of depth cues (which seems a key ingredient to increase the segmentation quality).
-
-
-
-
-
-
-
-
-
-
+In the previous section we performed a series of experiments on different datasets to examine the influence of various pipeline components and their corresponding parameters. In this section we list the main findings of experiments and relate them to our initial thesis goals. \\ \\
+We visually and statistically demonstrated that our pipeline is able to produce good segmentation results on complex scenes. In particular, our best pipeline combination could handle scenes consisting of a moving cameras and rotating moving objects. Therefore, we achieved our initial goal of building a motion segmentation pipeline on RGB-D videos using optical flows. \\ \\
+Our motion segmentation pipeline is an over-parameterized multi-stage implementation. Usually, finding the correct parameter values is not obvious. We therefore suggested a reliable heuristics to specify some of the parameters. In our experiments we were able to justify our default parameter selection. \\ \\
+We further were able to find the best pipeline combinations. We experimentally demonstrated that SRSF flows outperform every other flow method supported by our pipeline. Moreover, we successfully could show that using depth information drastically increases the quality of motion segmentations. Among our segmentation methods, KL produces the best results. This method however, uses S-affinities. In contrast, when using P-affinities, MC seems is the best choice. When comparing KL against MC we can conclude, that KL produces better results but on the same time requires an enormous amount of computation time. However, MC runs in decent time and the same time produces good results. Combining all these finding we suggest the two following winner combinations: SRSF PED MC and SRSF SED KL. \\ \\
+While letting our pipeline compete against Brox' GraphCut $\cite{KB15b}$, we interestingly obtained better results even when not using depth data. However, to be fair we have to mention that we did not specify any specific parameters and hence his implementation was using its standard parameter setup. In contrast, we used our optimal parameters during our experiments.
