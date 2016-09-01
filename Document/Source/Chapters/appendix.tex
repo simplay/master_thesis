@@ -38,14 +38,6 @@ y_1 \sim y_2 (0, \sigma_y^2
 In the last step of equation $\ref{eq:flow_variance_formula}$ we used the abbreviation $\sigma_x^2$ which denotes the variance of the optical flow along its $x$ direction. In this derivation we exploited the fact that $x_1$ and $x_2$ are independent random variables, $y_1$ and $y_2$ respectively. Hence, the term $\mathbf{E} \left[ x_1 x_2\right]$ yields the value zero. \\ \\
 We experimentally also have defined an expression for computing depth variances. However, we this special run-mode has only been implemented to demonstrate the limitations of our pipeline. Therefore, the description of this procedure can be found in the appendix $\ref{sec:depth_field_variances}$ on page $\pageref{sec:depth_field_variances}$.
 
-\section{Corner thresholding}
-\label{sec:corner_thresholding}
-describe the corner thresholding approach here.
-
-\section{Depth Field Variances}
-\label{sec:depth_field_variances}
-describe how depth field variances can be computed and how they can be used. Additionally, describe the run-mode in the pipeline and maybe also offer some results and limitations.
-
 \chapter{Additional Theoretical Background}
 \section{On Filtering Images}
 \subsection{Gaussian Filter}
@@ -421,16 +413,7 @@ of number of clusters,eigenvectors. The corresponding statistics are listed in t
 \subsection{Varying Pipeline Combinations for LDOF flows}
 For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
 
-% end new bonn chairs fig
-
-% new bc table
-
-% end new bc table
-
-
-
 \subsection{Varying Cluster Count on SC and MC}
-% START EXPERIMENT DESC
 use LDOF flows and run the pipeline modes: PD SC, PD MC, PED SC, PED MC
 vary the number of clusters and evaluate the resulting segmentations
 This experiment should examine 
@@ -586,47 +569,6 @@ PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hl
 \caption[Chair 3 Cast Worst/Best Result]{Comparison of the worst- (center) and the best (right) segmentation results according to the F1 measure using the shown mask on the left.}
 \label{fig:chair_3_cast_gt_worst_best}
 \end{figure}
-
-
-c 5
-density:0.7114
-density:0.7114
-density:0.6062
-density:0.6062
-
-c 10
-density: 0.7114
-density:0.7114
-density:0.6062
-density:0.6062
-
-c 15
-density:0.71138
-density:0.7114
-density:0.6062
-density:0.6062
-
-
-avgs
-
-%c20
-%pd sc density: 0.72198\%
-%pd mc density:0.71138\%
-%ped sc density:0.6062\%
-%ped mc density:0.6062\%
-
-
-% TODO: cereal SRSF PED MC, LDOF PED MC
-%TODO: mache evaluation über alle datasets
-
-% TODO wh1	: PED SC PED MC
-% matrix clusters/eigenvectors for MC
-% c = 2, 3, 4, 5
-% eigs 2 3 4 5
-
-% TODO artificial results
-
-% rotating statue
 
 \subsection{Dependence of Eigenvector-Cluster Count on MC}
 In this experiment, we use the \textbf{WH} dataset and again only use LDOF flows. An example frame with its ground truth image is shown in figure $\ref{fig:wh1_dataset}$.
