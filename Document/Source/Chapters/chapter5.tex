@@ -355,77 +355,67 @@ The statistical measurements are listed in table $\ref{tab:eval_stat_raw_merged}
 
 
 \subsubsection{Examine Varying Cluster Count}
-
+In this experiment we examine the influence of a varying number of clusters on the segmentation quality. For this purpose generated segmentations on the Bonn Chairs dataset using the LDOF SED KL pipeline mode. The resulting segmentations are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[2 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_2}
-   \label{fig:bonn_chairs_sed_varyingclusters_a}
 }
 \subfigure[3 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_3}
-   \label{fig:bonn_chairs_sed_varyingclusters_b}
 }
 \subfigure[4 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_4}
-   \label{fig:bonn_chairs_sed_varyingclusters_c}
 }
 ~
 \subfigure[5 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_5}
-   \label{fig:bonn_chairs_sed_varyingclusters_a}
 }
 \subfigure[6 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_6}
-   \label{fig:bonn_chairs_sed_varyingclusters_b}
 }
 \subfigure[7 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_7}
-   \label{fig:bonn_chairs_sed_varyingclusters_c}
 }
 ~
 \subfigure[8 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_8}
-   \label{fig:bonn_chairs_sed_varyingclusters_a}
 }
 \subfigure[9 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_9}
-   \label{fig:bonn_chairs_sed_varyingclusters_b}
 }
 \subfigure[10 Clusters]{
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_10}
-   \label{fig:bonn_chairs_sed_varyingclusters_c}
 }
 \end{center}
 \caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
 \label{fig:bonn_chairs_sed_varyingclusters}
 \end{figure}
-
+We observe that using more and more clusters yield better segmentations. This trivial fact is fortified with statistical results shown in figure $\ref{fig:bonn_chairs_plot_avg_stat}$. To have a more solid argument, we additionally evaluated LDOF PD SC and LDOF PED MC for a varying number of clusters, which are also visible in the plots.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Recall / Precision Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/bonn_chairs/avg/avg_rec_prec}
-   \label{fig:bonn_chairs_plot_avg_stat_a}
 }
 \subfigure[Cluster Count / F1 Score Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/bonn_chairs/avg/avg_clusters_f1}
-   \label{fig:bonn_chairs_plot_avg_stat_b}
 }
 \end{center}
-\caption[Chair 3 Cast avg statistic plots]{Plots of the average performance of the four methods PED SC, PD MC, PED SC and PED MC for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
+\caption[Bonn Chairs Varying Clusters]{Visualizing plots of the average performance of PD SC, PED MC and SED KL for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
 \label{fig:bonn_chairs_plot_avg_stat}
 \end{figure}
 
 \subsubsection{Examine Convergence of MC}
-In the graph of figure $\ref{fig:two_chairs_ped_mc_iterations}$ we see a plot of the convergence rate of the MC segmentation method. The more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 3 iterations. This matches with our assumption that no more than 5 to 10 iterations have to be run when using the MC segmentation method.
+In this experiment we have a closer look into the convergence rate of the MC segmentation method. In this experiment we run the mode LDOF PED MC on the Two Chairs dataset. Moreover, we set the cluster count to 20, to produce an oversegmentation. On one hand using that many clusters will result in an oversegmentation but on the other hand this also ensures a good convergence rate plot. The graph in figure $\ref{fig:two_chairs_ped_mc_iterations}$ shows the convergence rate graph.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
-\label{fig:two_chairs_ped_mc_iterations_b}
 \end{center}
 \caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
-\label{fig:two_chairs_ped_mc_iterations}
+\label{fig:convergence_rate_mc}
 \end{figure}
+We observe that the more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 4 iterations. This matches with our assumption that no more than 20 iterations have to be run when using the MC segmentation method.
+
 \begin{figure}[H]
 \begin{center}
 \subfigure[1 Iteration]{
