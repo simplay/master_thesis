@@ -289,14 +289,14 @@ For performing our experiments we used MacBook Pro. The hardware specifications 
 \caption{A listing of the hardware specifications of the used machine to produce the results.}
 \label{tab:used_hardware_specs}
 \end{table}
-The first series of experiments examines the influence of certain pipeline parameters. In particular we legitimize the choice for our default parameter assignments. Next, we have study the behaviour and quality of segmentations when altering our flow estimation methods. The main experiment is the evaluation of some strong pipeline combinations applied on all of our datasets. Finally, we try to find the best pipeline combinations for each stage.
+The first series of experiments (Sec. $\ref{sec:parameter_experiments}$) examines the influence of certain pipeline parameters. In particular we justify the choice for our default parameter assignments. Next, we study the behaviour and quality of segmentations when altering our flow estimation methods (Sec. $\ref{sec:flow_methods}$). The main experiment (Sec. $\ref{sec:overall_performance}$) is the evaluation of some strong pipeline combinations applied on all of our datasets. Finally, we perform a series of experiments to find the best pipeline combinations for each stage (Sec. $\ref{sec:pipeline_combination_cmp}$).
 
 \subsection{Parameter Experiments}
 \label{sec:parameter_experiments}
-In this section we describe a series of experiments that address our default parameter selection choice. In particular it acts as a justification of our choices and should demonstrate their legitimization.
+In this section we describe a series of experiments that examine our default parameters. In particular the results presented in this section act as a justification for choosing the described default values.
 
 \subsubsection{Examine Influence of Cluster Merger}
-For the following experiment we examine the influence of our cluster merger. In particular we visually evaluate the influence of this merging step. In this experiment we only use LDOF flows. The visual results are shown in figure $\ref{fig:eval_raw_vs_merged}$.
+In the following experiment we examine the influence our cluster merger post-processing step. In particular we visually study the influence of this merging step on resulting segmentations. In this experiment we generated segmentations for every LDOF pipeline mode. The results are shown in figure $\ref{fig:eval_raw_vs_merged}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Raw PD SC]{
@@ -349,10 +349,7 @@ For the following experiment we examine the influence of our cluster merger. In 
 \caption[Bonn Chairs Segmentations Frame 30]{Raw-and merged segmentations produced by our pipeline when running all modes on the Bonn Chairs dataset using LDOF flows.}
 \label{fig:eval_raw_vs_merged}
 \end{figure}
-
-The statistical measurements are listed in table $\ref{tab:eval_stat_raw_merged}$
-
-
+From these results we can see that our pipeline tends to produce oversegmentations. Especially the steady background is clustered into meany segments. Also, the seat of the chair seems to get segmented into many parts. We also see that after applying our merger these parts are forming a coherent object. We conclude that our cluster merger does not significantly obfuscate the segmentation results. The corresponding statistical measurements are listed in table $\ref{tab:eval_stat_raw_merged}$
 
 \subsubsection{Examine Varying Cluster Count}
 In this experiment we examine the influence of a varying number of clusters on the segmentation quality. For this purpose generated segmentations on the Bonn Chairs dataset using the LDOF SED KL pipeline mode. The resulting segmentations are shown in figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
@@ -530,6 +527,7 @@ Addition experiments for varying cluster-eigenvalue count and the numeric values
 
 
 \subsection{On exploring flow methods}
+\label{sec:flow_methods}
 Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many cross-combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
 In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
 In the first sub-experiment we compare the segmentations produced on LDOF-and HS flows. In the second experiment we examine the quality of segmentations produced by LRGBD flows.
@@ -644,6 +642,7 @@ Again, we observe, that LRGBD flows produce poor segmentations. So, what is goin
 When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flows cluster the objects according to their depth layers rather by their motion.
 
 \subsection{Overall Performance}
+\label{sec:overall_performance}
 So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flows can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
 In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is listed in table $\ref{tab:overall_performance}$.
 \begin{table}[H]
@@ -685,6 +684,7 @@ LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline
 We again observe, that among the LDOF/P-affinity variants, using depths yields better results than not using them and MC achieves higher scores than SC.  
 
 \subsection{Pipeline Combination Comparisons}
+\label{sec:pipeline_combination_cmp}
 
 \subsubsection{LDOF vs. SRSF}
 In this section we want to illustrate the dominance of SRSF flows. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
