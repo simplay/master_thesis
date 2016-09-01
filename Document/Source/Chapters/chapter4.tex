@@ -680,29 +680,29 @@ In the following we describe this energy term, but before doing so, we have to p
 \end{equation}
 The $\delta_{\pi^A, \pi^B}$ is a characteristic function that is equals one, if the trajectories $A$ and $B$ are assigned to the same cluster and zero otherwise. Similarly, the expression $\delta_{\pi^A, k}$ is a boolean function that is one, if the trajectory $A$ got the label k assigned. \\ \\
 The $\textbf{data term}$ models a unary cost that is minimized by k-means, where $\mu_k$ denotes the centroid of cluster $k$. Notice that this term makes use of the norm $\norm{.}_{\lambda}$. In this norm each eigenvector is weighted by the inverse of the square root of its corresponding eigenvalue. Such a weighting ensures that eigenvectors \enquote{that separate more distinct clusters} correspond to smaller eigenvalues. \\ \\
-The $\textbf{smoothness term}$ acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized for more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
-The parameter $\nu$ acts as the tread-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
-Minimizing the energy formulated energy in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibit many local minima. However, when using a fixed number of clusters $K$, then minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids.
+The $\textbf{smoothness term}$ acts as a regularizer that penalizes the spatial boundaries between clusters. The penalty is weighted by the inverse difference of the eigenvectors along these boundaries. On one hand, this penalty is very small for the case when there are clear discontinuities along cluster boundaries. On the other hand, boundaries within a smooth area are penalized more heavily. This avoids splitting clusters at arbitrary locations due to smooth transitions in the eigenvectors. \\ \\
+The parameter $\nu$ acts as the trade-off between the two terms and thus determines how smooth the final segmentation should be. \\ \\
+Minimizing the energy formulated in equation $\ref{eq:min_cut_energy_revisited}$ is a difficult problem, because it exhibits many local minima. However, when using a fixed number of clusters $K$, minimizing this energy becomes a multi-label Markov Random Field (MRF) optimization problem with unknown centroids.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Initialization]{
-   \includegraphics[width=0.15\linewidth] {implementation/mc/0}
+   \includegraphics[width=0.175\linewidth] {implementation/mc/0}
    \label{fig:convergence_mc_seg_0}
 }
 \subfigure[Iteration 1]{
-   \includegraphics[width=0.15\linewidth] {implementation/mc/1}
+   \includegraphics[width=0.175\linewidth] {implementation/mc/1}
    \label{fig:convergence_mc_seg_1}
 }
 \subfigure[Iteration 2]{
-   \includegraphics[width=0.15\linewidth] {implementation/mc/2}
+   \includegraphics[width=0.175\linewidth] {implementation/mc/2}
    \label{fig:convergence_mc_seg_2}
 }
 \subfigure[Iteration 3]{
-   \includegraphics[width=0.15\linewidth] {implementation/mc/3}
+   \includegraphics[width=0.175\linewidth] {implementation/mc/3}
    \label{fig:convergence_mc_seg_3}
 }
 \subfigure[Iteration 4]{
-   \includegraphics[width=0.15\linewidth] {implementation/mc/4}
+   \includegraphics[width=0.175\linewidth] {implementation/mc/4}
    \label{fig:convergence_mc_seg_4}
 }
 \end{center}
@@ -714,7 +714,7 @@ In our Matlab implementation we optimize this minimization problem by using an i
 	\forall k \in \{ 1, \dots, K \} \forall A_i : (k - 1) \frac{n}{K} \leq i \leq k \frac{n}{K} : \pi^{A_i} = k
 \label{eq:initialization_min_cut}
 \end{equation}
-An loop iteration consists of two main steps: In the first step, we fix the label assignments and solve for the cluster centroids by running k-means. In the second step, we fix the centroids by using the previously computed centers and optimize for the assignments by running a multi-label graph cut energy minimization. For this purpose we rely on $\cite{Fulkerson2009}$'s $\textit{GCMex}$ framework$\footnote{This frameworks offers some handy methods to compute the multi-label graph cut.}$, which is a freely available Matlab implementation. We repeat this iteration until the labels assignments have converged. The resulting assignment is the motion segmentation. An example of the MC segmentation method is shown in figure $\ref{fig:convergence_mc_seg}$. 
+A loop iteration consists of two main steps: First, we fix the label assignments and solve for the cluster centroids by running k-means. Second, we fix the centroids by using the previously computed centers and optimize for the assignments by running a multi-label graph cut energy minimization. For this purpose we rely on $\cite{Fulkerson2009}$'s $\textit{GCMex}$ framework$\footnote{This frameworks offers some handy methods to compute the multi-label graph cut.}$, which is a freely available Matlab implementation. We repeat this iteration until the label assignments have converged. The resulting assignment is the motion segmentation. An example of the MC segmentation method is shown in figure $\ref{fig:convergence_mc_seg}$. 
 
 \subsection{Kernighan-Lin Heuristic} 
 In this section we describe a method that addresses the problem of motion segmentation by formulating it as a minimum cost multi-cut problem on a trajectory similarity graph as defined in section $\ref{sec:similarity_graphs}$. The energy term we optimize to find an optimal graph partition is based on the work presented in $\cite{KB15b}$. To solve this graph cut problem numerically we implemented the $\textit{Kernighan-Lin}$ heuristic ($\textbf{KL}$) described in $\cite{Ker70}$. \\ \\
