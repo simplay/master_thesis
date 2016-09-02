@@ -860,16 +860,14 @@ In our implementation we want to use the following initialization: One set among
 
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
-Up to this moment we are able to generate sparse motion segmentations by using three different methods. However, in some vision related tasks, it would actually make sense to determine dense masks. This would enable us to extract the moving objects by simply applying the corresponding mask. However, keep in mind that generating dense motion segmentations is not the focus of this work. Therefore, we also will not evaluate this method. \\ \\
-In this section we describe a simple method to produce a dense motion segmentations from previously generated sparse segmentations. \\ \\
-For this purpose we adapted an existing implementation, which address the problem of demosaicing an image by formulating it as convex optimization problem. The problem is reformulated in its primal-dual form and an iterative solver was developed. I developed this program during a semester project in the class \textit{Convex Optimization} in 2015 held by Prof. Dr. P. Favaro at the unversity of Bern. The class is based in the book convex optimization $\cite{BoydVanderberg2004}$. \\ \\
-A detailed derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. The class, as well as the implementation and the derivation assume a certain background in convex problem formulations and how to solve such problems. \\ \\
-The idea is to interpret the sparse segmentation as in image a image with missing data due to its sparsity. Therefore, we want to solve the problem of hole filling, which is the same as finding the demosaiced image, using our formulation. \\ \\
+From this moment on we are able to generate sparse motion segmentations by using three different methods: \textit{SC}, \textit{MC} and \textit{KL}. However, in some vision related tasks, it would make sense to determine dense masks. This would enable us to extract moving objects by simply applying the corresponding mask. However, keep in mind that generating dense motion segmentations is not the focus of this \enquote{work} and therefore will not be evaluated. \\ \\
+In this section we describe a simple method to produce a dense motion segmentations from previously generated sparse segmentations. For this purpose we adapted an existing implementation, which addresses the problem of demosaicing an image by formulating it as a convex optimization problem. The problem is reformulated in its primal-dual form and an iterative solver was developed. A detailed derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. I developed this program during a semester project in the class \textit{Convex Optimization} in 2015 held by Prof. Dr. P. Favaro at the University of Bern. The class was based about the book Convex Optimization by Boyd and Vanderberg $\cite{BoydVanderberg2004}$. The class, as well as the implementation and the derivation assume a certain knowledge in convex problem formulations and how to solve such problems. \\ \\
+The idea is to interpret the sparse segmentation as an image with missing data due to its sparsity. Therefore, we aim to solve the problem of hole filling, which is the same as finding the demosaiced image by using our formulation. \\ \\
 For a given image with missing data $g$ we want to find its reconstructed image $u$. This can be achieved by minimizing an energy term $E$ which is defined as 
 \begin{equation}
 	E(u) = \underbrace{\norm{\nabla u}_2}_{\text{smoothness term}} + \frac{\lambda}{2} \underbrace{\norm{u - g}^2_{\Omega}}_{\text{data term}}	
 \end{equation}
-where we defined the data term as
+where we defined its data term as
 \begin{equation}
 \begin{aligned}
 & \norm{u - g}^2_{\Omega_{C}} = \sum_x \sum_y \Omega_{C}(x,y)\norm{u(x,y) - g(x,y)}^2 \\
@@ -880,7 +878,7 @@ where we defined the data term as
 \end{cases}
 \end{aligned}
 \end{equation}
-First let us have a look at the \textbf{data term}. It ensures that the reconstructed image does not deviate too much from the given input $g$ w.r.t the norm $\norm{\cdot}_\Omega$. The reason for introducing this kind of norm is that we want to define a meaningful measure that captures the sense of meaningful. Therefore, we have to skip every invalid image location in $g$, when applying this norm on the difference between $u$ and $g$. The \textbf{smoothness term} ensures a smooth transition between the colors in the image.
+First let us have a look at the \textbf{data term}. It ensures that the reconstructed image does not deviate too much from the given input $g$ w.r.t the norm $\norm{\cdot}_\Omega$. This norm only operates on image locations that exhibit existing pixel data. Therefore, we have to skip every invalid image location in $g$, when applying this norm on the difference between $u$ and $g$. The \textbf{smoothness term} ensures a smooth transition between the colors in the image.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\linewidth] {implementation/dense_seg/cars_1}
@@ -888,7 +886,7 @@ First let us have a look at the \textbf{data term}. It ensures that the reconstr
 \caption[Dense Segmentation Cars]{A dense segmentation produced by our pipeline. We see an overlay of the sparse segmentation on top of the dense masks. As we can see, the dense segmentation is basically a blur of the initial given sparse segments.}
 \label{fig:dense_segmentation_cars_1}
 \end{figure}
-In section $\ref{sec:primal_dual_form}$ describe how to solve this optimization problem by formulating its primal-dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. One iteration of our solver runs the following steps:
+In section $\ref{sec:primal_dual_form}$ described how to solve this optimization problem by formulating its primal-dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix $\ref{chap:appendix_demosaicing}$. One iteration of our solver runs the following steps:
 \begin{equation}
 \begin{aligned}
 	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
@@ -896,6 +894,6 @@ In section $\ref{sec:primal_dual_form}$ describe how to solve this optimization 
 	\bar{x}^{n+1} &= x^{n+1} + \theta(x^{n+1} - x^n)
 \end{aligned}
 \end{equation}
-For computing $\nabla$ we use a forward difference approximation scheme.
+For computing $\nabla$ we rely on a forward difference approximation scheme.
 We repeat this update rule until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough. Moreover, we use the parameter assignment listed in equation $\ref{eq:parameter_set_up}$. \\ \\
-An dense segmentation produced by running this method is shown in figure $\ref{fig:dense_segmentation_cars_1}$. This figure shows the dense segments as colored masks. Additionally, we also show the sparse segmentation, using the same colors. As we can see, the dense segmentation is basically a blurred version of the initial sparse input. 
+A dense segmentation, produced by running this method, is shown in figure $\ref{fig:dense_segmentation_cars_1}$. This figure shows the dense segments as colored masks. Additionally, we also show the sparse segmentation, using the same colors. As we can see, the dense segmentation is basically a blurred version of the initial sparse input. 
