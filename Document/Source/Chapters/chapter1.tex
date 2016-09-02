@@ -2,21 +2,6 @@
 
 %TODO: think about where to explain the difference between rigid-and deformable motion.
 
-% RELATED WORK - OF
-%=> SRSF
-%source 1:
-% 
-%propose    a    per-pixel    over-
-%parameterized representation using rotation and translation
-%to  capture  the  global  rigid  motion  of  the  scene  while
-%allowing  local  deviations.    Their  method  is  more  suited
-%for  a  single  moving  object.   By  comparison  our  method
-%captures the global 3D motion for each individually moving
-%object  and  can  handle  multiple  moving  objects
-%source 2:
-%
-%overparametrize scene flow and estimate a 6-DoF rigid- body motion at each pixel. They regularize the flow field in this 6-DoF parametrization such that their model favors lo- cally rigid motions
-
 \chapter{Introduction}
 \section{Motivation}
 In nature one important aspect that determines the odds of survival and thus the individual success to reproduce is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, motion is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
@@ -42,7 +27,7 @@ In nature one important aspect that determines the odds of survival and thus the
 \caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform self-localization}
 \label{fig:motivating_example}
 \end{figure}
-Despite its apparent simplicity, motion is a very general and powerful cue to detect moving objects or to even partition them into its logical parts. This kind of partitioning is also known as \textit{motion segmentation}. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. \\ \\
+Despite its apparent simplicity, motion is a very general and powerful cue to detect moving objects or even to partition them into their logical parts. This kind of object separation is also known as \textit{motion segmentation}. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. \\ \\
 As natural such tasks might be performed by our brains the harder they become to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
 However, a lot of scientific effort has been put into solving this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
 \begin{figure}[H]
@@ -89,9 +74,6 @@ In summary, we want to achieve the following three goals:
 In recent Computer Vision literature there exist various complementary ideas about how to approach the task of motion segmentation. In this section we summarize the most prominent methods and compare them with our model.
 
 \paragraph{Image Difference:} Taking the difference between two frames is a simple technique for detecting changes. By thresholding the intensity difference of two frames, a coarse map of the temporal changes can be obtained. Despite its simplicity, this techniques is limited by noise, camera movement (everything is changing) and low frame rates (nothing is changing). However, instead of directly using the difference image as the segmentation, the rough map of the changing areas can be used as a guide to extract spatial or temporal information in order to track the regions. Image difference techniques have been used in the work of $\cite{Cav05}$, $\cite{Li07}$ and $\cite{Col07}$.
-
-
-
 
 \paragraph{Statistical Approach} Motion segmentation can be identified as the classification problem, whether a particular pixel belongs to either the background or the foreground. In $\cite{Cre05}$, the authors present a variational approach for segmenting an image into a set of regions. For this purpose they use a parametric motion model based on a conditional probabilities of the spatio-temporal image gradient. By exploiting Bayesian theory, they derive a cost functional which depends on parametric motion models for each set of regions and on the boundary separating these regions.
 
