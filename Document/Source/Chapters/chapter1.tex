@@ -2,6 +2,8 @@
 
 %TODO: think about where to explain the difference between rigid-and deformable motion.
 
+
+
 \chapter{Introduction}
 \section{Motivation}
 In nature one important aspect that determines the odds of survival and thus the individual success to reproduce is the ability to sense the surrounding environment. In particular, the perceptional system of any advanced species is directed by visual cues amongst others. Alongside with sensing color, depths and brightness, the perception of motion is a fundamental visual cue. Particularly, motion is of great importance for interpreting visual information such as object groupings and their structure, estimating speed and performing self-localization, as shown in figure $\ref{fig:motivating_example}$.
@@ -21,12 +23,16 @@ In nature one important aspect that determines the odds of survival and thus the
 }
 \subfigure[Grouping Moving Objects]{
    \includegraphics[width=0.31\linewidth] {introduction/motivation/perception/motion_tracking}
-   \label{fig:motivating_example_c}
+   \label{fig:motivating_example_d}
 }
 \end{center}
-\caption[Motivating Example]{Visual cues allow us to group objects, estimate speed and depths and perform self-localization}
+\caption[Motivating Example]{Motivating Examples$\footnotemark$: Visual cues allow us to group objects, estimate speed and depths and perform self-localization}
 \label{fig:motivating_example}
 \end{figure}
+\footnotetext{Source figure \ref{fig:motivating_example_a}: \url{http://opticflow.bu.edu/} \\
+ source figure \ref{fig:motivating_example_b}: \url{http://practicalphysics.org/forces-and-motion.html} \\
+ source figure \ref{fig:motivating_example_c}: \url{http://digital-photography-school.com/a-beginners-to-capturing-motion-in-your-photography/} \\
+ source figure \ref{fig:motivating_example_d}: \url{http://docs.opencv.org/trunk/d7/d8b/tutorial_py_lucas_kanade.html}}
 Despite its apparent simplicity, motion is a very general and powerful cue to detect moving objects or even to partition them into their logical parts. This kind of object separation is also known as \textit{motion segmentation}. Generally, moving objects can be identified independently of their shape, type or looks. For instance it does not matter whether or not an object represents an animal or a car, both can be segmented by their motion. \\ \\
 As natural such tasks might be performed by our brains the harder they become to realize in a technical point of view. Especially the task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. \\ \\
 However, a lot of scientific effort has been put into solving this problem statement and many sophisticated approaches have been established. In particular, the most promising motion segmentations were produced by methods relying on optical flows. An example is given in figure $\ref{fig:motion_segmentation_motivation_eg}$.
@@ -53,7 +59,7 @@ In combination with color, depth is another powerful visual clue that can be use
 While combining RGB-D data with optical flow estimation has gained a lot of attention recently $\cite{Bro14}$, $\cite{PawanKumar2008}$ standard motion segmentation approaches have not yet been extended to benefit optimally from additional depth information. Therefore this thesis investigates this particular problem in detail and provides a solution for segmenting moving objects using optical flows on RGB-D videos.
 
 \section{Goals}
-The purpose of this thesis is to describe and evaluate a robust motion segmentation method and to incorporate depth information available in RGB-D video sequences as well as other visual cues. Due to its relative simplicity and extendibility we focus on motion segmentation with a traditional trajectory clustering approach using trajectories established via optical flow. In our formulation we assume a piecewise rigid motion model and do not constrain the camera movement. \\ \\
+The purpose of this thesis is to describe and evaluate a robust motion segmentation method and to incorporate depth information available in RGB-D video sequences as well as other visual cues. Due to its relative simplicity and extendibility we focus on motion segmentation with a traditional trajectory clustering approach using trajectories established via optical flow. In our formulation we assume a piecewise rigid motion$\footnote{A rigid motion can be represented by a transformation consisting of rotations and translations.}$ model and do not constrain the camera movement. \\ \\
 The actual problem we want to address is shown in figure $\ref{fig:problem_statement}$. For a given RGB-D video sequence and the camera calibration data, we want to detect and extract the individual moving objects. We therefore develop a pipeline that is capable of generating such motion segmentations by using optical flows. \\ \\
 \begin{figure}[H]
 \begin{center}
