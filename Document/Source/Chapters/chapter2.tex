@@ -17,7 +17,7 @@ In this thesis we want to follow a similar approach as described in those two co
 	\item Group the trajectories via a spectral clustering on the affinity matrix.
 \end{enumerate}
 However, keep in mind that this motion segmentation technique also suffers from some issues: Trajectories usually start and end in different frames due to occlusion and disocclusion. Therefore, it is crucial to know where points get occluded. Furthermore, there are various metrics that can be used to compute distances between trajectories, such as their spatial-, color- or motion-distance. Moreover, there are many mathematical variants to solve the problem of spectral clustering. Lastly, the used optical flow estimation method should be carefully chosen since it affects the quality of the final segmentation. \\ \\
-
+In next chapter we describe how we implemented such a motion segmentation pipeline by following these main stages. In particular, we will address all issues described above and provide robust solution.
 
 \section{Optical Flow}
 \label{sec:optical_flow}
