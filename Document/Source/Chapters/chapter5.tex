@@ -259,7 +259,7 @@ Before evaluating the performance of generated segmentations, we run our segment
 \label{eq:statistical_measures}
 \end{equation}
 The final reported outputs is the average value of these measured over all foreground objects. \\ \\
-Finally some words about how we determined the quantities $TP$, $FP$ and $FN$. We only have to iterate over all points in every cluster and compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false negatives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$. For a given label $\alpha$ these measures are defined as:
+Finally some words about how we determined the quantities $TP$, $FP$ and $FN$. We only have to iterate over all points in every cluster and compare them against an available ground image. While doing so we count their true positives (\textbf{TP}), false positives (\textbf{FP}) and their false negatives (\textbf{FN}). The exact definition of these quantities is listed in equation $\ref{eq:statistical_counts}$. For a given label $\alpha$ these measures are defined as:
 \begin{equation}
 \begin{aligned}
 	\textbf{TP} &:= \text{Samples correctly labeled $\alpha$} \\
@@ -652,10 +652,10 @@ In particular we are interested in comparing the modes LDOF PD SC and SRSF PED M
 Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 LDOF PD SC & 60.04 \%   & 35.99\%     & 45.00\%  \\ \hline
 LDOF PD MC & 54.65\%   & 58.31\%     & 56.42\%  \\ \hline
-LDOF PED SC & 63.85\%   & 59.68\%     & 61.69\%  \\ \hline
-LDOF PED MC & 59.30\%   & 64.79\%     & 61.93\%  \\ \hline
+LDOF PED SC & 63.85\%   & 54.68\%     & 58.91\%  \\ \hline
+LDOF PED MC & 63.32\%   & 67.45\%     & 65.32\%  \\ \hline
 SRSF PED MC & \textbf{76.52}\%   & \textbf{83.47}\%     & \textbf{79.84}\%  \\ \hline
-SRSF PED SC & 60.23\%   & 49.62\%     & 54.41\%  \\ \hline 
+SRSF PED SC & 65.70\%   & 58.56\%     & 61.93\%  \\ \hline 
 SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
 SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
 Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
