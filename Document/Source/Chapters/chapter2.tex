@@ -34,7 +34,7 @@ Figure $\ref{fig:optical_flow_math_def_eg}$ illustrates the idea of the point-to
 \label{fig:optical_flow_math_def_eg}
 \end{figure}
 \footnotetext{The unprocessed image shown in this figure has been taken from: \\ \url{http://robotics.eecs.berkeley.edu/~sastry/ee20/vision3/node2.html}}
-In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$ (visualized by a red arrow) to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in equation $\ref{eq:of_brightness_const}$.
+In this figure two frames of a spinning Rubik's cube at different times are shown. The orange point $p = (x,y)$ at time $t$ is tracked to the position $(x+u, y+v)$ at time $t+dt$ by adding the optical flow $(u,v)$ (visualized by a red arrow) to $p$. This matter of a fact can mathematically be modelled via the brightness consistency assumption, stated in Equation $\ref{eq:of_brightness_const}$.
 \begin{equation}
 	I_{t} \left( x,y \right) = I_{t+dt} \left( x+u, y+v \right)
 \label{eq:of_brightness_const}
@@ -42,7 +42,7 @@ In this figure two frames of a spinning Rubik's cube at different times are show
 Where $I_t$ depicts the brightness at frame $t$.
 
 \subsection{Visualization of Flow Fields}
-For visualizing flow fields we use the Middlebury$\cite{Baker2011}$ flow color encoding$\footnote{The corresponding visualizer script can be found at \url{http://vision.middlebury.edu/flow/submit/}}$ shown in subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized$\footnote{One way to normalize a set of vectors is the following: Divide each vector by the maximal length of these vectors.}$ flow vectors. The angle in the circle corresponds to the flow direction and the distance to the center corresponds to the flow velocity. Moreover, figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes. As we can see the cars are moving to the bottom-right direction at a intermediate velocity.
+For visualizing flow fields we use the Middlebury$\cite{Baker2011}$ flow color encoding$\footnote{The corresponding visualizer script can be found at \url{http://vision.middlebury.edu/flow/submit/}}$ shown in Subfigure $\ref{fig:color_encoding_flows_a}$. The shown color plate provides color values for the normalized$\footnote{One way to normalize a set of vectors is the following: Divide each vector by the maximal length of these vectors.}$ flow vectors. The angle in the circle corresponds to the flow direction and the distance to the center corresponds to the flow velocity. Moreover, Figure $\ref{fig:color_encoding_flows}$ also contains an example of a flow visualization using these color codes. As we can see the cars are moving to the bottom-right direction at a intermediate velocity.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Flow Color Codes]{
@@ -73,7 +73,7 @@ Their formulation is based on the following assumptions:
   \item Situations where objects occlude one another are excluded.
 \end{itemize}
 These assumptions allow to conclude, that in their model the brightness of a particular point in the pattern is constant. \\ \\
-Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, $\frac{d E}{dt} = 0$ hold true. Using the chain rule for differentiation, they derived the expression in equation $\ref{eq:flow_eq}$.  
+Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, $\frac{d E}{dt} = 0$ hold true. Using the chain rule for differentiation, they derived the expression in Equation $\ref{eq:flow_eq}$.  
 \begin{equation}
 \begin{aligned}
 0 &= \frac{d E}{dt} \\
@@ -82,13 +82,13 @@ Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be de
 \end{aligned}
 \label{eq:flow_eq}	
 \end{equation}
-where we the following substitutions were used to derive the last identity of equation $\ref{eq:flow_eq}$:
+where we the following substitutions were used to derive the last identity of Equation $\ref{eq:flow_eq}$:
 \begin{equation}
 \begin{aligned}
 	u = \frac{dx}{dt} \text{ and } v = \frac{dy}{dt}
 \end{aligned}
 \end{equation}
-By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has been done in equation $\ref{eq:reordered_flow_eq}$:
+By re-ordering the terms of Equation $\ref{eq:flow_eq}$ the same way like it has been done in Equation $\ref{eq:reordered_flow_eq}$:
 \begin{equation}
 \begin{aligned}
 	(E_x, E_y) \cdot (u, v) &= -E_t \\
@@ -97,28 +97,28 @@ By re-ordering the terms of equation $\ref{eq:flow_eq}$ the same way like it has
 \label{eq:reordered_flow_eq}
 \end{equation}
 Hence, they could show that the change in image brightness can be formulated by a single linear equations with two unknowns $u$ and $v$, the so called $\textit{flow velocity}$. As a consequence, such a flow velocity cannot be computed locally without introducing additional constraints. \\ \\
-In their formulation they express their additional constraint by stating that the square of the magnitude of the gradient of the optical flow velocity, as defined in equation $\ref{eq:smoothness_constraints}$
+In their formulation they express their additional constraint by stating that the square of the magnitude of the gradient of the optical flow velocity, as defined in Equation $\ref{eq:smoothness_constraints}$
 \begin{equation}
 	\left( \frac{\partial u}{\partial x} \right)^2 + \left( \frac{\partial u}{\partial y} \right)^2 \text{ and } \left( \frac{\partial v}{\partial x} \right)^2 + \left( \frac{\partial v}{\partial y} \right)^2,
 \label{eq:smoothness_constraints}
 \end{equation}
-should be minimal. The remaining problem is then to minimize the sum of the energies modelling the rate of image brightness change as stated in equation $\ref{eq:energy_brightness}$
+should be minimal. The remaining problem is then to minimize the sum of the energies modelling the rate of image brightness change as stated in Equation $\ref{eq:energy_brightness}$
 \begin{equation}
 	E_b = E_x u + E_y v + E_t
 \label{eq:energy_brightness}
 \end{equation}
-and the measure of the departure from smoothness in the velocity flow, as formulated in equation $\ref{eq:energy_constraint}$.
+and the measure of the departure from smoothness in the velocity flow, as formulated in Equation $\ref{eq:energy_constraint}$.
 \begin{equation}
 	E_c^2 = \norm{\nabla u}^2 + \norm{\nabla v}^2
 \label{eq:energy_constraint}
 \end{equation}
-The total error to be minimized is therefore equals to the energy term formulated in equation $\ref{eq:final_hs_energy_term}$.
+The total error to be minimized is therefore equals to the energy term formulated in Equation $\ref{eq:final_hs_energy_term}$.
 \begin{equation}
 	E = \int \int \left( E_b^2 + \alpha^2 E_c^2 \right) dx dy
 \label{eq:final_hs_energy_term}
 \end{equation}
 This flow estimation formulation assumes smoothness in the flow over the whole image. Hence, minimzing this energy results in a minimization of distortions in the flow and thus prefers solutions which exhibit more smoothness. The scalar $\alpha$ acts as a regularization constant, that weights the influence of the smoothness term. Hence, larger values for $\alpha$ lead to soother flow estimations. \\ \\
-This minimization can analytically be solved by formulating its multi-dimensional Euler-Lagrange equations as formulated in $\ref{eq:multi_dim_euler_lagrange}$.
+This minimization can analytically be solved by formulating its multi-dimensional Euler-Lagrange equations as formulated in Equation $\ref{eq:multi_dim_euler_lagrange}$.
 \begin{equation}
 \begin{aligned}
  \frac{\partial L}{\partial u} - \frac{\partial}{\partial x} \frac{\partial L}{\partial u_x} - \frac{\partial}{\partial y}\frac{\partial L}{\partial u_y} &= 0 \\
@@ -126,7 +126,7 @@ This minimization can analytically be solved by formulating its multi-dimensiona
 \end{aligned}
 \label{eq:multi_dim_euler_lagrange}
 \end{equation}
-where L denotes the integrand of the energy expression, given by equation $\ref{eq:def_l_euler_lag}$:
+where L denotes the integrand of the energy expression, given by Equation $\ref{eq:def_l_euler_lag}$:
 \begin{equation}
 \begin{aligned}
 E_x E_b - \alpha^2 \Delta u &= 0 \\
@@ -137,12 +137,12 @@ E_y E_b - \alpha^2 \Delta v &= 0 \\
 Where $\Delta$ denotes the Laplace$\footnote{Definition of the Laplace operator in the two dimensional case: $\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$}$ operator.
 
 When using a finite differences scheme for approximating the laplacian equation
-as defined in equation $\ref{eq:finite_difference_laplacian}$
+as defined in Equation $\ref{eq:finite_difference_laplacian}$
 \begin{equation}
 	\Delta u(x,y) = \bar{u} (x,y) - u(x,y)
 \label{eq:finite_difference_laplacian}
 \end{equation}
-where $\bar{u} (x,y)$ denotes the weighted average of u computed by visiting the neighborhood around the pixel at location $(x,y)$, equation $\ref{eq:def_l_euler_lag}$ can be simplified to
+where $\bar{u} (x,y)$ denotes the weighted average of u computed by visiting the neighborhood around the pixel at location $(x,y)$, Equation $\ref{eq:def_l_euler_lag}$ can be simplified to
 \begin{equation}
 \begin{aligned}
 (E_x^2 + \alpha^2) u + E_x E_y v &= \alpha^2 \bar{u} - E_x E_t \\
@@ -150,7 +150,7 @@ where $\bar{u} (x,y)$ denotes the weighted average of u computed by visiting the
 \end{aligned}
 \label{eq:def_l_euler_lag_simplified}
 \end{equation}
-The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and $v$. This allows to solve this minimization problem for each pixel in the image. However, keep in mind that the solution depends on the neighboring values of the flow field. Hence, the system must be solved iteratively. The following update rule can therefore be used:
+The equations from above (Eq. $\ref{eq:def_l_euler_lag_simplified}$) became linear in $u$ and $v$. This allows to solve this minimization problem for each pixel in the image. However, keep in mind that the solution depends on the neighboring values of the flow field. Hence, the system must be solved iteratively. The following update rule can therefore be used:
 \begin{equation}
 \begin{aligned}
  u_{k+1} &= \bar{u}_k - \frac{E_x (E_x \bar{u}_k + E_y \bar{v}_k + E_t)}{\alpha^2 + E_x^2 + E_y^2} \\
@@ -164,7 +164,7 @@ The equations in $\ref{eq:def_l_euler_lag_simplified}$ became linear in $u$ and 
 In this section we briefly summarize four modern flow methods. Additionally, we state their main properties and their drawbacks. Discussing those methods particularly makes sense since we make use of these flow estimation techniques later in our pipeline to generate flow fields.
 
 \subsubsection{Enhanced H.S. Optical Flows}
-In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
+In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flows. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in Section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
 When using the abbreviation HS we strictly refer to their implementation. \\ \\
 The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
 \begin{itemize}
@@ -219,7 +219,7 @@ Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\t
 \label{eq:k_means_minimzation_formulation}
 \end{equation}
 where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. \\ \\
-The k-means clustering equations $\ref{eq:k_means_minimzation_formulation}$ can be iteratively minimized, but without the guarantee of finding a global minimum. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
+The k-means clustering equations (Eq. $\ref{eq:k_means_minimzation_formulation}$) can be iteratively minimized, but without the guarantee of finding a global minimum. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
 \begin{itemize}
 \item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least sum of distance functions of each point in the cluster. Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
 \begin{equation}
@@ -327,7 +327,7 @@ which has the following properties:
 \item Zero is an eigenvalue of $L^{\text{sym}}$ with the eigenvector $D^{\frac{1}{2}} \mathbbm{1}$
 \item $L^{\text{sym}}$ is positive semi-definite and has $n$ non-negative real-valued eigenvectors.
 \end{itemize}
-Please notice that the definition of equation $\ref{eq:normalized_graph_laplacian}$ relies on the definition of the unnormalized graph Laplacian, stated in equation $\ref{eq:unnormalized_graph_laplacian}$. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
+Please notice that the definition of Equation $\ref{eq:normalized_graph_laplacian}$ relies on the definition of the unnormalized graph Laplacian, stated in Equation $\ref{eq:unnormalized_graph_laplacian}$. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
 
 \subsection{Spectral Clustering}
 \label{sec:spectral_clustering_bg}
@@ -346,14 +346,14 @@ The rational of the spectral clustering algorithm is to change the abstract repr
 \setlength{\fboxrule}{0pt} 
 \begin{boxedminipage}{1.0\textwidth}
   \begin{algorithmic}[1]
-  	  \State $\text{Construct a similarity graph as described in section }\ref{sec:similarity_graphs}$
+  	  \State $\text{Construct a similarity graph as described in Section }\ref{sec:similarity_graphs}$
   	  \State $\text{Let } W \text{ denote the corresponding weighted adjacency matrix}.$
-  	  \State $\text{Compute the normalized graph Laplacian } L^{\text{sym}} \text{ as defined in equation } \ref{eq:normalized_graph_laplacian}$
+  	  \State $\text{Compute the normalized graph Laplacian } L^{\text{sym}} \text{ as defined in Equation } \ref{eq:normalized_graph_laplacian}$
   	  \State $\text{Compute the first k eigenvectors } u_1,\dots,u_k \text{ of } L^{\text{sym}}$
   	  \State $\text{Let } U \in \mathbb{R}^{n \times k} \text{ be the matrix containing the vectors } u_1,\dots,u_k \text{ as columns}$
   	  \State $\text{Form a matrix } T \in \mathbb{R}^{n \times k} \text{ from U by normalizing the rows}$
   	  \State $\forall i \in \left[ 1, n \right]: \text{ Let } y_i \in \mathbb{R}^k \text{ be the vector corresponding to the t-th row of T.}$
-  	  \State $\text{Cluster the points } (y_i)_{i=1,\dots,n} \text{ via k-means as described in section } \ref{sec:k_means} \text{ into clusters } C_1, \dots, C_k$
+  	  \State $\text{Cluster the points } (y_i)_{i=1,\dots,n} \text{ via k-means as described in Section } \ref{sec:k_means} \text{ into clusters } C_1, \dots, C_k$
   \end{algorithmic}
   \end{boxedminipage}
   \vskip1.5pt
@@ -370,8 +370,8 @@ Let $G = (V, E)$ denote a similarity graph and $W$ its corresponding adjacency m
 \text{cut} \left( A_1, \dots, A_k \right) := \frac{1}{2} \sum_{i=1}^k W \left( A_i, \bar{A_i} \right)
 \label{eq:simple_mincut} 
 \end{equation}
-where $\bar{A}$ denotes the complement of $A$ as defined in equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in equation $\ref{eq:set_sum}$. \\ \\
-The minimum cut problem from equation $\ref{eq:simple_mincut}$ can be efficiently solved according to the method described in $\cite{Stoer:1997:SMA:263867.263872}$. The idea is to reduce the graph by merging the vertices of an edge determined similar as in iteration of Prim's minimum spanning tree algorithm, until the graph only contains two combined vertex sets. After each shrinking, the weight of the merged cut would be stored in a list. Finally, the minimum weight cut in the list will be the minimum of the graph. \\ \\
+where $\bar{A}$ denotes the complement of $A$ as defined in Equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in Equation $\ref{eq:set_sum}$. \\ \\
+The minimum cut problem from Equation $\ref{eq:simple_mincut}$ can be efficiently solved according to the method described in $\cite{Stoer:1997:SMA:263867.263872}$. The idea is to reduce the graph by merging the vertices of an edge determined similar as in iteration of Prim's minimum spanning tree algorithm, until the graph only contains two combined vertex sets. After each shrinking, the weight of the merged cut would be stored in a list. Finally, the minimum weight cut in the list will be the minimum of the graph. \\ \\
 In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly the resulting partitions should be large enough. 
 The two common objective functions to encode the notion of size is the ratio cut \textit{Rcut} and the normalized cut \textit{Ncut}. They are defined as
 \begin{equation}
@@ -380,6 +380,6 @@ The two common objective functions to encode the notion of size is the ratio cut
 &\text{Ncut} = \frac{1}{2} \sum_{i=1}^k \frac{W(A_i, \bar{A_i})}{\text{vol}(A_i)} = \sum_{i=1}^k \frac{\text{cut}(A_i, \bar{A_i})}{\text{vol}(A_i)}
 \end{aligned}
 \end{equation}
-Both objective functions try to achieve that the clusters are balanced in terms of either the number of vertices (Rcut) or edges (Ncut). The downside of this is that introducing balancing conditions make the previous simple mincut become NP hard, as discussed in $\cite{Jeg09}$. Spectral clustering is a way to solve a relaxed version of those balanced mincut problems. In particular, in $\cite{vonLuxburg2007}$ the authors demonstrated that relaxing Ncut leads to the spectral clustering algorithm we mention in section $\ref{sec:spectral_clustering_bg}$. \\ \\
+Both objective functions try to achieve that the clusters are balanced in terms of either the number of vertices (Rcut) or edges (Ncut). The downside of this is that introducing balancing conditions make the previous simple mincut become NP hard, as discussed in $\cite{Jeg09}$. Spectral clustering is a way to solve a relaxed version of those balanced mincut problems. In particular, in the paper $\cite{vonLuxburg2007}$ the authors demonstrated that relaxing Ncut leads to the spectral clustering algorithm we mention in Section $\ref{sec:spectral_clustering_bg}$. \\ \\
 In literature, many sophisticated methods exist to optimize relaxed versions of this NP hard problem. Examples are the graph partition heuristic in $\cite{Ker70}$, or by solving the multi-label CRF problem via max-flows as presented in $\cite{Fulkerson2009}$.
 

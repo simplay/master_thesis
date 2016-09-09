@@ -18,14 +18,14 @@ with the measure
 \label{eq:measure}
 \end{equation}
 where C denotes the three different color channels. $\Omega_{C}$ is defined such that $\Omega_{C}(x,y) = 1$ if the pixel value at $(x,y)$ is \emph{valid}$\footnote{this means that the pixel at location (x,y) is valid for the bayer color mask C}$ and $\Omega_{C}(x,y) = 0$ when the data is missing. \\ \\
-The cost function from equation $\ref{eq:basis_cost_demosaicing}$ consists of a smoothness term, $\norm{\nabla u_c}_2$ and $\norm{u_c - g}^{2}_{\Omega_{c}}$. The first term ensures a smooth color transition between colors in a l2 norm sense. The second term ensures that the reconstructed images does not deviate too much from the given input, i.e. de demosaiced image should resemble to the provided mosaiced raw camera image. This similarity term is further parameterized by a regularization term $\lambda$, indicating how strong the output should match the given input according to the formulated measure in equation $\ref{eq:measure}$. In summary, larger values for $\lambda$ weight the similarity of the input and output image more, and contrarely, lower values weight the color smoothness term more. \\ \\
-Hereby, minimizating the cost function from equation $\ref{eq:basis_cost_demosaicing}$ leads to an optimal demosaiced image $u$.
+The cost function from Equation $\ref{eq:basis_cost_demosaicing}$ consists of a smoothness term, $\norm{\nabla u_c}_2$ and $\norm{u_c - g}^{2}_{\Omega_{c}}$. The first term ensures a smooth color transition between colors in a l2 norm sense. The second term ensures that the reconstructed images does not deviate too much from the given input, i.e. de demosaiced image should resemble to the provided mosaiced raw camera image. This similarity term is further parameterized by a regularization term $\lambda$, indicating how strong the output should match the given input according to the formulated measure in Equation $\ref{eq:measure}$. In summary, larger values for $\lambda$ weight the similarity of the input and output image more, and contrarely, lower values weight the color smoothness term more. \\ \\
+Hereby, minimizating the cost function from Equation $\ref{eq:basis_cost_demosaicing}$ leads to an optimal demosaiced image $u$.
 Mathematically we want to solve for 
 \begin{equation}
 	\widetilde{u} = \argmin_{u_c} E(u_c)
 \label{eq:our_general_cost_function}
 \end{equation}
-We can further simplify the cost function stated in equation $\ref{eq:basis_cost_demosaicing}$ relying on the following observation: Since the function $\Omega_{C}$ is only true for pixels that correspond to the color channel C in the bayer mask, we see that $\Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}$ is only not equal zero if the pixel at location $(x,y)$ belongs to the color channel $C$. Therefore we are allowed to solve the stated optimization problem from equation $\ref{eq:basis_cost_demosaicing}$ for each color channel separately. \\ \\
+We can further simplify the cost function stated in Equation $\ref{eq:basis_cost_demosaicing}$ relying on the following observation: Since the function $\Omega_{C}$ is only true for pixels that correspond to the color channel C in the bayer mask, we see that $\Omega_{C}(x,y)\norm{u_{c}(x,y) - g(x,y)}$ is only not equal zero if the pixel at location $(x,y)$ belongs to the color channel $C$. Therefore we are allowed to solve the stated optimization problem from Equation $\ref{eq:basis_cost_demosaicing}$ for each color channel separately. \\ \\
 According to this insight we are supposed to minimize the following three independent$\footnote{Independent in the sense that we are allowed to solve for each color channel separately}$ convex problems:
 \begin{align}
 	\widetilde{u}_R = \argmin_{u_R} \norm{\nabla u_R}_2 + \frac{\lambda}{2} \norm{u_R - g}^2_{\Omega_{R}} \nonumber \\
@@ -33,8 +33,8 @@ According to this insight we are supposed to minimize the following three indepe
 	\widetilde{u}_B = \argmin_{u_B} \norm{\nabla u_R}_2 + \frac{\lambda}{2} \norm{u_B - g}^2_{\Omega_{B}}
 \label{eq:our_convex_probelm}		
 \end{align}
-Where we still rely on the measure defined in equation $\ref{eq:measure}$ but C was replayed by the appropriate color channel$\footnote{C stands for either the color channel R, G or B.}$. We notice that the equations in $\ref{eq:our_convex_probelm}$ tell us that we have to solve three different energies similar to the one formulated in equation $\ref{eq:our_general_cost_function}$. \\ \\
-In the next section we will describe how to solve the stated minimization problems from equation $\ref{eq:our_convex_probelm}$ numerically. \\ \\
+Where we still rely on the measure defined in Equation $\ref{eq:measure}$ but C was replayed by the appropriate color channel$\footnote{C stands for either the color channel R, G or B.}$. We notice that the equations in Equation $\ref{eq:our_convex_probelm}$ tell us that we have to solve three different energies similar to the one formulated in Equation $\ref{eq:our_general_cost_function}$. \\ \\
+In the next section we will describe how to solve the stated minimization problems from Equation $\ref{eq:our_convex_probelm}$ numerically. \\ \\
 
 \section{Primal-Dual Form}
 \label{sec:primal_dual_form}
@@ -43,7 +43,7 @@ In this section we derive the primal-dual form of the stated convex demosaicing 
 	\min_{x \in X} F(K x) + G(x)
 \label{eq:initial_primal}	
 \end{align}
-where $F$, $G$ are convex functions and $K$ denotes a linear operator. The primal-dual formulation for equation $\ref{eq:initial_primal}$ is given by 
+where $F$, $G$ are convex functions and $K$ denotes a linear operator. The primal-dual formulation for Equation $\ref{eq:initial_primal}$ is given by 
 \begin{align}
 	\min_{x \in X} \max_{y \in Y} < Kx, y > - F^*(y) + G(x)
 \label{eq:initial_primal_dual}	
@@ -53,8 +53,8 @@ For a given mosaiced RGB image $u_{RGB}$ encoded as a 3 dimensional $M \times N$
 \min_{u \in U} \norm{\nabla u} + \frac{\lambda}{2} \norm{u - g}^2_{\Omega}
 \label{eq:initial_energy}
 \end{equation}
-where $\norm{u - g}^2_{\Omega}$ is defined as in equation $\ref{eq:measure}$ and $g$ is the corresponding color channel of the mosaiced image described in the problem statement. \\ \\
-We observe that equation $\ref{eq:initial_energy}$ has the same structure as the initial problem stated in equation $\ref{eq:initial_primal}$. This allows us to formulate the primal-dual form of equation $\ref{eq:initial_energy}$ which will look like the following:
+where $\norm{u - g}^2_{\Omega}$ is defined as in Equation $\ref{eq:measure}$ and $g$ is the corresponding color channel of the mosaiced image described in the problem statement. \\ \\
+We observe that Equation $\ref{eq:initial_energy}$ has the same structure as the initial problem stated in Equation $\ref{eq:initial_primal}$. This allows us to formulate the primal-dual form of Equation $\ref{eq:initial_energy}$ which will look like the following:
 \begin{align}
 	\min_{u \in U} \max_{y \in Y} < Kx, y > - F^*(y) + G(x)
 \label{eq:initial_primal_dual}	
@@ -87,7 +87,7 @@ In the third equality I make use of the Cauchy-Schwarz inequality,
 \begin{equation}
 	\twonorm{x} = \max_{\twonorm{z} \leq 1} x^T z
 \end{equation}
-Plugging equation $\ref{eq:legendre_fenchel_transform_f}$ and the definitions in from equation $\ref{eq:def_kfg}$ into the primal-dual equation equation $\ref{eq:initial_primal_dual}$ we conclude the following final primal-dual formulation:
+Plugging Equation $\ref{eq:legendre_fenchel_transform_f}$ and the definitions in from Equation $\ref{eq:def_kfg}$ into the primal-dual Equation $\ref{eq:initial_primal_dual}$ we conclude the following final primal-dual formulation:
 \begin{equation}
 \min_{u \in U} \max_{y \in Y} <\nabla u, y> - \delta(y) + \frac{\lambda}{2}\norm{u - g}^2_{\Omega}
 \label{eq:final_primal_dual}
@@ -95,7 +95,7 @@ Plugging equation $\ref{eq:legendre_fenchel_transform_f}$ and the definitions in
 
 \section{Primal-Dual steps}
 In this section I will present an iterative solver for our stated primal-dual formulation. \\ \\
-In the following I am going to rely on an algorithm formulated by A.Chambolle and T.Pocke which allows to solve primal-formulations as ours stated in equation $\ref{eq:final_primal_dual}$. \\ \\
+In the following I am going to rely on an algorithm formulated by A.Chambolle and T.Pocke which allows to solve primal-formulations as ours stated in Equation $\ref{eq:final_primal_dual}$. \\ \\
 They stated an iterative algorithm that has the following update steps:
 \begin{align}
 	y^{n+1} &= \prox_{\sigma F^*}(y^n + \sigma K \bar{x}^n) \nonumber \\
@@ -108,10 +108,10 @@ Hereby $prox(\cdot)$ denotes the proximity operator and is defined as
 \begin{equation}
 	\prox_{\lambda F}(z) = \arg \min_x \frac{1}{2} \twonorm{x - z}^2 + \lambda F(x)
 \end{equation}
-In the following we will derive explicit identities for the update rules in equation $\ref{eq:update_rules_plain}$that can be numerically solved. Our goal is to find an expression for the proximity operator.
+In the following we will derive explicit identities for the update rules in Equation $\ref{eq:update_rules_plain}$that can be numerically solved. Our goal is to find an expression for the proximity operator.
 
 \subsection{Update for $y^{n+1}$}
-In this subsection we derive an identity for the $y^{n+1}$ update rule from equation $\ref{eq:update_rules_plain}$. The key idea is to use the so called Moreau's Identity:  
+In this subsection we derive an identity for the $y^{n+1}$ update rule from Equation $\ref{eq:update_rules_plain}$. The key idea is to use the so called Moreau's Identity:  
 \begin{equation}
 	\prox_{\lambda F^*}(z) = z - \lambda \cdot \prox_{F/ \lambda}(z / \lambda) 
 \label{eq:moreau}	
@@ -124,7 +124,7 @@ Next, we apply the Moreau's identity to the proximity operator of the Legendre-F
 	&= (y^n + \sigma K \bar{x}^{n}) - \left( y^n + \sigma K \bar{x}^{n} \right) \max{\left(0, 1-\frac{1}{\twonorm{y^n + \sigma K \bar{x}^{n} }}\right)}  
 \label{eq:y_n_1_expression}
 \end{align}
-For the first equality we use the definition of equation $\ref{eq:moreau}$ and for the second equality we used the fact (proven during class) that
+For the first equality we use the definition of Equation $\ref{eq:moreau}$ and for the second equality we used the fact (proven during class) that
 \begin{align}
 	\prox_{\frac{\twonorm{\cdot}}{\sigma}}(\frac{x}{\sigma}) = \frac{x}{\sigma} \max{\left(0, 1-\frac{1}{\twonorm{x}}\right)}
 \end{align}
@@ -143,7 +143,7 @@ To simplify our derivation even and also get rid of the proximity operator we ne
 			&= 1-\frac{1}{\twonorm{y^n + \sigma K \bar{x}^{n}}}
 		\end{align}
 		
-		This insight can directly be used for the maximum expression in equation $\ref{eq:y_n_1_expression}$ and we hence obtain:
+		This insight can directly be used for the maximum expression in Equation $\ref{eq:y_n_1_expression}$ and we hence obtain:
 		
 		\begin{align}
 			\prox_{\lambda F^*}(y^n + \sigma K \bar{x}^{n})
@@ -163,7 +163,7 @@ To simplify our derivation even and also get rid of the proximity operator we ne
 			\max{\left(0, 1-\frac{1}{\twonorm{y^n + \sigma K \bar{x}^{n}}}\right)} 
 			&= 0
 		\end{align}
-		which offers us the following new identity for equation $\ref{eq:y_n_1_expression}$:
+		which offers us the following new identity for Equation $\ref{eq:y_n_1_expression}$:
 		
 		\begin{align}
 			\prox_{\lambda F^*}(y^n + \sigma K \bar{x}^{n})
@@ -172,12 +172,12 @@ To simplify our derivation even and also get rid of the proximity operator we ne
 			&= y^n + \sigma K \bar{x}^{n}
 		\end{align}
 \end{itemize}
-By using the results from the case distinction from above we can simplify equation $\ref{eq:y_n_1_expression}$ even further to:
+By using the results from the case distinction from above we can simplify Equation $\ref{eq:y_n_1_expression}$ even further to:
 \begin{equation}
 	\prox_{\lambda F^*}(y^n + \sigma K \bar{x}^{n}) = \frac{y^n + \sigma K \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma K \bar{x}^{n}} \right)}}
 \label{eq:y_p_1_we_proxy}	
 \end{equation}
-Finally, the only left step to do is to plug in the definition of $K$ into equation $\ref{eq:y_p_1_we_proxy}$ which gives us then the final update rule for $y_{n+1}$ when relying on the update rule from equation $\ref{eq:y_n_1_expression}$:
+Finally, the only left step to do is to plug in the definition of $K$ into Equation $\ref{eq:y_p_1_we_proxy}$ which gives us then the final update rule for $y_{n+1}$ when relying on the update rule from Equation $\ref{eq:y_n_1_expression}$:
 \begin{align}
 	y_{n+1} = \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}}
 \label{eq:update_rule_y_n_p_1}	
@@ -195,7 +195,7 @@ To simplify the following derivations, let us define the following substitution:
 \begin{align}
 	m := \left(x^n - \tau \nabla^* y^{n+1} \right)
 \end{align}
-We can solve for $x^{n+1}$ by finding the zeros of the partial derivative of $E(z)$ from equation $\ref{eq:energy_x_p_1}$. Let us start with the partial derivative along $z$ of $E(z)$ from equation $\ref{eq:energy_x_p_1}$: 
+We can solve for $x^{n+1}$ by finding the zeros of the partial derivative of $E(z)$ from Equation $\ref{eq:energy_x_p_1}$. Let us start with the partial derivative along $z$ of $E(z)$ from Equation $\ref{eq:energy_x_p_1}$: 
 \begin{align}
 	\partial_{z} E(z)
 	&= \partial_{z} \left( \frac{1}{2} \twonorm{m - z}^2 + \tau \frac{\lambda}{2}\norm{z - g}_{\Omega}^2 \right) \nonumber \\
@@ -206,7 +206,7 @@ We can solve for $x^{n+1}$ by finding the zeros of the partial derivative of $E(
 	&= \left[ \left(1+\tau \lambda \Omega \right)z-m - \tau \lambda \Omega g \right]	 \nonumber \\
 \label{eq:derivative_x_n_p_1}		
 \end{align}
-Next, let us set the finding from equation $\ref{eq:derivative_x_n_p_1}$ to zero and solve for $z$:
+Next, let us set the finding from Equation $\ref{eq:derivative_x_n_p_1}$ to zero and solve for $z$:
 \begin{align}
 	\partial_{z} E(z) 
 	&= 0 \nonumber \\
@@ -216,7 +216,7 @@ Next, let us set the finding from equation $\ref{eq:derivative_x_n_p_1}$ to zero
 \label{eq:zeros_ez}	
 \end{align}
 Note that the division $(1+\tau \lambda \Omega)$ denotes a component-wise division, since $\Omega$ is applied component-wise to the elements of $g$. In addition, 1 and $\Omega$ are representing matrices here (of same dimension as $g$ and $z$ ($u$ respectively).
-By plugging the definition $m$ into equation $\ref{eq:zeros_ez}$ and using the fact, that $z$ corresponds to $x^{n+1}$ we can conclude:
+By plugging the definition $m$ into Equation $\ref{eq:zeros_ez}$ and using the fact, that $z$ corresponds to $x^{n+1}$ we can conclude:
 \begin{align}
 	x^{n+1} 
 	&= \frac{x^n - \tau \nabla^* y^{n+1} +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \nonumber \\
@@ -241,7 +241,7 @@ In this section I how I have actually Implemented the so far described dual-prim
 	&= div(y^{n+1})
 \end{align}
 So we have to omit a minus one factor. This affects the update rule for $x^{n+1}$ derived previously. \\ \\
-In the previous section we have defined explicit update rules. Aggregating all finding, mainly those from equation $\ref{eq:update_x_n_p_1}$ and $\ref{eq:update_rule_y_n_p_1}$, and plugging them into equation $\ref{eq:update_rules_plain}$ we get our update rules
+In the previous section we have defined explicit update rules. Aggregating all finding, mainly those from Equation $\ref{eq:update_x_n_p_1}$ and Equation $\ref{eq:update_rule_y_n_p_1}$, and plugging them into Equation $\ref{eq:update_rules_plain}$ we get our update rules
 \begin{align}
 	y^{n+1} &= \frac{y^n + \sigma \nabla \bar{x}^{n}}{\max{\left(1,\twonorm{y^n + \sigma \nabla \bar{x}^{n}} \right)}} \nonumber \\
 	x^{n+1} &= \frac{x^n - \tau div(y^{n+1}) +  \tau \lambda \Omega g}{1+\tau \lambda \Omega} \\
@@ -269,6 +269,6 @@ Initially, I used the following parameter setting:
 \label{eq:parameter_set_up}	
 \end{align}
 With $\sqrt{\norm{K}} = \sqrt{4}$, a strong upper bound for the function $K$\footnote{For further information about this upper bound please have a look at Chambolle, Antonin: An algorithm for total variation minimisation and application. In Journal of Mathematical imaging and vision 20, 2004.}. \\ \\
-For consistency, a named all functions in my Matlab code the same as in this report. Furthermore I used a fixed number of iterations for computing my iterative demosaiced images. The final algorithms I have to perform is the following: For each color-channel $C \in \{R,G,B\}$ Do Loop until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough do: use parameter setup as defined in equation $\ref{eq:parameter_set_up}$ and then solve the update rules from equation $\ref{eq:final_update_rules_plain}$. Finally, merge all color iterative color channel solutions to a color image. \\ \\
+For consistency, a named all functions in my Matlab code the same as in this report. Furthermore I used a fixed number of iterations for computing my iterative demosaiced images. The final algorithms I have to perform is the following: For each color-channel $C \in \{R,G,B\}$ Do Loop until $\norm{\bar{x}^{n+1} - \bar{x}^{n}}$ is small enough do: use parameter setup as defined in Equation $\ref{eq:parameter_set_up}$ and then solve the update rules from Equation $\ref{eq:final_update_rules_plain}$. Finally, merge all color iterative color channel solutions to a color image. \\ \\
 When computing the gradient and divergence finite approximation schemes, I used a zero padding boundary condition. Since I also tried out this kind of boundary condition in the first report, comparing the results produced in this project which those from the first project is valid. \\ \\
 One last comment: From the definition of the update rules, we see that the value of $\lambda$ directly affects the parameters $\tau$ and $\sigma$. Thus, when changing the value of $\lambda$ we also would have to find new best $\tau$ and $\sigma$ parameters. Hence, changing $\lambda$ also affects the convergence behaviour of the primal dual method. 
