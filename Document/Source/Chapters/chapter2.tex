@@ -162,6 +162,7 @@ The equations from above (Eq. $\ref{eq:def_l_euler_lag_simplified}$) became line
 In this section we briefly summarize four modern flow methods. Additionally, we state their main properties and their drawbacks. Discussing those methods particularly makes sense since we make use of these flow estimation techniques later in our pipeline to generate flow fields.
 
 \subsubsection{Enhanced H.S. Optical Flow Fields}
+\label{sec:hs_flows}
 In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and determined the most important factors that increase the quality of produced flow fields. They incorporated their findings in Horn and Schunck's original formulation and contributed a efficient implementation of their method. Additional information about their formulations can be found in Section $\ref{sec:hs_formulation}$ on page $\pageref{sec:hs_formulation}$. \\ \\
 When using the abbreviation HS we strictly refer to their implementation. \\ \\
 The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
@@ -172,12 +173,14 @@ The original HS formulation combines a data term that assumes constancy of some 
 \end{itemize}
 
 \subsubsection{Large Displacement Optical Flows}
+\label{sec:ldof_flows}
 Before the work in $\cite{Bro11a}$, there was no accurate method present to estimate fast motions of small objects, i.e. large motions. Most flow methods are based on a combination of HS flow formulation and the concept of coarse-to-fine image warping. However, both approaches have been extended by robust statistics to fight outliers and the same time retain smoothness assumptions. \\ \\
 Two fundamental ideas exist to address the issue of large motions. On on hand there are coarse-to-fine techniques. Such techniques, however, require a downsampling. Unfortunately, this also removes details that may be important for the flow accuracy. consequently, the method cannot refine the flow of structures that are smaller than their displacement, because the structure is smoothed away. Flow Fields produced this way are often close to the motion of the larger scale structures. \\ \\
 On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have limited accuracy and exhibit many outliers to to missing regularity constraints and lastly, there is only pixel-level accuracy. \\ \\
 In their paper they propose a method how to combine both strategies. They direct a variational technique using correspondences from sparse descriptor matching. The correspondences determined by the descriptors are directly integrated into the variational approach. The allows to make use of all image information at every level and smoothly scales down the influence of descriptor keypoints as the grid gets finer.
 
 \subsubsection{Semi Rigid Scene Flows}
+\label{sec:srsf_flows}
 In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
 This allows for piecewise smooth solutions using a total variation (TV) regularization$\footnote{An image denoising technique, which is also known as \textit{total variation denoising}.}$ on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
 They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
@@ -191,6 +194,7 @@ In the following some details according to their implementation:
 \end{itemize}
 
 \subsubsection{Layered RGB-D Flow Fields}
+\label{sec:lrgbd_flows}
 %s1
 %estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
 %s2
