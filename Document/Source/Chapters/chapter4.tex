@@ -20,7 +20,7 @@ In the following let us briefly outline the main stages of our motion segmentati
 \item \textbf{Affinity Matrix Generation} (Sec. $\ref{sec:affinity_matrix_impl}$): In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
 \item \textbf{Segmenter}: Our pipeline offers two types of segmentations: sparse and dense. 
 	\begin{enumerate}
-	\item \textbf{Sparse Motion Segmentation} (Sec. $\ref{sec:sparse_motion_segmentation}$): Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its dense segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. 
+	\item \textbf{Sparse Motion Segmentation} (Sec. $\ref{sec:sparse_motion_segmentation}$): Using the affinity matrix plus the nearest neighbouring trajectories per trajectory, we can compute its sparse segmentation by either applying a spectral clustering on the affinity matrix or by reformulating the problem as a graph cut problem. 
 	\item \textbf{Dense Segmentation} (Sec. $\ref{sec:dense_motion_segmentation}$): Optionally, our pipeline allows us to transform the sparse segmentation into a dense segmentation. 	
 	\end{enumerate}
 \end{enumerate}
@@ -40,10 +40,11 @@ The preparation of input datasets is the very first stage of our pipeline. Initi
    \label{fig:color_and_depth_image_b}
 }
 \end{center}
-\caption[Color and Depth Image]{An example of a color image / depth field pair.}
+\caption[Color and Depth Image]{Visualizing a color frame and a depth field of the \textit{Bonn Water Can} dataset$\footnotemark$.}
 \label{fig:color_and_depth_image}
 \end{figure}
-Our pipeline assumes a well-enumeration of its video frames, meaning that the image, which corresponds to the $k-th$ frame is referenced by the name \textit{k}. Moreover depth fields follow the same naming convention and thus are similarly named as its corresponding video frame. A listing of our datasets can be found in Section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
+\footnotetext{Source of the images shown in Figure \ref{fig:color_and_depth_image}: \url{http://www.ais.uni-bonn.de/download/rigidmultibody/}}
+Our pipeline assumes a well-enumeration of its video frames, meaning that the image, which corresponds to the $k-th$ frame is referenced by the name \textit{k}. Moreover depth fields follow the same naming convention and thus are similarly named as its corresponding video frame. A listing of our datasets can be found in Section~\ref{sec:datasets} on page~\pageref{sec:datasets}.
 
 \section{Generate Optical Flow Fields}
 \label{sec:generate_of}
