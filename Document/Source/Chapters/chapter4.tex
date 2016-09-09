@@ -45,7 +45,7 @@ The preparation of input datasets is the very first stage of our pipeline. Initi
 \end{figure}
 Our pipeline assumes a well-enumeration of its video frames, meaning that the image, which corresponds to the $k-th$ frame is referenced by the name \textit{k}. Moreover depth fields follow the same naming convention and thus are similarly named as its corresponding video frame. A listing of our datasets can be found in section~\ref{sec:datasets} on page~\pageref{sec:datasets}. \\ \\
 
-\section{Generate Optical Flows}
+\section{Generate Optical Flow Fields}
 \label{sec:generate_of}
 In our pipeline we rely heavily on optical flow fields. In particular, flow fields are used to perform the point tracking required to extract motion trajectories, to detect occlusions and to compute affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation of optical flow fields is provided in section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. However, in principle, the optical flow represents a displacement field that defines where a certain point in a frame is mapped to in its successive frame. \\ \\
@@ -234,7 +234,7 @@ In the image on the left (fig. $\ref{fig:c14_f1_cand_dense_2}$) we see the set o
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
 Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flows we know where the extracted features have to be tracked to in their successive frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find such occluded regions.
 
-\subsection{Occlusion detection}
+\subsection{Occlusion Detection}
 \label{sec:occlusion_det}
 In this section we discuss how to determine when we should stop tracking a particular tracking candidate. This is particularly important since otherwise groupings on motion trajectories would be very erroneous and thus would negatively affect the motion segmentation quality. \\ \\
 The previously determined tracking candidates are used as starting points for point tracking. For every tracking candidate we determine its \textit{tracked to} position by adding the appropriate forward flow. However, this approach is very prone to create errors due to the use of incorrect flow estimations or the presence of occluded regions. \\ \\
@@ -319,7 +319,7 @@ As mentioned previously, motion is a spatially and temporally coherent visual cu
 So far we have discussed how to obtain starting positions of trajectories (Sec. $\ref{sec:tracking_candidates}$) and when we have to stop them (Sec. $\ref{sec:occlusion_det}$). Moreover, by relying on the generated optical flow (Sec. $\ref{sec:generate_of}$) we are able to determine the location a point gets tracked to in its successor frame. Therefore, we are now able to discuss how to track motion trajectories. \\ \\
 In this section we explain, in detail, the required steps to track motion trajectories. Moreover we discuss a transformation that allows us to obtain 3d world coordinates from the traced 2d trajectory points. For this purpose we will make use of the depth field.
 
-\subsection{Point tracking}
+\subsection{Point Tracking}
 Every point $p_t$ in frame $t$ can be tracked to a position $p_{t+1}$ in its successor frame $t+1$ by using the corresponding forward flow field $w_t$ that belongs to frame $t$. This is achieved by adding $w_t$ to $p_t$, which yields $p_{t+1}$. We repeat this procedure until the point gets either occluded or has reached the last video frame. Algorithm $\ref{alg:point_tracking}$ offers a detailed description of the involved steps to run the point tracking. \\ \\
 \begin{algorithm}[H]
 \caption{Point Tracking}
@@ -376,7 +376,7 @@ Finally, we conclude this section by offering an example of an actual point trac
 \label{fig:cars_trajectories}
 \end{figure}
 
-\subsection{Transformation to 3d points}
+\subsection{Transformation to 3D Points}
 \label{subsection:transform_to_3d_points}
 In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flows and our tracking candidates, are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories so that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
 In the following section we explain how such a transformation from 2d image space to 3d world space can be implemented. We assume, that the utilized RGBD-video sequences were captured using two cameras, a color and depth camera. To be as general as possible, we further assume that these cameras are not aligned. Having a formulation based on this assumptions allows us to support a broad series of video sequences captured by various devices. \\ \\
