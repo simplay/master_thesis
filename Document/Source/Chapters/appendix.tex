@@ -91,7 +91,7 @@ The bilateral filter is controlled by the two parameters $\sigma_s$ and $\sigma_
 
 \subsection{Harris Corner Detector}
 \label{sec:harris_corner_detector}
-Let us consider a grayscale image $I$. We are going to sweep a window $w(x,y)$ (with displacements u in the x direction and v in the right direction) I and will calculate the variation of intensity. Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:
+In this section we explain the principles of the Harris corner detector $\cite{Harris88acombined}$. Let us, therefore, consider a grayscale image $I$. We are going to sweep a window $w(x,y)$ (with displacements u in the x direction and v in the right direction) I and will calculate the variation of intensity. Since we are looking for windows with corners, we are looking for windows with a large variation in intensity. Hence, we have to maximize the equation above, specifically the term:
 \begin{equation}
 	E \left( u, v \right) = \sum_{x,y} w \left( x,y \right) \left[ I(x + u, y + v) - I(x, y) \right]^2
 \label{eq:var_intensitiy_def}
