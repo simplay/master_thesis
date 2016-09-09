@@ -570,7 +570,7 @@ Our pipeline implements four affinity matrix generation modes. These available p
    \includegraphics[width=0.7\linewidth] {implementation/affinities/modes}
    \label{fig:cars_w}
 \end{center}
-\caption[Affinity Pipeline Modes]{A visualization of all affinity computation modes that can be run by our pipeline.}
+\caption[Affinity Pipeline Modes]{A visualization of all affinity computation modes that can be run by our pipeline. The PD mode corresponds to the distance measure described in $\cite{OB14b}$ and SD to the measure described in $\cite{KB15b}$. However, the modes PED and SED, which incorporate depths, are novel approaches. In our pipeline we use PD and PED to run the spectral clustering (Sec. $\ref{sec:spectral_clustering_impl}$)} or the mincut (Sec. $\ref{sec:min_cut_seg}$) segmentation methods. Moreover, the modes SD and SED are used by the Kernighan-Lin graph partitioning method (Sec. $\ref{sec:kl_impl}$).
 \label{fig:affinity_modes}
 \end{figure}
 Additionally, our pipeline also offers a mode to compute affinities between shortly disconnected trajectories. The idea is to prepend (extend) one additional tracking point to a predecessor (successor) frame by adding the average motion distance of the next (previous) five frames to the trajectory's starting point (end point). Please note that this run-mode is only optional and thus has to be invoked manually. Moreover, we could not observe any improvements in the resulting segmentations, when enabling this mode. \\ \\ 
@@ -645,6 +645,7 @@ In order to draw the segmentation of the $k-th$ dataset frame, we load all traje
 In the following we offer a detailed explanation of these motion segmentation methods.
 
 \subsection{Spectral Clustering}
+\label{sec:spectral_clustering_impl}
 In the previous section we described how the pairwise affinities can be computed. For $n$ trajectories we ended up with a $n \times n$ affinity matrix $W$. \\ \\ 
 One possible way to interpret these matrix entries is to identify them as edge weights of a fully connected graph $G$, where each trajectory represents a node. Following this interpretation, then, the task of extracting the moving objects  corresponds to the task of grouping several similar graph vertices. \\ \\
 An approximately optimal partitioning of $G$ can be obtained via spectral clustering as described in Section $\ref{sec:spectral_clustering_bg}$. The idea behind this approach is to decompose the Laplacian matrix $L$ that corresponds to $W$ into its eigenvalues and eigenvectors $V$ and then to run k-means on $V$. We used Algorithm $\ref{alg:spectral_clustering_algorithm}$ in Matlab to run such a spectral clustering. As the first step we load the affinity matrix $W$ and compute its normalized Laplacian according to the definition from Equation $\ref{eq:normalized_graph_laplacian}$. Next, we compute the eigen-decomposition of $L$, defined as
@@ -725,7 +726,8 @@ In our Matlab implementation we optimize this minimization problem by using an i
 \end{equation}
 A loop iteration consists of two main steps: First, we fix the label assignments and solve for the cluster centroids by running k-means. Second, we fix the centroids by using the previously computed centers and optimize for the assignments by running a multi-label graph cut energy minimization. For this purpose we rely on $\cite{Fulkerson2009}$'s $\textit{GCMex}$ framework$\footnote{This frameworks offers some handy methods to compute the multi-label graph cut.}$, which is a freely available Matlab implementation. We repeat this iteration until the label assignments have converged. The resulting assignment is the motion segmentation. An example of the MC segmentation method is shown in Figure $\ref{fig:convergence_mc_seg}$. 
 
-\subsection{Kernighan-Lin Heuristic} 
+\subsection{Kernighan-Lin Heuristic}
+\label{sec:kl_impl}
 In this section we describe a method that addresses the problem of motion segmentation by formulating it as a minimum cost multi-cut problem on a trajectory similarity graph as defined in Section $\ref{sec:similarity_graphs}$. The energy term \enquote{we optimized to find an optimal graph partition} is based on the work presented in $\cite{KB15b}$. To solve this graph cut problem numerically we implemented the $\textit{Kernighan-Lin}$ heuristic ($\textbf{KL}$) described in $\cite{Ker70}$. \\ \\
 In the following, let $G = (E, V)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. Moreover, every edge in $E$ has a certain weight $e_c$ assigned. Then, the minimum cost multi-cut problem decomposes the graph $G$ into an optimal number of segments such that the overall edge weights cost is minimized. Equivalently, this vertex labeling problem can be formulated as a binary edge labeling problem, which is defined as
 \begin{equation}
