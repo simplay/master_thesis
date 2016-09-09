@@ -87,6 +87,15 @@ For the actual computation of the flow fields we rely on existing implementation
 For this thesis let us use the abbreviations defined in the list above when referring to a particular flow method. To conclude this section we demonstrate in Figure $\ref{fig:flow_method_flows}$ an example output produced by running these methods on a common frame:
 \begin{figure}[H]
 \begin{center}
+\subfigure[Color Frame]{
+   \includegraphics[width=0.47\linewidth] {implementation/flow_methods/f30}
+   \label{fig:flow_method_flows_a}
+}
+\subfigure[Depth Field]{
+   \includegraphics[width=0.47\linewidth] {implementation/flow_methods/d30}
+   \label{fig:flow_method_flows_b}
+}
+~
 \subfigure[HS]{
    \includegraphics[width=0.47\linewidth] {implementation/flow_methods/hs}
    \label{fig:flow_method_flows_a}
@@ -105,9 +114,10 @@ For this thesis let us use the abbreviations defined in the list above when refe
    \label{fig:flow_method_flows_d}
 }
 \end{center}
-\caption[Flow Fields]{A visualization of the flow fields produced by our used flow methods when running them on the same frame sequence. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
+\caption[Flow Fields]{A visualization of the flow fields produced by our used flow methods when running them on frame 30 of \textit{Bonn Water Can} dataset$\footnotemark$. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
 \label{fig:flow_method_flows}
 \end{figure}
+\footnotetext{Source of the images shown in Figure \ref{fig:flow_method_flows}: \url{http://www.ais.uni-bonn.de/download/rigidmultibody/}}
 
 \section{Data Extraction}
 \label{sec:data_extraction}
