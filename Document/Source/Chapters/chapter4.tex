@@ -247,7 +247,7 @@ Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} 
 
 \subsection{Occlusion Detection}
 \label{sec:occlusion_det}
-In this section we discuss how to determine when we should stop tracking a particular tracking candidate. This is particularly important since otherwise groupings on motion trajectories would be very erroneous and thus would negatively affect the motion segmentation quality. \\ \\
+In this section we discuss a technique, which allows us to determine when to stop tracking a trajectory. This is particularly important since without stopping the tracking process within occluded regions, two distinct objects would be tracked by the same trajectory. In such a case groupings on motion trajectories would be very erroneous and thus would negatively affect the motion segmentation quality. \\ \\
 The previously determined tracking candidates are used as starting points for point tracking. For every tracking candidate we determine its \textit{tracked to} position by adding the appropriate forward flow. However, this approach is very prone to create errors due to the use of incorrect flow estimations or the presence of occluded regions. \\ \\
 Occlusion may occur whenever a previously visible object gets covered by another object. For instance, when an object close to the camera gets directly in front of an object in the background. Continuing to trace a point in an occluded region yields an incorrect tracking, because two distinct objects are tracked by the same trajectory. Thus, we have to stop tracking points as soon as they get occluded.
 \begin{figure}[H]
@@ -264,7 +264,7 @@ Occlusion may occur whenever a previously visible object gets covered by another
 \caption[Occluded Regions]{A visualization of occluded regions. On the left, a color video frame and on the right its corresponding occluded regions (white pixels).}
 \label{fig:invalid_regions}
 \end{figure}
-In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. However, based in  $\cite{Bro10c}$ we detect occlusions by verifying a consistency check between the forward- and backward flow fields. Such a verification is performed by applying the backward flow $\hat{w}_t$ to its continued tracked point $p_{t+1}$ and then is checking whether the resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Additionally, we visually outlined this concept of occlusion detection in Figure $\ref{fig:occlusion_detection}$. Moreover, an example of occluded regions produced by following our approach is shown in Figure $\ref{fig:invalid_regions}$.
+In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. However, following the ideas described in $\cite{Bro10c}$, we detect occlusions by verifying a consistency check between the forward- and backward flow fields. Such a verification is performed by applying the backward flow $\hat{w}_t$ to its continued tracked point $p_{t+1}$. Finally we have to check whether the resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Additionally, we visually outlined this concept of occlusion detection in Figure $\ref{fig:occlusion_detection}$. Moreover, an example of occluded regions produced by following our approach is shown in Figure $\ref{fig:invalid_regions}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
