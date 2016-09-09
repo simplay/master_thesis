@@ -322,7 +322,7 @@ In this appendix chapter we put a series of extra experiments as well as all num
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-\multicolumn{4}{|c|}{Comparison bonn chairs dataset using LDOF flows}                        \\ \hline
+\multicolumn{4}{|c|}{Comparison Bonn Chairs dataset using LDOF flow fields}                        \\ \hline
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 PD SC & 47.48 \%   & 61.88 \%     & 53.73 \%  \\ \hline
 PD MC & 42.46 \%   & 66.10 \%     & 51.70 \%    \\ \hline
@@ -410,11 +410,11 @@ of number of clusters,eigenvectors. The corresponding statistics are listed in T
 \label{tab:wh_ev_c}
 \end{table}
 
-\subsection{Varying Pipeline Combinations for LDOF flows}
-For the following experiment we only use LDOF flows. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in Figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
+\subsection{Varying Pipeline Combinations for LDOF flow fields}
+For the following experiment we only use LDOF flow fields. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in Figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
 
 \subsection{Varying Cluster Count on SC and MC}
-use LDOF flows and run the pipeline modes: PD SC, PD MC, PED SC, PED MC
+use LDOF flow fields and run the pipeline modes: PD SC, PD MC, PED SC, PED MC
 vary the number of clusters and evaluate the resulting segmentations
 This experiment should examine 
 This experiment should examine the behaviour of these modes using an increasing number of clusters.
@@ -571,7 +571,7 @@ PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hl
 \end{figure}
 
 \subsection{Dependence of Eigenvector-Cluster Count on MC}
-In this experiment, we use the \textbf{WH} dataset and again only use LDOF flows. An example frame with its ground truth image is shown in Figure $\ref{fig:wh1_dataset}$.
+In this experiment, we use the \textbf{WH} dataset and again only use LDOF flow fields. An example frame with its ground truth image is shown in Figure $\ref{fig:wh1_dataset}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 40]{

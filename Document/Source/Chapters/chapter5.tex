@@ -1,6 +1,6 @@
 \chapter{Results}
 In the previous chapter we explained the implementation details of our motion segmentation pipeline. In particular we described the purpose of every individual pipeline component and how they are implemented. \\ \\
-In summary, our pipeline consists of the following main stages: generate optical flow estimations, track motion trajectories using these flows, compute similarities between every trajectory pair with respect to certain measures and last, perform a segmentation by clustering the trajectories according to their similarities. Every such stages offers various implementation variants, from which a user can select from.  
+In summary, our pipeline consists of the following main stages: generate optical flow estimations, track motion trajectories using these flow fields, compute similarities between every trajectory pair with respect to certain measures and last, perform a segmentation by clustering the trajectories according to their similarities. Every such stages offers various implementation variants, from which a user can select from.  
 In the following \enquote{a specific stage implementation} is called\textit{pipeline mode} and \enquote{a set of pipeline modes} is called \textit{pipeline combinations}. \\ \\
 In this chapter we describe how we evaluate segmentations produced by different pipeline combinations. In particular, we examine the influence of several pipeline modes on the segmentation quality. \\ \\
 We start be defining the default pipeline parameter specifications (Sec. $\ref{sec:spectral_clustering_parameters}$) of specific implementations. Next, we introduce the datasets (Sec. $\ref{sec:datasets}$) we use during our evaluation. In the following we describe our cluster merger post-processing step (Sec. $\ref{sec:seg_merger}$), which has to be run before starting the evaluation. We continue by describing our methodology (Sec. $\ref{sec:methodology}$) we rely on to perform the experiments. Finally, we describe our experiments (Sec. $\ref{sec:experiments}$), the corresponding results and observations. We conclude this chapter by listing some pipeline runtime measurements (Sec. $\ref{sec:runtime_measurements}$) and a discussion about our main findings (Sec. $\ref{sec:discussion}$). 
@@ -345,7 +345,7 @@ In the following experiment we examine the influence our cluster merger post-pro
    \label{fig:bonn_chairs_c_10_e}
 }
 \end{center}
-\caption[Bonn Chairs Segmentations Frame 30]{Raw-and merged segmentations produced by our pipeline when running all modes on the Bonn Chairs dataset using LDOF flows.}
+\caption[Bonn Chairs Segmentations Frame 30]{Raw-and merged segmentations produced by our pipeline when running all modes on the Bonn Chairs dataset using LDOF flow fields.}
 \label{fig:eval_raw_vs_merged}
 \end{figure}
 From these results we can see that our pipeline tends to produce oversegmentations. Especially the steady background is clustered into meany segments. Also, the seat of the chair seems to get segmented into many parts. We also see that after applying our merger these parts are forming a coherent object. We conclude that our cluster merger does not significantly obfuscate the segmentation results. The corresponding statistical measurements are listed in Table $\ref{tab:eval_stat_raw_merged}$
@@ -529,11 +529,11 @@ Addition experiments for varying cluster-eigenvalue count and the numeric values
 \label{sec:flow_methods}
 Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many cross-combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
 In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
-In the first sub-experiment we compare the segmentations produced on LDOF-and HS flows. In the second experiment we examine the quality of segmentations produced by LRGBD flows.
+In the first sub-experiment we compare the segmentations produced on LDOF-and HS flow fields. In the second experiment we examine the quality of segmentations produced by LRGBD flow fields.
 
-\subsubsection{LDOF vs. HS Flows}
+\subsubsection{LDOF vs. HS Flow Fields}
 Both flow estimation methods, LDOF and HS, are not making use of depth fields. Therefore, we would like to determine whether one of these two methods is significantly better. \\ \\
-In the following experiment we compute P-affinities using LDOF and HS flows on the bonn datasets. The examine the quality of the flows, we evaluate SC segmentations using these affinities. The average statistics are listed in Table $\ref{tab:hs_vs_ldof}$.
+In the following experiment we compute P-affinities using LDOF and HS flow fields on the Bonn datasets. The examine the quality of the flow fields, we evaluate SC segmentations using these affinities. The average statistics are listed in Table $\ref{tab:hs_vs_ldof}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -545,13 +545,13 @@ HS PD SC MC & 40.19\%   & 52.33\%     & 45.47\%  \\ \hline
 LDOF PED SC & 69.34\%   & 54.13\%     & 60.80\%  \\ \hline
 HS PED SC MC & 55.61\%   & 53.15\%     & 54.35\%  \\ \hline             
 \end{tabular}
-\caption[LDOF vs. HS Flows]{Comparison of Bonn-Dataset segmentations produced by running PD SC and PED SC on LDOF- and HS flows. Segmentations using ldof flows seems to be more }
+\caption[LDOF vs. HS Flow Fields]{Comparison of Bonn-Dataset segmentations produced by running PD SC and PED SC on LDOF- and HS flow fields. Methods using LDOF flow fields seem to be produce better segmentations than those which are using HS flow fields.}
 \label{tab:hs_vs_ldof}
 \end{table}
-From the data in the table we can see that segmentations produced using LDOF flows yield higher f1 scores than those produced by HS flows. Apparently, pipeline combinations that use LDOF flows are producing qualitatively better segmentations. Therefore, we decide to drop HS flows and only use LDOF flows instead.
+From the data in the table we can see that segmentations produced using LDOF flow fields yield higher f1 scores than those produced by HS flow fields. Apparently, pipeline combinations that use LDOF flow fields are producing qualitatively better segmentations. Therefore, we decide to drop HS flow fields and only use LDOF flow fields instead.
 
-\subsubsection{On LRGBD Flows}
-In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flows on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. Hence, we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
+\subsubsection{On LRGBD Flow Fields}
+In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flow fields on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. Hence, we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
 The achieved performances are listed in Table $\ref{tab:statue_performance}$ and visual segmentations are depicted in Figure $\ref{fig:alley_segmentations}$.
 \begin{table}[H]
 \centering
@@ -563,10 +563,10 @@ LDOF PED MC & 69.93\%   & 38.23\%     & 49.44\%  \\ \hline
 SRSF PED MC & 72.47\%   & 70.68\%     & 71.56\%  \\ \hline
 LRGBD PED MC & 61.46\%   & 8.37\%     & 14.73\%  \\ \hline              
 \end{tabular}
-\caption[Performance Statue]{Comparing the segmentation quality produced by LDOF, SRSF and LRGBD flows.}
+\caption[Performance Statue]{Comparing the segmentation quality produced by LDOF, SRSF and LRGBD flow fields.}
 \label{tab:statue_performance}
 \end{table}
-We observe that segmentations using SRSF score good, and segmentations using LDOF score intermediate quality results. However, pipeline combinations based on LRGBD flows produce visually, as well as statistically very poor segmentations. Apparently, this flow method is a bad choice for the task of motion segmentation. Therefore, we drop it from our pipeline. 
+We observe that segmentations using SRSF score good, and segmentations using LDOF score intermediate quality results. However, pipeline combinations based on LRGBD flow fields produce visually, as well as statistically very poor segmentations. Apparently, this flow method is a bad choice for the task of motion segmentation. Therefore, we drop it from our pipeline. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[LDOF PED MC]{
@@ -598,9 +598,9 @@ We observe that segmentations using SRSF score good, and segmentations using LDO
 \caption[Bonn Cerealbox Segmentations]{Visualization of the segmentation that belong to the results listed in Table $\ref{tab:statue_performance}$.}
 \label{fig:alley_segmentations}
 \end{figure}
-Although the LRGBD flows are supposed to be competitive against SRSF flows, using them for segmentation tasks yield poor segmentations. This is due the fact, that LRGBD flows are estimated by segmenting the flows with respect to their depth layers instead according to their motion. \\ \\
+Although the LRGBD flow fields are supposed to be competitive against SRSF flow fields, using them for segmentation tasks yield poor segmentations. This is due the fact, that LRGBD flow fields are estimated by segmenting the flow fields with respect to their depth layers instead according to their motion. \\ \\
 
-In order to verify that LRGBD flows are indeed not suitable for our motion segmentation pipeline we performed a second experiment. This time we evaluated the Bonn-Watercan segmentations. We used all existing flow methods and produced segmentations using PED-affinities. The results are listed in Table $\ref{tab:bonn_wc_flwo_methods}$.
+In order to verify that LRGBD flow fields are indeed not suitable for our motion segmentation pipeline we performed a second experiment. This time we evaluated the Bonn-Watercan segmentations. We used all existing flow methods and produced segmentations using PED-affinities. The results are listed in Table $\ref{tab:bonn_wc_flwo_methods}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|r|l|l|}
@@ -619,7 +619,7 @@ LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \caption[Flow Method Comparission Bonn Watercan]{Comparing the quality of our flow methods on the Bonn Watercan dataset.}
 \label{tab:bonn_wc_flwo_methods}
 \end{table}
-Again, we observe, that LRGBD flows produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by LRGBD PED MC. The corresponding segmentation of frame 30 is visualized in Figure $\ref{fig:issues_lrgbd_flow_methods}$. 
+Again, we observe, that LRGBD flow fields produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by LRGBD PED MC. The corresponding segmentation of frame 30 is visualized in Figure $\ref{fig:issues_lrgbd_flow_methods}$. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extracted Layers Frame 30]{
@@ -635,14 +635,14 @@ Again, we observe, that LRGBD flows produce poor segmentations. So, what is goin
    \label{fig:issues_lrgbd_flows_c}
 }
 \end{center}
-\caption[Issue with LRGBD Flows]{Comparing the a LRGBD based segmentation against its flow field.}
+\caption[Issue with LRGBD Flow Fields]{Comparing the a LRGBD based segmentation against its flow field.}
 \label{fig:issues_lrgbd_flow_methods}
 \end{figure}
-When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flows cluster the objects according to their depth layers rather by their motion.
+When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flow fields cluster the objects according to their depth layers rather by their motion.
 
 \subsection{Overall Performance}
 \label{sec:overall_performance}
-So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flows can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
+So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flow fields can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
 In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is listed in Table $\ref{tab:overall_performance}$.
 \begin{table}[H]
 \centering
@@ -660,10 +660,10 @@ SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
 SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
 Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
 \end{tabular}
-\caption[Overall Performance]{Evaluation of LDOF and SRSF flows using all pipeline combinations on a subset of our datasets.}
+\caption[Overall Performance]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on a subset of our datasets.}
 \label{tab:overall_performance}
 \end{table}
-We observe the following facts: Methods using SRSF flows achieve better results than those using LDOF flows. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using MC for generating the segmentation is better than running spectral clustering. \\ \\
+We observe the following facts: Methods using SRSF flow fields achieve better results than those using LDOF flow fields. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using MC for generating the segmentation is better than running spectral clustering. \\ \\
 Overall, KL yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we just used its standard parameters but used specifically good parameters in our pipeline (determined for our datasets).
 Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are in Table $\ref{tab:overall_performance_ldof}$.
 \begin{table}[H]
@@ -687,25 +687,25 @@ We again observe, that among the LDOF/P-affinity variants, using depths yields b
 Our pipeline allows to alter between many different flow estimation-, affinity matrix computation- and segmentation methods. In this section we want to determine an optimal pipeline combination by comparing the methods of each stage and choosing the best one.
 
 \subsubsection{LDOF vs. SRSF}
-In this section we want to illustrate the dominance of SRSF flows. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in Table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
+In this section we want to illustrate the dominance of SRSF flow fields. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in Table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{Comparison flows bonn dataset using MC}                        \\ \hline
+\multicolumn{4}{|c|}{Comparison flow fields Bonn dataset using MC}                        \\ \hline
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
 LDOF PD & 35.76\% & 46.90\% & 40.58\% \\ \hline
 SRSF PD & 48.32\% & 48.99\% & 48.65\% \\ \hline
 LDOF PED & 44.22\% & 50.92\% & 47.34\% \\ \hline
 SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
 \end{tabular}
-\caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flows using MC}
+\caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flow fields using MC}
 \label{tab:bonn_datasets_ldof_vs_srsf}
 \end{table}
-We observe, that segmentations based on SRSF flows always obtain higher f1 scores. Therefore, using SRSF flows seems to be beneficial.
+We observe, that segmentations based on SRSF flow fields always obtain higher f1 scores. Therefore, using SRSF flow fields seems to be beneficial.
 
 \subsubsection{2d vs 3d}
-In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flows and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
+In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flow fields and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -725,7 +725,7 @@ SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 We observe, that regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
 
 \subsubsection{SC vs. MC}
-In this experiment we compare our two P-affinity segmentation methods. For this purpose we evaluated the segmentations of the One Chair dataset. For this experiment we strictly use LDOF flows and then generated segmentations for the modes PD SC, PD MC, PED SC and PED MC. The results are listed in Table $\ref{tab:one_chair_sc_vs_mc}$
+In this experiment we compare our two P-affinity segmentation methods. For this purpose we evaluated the segmentations of the One Chair dataset. For this experiment we strictly use LDOF flow fields and then generated segmentations for the modes PD SC, PD MC, PED SC and PED MC. The results are listed in Table $\ref{tab:one_chair_sc_vs_mc}$
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -786,7 +786,7 @@ As we can see, running KL is very time consuming. For instance, when we use a la
 \section{Discussion}
 \label{sec:discussion}
 In the previous section we performed a series of experiments on different datasets to examine the influence of various pipeline components and their corresponding parameters. In this section we list the main findings of experiments and relate them to our initial thesis goals. \\ \\
-We visually and statistically demonstrated that our pipeline is able to produce good segmentation results on complex scenes. In particular, our best pipeline combination could handle scenes consisting of a moving cameras and rotating moving objects. Therefore, we achieved our initial goal of building a motion segmentation pipeline on RGB-D videos using optical flows. \\ \\
+We visually and statistically demonstrated that our pipeline is able to produce good segmentation results on complex scenes. In particular, our best pipeline combination could handle scenes consisting of a moving cameras and rotating moving objects. Therefore, we achieved our initial goal of building a motion segmentation pipeline on RGB-D videos using optical flow fields. \\ \\
 Our motion segmentation pipeline is an over-parameterized multi-stage implementation. Usually, finding the correct parameter values is not obvious. We therefore suggested a reliable heuristics to specify some of the parameters. In our experiments we were able to justify our default parameter selection. \\ \\
-We further were able to find the best pipeline combinations. We experimentally demonstrated that SRSF flows outperform every other flow method supported by our pipeline. Moreover, we successfully could show that using depth information drastically increases the quality of motion segmentations. Among our segmentation methods, KL produces the best results. This method however, uses S-affinities. In contrast, when using P-affinities, MC seems is the best choice. When comparing KL against MC we can conclude, that KL produces better results but on the same time requires an enormous amount of computation time. However, MC runs in decent time and the same time produces good results. Combining all these finding we suggest the two following winner combinations: SRSF PED MC and SRSF SED KL. \\ \\
+We further were able to find the best pipeline combinations. We experimentally demonstrated that SRSF flow fields outperform every other flow method supported by our pipeline. Moreover, we successfully could show that using depth information drastically increases the quality of motion segmentations. Among our segmentation methods, KL produces the best results. This method however, uses S-affinities. In contrast, when using P-affinities, MC seems is the best choice. When comparing KL against MC we can conclude, that KL produces better results but on the same time requires an enormous amount of computation time. However, MC runs in decent time and the same time produces good results. Combining all these finding we suggest the two following winner combinations: SRSF PED MC and SRSF SED KL. \\ \\
 While letting our pipeline compete against Brox' GraphCut $\cite{KB15b}$, we interestingly obtained better results even when not using depth data. However, to be fair we have to mention that we did not specify any specific parameters and hence his implementation was using its standard parameter setup. In contrast, we used our optimal parameters during our experiments.

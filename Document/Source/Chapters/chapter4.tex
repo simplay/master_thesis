@@ -2,21 +2,21 @@
 % TODO: keep me: Before going into details, let us first revisit the definition of a trajectory. By the term trajectory we refer to a list of tracking points, which is ordered by the frame index in which each point was traced. Therefore, every points knows to which frame it belongs to.
 \chapter{Motion Segmentation Pipeline}
 In this chapter we explain in detail the relevant stages of our motion segmentation pipeline. For this purpose we heavily rely on the definitions of \textit{Optical Flow} and \textit{Spectral Clustering} introduced in the previous chapter. We start by restating the initial problem statement our pipeline tries to solve. Moreover, for each stage, we describe its required input data and what output it generates. Lastly, we also mention all assumptions and induced limitations for each pipeline stage. \\ \\
-The problem statement our pipeline solves is defined as follows: Given a sequence of frames that form a video and their associated depth maps. Then our goal is to segment the images into regions that mask regions of coherent and independent rigidly moving objects. Therefore we describe the implementation of a motion segmentation pipeline that addresses this problem statement by using optical flows. In addition, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data, should be able to handle many moving objects, and lastly, it should be able to detect several fast moving rigid objects. \\ \\
-The idea of such a segmentation is to identify and extract meaningful rigid motions from a steady background. The motion of an object in a video sequence can usually not be considered as independent in a per frame basis, since typical object motions proceed over a series of frame. From the previous chapter we know that using optical flows enables us to run a consistent tracking of feature points in a video. Hence, the optical flow is an ideal cue for making motion grouping decisions. In our case we use the flows to generate motion point trajectories.
+The problem statement our pipeline solves is defined as follows: Given a sequence of frames that form a video and their associated depth maps. Then our goal is to segment the images into regions that mask regions of coherent and independent rigidly moving objects. Therefore we describe the implementation of a motion segmentation pipeline that addresses this problem statement by using optical flow fields. In addition, our implementation should be robust according to complex camera movement and noise, should be able to deal with occlusions and missing data, should be able to handle many moving objects, and lastly, it should be able to detect several fast moving rigid objects. \\ \\
+The idea of such a segmentation is to identify and extract meaningful rigid motions from a steady background. The motion of an object in a video sequence can usually not be considered as independent in a per frame basis, since typical object motions proceed over a series of frame. From the previous chapter we know that using optical flow fields enables us to run a consistent tracking of feature points in a video. Hence, the optical flow is an ideal cue for making motion grouping decisions. In our case we use the flow fields to generate motion point trajectories.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.9\linewidth] {implementation/pipeline}
 \end{center}
-\caption[Motion Segmentation Pipeline]{A schematic illustration of the structure of our pipeline. Individual pipeline components are drawn as orange boxes. The initial inputs are drawn as green boxes, the resulting final output as a blue box. Intermediate outputs are drawn as gray boxes. The arrows indicate the data-flow, whereas the white dots indicate a data-flow multiplexing. That means that data, which flows through such a dot is used by several pipeline components.}
+\caption[Motion Segmentation Pipeline]{A schematic illustration of the structure of our pipeline. Individual pipeline components are drawn as orange boxes. The initial inputs are drawn as green boxes, the resulting final output as a blue box. Intermediate outputs are drawn as gray boxes. The arrows indicate the data-flow, whereas the white dots indicate a data-flow multiplexing. That means that data, which flow fields through such a dot is used by several pipeline components.}
 \label{fig:pipeline_schematic}
 \end{figure}
 In the following let us briefly outline the main stages of our motion segmentation pipeline, which is visualized in Figure $\ref{fig:pipeline_schematic}$:
 \begin{enumerate}
 \item \textbf{Dataset Preparations} (Sec. $\ref{sec:dataset_preparations}$): Initially, the frames and depth maps of a given RGB-D video have to be extracted and named according to our pipeline naming conventions. Moreover, the depth map range is normalized in meter units.
-\item \textbf{Generate Optical Flows} (Sec. $\ref{sec:generate_of}$): In this stage the forward- and backward-flows are computed on the input sequence.
+\item \textbf{Generate Optical Flow Fields} (Sec. $\ref{sec:generate_of}$): In this stage the forward- and backward-flow fields are computed on the input sequence.
 \item \textbf{Data Extractor} (Sec. $\ref{sec:data_extraction}$): In this stage we extract traceable feature locations in our images. In addition, a mask containing all invalid tracking locations per image is computed by checking whether the forward and backward flow correspond to each other. Optionally depth data, flow and depth variances and color maps are extracted that are used at within a later pipeline stage. 
-\item \textbf{Trajectory Tracking} (Sec. $\ref{sec:trajectory_tracking}$): The previously computed flows are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory.
+\item \textbf{Trajectory Tracking} (Sec. $\ref{sec:trajectory_tracking}$): The previously computed flow fields are used to perform a point tracking on the extracted traceable features. The ordered sequence of tracking points of a feature is called trajectory.
 \item \textbf{Affinity Matrix Generation} (Sec. $\ref{sec:affinity_matrix_impl}$): In this stage the similarities between all trajectory pairs are computed. This is achieved by computing the color-, spatial- and motion distance between the overlapping segments of a pair and combining them in a certain way.
 \item \textbf{Segmenter}: Our pipeline offers two types of segmentations: sparse and dense. 
 	\begin{enumerate}
@@ -49,12 +49,12 @@ Our pipeline assumes a well-enumeration of its video frames, meaning that the im
 \label{sec:generate_of}
 In our pipeline we rely heavily on optical flow fields. In particular, flow fields are used to perform the point tracking required to extract motion trajectories, to detect occlusions and to compute affinities between trajectories. Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation. \\ \\
 A conceptual idea as well as a mathematical formulation of optical flow fields is provided in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. However, in principle, the optical flow represents a displacement field that defines where a certain point in a frame is mapped to in its successive frame. \\ \\
-In this stage we want to generate the following optical flows on the frames of a given dataset video:
+In this stage we want to generate the following optical flow fields on the frames of a given dataset video:
 \begin{itemize}
 	\item The \textbf{forward flow} fields: Refers to the optical flow between a frame and its successor frame.
 	\item The \textbf{backward flow} fields: Refers to the optical flow between a frame and its predecessor frame.
 \end{itemize}
-For the actual computation of the optical flows we rely on existing implementations. In particular we use the freely available implementations of the methods discussed in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. In the following is a short list of the flows integrated in our pipelines and their main properties:
+For the actual computation of the flow fields we rely on existing implementations. In particular we use the freely available implementations of the methods discussed in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$. In the following is a short list of the flow fields integrated in our pipelines and their main properties:
 \begin{itemize}
 \item The enhanced version of the original flow method proposed by Horn and Schunck (\textbf{HS}): This flow estimation method is a tweaked version of H.S. original formulation. The authors offer a freely available Matlab implementation that has a decent run-time. Please note that this implementation does not make use of depth maps to compute the flow estimations.
 	\begin{itemize}
@@ -104,7 +104,7 @@ For this thesis let us use the abbreviations defined in the list above when refe
    \label{fig:flow_method_flows_d}
 }
 \end{center}
-\caption[Flow Method Flows]{A visualization of the flow fields produced by our used flow methods when running them on the same frame sequence. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
+\caption[Flow Fields]{A visualization of the flow fields produced by our used flow methods when running them on the same frame sequence. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
 \label{fig:flow_method_flows}
 \end{figure}
 
@@ -117,7 +117,7 @@ In particular we will explain how meaningful image locations of moving objects a
 \begin{table}[H]
   \begin{tabular}{@{}lll@{}}
     \textbf{Input:} & Dataset Images \bf{F} \\
-		& Forward- and Backward Optical Flows \bf{OF} \\
+		& Forward- and Backward Optical Flow Fields \bf{OF} \\
  		& Depth Images (\emph{optional}) \bf{DI} \\
     \textbf{Output:} & Traceable Feature Locations \bf{TF} \\
     & Occluded Location Masks \bf{OM}\\
@@ -232,7 +232,7 @@ Finally, there is one optional post-processing stage, which removes all candidat
 \end{figure}
 In the image on the left (Fig. $\ref{fig:c14_f1_cand_dense_2}$) we see the set of all dense tracking candidates overlaid by their flow magnitudes (the bluish masks). The stronger the magnitude, the more bluish the mask is colored. We make the trivial observation that the moving objects themselves correspond to the top flow magnitudes. Hence, filtering the tracking candidates by their flow magnitudes yields only tracking candidates located at moving objects (Fig. $\ref{fig:c14_cand_dense_strict}$). \\ \\
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
-Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flows we know where the extracted features have to be tracked to in their successive frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find such occluded regions.
+Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flow fields we know where the extracted features have to be tracked to in their successive frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find such occluded regions.
 
 \subsection{Occlusion Detection}
 \label{sec:occlusion_det}
@@ -253,7 +253,7 @@ Occlusion may occur whenever a previously visible object gets covered by another
 \caption[Occluded Regions]{A visualization of occluded regions. On the left, a color video frame and on the right its corresponding occluded regions (white pixels).}
 \label{fig:invalid_regions}
 \end{figure}
-In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. However, based in  $\cite{Bro10c}$ we detect occlusions by verifying a consistency check between the forward- and backward flows. Such a verification is performed by applying the backward flow $\hat{w}_t$ to its continued tracked point $p_{t+1}$ and then is checking whether the resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Additionally, we visually outlined this concept of occlusion detection in Figure $\ref{fig:occlusion_detection}$. Moreover, an example of occluded regions produced by following our approach is shown in Figure $\ref{fig:invalid_regions}$.
+In tracking tasks, occlusion is usually detected by comparing the appearance of the local neighborhood of the tracked point over time. However, based in  $\cite{Bro10c}$ we detect occlusions by verifying a consistency check between the forward- and backward flow fields. Such a verification is performed by applying the backward flow $\hat{w}_t$ to its continued tracked point $p_{t+1}$ and then is checking whether the resulting point has the same origin $\hat{p}_t$ as the actual tracked from position $p_t$. Additionally, we visually outlined this concept of occlusion detection in Figure $\ref{fig:occlusion_detection}$. Moreover, an example of occluded regions produced by following our approach is shown in Figure $\ref{fig:invalid_regions}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.6\linewidth] {implementation/occlusion/occ_det}
@@ -274,10 +274,10 @@ Whenever a trajectory got occluded then this also means that a new moving object
 \subsection{Flow Variance}
 \label{sec:flow_variance}
 So far, we were assuming that the generated flow fields are good estimates because they do not exhibit an enormous amount of noise. However, especially along motion boundaries, this assumption is very dangerous. For instance, when taking the difference between two noisy flow vectors, the noise level can get amplified on the resulting vector. This is especially problematic while computing similarities between trajectories based on the motion distance. In that case, repeatedly using noisy flow differences will negatively affect the resulting segmentation quality. \\ \\
-In this section we, therefore, propose a normalization factor that reduces the influence of potential noise present in the estimated flow fields. A simple, first idea would be to smooth the flows by applying a low-pass filter$\footnote{The purpose of a low pass filter is to damp high frequencies such as noise.}$, such as a Gaussian kernel. On one hand, it would surely reduce the noise level along the motion boundaries, but on the other hand it would also wash out many relevant motion details. Therefore, filtering the flows directly is not recommendable and instead we would like to follow another, more robust idea. \\ \\
-The rationale behind our approach is that the variance on the weights of a low-pass filter are a reliable local indicator for the strength of noise and thus may be used to damp flows differences. \\ \\
+In this section we, therefore, propose a normalization factor that reduces the influence of potential noise present in the estimated flow fields. A simple, first idea would be to smooth the flow fields by applying a low-pass filter$\footnote{The purpose of a low pass filter is to damp high frequencies such as noise.}$, such as a Gaussian kernel. On one hand, it would surely reduce the noise level along the motion boundaries, but on the other hand it would also wash out many relevant motion details. Therefore, filtering the flow fields directly is not recommendable and instead we would like to follow another, more robust idea. \\ \\
+The rationale behind our approach is that the variance on the weights of a low-pass filter are a reliable local indicator for the strength of noise and thus may be used to damp flow field differences. \\ \\
 Another prominent low-pass filter is the Bilateral Filter ($\textbf{BF}$). Similar to a Gaussian filter, this filter also computes a weighted average of the input, but at the same time takes into account the variation of intensities to preserve details, such as edges. In particular, using such a filter would preserve motion boundaries. More details about this filter can be found in the appendix in Section $\ref{sec:bilateral_filter}$ on page $\pageref{sec:bilateral_filter}$. \\ \\
-So, how could we make use of this filter to implement our idea? Imagine we would know the error of the computed flows. Then, by using the variance of the field, we could directly address the error by normalizing the flow value by its corresponding variance value. However, since we do not know the actual error, we have to formulate a robust flow variance estimator. \\ \\
+So, how could we make use of this filter to implement our idea? Imagine we would know the error of the computed flow fields. Then, by using the variance of the field, we could directly address the error by normalizing the flow value by its corresponding variance value. However, since we do not know the actual error, we have to formulate a robust flow variance estimator. \\ \\
 For the following, let us consider the filter weights $w_{p,q}$ between two pixels $p$ and $q$ in a Bilateral filter defined as in Equation $\ref{eq:def_bilateral_filter}$. Furthermore, let $\bf{q}_p$ denote a vector containing all neighbors of pixel $\bf{p}$ and $\bf{w}_p$ denotes the vector that contains all weights $w_{p,q}$ between $p$ and its neighbors. Mathematically, this can be formulated as:
 \begin{equation}
 \begin{aligned}
@@ -378,7 +378,7 @@ Finally, we conclude this section by offering an example of an actual point trac
 
 \subsection{Transformation to 3D Points}
 \label{subsection:transform_to_3d_points}
-In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flows and our tracking candidates, are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories so that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
+In the previous section we described a method to run a tracking of motion trajectories. However, the so far traced trajectories consist of a set of 2d dimensional tracking points, since both, the optical flow fields and our tracking candidates, are defined over the 2d image space. Ideally, for defining more accurate similarities between trajectories we would like to use 3d versions of the trajectory points instead. Therefore we have to transform our extracted motion trajectories so that they are defined in the 3d world space. To define such a transformation we have to make use of the depth fields and the camera calibration. \\ \\
 In the following section we explain how such a transformation from 2d image space to 3d world space can be implemented. We assume, that the utilized RGBD-video sequences were captured using two cameras, a color and depth camera. To be as general as possible, we further assume that these cameras are not aligned. Having a formulation based on this assumptions allows us to support a broad series of video sequences captured by various devices. \\ \\
 Let us model the two cameras by a pinhole camera as described in the appendix Section $\ref{sec:pinhole_camera}$. The pinhole camera model is a simple mathematical model to define a projection from the world space to the 2d image space using a homogeneous transformation defined as: 
 \begin{equation}
@@ -446,7 +446,7 @@ In the following we describe in detail the steps of Algorithm $\ref{alg:computin
 \begin{table}[H]
   \begin{tabular}{@{}lll@{}}
     \textbf{Input:} & Extracted Trajectories \bf{T} \\
-		& Forward Flows \bf{OF} \\
+		& Forward Flow Fields \bf{OF} \\
  		& Dataset Images (\emph{optional}) \bf{F} \\
     \textbf{Output:} & Affinity Matrix \bf{W} \\
     & Nearest Trajectory Neighbors \bf{$\mathcal{N}$}\\
