@@ -17,7 +17,7 @@ In this thesis we want to follow a similar approach as described in those two co
 	\item Group the trajectories via a spectral clustering on the affinity matrix.
 \end{enumerate}
 However, keep in mind that this motion segmentation technique also suffers from some issues: Trajectories usually start and end in different frames due to occlusion and disocclusion. Therefore, it is crucial to know where points get occluded. Furthermore, there are various metrics that can be used to compute distances between trajectories, such as their spatial-, color- or motion-distance. Moreover, there are many mathematical variants to solve the problem of spectral clustering. Lastly, the used optical flow estimation method should be carefully chosen since it affects the quality of the final segmentation. \\ \\
-In next chapter we describe how we implemented such a motion segmentation pipeline by following these main stages. In particular, we will address all issues described above and provide robust solution.
+In next chapter we describe how we implemented such a motion segmentation pipeline by following these main stages. In particular, we will address all issues described above and provide robust solutions.
 
 \section{Optical Flow}
 \label{sec:optical_flow}
@@ -61,9 +61,9 @@ For visualizing flow fields we use the Middlebury$\cite{Baker2011}$ flow color e
 
 \subsection{Original Flow Estimation Method of H.S.}
 \label{sec:hs_formulation}
-In the pioneering work of $\cite{Hs81}$, B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothness in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flow fields where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is is very sensitive to noise. \\ \\
+In the pioneering work of $\cite{Hs81}$, B. Horn and B. Schnunck describe a technique to estimate the optical flow. Their method assumes smoothness in the flow over the whole image. Their flow estimation is formulated as a global energy functional and can numerically be solved via the Jocobi method$\footnote{The Jacobi method is an iterative method used to solve linear systems.}$. The advantage of their method is that it produces flow fields where the inner parts of homogeneous objects is filled in from the motion boundaries. However, its downside is that is very sensitive to noise. \\ \\
 Back then they defined the optical flow as \textit{the distribution of apparent velocities of movement of brightness patterns in an image}. \\ \\
-Moreover, they already understood the potential of the optical flow and stated the following properties: It can arise from relative motion between objects and the viewer, provides information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Moreover, the mentioned that discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
+Moreover, they already understood the potential of the optical flow and stated the following properties: It can arise from relative motion between objects and the viewer, provides information about the spatial arrangement of the viewed objects and the rate of change in that arrangement. Moreover, they mentioned that discontinuities in the optical flow can help to perform segmentation tasks. \\ \\
 Sticking to their flow definition they derived an equation that relates the change in the image brightness at a point to the motion of the brightness. \\ \\
 Their formulation is based on the following assumptions:
 \begin{itemize}
@@ -73,7 +73,7 @@ Their formulation is based on the following assumptions:
   \item Situations where objects occlude one another are excluded.
 \end{itemize}
 These assumptions allow to conclude, that in their model the brightness of a particular point in the pattern is constant. \\ \\
-Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, $\frac{d E}{dt} = 0$ hold true. Using the chain rule for differentiation, they derived the expression in Equation $\ref{eq:flow_eq}$.  
+Let the image brightness at a point $(x,y)$ in the image plane at time $t$ be denoted by $E(x,y,t)$. Since the brightness of any point is constant, the total derivative $\frac{d E}{dt}$ is zero. Using the chain rule for differentiation, they derived the expression in Equation $\ref{eq:flow_eq}$.  
 \begin{equation}
 \begin{aligned}
 0 &= \frac{d E}{dt} \\
@@ -112,7 +112,7 @@ and the measure of the departure from smoothness in the velocity flow, as formul
 	E_c^2 = \norm{\nabla u}^2 + \norm{\nabla v}^2
 \label{eq:energy_constraint}
 \end{equation}
-The total error to be minimized is therefore equals to the energy term formulated in Equation $\ref{eq:final_hs_energy_term}$.
+The total error to be minimized is therefore equal to the energy term formulated in Equation $\ref{eq:final_hs_energy_term}$.
 \begin{equation}
 	E = \int \int \left( E_b^2 + \alpha^2 E_c^2 \right) dx dy
 \label{eq:final_hs_energy_term}
@@ -134,9 +134,7 @@ E_y E_b - \alpha^2 \Delta v &= 0 \\
 \end{aligned}
 \label{eq:def_l_euler_lag}
 \end{equation}
-Where $\Delta$ denotes the Laplace$\footnote{Definition of the Laplace operator in the two dimensional case: $\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$}$ operator.
-
-When using a finite differences scheme for approximating the laplacian equation
+Where $\Delta$ denotes the Laplace$\footnote{Definition of the Laplace operator in the two dimensional case: $\Delta = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$}$ operator. When using a finite differences scheme for approximating the Laplacian equation
 as defined in Equation $\ref{eq:finite_difference_laplacian}$
 \begin{equation}
 	\Delta u(x,y) = \bar{u} (x,y) - u(x,y)
@@ -168,9 +166,9 @@ In $\cite{Deq10}$ Dequing Sun et al studied various flow methods and models and 
 When using the abbreviation HS we strictly refer to their implementation. \\ \\
 The original HS formulation combines a data term that assumes constancy of some image property with a spatial term that models how the flow is expected to vary across the image. The HS model relies on brightness constancy and spatial smoothness assumptions. Unfortunately it is not very robust to outliers. Therefore, the following main improvements were implemented in their methods:
 \begin{itemize}
-  \item The quadratic penalty function is replaced by the Charbonnier penalty $p\left( x \right) = \sqrt{x^2 + \epsilon^2}$. This penalty is supposed to be more error-prone to outliers.
+  \item The quadratic penalty function is replaced by the Charbonnier penalty $p\left( x \right) = \sqrt{x^2 + \epsilon^2}$. This penalty is supposed to be less error-prone to outliers.
   \item An incremental multi-resolution technique is applied to estimate flow fields with large displacements. The optical flow estimated at a coarse level is used to warp the second image toward the first at the next finer level and a flow increment is calculated between the first image and the warped second image. Each level is recursively downsampled by applying a Gaussian filter from its nearest lower level.
-  \item An enhanced objective function is used, which including a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
+  \item An enhanced objective function is used, which includes a non-local term that robustly integrates flow estimates over large spatial neighborhoods. This is achieved by applying a median filtering to denoise the flow after every warping step to increase the accuracy.
 \end{itemize}
 
 \subsubsection{Large Displacement Optical Flows}
@@ -181,14 +179,14 @@ In their paper they propose a method how to combine both strategies. They direct
 
 \subsubsection{Semi Rigid Scene Flows}
 In their paper $\cite{Bro14}$, Quiroga et al. proposed an approach to estimate the scene flow$\footnote{The term scene flow denotes a motion field in the 3d space, which can be computed from a single view when using RGB-D sensor data.}$ by exploiting the properties of motion in real world scenes. For that purpose they implemented an over-parameterized framework that estimates scene flows from RGBD images. \\ \\
-This allows for piecewise smooth solutions using a TV regularization on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
+This allows for piecewise smooth solutions using a total variation (TV) regularization$\footnote{An image denoising technique, which is also known as \textit{total variation denoising}.}$ on the parameterization. Most real world scenes can be modelled as locally or piecewise rigid. This means that the scene is composed of 3d independently rigid components. Moreover, their formulation offers a general formulation to solve for the local and global motion by jointly using intensity and depth data. \\ \\
 They model the scene flow as a 3d vector field consisting of a global rigid motion plus a non-rigid residual. this is particularly useful, when estimating the motion of deformable objects in conjunction with a moving camera. A piecewise smooth solution is estimated using a total variation on the parameterization.\\ \\
-In the following some details according to their implementation
+In the following some details according to their implementation:
 \begin{itemize}
-  \item they represent motions as a field 3d vector field of twists, which encourages piecewise-smooth solutions of rigid body motions.
-  \item instead of representing the flow vectors in the 3d space, they represent the scene structure in the image domain. Then, color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images. 
-  \item However, scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed. In their work the use an over-parameterization of the scene flow. each scene point is allowed to follow a rigid body motion. this way, the regularization can be done on a field of rigid motion.
-  \item usually, the 3d motion vector if each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
+  \item They represent motions as a 3d vector field of twists, which encourages piecewise-smooth solutions of rigid body motions.
+  \item Instead of representing the flow vectors in the 3d space, they represent the scene structure in the image domain. Then, color and depth data can be coupled using a projective function. this way depth influences the motion in the image domain and consistency constraints can be formulated jointly over the color and depth images. 
+  \item However, scene flow estimation using intensity and depth is an ill-posed problem and regularization is needed. In their work they use an over-parameterization of the scene flow. Each scene point is allowed to follow a rigid body motion. this way, the regularization can be done on a field of rigid motion.
+  \item Usually, the 3d motion vector of each point is solved to minimize color and intensity constraints in a data term and the whole 3d motion field is regularized to get spatially smooth solutions while preserving discontinuities. Since depth data is available a weighted regularization can be used to preserve motion discontinuities along depth edges. 
   \item In order to formulate an efficient 3d motion exploration they use a parameterization provided by RGB-D sensors to formulate an efficient 3d motion exploration. Hence, they define a warping function to couple the twist motion and the optical flow. They use a warping function to locally constrain the rigid motion field in the image domain and define a depth consistency constraint to exploit the sensor data.
 \end{itemize}
 
@@ -205,10 +203,10 @@ The implementation of their method is freely available on the authors website, w
 \section{On Data Clustering}
 \label{sec:on_data_clustering}
 Clustering is a technique for exploratory data analysis and allows to identify groups of similar behaviour. This is achieved by separating data points according to their similarities. \\ \\
-Generally, clustering is a hard problem and no yet no perfect method exists. As we show in our evaluation section, the choice of the segmentation method has a big influence on the quality of our motion segmentation pipeline. \\ \\
+Generally, clustering is a hard problem and yet no perfect method exists. As we show in our evaluation section, the choice of the segmentation method has a big influence on the quality of our motion segmentation pipeline. \\ \\
 In this section we offer the reader definitions of various such techniques. For writing the content of this section we partially relied on the work of $\cite{vonLuxburg2007}$. \\ \\
 In the following we start by describing the k-means clustering which is a clustering method applied on point clouds and which is popular because of its speed, relative simplicity and robustness. However, a drawback of k-means is that it only works for relatively low-dimensional datasets. \\ \\ 
-In this thesis, we are mainly working with datasets consisting of point trajectories. This kind of data is not easily embeddable in an euclidean space. Therefore, we present a more general clustering framework targeting at segmenting graphs. Regardless of the dimensionality of the input data, these method are general enough to work with any kind of data as long as it is possible to compute a distance between data point pairs
+In this thesis, we are mainly working with datasets consisting of point trajectories. This kind of data is not easily embeddable in an Euclidean space. Therefore, we present a more general clustering framework targeting at segmenting graphs. Regardless of the dimensionality of the input data, these method are general enough to work with any kind of data as long as it is possible to compute a distance between data point pairs
 
 \subsection{K-Means Clustering}
 \label{sec:k_means}
@@ -282,18 +280,18 @@ The volume is the sum of weights of all edges attached to vertices in $A$.
 
 \subsection{Similarity Graph}
 \label{sec:similarity_graphs}
-Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_ij \geq 0$ between all pairs of data points $x_i$ and $x_j$. Then, our goal is to divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other. To address this task we represent our data by a similarity graph $G = (V, E)$. \\ \\
+Given a set of data points $x_1, \dots, x_n$ and some notion of similarity $s_{ij} \geq 0$ between all pairs of data points $x_i$ and $x_j$. Then, our goal is to divide the data points into several groups such that points in the same group are similar and points in different groups are dissimilar to each other. To address this task we represent our data by a similarity graph $G = (V, E)$. \\ \\
 Each vertex $v_i$ in this graph represents a data point $x_i$. Two vertices are connected if the similarity $s_{ij}$ between the corresponding data point $x_i$ and $x_j$ is positive or larger than a certain threshold and the edge is weighted by $s_{ij}$. The data clustering reduces to the graph partitioning problem. The goal is then to find a partition of the graph such that the edges between different groups have very low weights$\footnote{This means that points in different clusters are dissimilar from each other.}$ and edges within a group have high weights$\footnote{which means that points within the same cluster are similar to each other}$. \\ \\
-There are several constructions to transform a given set of data points with pairwise similarities $s_{ij}$ or pairwise distances $d_{ij}$ on the graph. The common goal of such a construction is to to model the local neighborhood relationships between the data points. In the following several a list of different construction types.
+There are several constructions to transform a given set of data points with pairwise similarities $s_{ij}$ or pairwise distances $d_{ij}$ on the graph. The common goal of such a construction is to model the local neighborhood relationships between the data points. In the following several a list of different construction types.
 \begin{itemize}
 	\item The \textbf{$\epsilon$-neighborhood graph}: All points whose pairwise distances are smaller than a given $\epsilon$ are connected. In that case the distances between connected vertices is at the same scale (at most equals $\epsilon$). Hence, the edge weights do not incorporate additional information about the data on the graph and thus, such a graph is usually considered as an unweighted graph.
 	\item The \textbf{k-nearest neighbor graph}: Vertex $v_i$ is connected with $v_j$ if $v_j$ is among the k-nearest neighbors of $v_i$. This definition usually leads to a directed graph, since this neighborhood relationship is not symmetric. When interested in constructing a undirected graph, we can either ignore the induced edge directions (corresponds to an OR relationship) or connect the vertices if and only if both are nearest neighbors of each other (corresponds to an AND relationship).
 	\item The \textbf{fully connected graph}: All points that exhibit a positive similarity are connected with each other. The edge weight corresponds to their similarity value.
 \end{itemize}
-For measuring the distances between data points any kind of metric$\footnote{For example one could use the euclidean distance or other kind of norms}$ can be used. 
+For measuring the distances between data points any kind of metric$\footnote{For example one could use the Euclidean distance or other kind of norms}$ can be used. 
 
 \subsection{Graph Laplacians}
-In spectral clustering we are working with the so called graph Laplacian matrices, which can be defined based on the previously discussed adjacency matrix formulation. In this section, we therefore define different graph laplacians and state some of their properties. \\ \\
+In spectral clustering we are working with the so called graph Laplacian matrices, which can be defined based on the previously discussed adjacency matrix formulation. In this section, we therefore define different graph Laplacians and state some of their properties. \\ \\
 In the following we assume that $G$ is an undirected, weighted graph with the the positive weight matrix $W$ and $D$ denotes the degree matrix. \\ \\
 When discussing some properties of the eigenvectors of the Laplacian matrix, keep in mind that they do not necessarily have to be normalized. By conventions, we assume the eigenvectors being ordered increasingly. Additionally, when referring to the first $k$ eigenvectors, we mean the eigenvectors that correspond to the $k$ smallest eigenvectors.
 
@@ -311,7 +309,7 @@ It has the following properties:
 \item L is symmetric and positive semi-defnite$\footnote{A $n \times n$ matrix $M$ is called positive semi-definite if and only if $\forall x \in \mathbb{R}^n : x^T M x \geq 0$ holds true.}$.
 \item The smallest eigenvalue of L is equal to zero and the corresponding eigenvector is the constant one vector.
 \end{itemize}
-The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of $L$ is equals the number of connected components in the graph. A proof of this property can be found in $\cite{Lux07}$.
+The unnormalized graph Laplacian does not depend on the diagonal elements of the matrix W. Each adjacency matrix which coincides with W on all off diagonal positions lead to the same Laplacian L. Moreover, the multiplicity of the eigenvalue zero of $L$ is equal the number of connected components in the graph. A proof of this property can be found in $\cite{Lux07}$.
 
 \paragraph{Normalied Graph Laplacian}
 The symmetric, normalized graph Laplacian matrix $L^{\text{sym}}$ of the graph $G$ is defined as
@@ -327,13 +325,13 @@ which has the following properties:
 \item Zero is an eigenvalue of $L^{\text{sym}}$ with the eigenvector $D^{\frac{1}{2}} \mathbbm{1}$
 \item $L^{\text{sym}}$ is positive semi-definite and has $n$ non-negative real-valued eigenvectors.
 \end{itemize}
-Please notice that the definition of Equation $\ref{eq:normalized_graph_laplacian}$ relies on the definition of the unnormalized graph Laplacian, stated in Equation $\ref{eq:unnormalized_graph_laplacian}$. Moreover, the multiplicity of the eigenvalue zero of L is equals the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
+Please notice that the definition of Equation $\ref{eq:normalized_graph_laplacian}$ relies on the definition of the unnormalized graph Laplacian, stated in Equation $\ref{eq:unnormalized_graph_laplacian}$. Moreover, the multiplicity of the eigenvalue zero of L is equal the number of connected components $A_1, \dots, A_k$ in the graph G. The Eigenspace of $L^{\text{sym}}$ is spanned by the vectors $D^{\frac{1}{2}} \mathbbm{1}_{A_i}$
 
 \subsection{Spectral Clustering}
 \label{sec:spectral_clustering_bg}
 In this section we describe a clustering technique for grouping data points by using the spectrum of the points' similarity matrix. More precisely, this method performs a dimensionality reduction and then separates the transformed data representation via k-means. \\ \\
-Given $n$ data points $x_1, \dots, x_n$ with their pairwise similarities $s_ij$ measured by some similarity function which is symmetric and non-negaitve. Then, the corresponding similarity matrix $S$ is defined as $S = (s_{ij})_{i,j=1,\dots,n}$. \\ \\
-The rational of the spectral clustering algorithm is to change the abstract representation of the data points $x_i$ to points $y_i \in \mathbb{R}^k$, which are easy to cluster using k-means. Algorithm $\ref{alg:spectral_clustering_algorithm}$ lists the actual step that have to performed to run the spectral clustering algorithm.
+Given $n$ data points $x_1, \dots, x_n$ with their pairwise similarities $s_{ij}$ measured by some similarity function which is symmetric and non-negaitve. Then, the corresponding similarity matrix $S$ is defined as $S = (s_{ij})_{i,j=1,\dots,n}$. \\ \\
+The rationale of the spectral clustering algorithm is to change the abstract representation of the data points $x_i$ to points $y_i \in \mathbb{R}^k$, which are easy to cluster using k-means. Algorithm $\ref{alg:spectral_clustering_algorithm}$ lists the actual step that have to performed to run the spectral clustering algorithm.
 \begin{algorithm}[H]
 \caption{Spectral Clustering Algorithm}
 \begin{table}[H]
@@ -372,8 +370,8 @@ Let $G = (V, E)$ denote a similarity graph and $W$ its corresponding adjacency m
 \end{equation}
 where $\bar{A}$ denotes the complement of $A$ as defined in Equation $\ref{eq:set_complement}$ and $W(A,B)$ is the set sum of the subsets $A$, $B$ as defined in Equation $\ref{eq:set_sum}$. \\ \\
 The minimum cut problem from Equation $\ref{eq:simple_mincut}$ can be efficiently solved according to the method described in $\cite{Stoer:1997:SMA:263867.263872}$. The idea is to reduce the graph by merging the vertices of an edge determined similar as in iteration of Prim's minimum spanning tree algorithm, until the graph only contains two combined vertex sets. After each shrinking, the weight of the merged cut would be stored in a list. Finally, the minimum weight cut in the list will be the minimum of the graph. \\ \\
-In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly the resulting partitions should be large enough. 
-The two common objective functions to encode the notion of size is the ratio cut \textit{Rcut} and the normalized cut \textit{Ncut}. They are defined as
+In practice, the resulting graph partitions are not satisfactory. In many situations, the solution of such a mincut simply separates one individual vertex from the rest of the graph. However, we expect clusters to from reasonable large groups and hence, partitions into individual vertices are not what we want. The remedy of this issue is to introduce an additional constraint, that models the notion of cluster size. We explicitly request that the resulting partitions should be large enough. 
+The two common objective functions to encode the notion of size is the ratio cut \textit{Rcut} $\cite{Hagen:2006:NSM:2298571.2301769}$ and the normalized cut \textit{Ncut} $\cite{Shi:2000:NCI:351581.351611}$. They are defined as
 \begin{equation}
 \begin{aligned}
 &\text{Rcut} = \frac{1}{2} \sum_{i=1}^k \frac{W(A_i, \bar{A_i})}{\left| A_i\right|} = \sum_{i=1}^k \frac{\text{cut}(A_i, \bar{A_i})}{\left| A_i\right|} \\
