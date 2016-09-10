@@ -250,34 +250,28 @@ The parameters $t$ and $R$ are called \textit{extrinsic camera parameters}.
 \chapter{Additional Experiment and Statistics}
 In this appendix chapter we put a series of extra experiments as well as all numeric measurements not previously shown in the results chapter.
 
-\subsection{Additional Experiment: Varying CC/EV}
+\section{Additional Experiment: Varying CC/EV}
 \label{sec:additional_cc_ev_exp}
-In this we examine the bahaviour of PED MC method for a varying the eigenvalue-cluster count. Additionally, we want to investigate the dependence between these two parameter to better understand them. \\ \\
-For 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
-of number of clusters,eigenvectors. The corresponding statistics are listed in Table $\ref{tab:wh_ev_c}$. To give the reader a easier way to understand the results we visualized the resulting statistics. For fixed cluster counts, we plotted the recall-precession and the eigenvector-f1 score graphs. Moreover, for fixed eigenvector counts we plotted the resulting recall-precession and clusters-f1 score graphs. The graphs are given in Figure $\ref{fig:wh1_performance_var_ev_c_graphs}$.
+In this experiment we examine the bahaviour of LDOF PED MC method for a varying the eigenvalue-cluster count. For 2 to 6 clusters and for 2 to 6 eigenvectors we generate segmentations on the Waving Hand dataset and plot the resulting performance (Fig. $\ref{fig:wh_altering_ev_cc_app}$. This experiment will give us some further insight about choosing appropriate eigenvalue (EV) and cluster count (CC) we want to solve for in MinCut (MC) and Spectral clustering (SC). The corresponding statistics are listed in Table $\ref{tab:wh_ev_c}$. To give the reader a easier way to understand the results we visualized the resulting statistics. For fixed cluster counts, we plotted the recall-precession and the eigenvector-f1 score graphs. Moreover, for fixed eigenvector counts we plotted the resulting recall-precession and clusters-f1 score graphs. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[Varying Clusters Recall/Precision Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_rec_prec}
-   \label{fig:wh1_performance_var_ev_a}
 }
 \subfigure[Varying Clusters EV/F1 Score Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_ev_f1}
-   \label{fig:wh1_performance_var_ev_b}
 }
 \subfigure[Varying EV Recall/Precision Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_rec_prec}
-   \label{fig:wh1_performance_var_ev_c}
 }
 \subfigure[Varying EV Clusters/F1 Score Plot]{
    \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_c_f1}
-   \label{fig:wh1_performance_var_ev_d}
 }
 \end{center}
-\caption[Plot Performance Varying CLuster/Eigenvectors]{foobar}
-\label{fig:wh1_performance_var_ev_c_graphs}
+\caption[Plot Performance Varying CLusters/Eigenvectors]{Visualizing the experiment \enquote{Varying CC/EV} via graphs: For a fixed number of eigenvectors and an altering cluster count (first row) we show the recall/precision and eigenvector/F1-Score plots. Similarly, we show recall/precision and clusters/F1-Score plots plots for a fixed number of clusters and an altering number of eigenvectors (second row). The utilized measurements for this plots is listed in Table $\ref{fig:wh_altering_ev_cc_app}$.}
+\label{fig:wh_altering_ev_cc_app}
 \end{figure}
-% TODO: state observations here: 
+
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|c|c|}
@@ -303,108 +297,69 @@ of number of clusters,eigenvectors. The corresponding statistics are listed in T
 5 & 10.91\% & 34.90\% & 50.90\% & 53.92\% & 70.97\%  \\ \hline
 6 & 10.91\% & 34.90\% & 51.30\% & 53.62\% & 69.37\%  \\ \hline
 \end{tabular}
-\caption[Performance Varying Eigenvector-Cluster]{My caption}
+\caption[Performance Varying Eigenvector-Cluster]{Measurements of the experiment \enquote{Varying CC/EV} on the Waving Hand dataset (Fig. $\ref{fig:wh_altering_ev_cc_app}$).}
 \label{tab:wh_ev_c}
 \end{table}
 
-\subsection{Varying Pipeline Combinations for LDOF flow fields}
-For the following experiment we only use LDOF flow fields. Moreover, we fix the number of clusters we want to solve for and set it equal to six segments. In our pipeline we run all valid cross combinations between our affinity computation methods, such as PD, PED, SD and SED and the segmentation methods SC, MC and KL. The resulting segmentations are shown in Figure $\ref{fig:eval_bonn_chairs_raw_segmentations}$.
-
-\subsection{Varying Cluster Count on SC and MC}
-use LDOF flow fields and run the pipeline modes: PD SC, PD MC, PED SC, PED MC
-vary the number of clusters and evaluate the resulting segmentations
-This experiment should examine 
-This experiment should examine the behaviour of these modes using an increasing number of clusters.
-
-
+\section{Varying Cluster Count on SC and MC}
+This experiment should examine the behaviour of the modes PD SC, PD MC, PED SC, PED MC when using LDOF flow fields for a varying number of clusters on the One Chair dataset (Fig. $\ref{fig:chair_3_cast_dataset_appendix}$). The quantitative results are visualized in Figure $\ref{fig:chair_3_cast_plot_avg_stat}$. Additionally, qualitative results of the best resulting segmentations (Fig. $\ref{fig:chair_3_cast_best_f_score_results}$) and the worst result (Fig. $\ref{fig:chair_3_cast_gt_worst_best}$) are visualized below. The corresponding measurements of these experiments are listed in Table $\ref{tab:chair_3_cast_avg_performance}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Frame 30]{
-   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/30}
-   \label{fig:chair_3_cast_dataset_a}
+   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/45}
 }
 \subfigure[Frame 45]{
-   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/45}
-   \label{fig:chair_3_cast_dataset_b}
+   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/60}
 }
 \subfigure[Frame 60]{
-   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/60}
-   \label{fig:chair_3_cast_dataset_c}
+   \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/ds/75}
 }
-\end{center}
-\caption[Chair 3 Cast Dataset]{Listing of 4 ascending frames of the our Chair 3 Cast dataset.}
-\label{fig:chair_3_cast_dataset}
-\end{figure}
-
-\begin{figure}[H]
-\begin{center}
-
+~
 \subfigure[Gt Frame 45]{
    \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/gt/45}
-   \label{fig:chair_3_cast_masks_a}
 }
 \subfigure[GT Frame 60]{
    \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/gt/60_amb}
-   \label{fig:chair_3_cast_masks_b}
 }
 \subfigure[GT Frame 75]{
    \includegraphics[width=0.31\linewidth] {evaluation/chairs_3_cast/gt/75_amb}
-   \label{fig:chair_3_cast_masks_c}
 }
 \end{center}
-\caption[Chair 3 Cast Masks]{An illustration of the ground truth masks we use to evaluate the performance of our segmentations.}
-\label{fig:chair_3_cast_masks}
+\caption[Chair 3 Cast Dataset]{Visualizing the ground truth frame and their frames of the One Chairs dataset}
+\label{fig:chair_3_cast_dataset_appendix}
 \end{figure}
 
 \begin{figure}[H]
 \begin{center}
 
+\subfigure[Raw 5 Clusters PED MC]{
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_5}
+}
 \subfigure[5 Clusters PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_5}
-   \label{fig:chair_3_cast_masks_a}
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_5}
+}
+\subfigure[Raw 10 Clusters PED MC]{
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_10}
 }
 \subfigure[10 Clusters PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_10}
-   \label{fig:chair_3_cast_masks_b}
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_10}
 }
 ~
+\subfigure[Raw 15 Clusters PD SC]{
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/best/pd_sc_c_15}
+}
 \subfigure[15 Clusters PD SC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/best/pd_sc_c_15}
-   \label{fig:chair_3_cast_masks_c}
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/merged/pd_sc_c_15}
 }
-\subfigure[20 Clusters PD SC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_20}
-   \label{fig:chair_3_cast_masks_d}
-}
-\end{center}
-\caption[Chair 3 Cast Winner]{Listing the four top segmentation results of frame 60 based on the scored F1 value.}
-\label{fig:chair_3_cast_best_f_score_results}
-\end{figure}
-
-%
-\begin{figure}[H]
-\begin{center}
-
-\subfigure[5 Clusters PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_5}
-   \label{fig:chair_3_cast_masks_merged_a}
-}
-\subfigure[10 Clusters PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_10}
-   \label{fig:chair_3_cast_masks_merged_b}
-}
-~
-\subfigure[15 Clusters PD SC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/merged/pd_sc_c_15}
-   \label{fig:chair_3_cast_masks_merged_c}
+\subfigure[Raw 20 Clusters PD SC]{
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/best/ped_mc_c_20}
 }
 \subfigure[20 Clusters PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_20}
-   \label{fig:chair_3_cast_masks_merged_d}
+   \includegraphics[width=0.22\linewidth] {evaluation/chairs_3_cast/merged/ped_mc_c_20}
 }
 \end{center}
-\caption[Chair 3 Cast Winner]{Visualization of the merged segmentations of the figures shown in Figure $\ref{fig:chair_3_cast_best_f_score_results}$.}
-\label{fig:chair_3_cast_best_f_score_results_merged}
+\caption[Chair 3 Cast Winner]{Listing the four top segmentation results of frame 60 according to their scored F1 value (Tab. $\ref{tab:chair_3_cast_avg_performance})$. On the left, the unmerged- and on the right the merged segmentation.}
+\label{fig:chair_3_cast_best_f_score_results}
 \end{figure}
 
 \begin{table}[H]
@@ -428,7 +383,7 @@ PD MC & 19.50\% & 29.79\% & 44.63\% & 51.40\% \\ \hline
 PED SC & 11.48\% & 30.89\% & 43.88\% & 40.69\% \\ \hline
 PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hline
 \end{tabular}
-\caption[Chair 3 Cast: Average Precision Scores]{Average performance on the chair 3 cast dataset for a varying number of clusters. For large and low cluster counts, PED MC achieves the best F1 scores.}
+\caption[Chair 3 Cast: Average Precision Scores]{Average results of the experiment \enquote{varying number of clusters} on the One Chair dataset.}
 \label{tab:chair_3_cast_avg_performance}
 \end{table}
 
@@ -444,7 +399,7 @@ PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hl
    \label{fig:chair_3_cast_plot_avg_stat_b}
 }
 \end{center}
-\caption[Chair 3 Cast avg statistic plots]{Plots of the average performance of the four methods PED SC, PD MC, PED SC and PED MC for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
+\caption[Chair 3 Cast avg statistic plots]{Plots of the average performance of the four methods PED SC, PD MC, PED SC and PED MC for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters. The actual measurements are listed in Table $\ref{tab:chair_3_cast_avg_performance}$.}
 \label{fig:chair_3_cast_plot_avg_stat}
 \end{figure}
 
@@ -463,285 +418,6 @@ PED MC & \textbf{21.97}\% & \textbf{40.63}\% & 40.12\% & \textbf{52.58}\% \\ \hl
    \label{fig:chair_3_cast_gt_worst_best_c}
 }
 \end{center}
-\caption[Chair 3 Cast Worst/Best Result]{Comparison of the worst- (center) and the best (right) segmentation results according to the F1 measure using the shown mask on the left.}
+\caption[Chair 3 Cast Worst/Best Result]{Comparison of the worst- (center) and the best (right) segmentation results according to the F1 measure (see Tab. $\ref{tab:chair_3_cast_avg_performance}$) using the shown mask on the left.}
 \label{fig:chair_3_cast_gt_worst_best}
 \end{figure}
-
-\subsection{Dependence of Eigenvector-Cluster Count on MC}
-In this experiment, we use the \textbf{WH} dataset and again only use LDOF flow fields. An example frame with its ground truth image is shown in Figure $\ref{fig:wh1_dataset}$.
-\begin{figure}[H]
-\begin{center}
-\subfigure[Frame 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/40}
-   \label{fig:wh1_performance_a}
-}
-\subfigure[GT]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/gt/40}
-   \label{fig:wh1_performance_b}
-}
-\end{center}
-\caption[Segmentations Waving Hand]{foobar}
-\label{fig:wh1_dataset}
-\end{figure}
-Initially, run the pipeline modes: PD SC, PD MC, PED SC, PED MC. \\ \\
-Afterwards, run the mode PED MC once again for a varying number of used eigenvectors-clusters. \\ \\
-Since the MC both parameters determine the final quality of this method, this should us give a better understanding of this parameters. How does the result change when we fix the cluster count but vary the number of eigenvectors or how does the segmentation quality improve for a fixed number of eigenvectors, when varying the total number of used clusters. Hence, a set of eigenvector-,cluster-count combinations are run their segmentations are evaluated using the available GT images. \\ \\
-This should give us a better understanding of the behaviour of the MC method and the influence of those parameter values. \\ \\
-
-In this first sub-experiment we generate the segmentations running the pipeline modes: PD SC, PD MC, PED SC, PED MC. We fix the number of clusters and eigenvectors and set them equals six. Some segmentations are shown in Figure $\ref{fig:wh1_performance}$.
-\begin{figure}[H]
-\begin{center}
-\subfigure[PD SC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_pd_sc}
-   \label{fig:wh1_performance_a}
-}
-\subfigure[PD MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_pd_mc}
-   \label{fig:wh1_performance_b}
-}
-\subfigure[PED SC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_ped_sc}
-   \label{fig:wh1_performance_c}
-}
-\subfigure[PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/segmentations/ldof_ped_mc}
-   \label{fig:wh1_performance_d}
-}
-\end{center}
-\caption[Segmentations Waving Hand]{foobar}
-\label{fig:wh1_performance}
-\end{figure}
-The corresponding statistics of those segmentations are listed in Table $\ref{tab:wh1_performance}$.
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Performance Waving Hand dataset}                        \\ \hline
-Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-PD SC & 69.67\%   & 58.66\%     & 63.69\%  \\ \hline
-PD MC & 55.16\%   & 68.076\%     & 60.94\%  \\ \hline
-PED SC & 75.40\%   & 62.90\%     & 68.58\%  \\ \hline
-PED MC & 71.47\%   & 67.39\%     & 69.37\%  \\ \hline               
-\end{tabular}
-\caption[Cars Varying $\lambda$]{My caption}
-\label{tab:wh1_performance}
-\end{table}
-We observe that:
-PED MC achieves a better results than the other methods.
-Additionally, using depths seems to increase the quality of the segmentations. \\ \\
-Next, we perform sub-experiment two. In this we examine the bahaviour of PED MC method for a varying the eigenvalue-cluster count. Additionally, we want to investigate the dependence between these two parameter to better understand them. \\ \\
-For 2..6 clusters for 2..6 eigenvectors plot results to demonstrate influence
-of number of clusters,eigenvectors. The corresponding statistics are listed in Table $\ref{tab:wh_ev_c}$. To give the reader a easier way to understand the results we visualized the resulting statistics. For fixed cluster counts, we plotted the recall-precession and the eigenvector-f1 score graphs. Moreover, for fixed eigenvector counts we plotted the resulting recall-precession and clusters-f1 score graphs. The graphs are given in Figure $\ref{fig:wh1_performance_var_ev_c_graphs}$.
-\begin{figure}[H]
-\begin{center}
-\subfigure[Varying Clusters Recall/Precision Plot]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_rec_prec}
-   \label{fig:wh1_performance_var_ev_a}
-}
-\subfigure[Varying Clusters EV/F1 Score Plot]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/clusters_ev_f1}
-   \label{fig:wh1_performance_var_ev_b}
-}
-\subfigure[Varying EV Recall/Precision Plot]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_rec_prec}
-   \label{fig:wh1_performance_var_ev_c}
-}
-\subfigure[Varying EV Clusters/F1 Score Plot]{
-   \includegraphics[width=0.47\linewidth] {evaluation/wh1/perf_ev_c/ev_c_f1}
-   \label{fig:wh1_performance_var_ev_d}
-}
-\end{center}
-\caption[Plot Performance Varying CLuster/Eigenvectors]{foobar}
-\label{fig:wh1_performance_var_ev_c_graphs}
-\end{figure}
-% TODO: state observations here: 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|}
-\hline
-\multicolumn{6}{|c|}{Performance Varying Eigenvectors/Clusters PED MC} \\ \hline
-\multicolumn{6}{|c|}{Precision} \\ \hline
-\textbf{Eigenvectors / Clusters} & 2 & 3 & 4 & 5 & 6 \\ \hline
-2 & 7.03\% & 29.28\% & 33.80\% & 59.61\% & 48.63\%  \\ \hline
-3 & 6.95\% & 28.62\% & 40.45\% & 57.17\% & 45.59\%  \\ \hline
-4 & 6.99\% & 30.28\% & 46.90\% & 43.53\% & 65.60\%  \\ \hline
-5 & 7.05\% & 30.28\% & 49.35\% & 53.55\% & 70.23\%  \\ \hline
-6 & 7.05\% & 30.28\% & 50.11\% & 53.81\% & 71.47\%  \\ \hline
-\multicolumn{6}{|c|}{Recall} \\ \hline
-2 & 23.64\% & 40.45\% & 36.28\% & 79.73\% & 50.27\%  \\ \hline
-3 & 23.64\% & 41.17\% & 40.45\% & 57.17\% & 61.04\%  \\ \hline
-4 & 23.64\% & 41.17\% & 57.20\% & 60.50\% & 79.28\%  \\ \hline
-5 & 24.09\% & 41.17\% & 52.55\% & 54.29\% & 71.71\%  \\ \hline
-6 & 24.09\% & 41.17\% & 52.55\% & 53.42\% & 67.39\%  \\ \hline
-\multicolumn{6}{|c|}{F1 Score} \\ \hline
-2 & 10.83\% & 33.97\% & 35.00\% & 68.22\% & 49.43\%  \\ \hline
-3 & 10.74\% & 33.77\% & 32.97\% & 50.94\% & 52.20\%  \\ \hline
-4 & 10.79\% & 34.90\% & 51.54\% & 50.63\% & 71.79\%  \\ \hline
-5 & 10.91\% & 34.90\% & 50.90\% & 53.92\% & 70.97\%  \\ \hline
-6 & 10.91\% & 34.90\% & 51.30\% & 53.62\% & 69.37\%  \\ \hline
-\end{tabular}
-\caption[Performance Varying Eigenvector-Cluster]{My caption}
-\label{tab:wh_ev_c}
-\end{table}
-
-\subsection{Quality Product Affinities}
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[Frame 15]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/ds/15}
-   \label{fig:two_chairs_dataset_a}
-}
-\subfigure[Frame 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/ds/40}
-   \label{fig:two_chairs_dataset_b}
-}
-~
-\subfigure[GT 15]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/gt/15}
-   \label{fig:two_chairs_dataset_c}
-}
-\subfigure[GT 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/gt/40}
-   \label{fig:two_chairs_dataset_d}
-}
-\end{center}
-\caption[Two Chairs Dataset]{foobar}
-\label{fig:two_chairs_dataset}
-\end{figure}
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[PD SC Frame 15]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/pd_sc}
-   \label{fig:two_chairs_seg_f_15_a}
-}
-\subfigure[PD MC Frame 15]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/pd_mc}
-   \label{fig:two_chairs_seg_f_15_b}
-}
-\subfigure[PED SC Frame 15]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/ped_sc}
-   \label{fig:two_chairs_seg_f_15_c}
-}
-\subfigure[PED MC Frame 15]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/15/ped_mc}
-   \label{fig:two_chairs_seg_f_15_d}
-}
-~
-\subfigure[PD SC Frame 40]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/pd_sc}
-   \label{fig:two_chairs_seg_f_15_e}
-}
-\subfigure[PD MC Frame 40]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/pd_mc}
-   \label{fig:two_chairs_seg_f_15_f}
-}
-\subfigure[PED SC Frame 40]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/ped_sc}
-   \label{fig:two_chairs_seg_f_15_g}
-}
-\subfigure[PED MC Frame 40]{
-   \includegraphics[width=0.22\linewidth] {evaluation/two_chairs/segmentations/40/ped_mc}
-   \label{fig:two_chairs_seg_f_15_h}
-}
-\end{center}
-\caption[Two Chairs Segmentation]{foobar}
-\label{fig:two_chairs_seg_f_15_40}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Performance Two Chairs dataset}                        \\ \hline
-Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-PD SC & 88.1991\%   & 65.3383\%     & 74.9641\%  \\ \hline
-PD MC & 87.9687\%   & 60.0087\%     & 65.3910\%  \\ \hline 
-PED SC & 97.1673\%   & 73.2142\%     & 76.4836\%  \\ \hline
-PED MC & 96.0427\%   & 96.8572\%     & 96.4160\%  \\ \hline               
-\end{tabular}
-\caption[Cars Varying $\lambda$]{My caption}
-\label{tab:two_chairs_performance}
-\end{table}
-
-
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[1 Iteration]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_1}
-   \label{fig:two:chairs_segmentations_ped_mc_iters_a}
-}
-\subfigure[2 Iterations]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_2}
-   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
-}
-~
-\subfigure[3 Iterations]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_3}
-   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
-}
-\subfigure[5 Iterations]{
-   \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/iters/iter_5}
-   \label{fig:two:chairs_segmentations_ped_mc_iters_b}
-}
-\end{center}
-\caption[Segmentations Waving Hand]{foobar}
-\label{fig:two:chairs_segmentations_ped_mc_iters}
-\end{figure}
-
-
-\subsection{Quality of LDOF P-Affnities}
-particular hard dataset, long frame sequence, very shaky camera, strong shadows, deformation due to human hand.
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[Frame 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/ds/f_40}
-   \label{fig:bonn_cerealbox_ds_a}
-}
-\subfigure[GT Frame 40]{
-   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/ds/gt_40}
-   \label{fig:bonn_cerealbox_ds_b}
-}
-\end{center}
-\caption[Bonn Cerealbox Dataset]{foobar}
-\label{fig:bonn_cerealbox_ds}
-\end{figure}
-
-\begin{figure}[H]
-\begin{center}
-\subfigure[PD MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/segmentations/ldof_pd_mc}
-   \label{fig:bonn_cerealbox_segmentations_mc_methods_a}
-}
-\subfigure[PED MC]{
-   \includegraphics[width=0.47\linewidth] {evaluation/bonn_cerealbox/segmentations/ldof_ped_mc}
-   \label{fig:bonn_cerealbox_segmentations_mc_methods_b}
-}
-\end{center}
-\caption[Bonn Cerealbox Segmentations]{foobar}
-\label{fig:bonn_cerealbox_segmentations_mc_methods}
-\end{figure}
-
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Performance Bonn Cerealbox dataset}                        \\ \hline
-Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-PD SC & 32.26\%   & 33.33\%     & 32.79\%  \\ \hline
-PD MC & 73.81\%   & 80.57\%     & 77.04\%  \\ \hline 
-PED SC & 76.15\%   & 86.69\%     & 81.08\%  \\ \hline
-PED MC & 88.87\%   & 91.98\%     & 90.40\%  \\ \hline               
-\end{tabular}
-\caption[Cars Varying $\lambda$]{My caption}
-\label{tab:bonn_cerealbox_performance}
-\end{table}
-
-
-
-
-

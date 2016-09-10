@@ -400,7 +400,7 @@ In this experiment we examine the influence of a varying number of clusters on t
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_10}
 }
 \end{center}
-\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{SED KL} on the \textit{bonn chairs} dataset.}
+\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{LDOF SED KL} on the \textit{bonn chairs} dataset.}
 \label{fig:bonn_chairs_sed_varyingclusters}
 \end{figure}
 We observe that using more and more clusters yield better segmentations. This trivial fact is fortified with statistical results shown in Figure $\ref{fig:bonn_chairs_plot_avg_stat}$. To have a more solid argument, we additionally evaluated LDOF PD SC and LDOF PED MC for a varying number of clusters, which are also visible in the plots.
@@ -423,7 +423,7 @@ In this experiment we have a closer look into the convergence rate of the MC seg
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
 \end{center}
-\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
+\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MinCut when running LDOF PED MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
 \label{fig:convergence_rate_mc}
 \end{figure}
 We observe that the more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 4 iterations. This matches with our assumption that no more than 20 iterations have to be run when using the MC segmentation method.
@@ -538,7 +538,7 @@ In this experiment we evaluate the Cars dataset, since it has a static camera an
 \end{figure}
 At first glance the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the f1 scores when increasing the number of clusters, which seems to be counterintuitive. The optimal cluster/eigenvalue count selection seems to more complex than our simple heuristic. However, when Considering the fixed clusters graph we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
 However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations produce top results according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster count and eigenvector count produce good results and thus we will rely on these cluster-and eigenvector-count assignment heuristic. \\ \\
-Addition experiments for varying cluster-eigenvalue count and the numeric values of the evaluation can be found in the appendix in Section $\ref{sec:additional_cc_ev_exp}$.
+Additional \enquote{varying the cluster-eigenvalue count} experiments and their measurements can be found in the appendix in Section $\ref{sec:additional_cc_ev_exp}$.
 
 
 \subsection{On Exploring Flow Methods}
