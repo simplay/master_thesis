@@ -658,26 +658,14 @@ When having a closer look at the generated LRGBD flow fields, we observe, that t
 \subsection{Overall Performance}
 \label{sec:overall_performance}
 So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flow fields can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
-In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is listed in Table $\ref{tab:overall_performance}$.
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{Using compatible datasets}                        \\ \hline
-Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
-LDOF PD SC & 60.04 \%   & 35.99\%     & 45.00\%  \\ \hline
-LDOF PD MC & 54.65\%   & 58.31\%     & 56.42\%  \\ \hline
-LDOF PED SC & 63.85\%   & 54.68\%     & 58.91\%  \\ \hline
-LDOF PED MC & 63.32\%   & 67.45\%     & 65.32\%  \\ \hline
-SRSF PED MC & \textbf{76.52}\%   & \textbf{83.47}\%     & \textbf{79.84}\%  \\ \hline
-SRSF PED SC & 65.70\%   & 58.56\%     & 61.93\%  \\ \hline 
-SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
-SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
-Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
-\end{tabular}
-\caption[Overall Performance]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on a subset of our datasets.}
-\label{tab:overall_performance}
-\end{table}
+In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measured data is listed in Table $\ref{tab:overall_performance}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.7\linewidth] {evaluation/overall/all}
+\end{center}
+\caption[Overall Performance Bar Chart]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on all compatible datasets.}
+\label{fig:overall_performance_bar_chart}
+\end{figure}
 We observe the following facts: Methods using SRSF flow fields achieve better results than those using LDOF flow fields. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using MC for generating the segmentation is better than running spectral clustering. \\ \\
 Overall, KL yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we just used its standard parameters but used specifically good parameters in our pipeline (determined for our datasets).
 Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are in Table $\ref{tab:overall_performance_ldof}$.
