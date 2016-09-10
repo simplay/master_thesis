@@ -1,10 +1,93 @@
 \chapter{Result Measurements}
+\label{chap:result_measurements}
+
+%ldof sed kl
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Bonn Chairs LDOF SED KL Varying Clusters (Fig. $\ref{fig:bonn_chairs_plot_avg_stat}$)}                        \\ \hline
+\textbf{Clusters} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+2 & 0.34 & 22.08\%   & 33.21\%     & 26.53\%  \\ \hline
+3 & 0.34 & 26.41\%   & 33.21\%     & 29.42\%  \\ \hline
+4 & 0.34 & 26.95\%   & 33.08\%     & 29.70\%  \\ \hline
+5 & 0.34 & 29.54\%   & 32.96\%     & 31.16\%  \\ \hline
+6 & 0.34 & 20.88\%   & 32.96\%     & 25.57\%  \\ \hline
+7 & 0.34 & 56.53\%   & 49.51\%     & 52.79\%  \\ \hline
+8 & 0.34 & 48.55\%   & 65.27\%     & 55.68\%  \\ \hline
+9 & 0.34 & 82.46\%   & 93.58\%     & 87.67\%  \\ \hline              
+10 & 0.34 & 95.97\%   & 86.59\%     & 91.04\%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs SED Varying Clusters]{Measurements for varying clusters experiment (Sec. $\ref{sec:varying_cluster_exp}$ on Page $\pageref{sec:varying_cluster_exp}$) on the Bonn Chairs dataset when running LDOF SED KL}
+
+\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}
+\end{table}
+
+%ldof pd sc
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Bonn Chairs LDOF PD SC Varying Clusters (Fig. $\ref{fig:bonn_chairs_plot_avg_stat}$)}                        \\ \hline
+\textbf{Clusters} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+2 & 0.41 & 0.0\%   & 0.0\%     & 0.0\%  \\ \hline
+3 & 0.41 & 18.30\%   & 9.76\%     & 12.73\%  \\ \hline
+4 & 0.41 & 25.30\%   & 28.00\%     & 26.58\%  \\ \hline
+5 & 0.41 & 23.46\%   & 19.86\%     & 21.51\%  \\ \hline
+6 & 0.41 & 40.28\%   & 30.44\%     & 34.68\%  \\ \hline
+7 & 0.41 & 49.88\%   & 66.01\%     & 56.83\%  \\ \hline
+8 & 0.41 & 49.81\%   & 58.35\%     & 53.75\%  \\ \hline
+9 & 0.41 & 49.86\%   & 65.38\%     & 56.57\%  \\ \hline              
+10 & 0.41 & 49.98\%   & 61.88\%     & 55.29\%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs PD SC Varying Clusters]{Measurements for varying clusters experiment (Sec. $\ref{sec:varying_cluster_exp}$ on Page $\pageref{sec:varying_cluster_exp}$) on the Bonn Chairs dataset when running LDOF PD SC}
+
+\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval_pd_sc}
+\end{table}
+
+% ldof ped mc
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{Bonn Chairs LDOF PED MC Varying Clusters (Fig. $\ref{fig:bonn_chairs_plot_avg_stat}$)}                        \\ \hline
+\textbf{Clusters} & \textbf{Density} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+2 & 0.34 & 33.33\%   & 16.92\%     & 22.45\%  \\ \hline
+3 & 0.34 & 26.55\%   & 23.23\%     & 24.78\%  \\ \hline
+4 & 0.34 & 26.17\%   & 29.55\%     & 27.76\%  \\ \hline
+5 & 0.34 & 26.20\%   & 24.12\%     & 25.12\%  \\ \hline
+6 & 0.34 & 58.94\%   & 54.44\%     & 56.60\%  \\ \hline
+7 & 0.34 & 58.97\%   & 46.03\%     & 51.70\%  \\ \hline
+8 & 0.34 & 58.47\%   & 43.61\%     & 49.96\%  \\ \hline
+9 & 0.34 & 59.39\%   & 55.24\%     & 57.24\%  \\ \hline              
+10 & 0.3452525  & 59.30\%   & 50.56\%     & 54.58\%  \\ \hline
+\end{tabular}
+\caption[Bonn Chairs PED MC Varying Clusters]{Measurements for varying clusters experiment (Sec. $\ref{sec:varying_cluster_exp}$ on Page $\pageref{sec:varying_cluster_exp}$) on the Bonn Chairs dataset when running LDOF PED MC}
+\label{tab:bonn_chairs_ldof_sed_c_6_9_10_eval_ped_mc}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{4}{|c|}{Influence of Cluster Merge (Fig. $\ref{fig:eval_raw_vs_merged}$)}                        \\ \hline
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+PD SC & 47.48 \%   & 61.88 \%     & 53.73 \%  \\ \hline
+PD MC & 42.46 \%   & 66.10 \%     & 51.70 \%    \\ \hline
+PED SC & 56.86 \%   & 47.35 \%     & 51.67 \%    \\ \hline
+PED MC & 56.68 \%   & 50.56 \%     & 53.44 \%     \\ \hline              
+SD KL & 46.34 \%   & 63.44 \%     & 53.56 \%     \\ \hline
+SED KL & 64.42 \%   & 64.63 \%     & 64.52 \%    \\ \hline
+\end{tabular}
+\caption[Statistics Bonn Chairs Frame 30]{Comparison Bonn Chairs dataset using LDOF flow fields}
+\label{tab:eval_stat_raw_merged}
+\end{table}
 
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{Overall Performance all combinations (Sec. $\ref{sec:overall_performance}$)}                        \\ \hline
+\multicolumn{4}{|c|}{Overall Performance all combinations (Fig. $\ref{fig:overall_performance_bar_chart}$)}                        \\ \hline
 Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 LDOF PD SC & 60.04 \%   & 35.99\%     & 45.00\%  \\ \hline
 LDOF PD MC & 54.65\%   & 58.31\%     & 56.42\%  \\ \hline
@@ -16,6 +99,24 @@ SRSF PD MC & 61.85\%   & 55.06\%     & 58.25\%  \\ \hline
 SRSF SED KL & 87.19\%   & 91.77\%     & 89.42\%  \\ \hline
 Brox's GraphCut & 30.88\%   & 25.34\%     & 27.84\%  \\ \hline                   
 \end{tabular}
-\caption[Overall Performance]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on a subset of our datasets.}
+\caption[Overall Performance]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on a subset of our datasets (Sec. $\ref{sec:overall_performance}$).}
 \label{tab:overall_performance}
+\end{table}
+
+%
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Convergence Rate Experiment (Fig. $\ref{fig:two:chairs_segmentations_ped_mc_iters_exp}$)}                        \\ \hline
+Iteration & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
+0 & 0\%   & 0\%     & 0\%  \\ \hline
+1 & 83.55\%   & 95.97\%     & 89.33\%  \\ \hline
+2 & 92.24\%   & 93.28\%     & 92.76\%  \\ \hline 
+3 & 96.89\%   & 94.42\%     & 95.64\%  \\ \hline
+4 & 97.14\%   & 94.49\%     & 95.80\%  \\ \hline
+5 & 97.22\%   & 94.51\%     & 95.84\%  \\ \hline               
+\end{tabular}
+\caption[Convergence PED MC]{Measurements of the Convergence Rate experiment when running LDOF PED MC on the Two Chairs dataset.}
+\label{tab:two_chairs_ped_mc_iterations}
 \end{table}

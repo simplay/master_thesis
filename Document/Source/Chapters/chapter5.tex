@@ -366,7 +366,8 @@ In the following experiment we examine the influence our cluster merger post-pro
 From these results we can see that our pipeline tends to produce oversegmentations. Especially the steady background is clustered into meany segments. Also, the seat of the chair seems to get segmented into many parts. We also see that after applying our merger these parts are forming a coherent object. We conclude that our cluster merger does not significantly obfuscate the segmentation results. The corresponding statistical measurements are listed in Table $\ref{tab:eval_stat_raw_merged}$
 
 \subsubsection{Examine Varying Cluster Count}
-In this experiment we examine the influence of a varying number of clusters on the segmentation quality. For this purpose generated segmentations on the Bonn Chairs dataset using the LDOF SED KL pipeline mode. The resulting segmentations are shown in Figure $\ref{fig:bonn_chairs_sed_varyingclusters}$.
+\label{sec:varying_cluster_exp}
+In this experiment we examine the influence of a varying number of clusters on the segmentation quality. For this purpose generated segmentations on the Bonn Chairs dataset using the LDOF SED KL pipeline mode. The resulting segmentations are shown in Figure $\ref{fig:bonn_chairs_sed_varyingclusters}$ and the corresponding measurements are listed in Table $\ref{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[2 Clusters]{
@@ -412,12 +413,12 @@ We observe that using more and more clusters yield better segmentations. This tr
    \includegraphics[width=0.47\linewidth] {evaluation/bonn_chairs/avg/avg_clusters_f1}
 }
 \end{center}
-\caption[Bonn Chairs Varying Clusters]{Visualizing plots of the average performance of PD SC, PED MC and SED KL for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
+\caption[Bonn Chairs Varying Clusters]{Visualizing plots of the average performance of the combinations LDOF PD SC (Tab. $\ref{tab:bonn_chairs_ldof_sed_c_6_9_10_eval_pd_sc}$), LDOF PED MC (Tab. $\ref{tab:bonn_chairs_ldof_sed_c_6_9_10_eval_ped_mc}$) and LDOF SED KL (Tab. $\ref{tab:bonn_chairs_ldof_sed_c_6_9_10_eval}$) for a varying number of clusters. The left plots shows the recall/precision plot and the figure on the right shows the F1 score alongside the number of clusters.}
 \label{fig:bonn_chairs_plot_avg_stat}
 \end{figure}
 
 \subsubsection{Examine Convergence of MC}
-In this experiment we have a closer look into the convergence rate of the MC segmentation method. In this experiment we run the mode LDOF PED MC on the Two Chairs dataset. Moreover, we set the cluster count to 20, to produce an oversegmentation. On one hand using that many clusters will result in an oversegmentation but on the other hand this also ensures a good convergence rate plot. The graph in Figure $\ref{fig:two_chairs_ped_mc_iterations}$ shows the convergence rate graph.
+In this experiment we have a closer look into the convergence rate of the MC segmentation method. In this experiment we run the mode LDOF PED MC on the Two Chairs dataset. Moreover, we set the cluster count to 20, to produce an oversegmentation. On one hand using that many clusters will result in an oversegmentation but on the other hand this also ensures a good convergence rate plot. The graph in Figure $\ref{fig:convergence_rate_mc}$ visualizes the convergence rate of the MinCut (MC) segmentation technique. The corresponding measurements are listed in Table $\ref{tab:two_chairs_ped_mc_iterations}$
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
@@ -443,7 +444,7 @@ We observe that the more iterations we run, the higher the F1-Score gets. Howeve
 }
 \end{center}
 \caption[Convergence Segmentations Two Chairs]{Visualizing the convergence of the MC segmentation method.}
-\label{fig:two:chairs_segmentations_ped_mc_iters}
+\label{fig:two:chairs_segmentations_ped_mc_iters_exp}
 \end{figure}
 
 \subsubsection{Examine $\lambda$ Default}
