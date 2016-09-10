@@ -719,7 +719,7 @@ SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
 \end{table}
 We observe, that segmentations based on SRSF flow fields always obtain higher f1 scores. Therefore, using SRSF flow fields seems to be beneficial.
 
-\subsubsection{2d vs 3d}
+\subsubsection{2D vs. 3D}
 In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flow fields and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
 \begin{table}[H]
 \centering
@@ -734,7 +734,7 @@ PED MC & 56.68\% & 64.56\% & 60.36\% \\ \hline
 SD KL & 51.34\% & 63.44\% & 56.75\% \\ \hline
 SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 \end{tabular}
-\caption[2D vs. 3D: Bonn Datasets]{Comparing affinities computed by 3d trajectories against 2d trajectories.}
+\caption[2D vs. 3D: Bonn Datasets]{Comparing affinities computed by 3D trajectories against 2D trajectories.}
 \label{tab:bonn_datasets_2d_vs_3d}
 \end{table}
 We observe, that regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
