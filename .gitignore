@@ -55,3 +55,4 @@ Document/Results/*.png
 Document/Results/*.jpg
 Document/tmp/
 Document/Results/segmentations/**
+Source/evaluation/files/
