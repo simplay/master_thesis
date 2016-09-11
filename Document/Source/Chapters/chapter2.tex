@@ -373,7 +373,15 @@ The rationale of the spectral clustering algorithm is to change the abstract rep
   \vskip1.5pt
 \label{alg:spectral_clustering_algorithm}
 \end{algorithm}
-The actual choice of similarity graph we want to construct depends on the underlying problem statement.
+The actual choice of similarity graph we want to construct depends on the underlying problem statement. A simple spectral clustering example is shown in Figure $\ref{fig:spectral_clustering_example}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth] {background/clustering/spectral_clustering_example}
+\end{center}
+\caption[Spectral Clustering Example]{A simple spectral clustering example: We want to partition a similarity graph (as shown on the left), which consists of two disconnected subgraphs, into two clusters by running the spectral clustering algorithm (Algorithm $\ref{alg:spectral_clustering_algorithm}$). The corresponding Laplacian matrix L that graph is a block diagonal matrix with each block defining a cluster (as shown in the center). The two smallest$\footnotemark$ eigenvectors $u_1$ and $u_2$ directly represent the connected components of the two subgraphs (as shown on the right). The resulting clusters $A_1$ and $A_2$ are shown on the left.}
+\label{fig:spectral_clustering_example}
+\end{figure}
+\footnotetext{By \textit{smallest eigenvectors} we are referring to those eigenvectors that belong to the smallest eigenvalues $\lambda$.}
 
 \subsection{Graph Cut}
 \label{sec:graph_cut}
