@@ -220,20 +220,32 @@ Given a set of observations $(\textbf{x}_1, \dots, \textbf{x}_n)$, where any $\t
 	\argmin_{\textbf{S}} \sum_{i=1}^k \sum_{\textbf{x} \in S_i} \norm{\textbf{x} - {\boldsymbol {\mu }}_{i}}^2
 \label{eq:k_means_minimzation_formulation}
 \end{equation}
-where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. \\ \\
+where ${\boldsymbol {\mu }}_{i}$ is the mean of points in $S_i$, the so called centroid. An example of the k-means algorithm is given in Figure $\ref{fig:k_means_example}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\linewidth] {background/clustering/k_means_steps}
+\end{center}
+\caption[K-Means Example]{An example$\footnotemark$ of the k-means algorithm. Training examples are shown as dots, and cluster centroids are shown as crosses. (a) Original dataset. (b) Random initial cluster centroids. (c-f) Illustration of running two iterations of k-means. In each iteration, we assign each training example to the closest cluster centroid (shown by "painting" the training examples the same color as the cluster centroid to which is assigned); then we move each cluster centroid to the mean of the points assigned to it. Images courtesy of Michael Jordan.}
+\label{fig:k_means_example}
+\end{figure}
+\footnotetext{The caption and the images in Figure $\ref{fig:k_means_example}$ were taken from: \\ \url{http://stanford.edu/~cpiech/cs221/handouts/kmeans.html}}
 The k-means clustering equations (Eq. $\ref{eq:k_means_minimzation_formulation}$) can be iteratively minimized, but without the guarantee of finding a global minimum. Given an initial set of $k$ means $m_1^{(1)}, \dots, m_k^{(1)}$, the algorithm proceeds by alternating between two steps:
 \begin{itemize}
-\item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least sum of distance functions of each point in the cluster. Since the sum of squares is the squared Euclidean distance, this is intuitively the "nearest" mean. 
+\item \textbf{Assignment step}: Assign each observation to the cluster whose mean yields the least sum of distance functions of each point in the cluster. Since the sum of squares is the squared Euclidean distance, this is intuitively the \enquote{nearest} mean. 
 \begin{equation}
   	S_i^{(t)} = \left\{ x_p \mid \forall j: 1 \leq j \leq k: \norm{x_p - m_i^{(t)}}^2 \leq \norm{x_p - m_j^{(t)}}^2 \right\}
+\label{eq:k_means_step_1}
 \end{equation} 
 where each $x_p$ is assigned to exactly one $S^{(t)}$.
 \item \textbf{Update step}: Calculate the new means to be the centroids of the observations in the new clusters. 
 \begin{equation}
 	m_i^{(t+1)} = \frac{1}{\left| S_i^{(t)} \right| } \sum_{x_j \in S_i^{(t)}} x_j
+\label{eq:k_means_step_2}
 \end{equation}
 \end{itemize}
-There are many initialization methods to assign the clusters such as randomly chooses k observations from the data set and uses these as the initial means or define k random clusters. The appropriate way of initializing the clusters depends on the given problem statement which the k-means attempts to address. However, keep in mind that different local minima are found depending on the chosen initialization of the cluster centers. One way to address this problem is to simply run this algorithm several times, using different initialization. Then, the minima with the lowest error is considered as the optimum.  
+These two steps (Eq. $\ref{eq:k_means_step_1}$ and Eq. $\ref{eq:k_means_step_2}$) are repeated until the assignments $\{S_1, \dots, S_m \}$ no longer change. \\ \\
+The k-means algorithm is guaranteed to converge to a local minimum because there are a finite number of possible data partitionings, and its objective function$\footnote{The objective function of the k-means algorithm is to assign each observation to the cluster whose mean yields the least within-cluster sum of squares.}$ must decrease in every step. A corresponding proof of this convergence statement can be found in the paper $\cite{Bottou95convergenceproperties}$. However, there is no guarantee that the global optimum is found using this algorithm.\\ \\
+Commonly, clusters are either initialized by using the \textit{Random}$\cite{1697556}$ or the \textit{Forgy}$\cite{Hamerly:2002:AKA:584792.584890}$ method. The Random method assigns each object a random cluster and then computes the initial centroid of each cluster. The Forgy method chooses k observations randomly from the data set and uses these as the initial means. The appropriate way of initializing the clusters depends on the given problem statement, which the k-means attempts to address. In general, the Random method places the clusters close to the center of the data points, whereas the Forgy method tends to spread the initial means out. However, different local minima are found depending on the chosen initialization of the cluster centers. One way to address this problem is to simply run this algorithm several times, using different initialization. Then, the minima with the lowest error is considered as the optimum.  
 \subsection{Graph Definitions}
 In the following we offer the reader some basic graph definitions which are broadly used in this thesis. \\ \\ 
 Let $G = (V, E)$ denote an undirected graph, where $V$ is the set of vertices and $E$ the set of edges. In this work we work with weighted graphs. This means that each edge between two vertices $v_i$ and $v_j$ has a non-negative weight $w_{ij}$. \\ \\
