@@ -1,4 +1,4 @@
-# Master Thesis: Flow and Motion Segmentation on RGB-D Sequences
+# Motion Segmentation on RGB-D Sequences using Optical Flow Fields
 
 + **Author**: Michael Single (**simplay**)
 + **Supervisor**: Prof. Dr. Matthis Zwicker
@@ -12,6 +12,7 @@
 | **Frame 1** | **Frame 2** | **Frame 3** | **Frame 4**
 
 ## Abstract
+The task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. In this thesis, we present a method for producing spatio-temporal consistent motion segmentation from RGB-D videos by using optical flow. Our framework consists of an optical flow estimation, motion trajectory tracking, affinity matrix formation and a segmentation stage. Our implementation can produce sparse as well as dense motion segmentations. Furthermore, we implemented several flow methods, similarity measures and segmentation techniques and examined their influence on the final segmentation quality. Finally, we quantitatively evaluated the quality of our segmentation results and determined an optimal pipeline assignment. In particular, we could successfully demonstrate, that incorporating depth data into our pipeline produces best results. 
 
 ## Project Structure
 
