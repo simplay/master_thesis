@@ -2,7 +2,7 @@ addpath('../libs/flow-code-matlab');
 addpath('../matlab_shared');
 clear all
 %% load ground truth img
-DATASET = 'cars';
+DATASET = 'bonn_chairs_263_3_434';
 img_index = 1;
 STEPSIZE_DATA = 8;
 PREFIX_INPUT_FILENAME = 'pd_top_100_lambda_10';

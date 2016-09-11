@@ -6,13 +6,13 @@ addpath('../libs/flow-code-matlab');
 addpath('src');
 addpath('../matlab_shared');
 
-DATASETNAME = 'bonn_chairs_263_3_434_HS';
-METHODNAME = 'hs';
-STEP_SIZE = 12;
+DATASETNAME = 'cars';
+METHODNAME = 'ldof';
+STEP_SIZE = 6;
 PRECISSION = 12;
 
 COMPUTE_TRACKING_DATA = true; % compute tracking candidates, valid regions, flows
-RUN_BACKGRUND_ELIMINATION = false; % tries to eliminate weak trackable canidates.
+RUN_BACKGRUND_ELIMINATION = true; % tries to eliminate weak trackable canidates.
 USE_HOLLOW_CANDIDATES = false; % strengthenes corner dectector criteria
 USE_FILTERED_DS_FOR_CANDIDATES = false; % runs candidate selection on blurred images
 COMPUTE_FLOW_VARIANCES = false; % compute local and global flow variance
@@ -161,9 +161,9 @@ if COMPUTE_TRACKING_DATA
             % display selected image region
             % imshow(img(:,:,1).*bgMask)
             % compute the eight quantiles
-            q_n = 8;
+            q_n = 7;
             alpha = 0.95;
-            
+            alpha = 0.98;
             % fetch the q_n quantiles of the valid flow regions
             q = quantile(backgroundEliminationMask(:), q_n);
             

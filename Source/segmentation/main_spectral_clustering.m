@@ -6,13 +6,16 @@ addpath('src');
 addpath('../matlab_shared');
 addpath('../libs/flow-code-matlab');
 
-DATASET = 'bonn_watercan_713_3_884_SRSF';
-METHODNAME = 'srsf';
+DATASET = 'cars';
+METHODNAME = 'ldof';
 BASE_PREFIX_OUTPUT_FILENAME = 'pd_top_100_lambda_0_01';
 PREFIX_INPUT_FILENAME = 'pd_top_100_lambda_0_01';
 
+BASE_PREFIX_OUTPUT_FILENAME = 'foobar';
+PREFIX_INPUT_FILENAME = 'pd_top_100_lambda_0_01';
+
 % should the eigendecomposition be computed
-COMPUTE_EIGS = true;
+COMPUTE_EIGS = false;
 
 % Should the previousely label assignments be re-used.
 % if set to `true,` then when changing either the CLUSTER COUNT 
@@ -30,16 +33,16 @@ USE_SIMPLE_COLORS = true;
 
 % use a prespecified number of eigenvectors
 USE_CLUSER_EW_COUNT = true;
-FORCE_EW_COUNT = 10;
+FORCE_EW_COUNT = 3;
 
 % number of clusters we want to segment the given sequence
-CLUSTER_CENTER_COUNT = 10;
+CLUSTER_CENTER_COUNT = 3;
 
 %
 % RUN_MODE = 1 => vis segmentation
 % RUN_MODE = 2 => vis affinities
 % RUN_MODE = 3 => vis eigenvector
-RUN_MODE = 1;
+RUN_MODE = 3;
 
 SHOW_LOCAL_VAR = false;
 
@@ -51,7 +54,7 @@ SAVE_FIGURES = true;
 
 SELECT_AFFINITY_IDX = false;
 % 265
-SELECTED_ENTITY_IDX = 1;
+SELECTED_ENTITY_IDX = 6;
 frame_idx = 1;
 
 for CLUSTER_CENTER_COUNT=10:10
