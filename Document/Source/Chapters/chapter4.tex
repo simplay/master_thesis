@@ -410,7 +410,7 @@ Z \\
 \label{eq:homogen_camera_mat_transf}
 \end{equation}
 where given the  $p = \left(p_x, p_y \right)$ denotes the principal point and the focal lengths $\left(f_x, f_y \right)$ of the camera. \\ \\
-So far we have exactly the opposite of what we would like to get: We defined a transformation that allows to project a 3D point onto the 2D image space. However, deriving the inverse transformation of the definition of Equation $\ref{eq:homogen_camera_mat_transf}$ allows us to define points in the 3D space. In the following, let us assume the the measured depth $d \equiv z$. Then
+So far we have exactly the opposite of what we would like to get: We defined a transformation that allows to project a 3D point onto the 2D image space. However, deriving the inverse transformation of the definition of Equation $\ref{eq:homogen_camera_mat_transf}$ allows us to define points in the 3D space. In the following, let us assume that $z$ denotes measured depth $d$. Then
 \begin{equation}
 	\colvec[X]{X}{Z} \mapsto \left( \frac{f_x x}{d} + p_x, \frac{f_y y}{d} + p_y \right)^T
 \end{equation}

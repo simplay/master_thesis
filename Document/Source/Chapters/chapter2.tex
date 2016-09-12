@@ -183,7 +183,7 @@ The original HS formulation combines a data term that assumes constancy of some 
 \label{sec:ldof_flows}
 Before the work in $\cite{Bro11a}$, there was no accurate method present to estimate fast motions of small objects, i.e. large motions. Most flow methods are based on a combination of HS flow formulation and the concept of coarse-to-fine image warping. However, both approaches have been extended by robust statistics to fight outliers and at the same time retain smoothness assumptions. \\ \\
 Two fundamental ideas exist to address the issue of large motions. On one hand there are coarse-to-fine techniques. Such techniques, however, require a downsampling. Unfortunately, this also removes details that may be important for the flow accuracy. Consequently, the method cannot refine the flow of structures that are smaller than their displacement, because the structure is smoothed away. Flow Fields produced this way are often close to the motion of the larger scale structures. \\ \\
-On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have limited accuracy and exhibit many outliers to to missing regularity constraints and lastly, there is only pixel-level accuracy. \\ \\
+On the other hand descriptor matching techniques are well suited to match large displacements. However, their resulting correspondences are very sparse, have a limited accuracy and exhibit many outliers due to missing regularity constraints and lastly, there is only a pixel-level accuracy guaranteed. \\ \\
 In their paper they propose a method how to combine both strategies. They direct a variational technique using correspondences from sparse descriptor matching. The correspondences determined by the descriptors are directly integrated into the variational approach. This allows to make use of all image information at every level and smoothly scales down the influence of descriptor keypoints as the grid gets finer.
 
 \subsubsection{Semi Rigid Scene Flows}
@@ -315,7 +315,7 @@ For measuring the distances between data points any kind of metric$\footnote{For
 
 \subsection{Graph Laplacians}
 In spectral clustering we are working with the so called graph Laplacian matrices, which can be defined based on the previously discussed adjacency matrix formulation. In this section, we therefore define different graph Laplacians and state some of their properties. \\ \\
-In the following we assume that $G$ is an undirected, weighted graph with the the positive weight matrix $W$ and $D$ denotes the degree matrix. \\ \\
+In the following we assume that $G$ is an undirected, weighted graph with the positive weight matrix $W$ and $D$ denotes the degree matrix. \\ \\
 When discussing some properties of the eigenvectors of the Laplacian matrix, keep in mind that they do not necessarily have to be normalized. By conventions, we assume the eigenvectors being ordered increasingly. Additionally, when referring to the first $k$ eigenvectors, we mean the eigenvectors that correspond to the $k$ smallest eigenvectors.
 
 \paragraph{Unnormalized Graph Laplacian}
