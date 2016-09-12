@@ -582,6 +582,23 @@ month={Nov},}
    isbn = "0-03-084866-0",
    year = 1976
 }
+@Article{Sun2014,
+author="Sun, Deqing
+and Roth, Stefan
+and Black, Michael J.",
+title="A Quantitative Analysis of Current Practices in Optical Flow Estimation and the Principles Behind Them",
+journal="International Journal of Computer Vision",
+year="2014",
+volume="106",
+number="2",
+pages="115--137",
+abstract="The accuracy of optical flow estimation algorithms has been improving steadily as evidenced by results on the Middlebury optical flow benchmark. The typical formulation, however, has changed little since the work of Horn and Schunck. We attempt to uncover what has made recent advances possible through a thorough analysis of how the objective function, the optimization method, and modern implementation practices influence accuracy. We discover that ``classical'' flow formulations perform surprisingly well when combined with modern optimization and implementation techniques. One key implementation detail is the median filtering of intermediate flow fields during optimization. While this improves the robustness of classical methods it actually leads to higher energy solutions, meaning that these methods are not optimizing the original objective function. To understand the principles behind this phenomenon, we derive a new objective function that formalizes the median filtering heuristic. This objective function includes a non-local smoothness term that robustly integrates flow estimates over large spatial neighborhoods. By modifying this new term to include information about flow and image boundaries we develop a method that can better preserve motion details. To take advantage of the trend towards video in wide-screen format, we further introduce an asymmetric pyramid downsampling scheme that enables the estimation of longer range horizontal motions. The methods are evaluated on the Middlebury, MPI Sintel, and KITTI datasets using the same parameter settings.",
+issn="1573-1405",
+doi="10.1007/s11263-013-0644-x",
+url="http://dx.doi.org/10.1007/s11263-013-0644-x"
+}
+
+
 
 
 
