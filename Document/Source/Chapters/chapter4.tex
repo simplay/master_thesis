@@ -243,7 +243,7 @@ Finally, there is one optional post-processing stage, which removes all candidat
 \caption[Strict Dense Candidates]{A visualization$\footnotemark$ of the post-processed traceable candidate locations. On the left side, all extracted candidate locations overlaid by the flow magnitudes (in blue), on the right, an image of the reduced candidates.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
-\footnotetext{To generate the images in Figure \ref{fig:sampling_rate_candidates} I used the Cars dataset from the BMS-26 dataset: Source\\ 
+\footnotetext{To generate the images in Figure \ref{fig:tracable_candidates_strict} I used the Cars dataset from the BMS-26 dataset: Source\\ 
 \url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
 In the image on the left (Fig. $\ref{fig:tracable_candidates_strict}$) we see the set of all dense tracking candidates overlaid by their flow magnitudes (the bluish masks). The stronger the magnitude, the more bluish the mask is colored. We make the trivial observation that the moving objects themselves correspond to the top flow magnitudes. Hence, filtering the tracking candidates by their flow magnitudes yields only tracking candidates located at moving objects (Fig. $\ref{fig:c14_cand_dense_strict}$). \\ \\
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
