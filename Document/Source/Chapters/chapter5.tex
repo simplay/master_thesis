@@ -101,7 +101,7 @@ In the following a listing of our datasets, showing three of its frames, one of 
    \includegraphics[width=0.22\linewidth] {evaluation/datasets/bonn_watercan/gt4}
 }
 \end{center}
-\caption[Dataset Bonn Watercan]{An indoor scene showing two men psuhing different objects on a table. First, the man on the right side moves a water can along the table, then after a while the second man moves a packet from the left side of the table to its center. The camera is slightly shaking.}
+\caption[Dataset Bonn Watercan]{An indoor scene showing two men pushing different objects on a table. First, the man on the right side moves a water can along the table, then after a while the second man moves a packet from the left side of the table to its center. The camera is slightly shaking.}
 \label{fig:eval_datasets_bonn_watercan}
 \end{figure}
 \item \textbf{Bonn Chairs}: \\
@@ -307,10 +307,10 @@ The first series of experiments (Sec. $\ref{sec:parameter_experiments}$) examine
 
 \subsection{Parameter Experiments}
 \label{sec:parameter_experiments}
-In this section we describe a series of experiments that examine our default parameters. In particular the results presented in this section act as a justification for choosing the described default values.
+In this section we describe a series of experiments to examine our default pipeline parameters. In particular the results presented in this section act as a justification for choosing the described default values.
 
 \subsubsection{Examine Influence of Cluster Merger}
-In the following experiment we examine the influence our cluster merger post-processing step. In particular we visually study the influence of this merging step on resulting segmentations. In this experiment we generated segmentations for every LDOF pipeline mode. The results are shown in Figure $\ref{fig:eval_raw_vs_merged}$.
+In the following experiment we examine the influence of our cluster merger post-processing step. In particular we visually study the influence of this merging step on resulting segmentations. We generated segmentations for every LDOF pipeline combination. The results are shown in Figure $\ref{fig:eval_raw_vs_merged}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Raw PD SC]{
@@ -363,7 +363,7 @@ In the following experiment we examine the influence our cluster merger post-pro
 \caption[Bonn Chairs Segmentations Frame 30]{Raw-and merged segmentations produced by our pipeline when running all modes on the Bonn Chairs dataset using LDOF flow fields.}
 \label{fig:eval_raw_vs_merged}
 \end{figure}
-From these results we can see that our pipeline tends to produce oversegmentations. Especially the steady background is clustered into meany segments. Also, the seat of the chair seems to get segmented into many parts. We also see that after applying our merger these parts are forming a coherent object. We conclude that our cluster merger does not significantly obfuscate the segmentation results. The corresponding statistical measurements are listed in Table $\ref{tab:eval_stat_raw_merged}$
+From these results we can see that our pipeline tends to produce oversegmentations. Especially the steady background is clustered into meany segments. Also, the seat of the chair seems to get segmented into many parts. We also see that, after applying our merger, these parts are forming a coherent object. We conclude that our cluster merger does not significantly obfuscate the segmentation results. The corresponding statistical measurements are listed in Table $\ref{tab:eval_stat_raw_merged}$
 
 \subsubsection{Examine Varying Cluster Count}
 \label{sec:varying_cluster_exp}
@@ -400,10 +400,10 @@ In this experiment we examine the influence of a varying number of clusters on t
    \includegraphics[width=0.31\linewidth] {evaluation/bonn_chairs_ldof_varying_c_sed/f_30_c_10}
 }
 \end{center}
-\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{LDOF SED KL} on the \textit{bonn chairs} dataset.}
+\caption[Bonn Chairs SED Segmentations for Varying Cluster Count]{A visualization of the real segmentations when running \textit{LDOF SED KL} on the \textit{Bonn Chairs} dataset.}
 \label{fig:bonn_chairs_sed_varyingclusters}
 \end{figure}
-We observe that using more and more clusters yield better segmentations. This trivial fact is fortified with statistical results shown in Figure $\ref{fig:bonn_chairs_plot_avg_stat}$. To have a more solid argument, we additionally evaluated LDOF PD SC and LDOF PED MC for a varying number of clusters, which are also visible in the plots.
+We observe that using more and more clusters yields better segmentations. This trivial fact is fortified with the statistical results shown in Figure $\ref{fig:bonn_chairs_plot_avg_stat}$. To have a more solid reasoning, we additionally evaluated LDOF PD SC and LDOF PED MC for a varying number of clusters and generated their corresponding performance graphs.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Recall / Precision Plot]{
@@ -418,12 +418,12 @@ We observe that using more and more clusters yield better segmentations. This tr
 \end{figure}
 
 \subsubsection{Examine Convergence of MC}
-In this experiment we have a closer look into the convergence rate of the MC segmentation method. In this experiment we run the mode LDOF PED MC on the Two Chairs dataset. Moreover, we set the cluster count to 20, to produce an oversegmentation. On one hand using that many clusters will result in an oversegmentation but on the other hand this also ensures a good convergence rate plot. The graph in Figure $\ref{fig:convergence_rate_mc}$ visualizes the convergence rate of the MinCut (MC) segmentation technique. The corresponding measurements are listed in Table $\ref{tab:two_chairs_ped_mc_iterations}$
+In this experiment we have a closer look at the convergence rate of the Minimum Cut (MC) segmentation method (Sec. $\ref{sec:min_cut_seg}$). For this purpose we run the mode LDOF PED MC on the Two Chairs dataset. Moreover, we set the cluster count to 20. On one hand, using that many clusters will result in producing oversegmentations but on the other hand this also ensures a good convergence rate plot (due to our segment merger). The graph in Figure $\ref{fig:convergence_rate_mc}$ visualizes the convergence rate of the MinCut (MC) segmentation technique. The corresponding measurements are listed in Table $\ref{tab:two_chairs_ped_mc_iterations}$
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
 \end{center}
-\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of MinCut when running LDOF PED MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
+\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of Minimum Cut when running LDOF PED MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
 \label{fig:convergence_rate_mc}
 \end{figure}
 We observe that the more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 4 iterations. This matches with our assumption that no more than 20 iterations have to be run when using the MC segmentation method.
@@ -481,11 +481,11 @@ $\lambda$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 0.1 & 44.75\% & 41.00\% & 42.79\%  \\ \hline
 \end{tabular}
 \end{minipage}
-\caption[Experiment Varying $\lambda$]{The averaged statistics of a varying $\lambda$ on P-affinities applied on the bonn datasets. On the left table, the results when using PED affinities, on the right, when using PD affinities. The best determined choices for $\lambda$ are marked in bold face.}
+\caption[Experiment Varying $\lambda$]{The averaged statistics of a varying $\lambda$ on P-affinities applied on the Bonn datasets. On the left table, the results when using PED affinities, on the right, when using PD affinities. The best determined choices for $\lambda$ are marked in bold face.}
 \label{tab:varying_lambda_experiment}
 \end{table}
 We observe that $\lambda$ equals $0.01$ works best for PD affinities and when $\lambda = 50$ when using PED affinities \\ \\
-In the following we visualize the influence of $\lambda$ on the segmentation quality. For this purpose we produced PD SC segmentations on the Cars dataset for different $\lambda$ values. The resulting segmentations are shown in Figure $\ref{fig:cars_dataset_lambdas}$ and the corresponding statistics can be found in the appendix Section $\ref{sec:appendix_varying_lambda}$.
+In the following we visualize the influence of $\lambda$ on the segmentation quality. For this purpose we produced PD SC segmentations on the Cars dataset for different $\lambda$ values. The resulting segmentations are shown in Figure $\ref{fig:cars_dataset_lambdas}$.
 \begin{figure}[H]
 \begin{center}
 \subfigure[$\lambda$ = 5]{
@@ -514,16 +514,14 @@ In the following we visualize the influence of $\lambda$ on the segmentation qua
    \label{fig:cars_dataset_lambdas_c}
 }
 \end{center}
-\caption[Influence varying $\lambda$]{Illustration of the influence of the parameter $\lambda$ used to scale PD-affinities. On the first row the affinities of a certain trajectory on the car in the back (marked by a red circle) to its neighbors. The second row shows the corresponding segmentations.}
+\caption[Influence varying $\lambda$]{Illustration of the influence of the parameter $\lambda$ used to scale PD-affinities. The first row shows the affinities between a certain trajectory on the car on the back (marked by a red circle) and its neighbors. The second row shows the corresponding segmentations.}
 \label{fig:cars_dataset_lambdas}
 \end{figure}
-As we can see, the optimal value $\lambda = 0.01$ produced the best segmentation. Moreover, a too large value leads to an oversegmentation, but when using a too small value we obtain an undersegmentation. \\ \\
-These results allow us to conclude that our $\lambda$ defaults are reliable enough to use them during our experiments.
-
+As we can see, the optimal value $\lambda = 0.01$ produced the best segmentation. Moreover, a too large value leads to an oversegmentation, but when using a too small value we obtain an undersegmentation. These results allow us to conclude that our $\lambda$ defaults are reliable enough to use them during our experiments.
 
 \subsubsection{Examine Eigenvector-/Cluster-Count Defaults}
-In Section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters-and eigenvectors when either running the SC or the MD segmentation method. We stated, that will use twice the estimated count of the moving objects present in the video for the cluster count and twice the cluster count for the number of eigenvalues. In order to legitimize the usage of those defaults, we create a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
-In this experiment we evaluate the Cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs shown in Figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of the used eigenvectors but keeps the cluster count as a free variable.
+In Section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters and eigenvectors, when either running the SC or the MD segmentation method. We stated, that we use twice the estimated count of the moving objects present in the video as the cluster count and twice the cluster count as the number of eigenvalues. In order to legitimize the usage of those defaults, we created a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
+In this experiment we evaluate the Cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs as shown in Figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of used eigenvectors but keeps the cluster count as a free variable.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Fixed Clusters and Varying Eigenvectors]{
@@ -536,38 +534,37 @@ In this experiment we evaluate the Cars dataset, since it has a static camera an
 \caption[Varying number of Clusters / Eigenvectors]{Two graphs that show the f1 score for a varying number of clusters and eigenvectors on the cars dataset. The graph on the left shows plots for fixed cluster numbers and the graph on the right plots the f1 score for a fixed eigenvalue count and varying cluster counts.}
 \label{fig:cc_ev_combinations}
 \end{figure}
-At first glance the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the f1 scores when increasing the number of clusters, which seems to be counterintuitive. The optimal cluster/eigenvalue count selection seems to more complex than our simple heuristic. However, when Considering the fixed clusters graph we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
-However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations produce top results according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster count and eigenvector count produce good results and thus we will rely on these cluster-and eigenvector-count assignment heuristic. \\ \\
+At first glance, the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the f1 scores, when increasing the number of clusters. This behaviour seems to be counterintuitive. Hence, the optimal cluster/eigenvalue count choice seems to be more complex than our simple heuristic. However, when considering the fixed clusters graph, we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
+However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations also produce top results, according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster- and and eigenvector count allow to produce good results. Therefore we will use this cluster and eigenvector heuristic during this evaluation. \\ \\
 Additional \enquote{varying the cluster-eigenvalue count} experiments and their measurements can be found in the appendix in Section $\ref{sec:additional_cc_ev_exp}$.
-
 
 \subsection{On Exploring Flow Methods}
 \label{sec:flow_methods}
-Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simple too many cross-combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
+Evaluating every pipeline combination on every dataset would exceed our capabilities, since there are simply too many cross-combinations. Therefore, we would like to detect and filter some weak combinations in advance. By having a closer look at the performance on the flow methods, we will be able to drop two methods. \\ \\
 In this section we examine the quality of the utilized flow methods. In particular we show that the flow methods HS and LRGBD do not produce good estimates and thus can be dropped from further considerations during our series of experiments. This will reduce the total number of pipeline combinations by a factor of two. \\ \\
 In the first sub-experiment we compare the segmentations produced on LDOF-and HS flow fields. In the second experiment we examine the quality of segmentations produced by LRGBD flow fields.
 
 \subsubsection{LDOF vs. HS Flow Fields}
 Both flow estimation methods, LDOF and HS, are not making use of depth fields. Therefore, we would like to determine whether one of these two methods is significantly better. \\ \\
-In the following experiment we compute P-affinities using LDOF and HS flow fields on the Bonn datasets. The examine the quality of the flow fields, we evaluate SC segmentations using these affinities. The average statistics are listed in Table $\ref{tab:hs_vs_ldof}$.
+In the following experiment we compute P-affinities using LDOF and HS flow fields on the Bonn datasets. In order to examine the quality of the flow fields, we evaluate SC segmentations using these affinities. The average statistics are listed in Table $\ref{tab:hs_vs_ldof}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{LDOF vs. HS on Bonn-Datasets}                        \\ \hline
+\multicolumn{4}{|c|}{LDOF vs. HS on Bonn Datasets}                        \\ \hline
 Method & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\ \hline
 LDOF PD SC & 42.98\%   & 55.06\%     & 48.28\%  \\ \hline
 HS PD SC MC & 40.19\%   & 52.33\%     & 45.47\%  \\ \hline
 LDOF PED SC & 69.34\%   & 54.13\%     & 60.80\%  \\ \hline
 HS PED SC MC & 55.61\%   & 53.15\%     & 54.35\%  \\ \hline             
 \end{tabular}
-\caption[LDOF vs. HS Flow Fields]{Comparison of Bonn-Dataset segmentations produced by running PD SC and PED SC on LDOF- and HS flow fields. Methods using LDOF flow fields seem to be produce better segmentations than those which are using HS flow fields.}
+\caption[LDOF vs. HS Flow Fields]{Comparison of Bonn dataset segmentations produced by running PD SC and PED SC on LDOF- and HS flow fields. Methods using LDOF flow fields seem to be produce better segmentations than those which are using HS flow fields.}
 \label{tab:hs_vs_ldof}
 \end{table}
-From the data in the table we can see that segmentations produced using LDOF flow fields yield higher f1 scores than those produced by HS flow fields. Apparently, pipeline combinations that use LDOF flow fields are producing qualitatively better segmentations. Therefore, we decide to drop HS flow fields and only use LDOF flow fields instead.
+Apparently, pipeline combinations that use LDOF flow fields are producing qualitatively better segmentations than those which use HS flow fields. Therefore, we decide to drop HS flow fields and only use LDOF flow fields instead.
 
 \subsubsection{On LRGBD Flow Fields}
-In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flow fields on the statue dataset. In this experiment we vary the used flow method and fix the pipeline mode to PED MC. Hence, we run the following three modes: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
+In the following we want to examine the quality of segmentations that use LRGBD, LDOF and SRSF flow fields on the Statue dataset. For this purpose we vary the used flow method and fix the pipeline mode to PED MC. Hence, we run the following three combinations: LDOF PED MC, SRSF PED MC, LGBDR PED MC. \\ \\
 The achieved performances are listed in Table $\ref{tab:statue_performance}$ and visual segmentations are depicted in Figure $\ref{fig:alley_segmentations}$.
 \begin{table}[H]
 \centering
@@ -582,7 +579,7 @@ LRGBD PED MC & 61.46\%   & 8.37\%     & 14.73\%  \\ \hline
 \caption[Performance Statue]{Comparing the segmentation quality produced by LDOF, SRSF and LRGBD flow fields.}
 \label{tab:statue_performance}
 \end{table}
-We observe that segmentations using SRSF score good, and segmentations using LDOF score intermediate quality results. However, pipeline combinations based on LRGBD flow fields produce visually, as well as statistically very poor segmentations. Apparently, this flow method is a bad choice for the task of motion segmentation. Therefore, we drop it from our pipeline. 
+We observe that segmentations that use SRSF flow fields score good, and segmentations using LDOF fields score intermediate quality results. However, pipeline combinations based on LRGBD flow fields produce visually, as well as statistically very poor segmentations. Apparently, this flow method is a bad choice for the task of motion segmentation. Therefore, we drop it from our pipeline. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[LDOF PED MC]{
@@ -614,9 +611,8 @@ We observe that segmentations using SRSF score good, and segmentations using LDO
 \caption[Bonn Cerealbox Segmentations]{Visualization of the segmentation that belong to the results listed in Table $\ref{tab:statue_performance}$.}
 \label{fig:alley_segmentations}
 \end{figure}
-Although the LRGBD flow fields are supposed to be competitive against SRSF flow fields, using them for segmentation tasks yield poor segmentations. This is due the fact, that LRGBD flow fields are estimated by segmenting the flow fields with respect to their depth layers instead according to their motion. \\ \\
-
-In order to verify that LRGBD flow fields are indeed not suitable for our motion segmentation pipeline we performed a second experiment. This time we evaluated the Bonn-Watercan segmentations. We used all existing flow methods and produced segmentations using PED-affinities. The results are listed in Table $\ref{tab:bonn_wc_flwo_methods}$.
+Although the LRGBD flow fields are supposed to be competitive against SRSF flow fields, using them in segmentation tasks yields qualitatively poor segmentations. This is due the fact, that LRGBD flow fields are estimated by segmenting the flow fields with respect to their depth layers instead according to their motion. \\ \\
+In order to verify that \enquote{LRGBD flow fields are indeed not suitable for our motion segmentation pipeline}, we performed a second experiment: This time we evaluated the Bonn Watercan segmentations. We used all existing flow methods and produced segmentations using PED-affinities. The results are listed in Table $\ref{tab:bonn_wc_flwo_methods}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|r|l|l|}
@@ -632,10 +628,10 @@ SRSF PED MC & 94.23 \%   & 95.04\%     & 94.63\%  \\ \hline
 LRGBD PED SC & 30.00\%   & 16.68\%     & 21.43\%  \\ \hline
 LRGBD PED MC & 31.23\%   & 16.32\%     & 21.44\%  \\ \hline
 \end{tabular}
-\caption[Flow Method Comparission Bonn Watercan]{Comparing the quality of our flow methods on the Bonn Watercan dataset.}
+\caption[Flow Method Comparission on Bonn Watercan]{Comparing the quality of our flow methods on the Bonn Watercan dataset.}
 \label{tab:bonn_wc_flwo_methods}
 \end{table}
-Again, we observe, that LRGBD flow fields produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentation produced by LRGBD PED MC. The corresponding segmentation of frame 30 is visualized in Figure $\ref{fig:issues_lrgbd_flow_methods}$. 
+Again, we observe, that LRGBD flow fields produce poor segmentations. So, what is going on there? To get a better understanding of the underlying problem, we have a look at the actual segmentations produced by the combination LRGBD PED MC. The corresponding segmentation of frame 30 is visualized in Figure $\ref{fig:issues_lrgbd_flow_methods}$. 
 \begin{figure}[H]
 \begin{center}
 \subfigure[Extracted Layers Frame 30]{
@@ -654,12 +650,12 @@ Again, we observe, that LRGBD flow fields produce poor segmentations. So, what i
 \caption[Issue with LRGBD Flow Fields]{Comparing the a LRGBD based segmentation against its flow field.}
 \label{fig:issues_lrgbd_flow_methods}
 \end{figure}
-When having a closer look at the generated LRGBD flow fields, we observe, that the flow fields are locally homogenous within the layer they belongs to. Moreover, the resulting segmentation on LRGBD flow fields cluster the objects according to their depth layers rather by their motion.
+We notice that the LRGBD flow fields are locally homogenous within the layer they belongs to. Moreover, LRGBD segmentations separate the objects according to their depth layers rather than by their motion.
 
 \subsection{Overall Performance}
 \label{sec:overall_performance}
-So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods. In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm, Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flow fields can only be run on images with a resolution of $640 \times 480$ pixels and some datasets have not depth fields.\\ \\
-In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first mode is very similar to the implementation described in $\cite{OB14b}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measured data is listed in Table $\ref{tab:overall_performance}$.
+So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods (HS and LRGBD). In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm and Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flow fields can only be generated for images with a resolution of $640 \times 480$ pixels. Furthermore, we do not use datasets that do not have depth fields.\\ \\
+In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first combination resembles to the implementation described in $\cite{OB14b}$$\footnote{Both implementations use LDOF flow fields, a similar affinity measure and a similar spectral clustering technique.}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measured data is listed in Table $\ref{tab:overall_performance}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.7\linewidth] {evaluation/overall/all}
@@ -667,9 +663,9 @@ In particular we are interested in comparing the modes LDOF PD SC and SRSF PED M
 \caption[Overall Performance Bar Chart]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on all compatible datasets.}
 \label{fig:overall_performance_bar_chart}
 \end{figure}
-We observe the following facts: Methods using SRSF flow fields achieve better results than those using LDOF flow fields. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using MC for generating the segmentation is better than running spectral clustering. \\ \\
+We observe the following facts: Methods using SRSF flow fields achieve better results than those using LDOF flow fields. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using Minimum Cut (MC) for generating the segmentation is better than running spectral clustering (SC). \\ \\
 Overall, KL yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we just used its standard parameters but used specifically good parameters in our pipeline (determined for our datasets).
-Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are in Table $\ref{tab:overall_performance_ldof}$.
+Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are listed in Table $\ref{tab:overall_performance_ldof}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -684,7 +680,7 @@ LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline
 \caption[Overall Performance LDOF P-Affinities]{Evaluation of all LDOF-P-affinity pipeline combinations on every dataset. }
 \label{tab:overall_performance_ldof}
 \end{table}
-We again observe, that among the LDOF/P-affinity variants, using depths yields better results than not using them and MC achieves higher scores than SC.  
+From these measurements we observe again, that incorporating depths (via running PED) into the pipeline yields significant better results than without doing so. Moreover, MC achieves higher f1 scores than SC. 
 
 \subsection{Pipeline Combination Comparisons}
 \label{sec:pipeline_combination_cmp}
