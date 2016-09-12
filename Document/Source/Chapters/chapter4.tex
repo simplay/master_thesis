@@ -826,7 +826,7 @@ Next, let us discuss an algorithm that enables us to partition the similarity gr
 	D_a = E_a - I_a
 \label{eq:kl_d_values}
 \end{equation}
-If $a$ and $b$ are interchanged, then the reduction in cost is equal to.
+If $a$ and $b$ are interchanged, then the reduction in cost is equal to
 \begin{equation}
 	T_{n} - T_{n-1} = D_a + D_b - 2c_{a,b}
 \label{eq:kl_difference_ext_int_costs}
@@ -868,11 +868,52 @@ In the following we offer the reader some details about the \emph{Kernighan-Lin}
 In this algorithm, we initialize two vertex sets according to some rule. E.g. assign randomly one half of the vertices to set A and the other half to set B. \\ \\
 In the inner loop, we determine a ranking of the vertices according to their gain: First, we compute Equation $\ref{eq:kl_d_values}$ on every vertex. Then, we compute the gain between all vertices $a \in A$ and $b \in B$ according to the formulation in Equation $\ref{eq:kl_difference_ext_int_costs}$ and select the vertices $a$ and $b$ that produces the largest gain value. Please note that this can yield negative values. Next, we remember their gain value, mark them as dirty and put each of these vertices into special sets $av$ and $bv$. Afterwards the $D$ values of all vertices, that are not dirty, are updated. We have to repeat this procedure $|V|/2$ times since each set $A$ and $B$ contains that many vertices. \\ \\
 In the list of gains we look for the maximal partial sum of gains. The index in the gain list that produced the maximum sum is used as the permutation index for performing a series of interchange operation. Relying on partial sums makes sense, since, as long as the sum increases, the gain in the next iteration gets bigger. We continue permuting until the maximal partial sum would result in having a lower gain in the next outer iteration. We repeat these steps of the most outer loop until there is no more gain. \\ \\
-Our Java implementation initially loads the corresponding $\textit{S-affinity}$ matrix and its corresponding nearest neighbor list. Then, an internal undirected graph $G = \left( V, E \right)$ is constructed. Its vertices represent individual trajectories and two vertices are connected if they are actual neighbors. Moreover, The edge weights represent the affinity value between two vertices. Usually, the full neighborhood is loaded into the pipeline and thus the complete graph is formed, i.e. every vertex is interconnected with any other vertex. However, the number of neighbors per trajectory, that should be loaded into the pipeline, can be directly specified by a user via a neighborhood size parameter. \\ \\ 
+Our Java implementation initially loads the corresponding $\textit{S-affinity}$ matrix and its corresponding nearest neighbor list. Then, an internal undirected graph $G = \left( V, E \right)$ is constructed. Its vertices represent individual trajectories and two vertices are connected if they are actual neighbors. Moreover, The edge weights represent the affinity value between two vertices. Usually, the full neighborhood is loaded into the pipeline and thus the complete graph is formed, i.e. every vertex is interconnected with any other vertex. However, the number of neighbors per trajectory, that should be loaded into the pipeline, can be directly specified by a user via a neighborhood size parameter. \\ \\
+An example of the Kernighan-Lin heuristic is illustrated in Figure $\ref{fig:kl_2_part_eg}$.
+% put e.g
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1\linewidth] {implementation/segmentation/kl_2_part_example}
+\end{center}
+\caption[Kernighan-Lin Example]{An example of Algorithm $\ref{alg:kernighan_lin}$ when solving for two optimal partitions: For two given initial balanced vertex sets $A = \{ a, b\}$ and $B = \{ c, d\}$ (as shown on the left) we want to find the optimal partition of these sets (as shown on the right). Initially, we compute the balance for every vertex according to the definition in Equation $\ref{eq:kl_d_values}$. The corresponding values are listed in the Table $\ref{tab:kl_example_costs}$ (left table). The maximum gain of the first inner loop iteration yields $g_{ac} = 4$ and the second iteration yields $g_{bd} = 0$. Therefore, $g_{max}$ is equal 4 with $k = 1$. Therefore, we have to swap the vertices $a$ and $c$. This will give us the graph partitioning shown on the right. We re-compute the vertex balances and obtain the values shown in the right subtable in Table $\ref{tab:kl_example_costs}$. Since $g_{max}$ is now equal -2, we can stop and have found the optimal graph partitioning $A = \{ b, c\}$ and $B = \{ a, d\}$.}
+\label{fig:kl_2_part_eg}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\setlength\tabcolsep{2pt}
+\begin{minipage}{0.47\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{Initialization} \\ \hline
+Vertex $v$ & $I_v$  & $E_v$ & $D_v$ \\ \hline
+a & -1 & 1 & 2 \\ \hline
+b & -1 & 1 & 2 \\ \hline
+c & -1 & 1 & 2 \\ \hline
+d & -1 & 1 & 2 \\ \hline
+\end{tabular}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.47\textwidth}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{After First Iteration} \\ \hline
+Vertex $v$ & $I_v$  & $E_v$ & $D_v$ \\ \hline
+a & 1 & -1 & -2 \\ \hline
+b & 1 & -1 & -2 \\ \hline
+c & 1 & -1 & -2 \\ \hline
+d & 1 & -1 & -2 \\ \hline
+\end{tabular}
+\end{minipage}
+\caption[Kernighan-Lin Example Costs]{The internal and external costs and balance values of every vertex of the Kernighan-Lin example, shown in Figure $\ref{fig:kl_2_part_eg}$. On the left the corresponding values after the initialization and on the right the values after the first iteration.}
+\label{tab:kl_example_costs}
+\end{table}
 So far, our KL method is only capable of performing a binary partition on a graph. However, we would like to extend it in such a way, that it can partition a graph into an arbitrary number of labels. \\ \\
 To address this problem we apply a greedy strategy. Let us assume that we want to solve for $k$ clusters and we are working with $n$ vertices. Then, we distribute the $n$ vertices according to some initialization rule among $k$ empty sets. Then, for each possible pair of subsets we sequentially run Algorithm $\ref{alg:kernighan_lin}$, which gives us the pairwise optima. We repeat this procedure until the solution has converged. Our final $KL$ algorithm that we use to solve the multi-cut problem is listed in Algorithm $\ref{alg:kl_multiple_segments}$.
 \begin{algorithm}[H]
-\caption{Kernighan-Lin Multicut Heuristic}
+\caption{Kernighan-Lin Multicut Heuristic (\textbf{KL})}
 \begin{table}[H]
   \begin{tabular}{@{}lll@{}}
     \textbf{Input:} & Graph \emph{G = (V, E)} \\
