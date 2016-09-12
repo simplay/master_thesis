@@ -112,7 +112,7 @@ For this thesis let us use the abbreviations defined in the list above when refe
    \label{fig:flow_method_flows_d}
 }
 \end{center}
-\caption[Flow Fields]{A visualization of the flow fields produced by our used flow methods when running them on frame 30 of \textit{Bonn Water Can} dataset$\footnotemark$. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
+\caption[Flow Fields]{A visualization of the flow fields produced by our used flow methods when running them on frame 30 of \textit{Bonn Watercan} dataset$\footnotemark$. Please notice that the color encoding is the same as introduced in Section $\ref{sec:optical_flow}$ on page $\pageref{sec:optical_flow}$.}
 \label{fig:flow_method_flows}
 \end{figure}
 \footnotetext{Source of the images shown in Figure \ref{fig:flow_method_flows}: \url{http://www.ais.uni-bonn.de/download/rigidmultibody/}}
@@ -130,7 +130,7 @@ In particular we will explain how meaningful image locations of moving objects a
  		& Depth Images (\emph{optional}) \bf{DI} \\
     \textbf{Output:} & Traceable Feature Locations \bf{TF} \\
     & Occluded Location Masks \bf{OM}\\
-    & Cie-Lab Color Images \bf{CI} \\
+    & Cielab Color Images \bf{CI} \\
     & Flow Variances \bf{FV} \\
     & Depth Variances \bf{DV} \\
     
@@ -222,9 +222,11 @@ In general it is always a trade-off between complexity and resolution. On one ha
    \label{fig:c14_undersampling}
 }
 \end{center}
-\caption[Density Of Candidates For Different Sampling Rates]{A visualization of different sampling rates of tracking candidates}
+\caption[Density Of Candidates For Different Sampling Rates]{A visualization$\footnotemark$ of different sampling rates of tracking candidates}
 \label{fig:sampling_rate_candidates}
 \end{figure}
+\footnotetext{To generate the images in Figure \ref{fig:sampling_rate_candidates} I used the Cars dataset from the BMS-26 dataset: Source\\ 
+\url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
 After tinkering with this parameter during our experiments we observed, that setting the cell size larger than 12 pixels causes a loss of details since there are not enough points to cover small object parts. Also, we observe that cells smaller than 6 pixels waste computation time as smaller objects tend to get smoothed away. Hence, our pipeline samples every 8th pixel by default. However, note that it is still possible to manually assign a different value to this parameter. \\ \\
 Finally, there is one optional post-processing stage, which removes all candidates that map to a too weak optical flow vector. This reduction is implemented as following: We use the tracking candidate of a frame as lookup coordinates$\footnote{Sine these points are real valued but lookup indices are supposed to be integer values, we perform a bilinear interpolation on the discrete flow field at the given lookup coordinate.}$ in their corresponding forward flow fields and compute their magnitude. Then, every candidate that maps to a magnitude value smaller than the largest 10 percent of the determined flow magnitudes is discarded. We repeat this procedure for every frame. Doing so drastically reduces the total number of candidates. However this procedure may also cancel out useful motion locations. Nevertheless, most of the time this post-processing only removes candidates that belong to the background$\footnote{By \textit{background} we refer to pixel locations that do not map to a moving object.}$. Additionally, Figure $\ref{fig:tracable_candidates_strict}$ graphically illustrates the idea behind this filtering approach.
 \begin{figure}[H]
@@ -238,10 +240,12 @@ Finally, there is one optional post-processing stage, which removes all candidat
    \label{fig:c14_cand_dense_strict}
 }
 \end{center}
-\caption[Strict Dense Candidates]{A visualization of the post-processed traceable candidate locations. On the left side, all extracted candidate locations overlaid by the flow magnitudes (in blue), on the right, an image of the reduced candidates.}
+\caption[Strict Dense Candidates]{A visualization$\footnotemark$ of the post-processed traceable candidate locations. On the left side, all extracted candidate locations overlaid by the flow magnitudes (in blue), on the right, an image of the reduced candidates.}
 \label{fig:tracable_candidates_strict}
 \end{figure}
-In the image on the left (Fig. $\ref{fig:c14_f1_cand_dense_2}$) we see the set of all dense tracking candidates overlaid by their flow magnitudes (the bluish masks). The stronger the magnitude, the more bluish the mask is colored. We make the trivial observation that the moving objects themselves correspond to the top flow magnitudes. Hence, filtering the tracking candidates by their flow magnitudes yields only tracking candidates located at moving objects (Fig. $\ref{fig:c14_cand_dense_strict}$). \\ \\
+\footnotetext{To generate the images in Figure \ref{fig:sampling_rate_candidates} I used the Cars dataset from the BMS-26 dataset: Source\\ 
+\url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
+In the image on the left (Fig. $\ref{fig:tracable_candidates_strict}$) we see the set of all dense tracking candidates overlaid by their flow magnitudes (the bluish masks). The stronger the magnitude, the more bluish the mask is colored. We make the trivial observation that the moving objects themselves correspond to the top flow magnitudes. Hence, filtering the tracking candidates by their flow magnitudes yields only tracking candidates located at moving objects (Fig. $\ref{fig:c14_cand_dense_strict}$). \\ \\
 Both moving objects in the shown example are preserved and only background pixels are removed. However, keep in mind that this post-processing may filter small, meaningful motions. Especially, when there is a lot of camera motion involved, this approach may fail. \\ \\
 Up to this moment we know \textit{when} (i.e. in what frame) and \textit{where} (i.e. at which location) we have to \textit{start} trajectories while running our point tracker. Moreover, by using the forward flow fields we know where the extracted features have to be tracked to in their successive frame. However, what we still do not know is \textit{when to end} the tracking of a trajectory. Usually, a trajectory is supposed to end when it gets occluded by an obstacle. In the next section we discus how to find such occluded regions.
 
@@ -382,12 +386,13 @@ This procedure is repeated until we have processed every frame and trajectory. \
 Finally, we conclude this section by offering an example of an actual point tracking applied on the cars dataset. The resulting trajectories, as well as their tracking points, are shown in Figure $\ref{fig:cars_trajectories}$. In this visualization we see different trajectories, tracked over four frames. Tracking points that belong to the same trajectory have the same color as their trajectory. As we can see, points that were tracked along the same moving objects exhibit consistent trajectories. In other words, our flow field based tracker produces reliable and meaningful results in this example.
 \begin{figure}[H]
 \begin{center}
-
 \includegraphics[width=0.65\linewidth] {implementation/trajectories/cars_trajectories_4_sel}
 \end{center}
 \caption[Trajectories]{Exemplary trajectories tracked in the cars dataset shown in different color. The tracking points exhibit the same color as the trajectory they belong to. The tracking points are plotted as thick dots.}
 \label{fig:cars_trajectories}
 \end{figure}
+\footnotetext{To generate Figure $\ref{fig:cars_trajectories}$ I used the Cars dataset from the BMS-26 dataset: Source\\ 
+\url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
 
 \subsection{Transformation to 3D Points}
 \label{subsection:transform_to_3d_points}
@@ -667,9 +672,11 @@ by using Matlab's fast eigen-decomposition $\textit{eigs}$. To get a better idea
    \label{fig:cars_eigenvectors_laplacian_b}
 }
 \end{center}
-\caption[Eigenvectors of Laplacian Matrix]{Visualizing the two smallest eigenvectors of the Laplacian matrix computed on the Cars dataset. Each component of an eigenvector maps to exactly one trajectory. More yellow values indicate a large value, whereas bluish markings indicate a low value. The absolute value does not matter. However, we already observe local groupings of moving objects/their parts, when visualizing the eigenvectors.}
+\caption[Eigenvectors of Laplacian Matrix]{Visualizing the two smallest eigenvectors of the Laplacian matrix computed on the Cars$\footnotemark$ dataset. Each component of an eigenvector maps to exactly one trajectory. More yellow values indicate a large value, whereas bluish markings indicate a low value. The absolute value does not matter. However, we already observe local groupings of moving objects/their parts, when visualizing the eigenvectors.}
 \label{fig:eigenvectors_laplacian_matrix}
 \end{figure}
+\footnotetext{Source of the Cars dataset: \\ 
+\url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
 The actual clustering is performed on the eigenvectors of $L$. In fact, we further assume that we only need some of the eigenvectors for the clustering. Actually, it can be proven, that at least $k$ eigenvectors are required if there are $k$ segments$\footnote{In fact, the background is also counted as a segment. The actual proof shows, that to extract the k connected components in a graph, we need to run a spectral clustering on the k smallest eigenvectors.}$. Therefore, we select the $m$ smallest eigenvectors $V_m$ according to their $\lambda \in \Lambda$. \\ \\
 The final clustering is performed by running k-means, similar as described in Section $\ref{sec:k_means}$, on $V_m$ using a pre-specified number of clusters. To run k-means, we use a random initialization. Since we might end up at a local minimum, we run the k-means algorithm 200 times and take the result with the smallest error$\footnote{The error is measured in terms of the distance between the resulting cluster centers and their assigned feature points.}$
 The output of this method is a grouping of vector indices of the eigenvectors $V_m$. Each index \enquote{that belong to the same group} corresponds to the same moving object. To obtain the corresponding trajectory label that maps to a certain vector index, we perform a query similar as shown Figure $\ref{fig:affinity_index_label_mapping}$ by using the \textit{index-label-mapping} list. \\ \\ 
