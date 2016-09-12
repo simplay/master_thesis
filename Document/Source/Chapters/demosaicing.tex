@@ -111,6 +111,7 @@ Hereby $prox(\cdot)$ denotes the proximity operator and is defined as
 In the following we will derive explicit identities for the update rules in Equation $\ref{eq:update_rules_plain}$that can be numerically solved. Our goal is to find an expression for the proximity operator.
 
 \subsection{Update for $y^{n+1}$}
+\label{sec:pd_yn}
 In this subsection we derive an identity for the $y^{n+1}$ update rule from Equation $\ref{eq:update_rules_plain}$. The key idea is to use the so called Moreau's Identity:  
 \begin{equation}
 	\prox_{\lambda F^*}(z) = z - \lambda \cdot \prox_{F/ \lambda}(z / \lambda) 
@@ -184,6 +185,7 @@ Finally, the only left step to do is to plug in the definition of $K$ into Equat
 \end{align} 	
 
 \subsection{Update for $x^{n+1}$}
+\label{sec:pd_xn}
 \begin{align}
 x^{n+1} &= \prox_{\tau G}(x^n - \tau K^* y^{n+1}) \\
 		&= \prox_{\tau \frac{\lambda}{2} \norm{u - g}_{\Omega}^2 }(x^n - \tau \nabla^* y^{n+1}) \\
