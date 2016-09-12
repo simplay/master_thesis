@@ -388,7 +388,7 @@ Finally, we conclude this section by offering an example of an actual point trac
 \begin{center}
 \includegraphics[width=0.65\linewidth] {implementation/trajectories/cars_trajectories_4_sel}
 \end{center}
-\caption[Trajectories]{Exemplary trajectories tracked in the cars dataset shown in different color. The tracking points exhibit the same color as the trajectory they belong to. The tracking points are plotted as thick dots.}
+\caption[Trajectories]{Exemplary trajectories tracked in the Cars$\footnotemark$ dataset shown in different color. The tracking points exhibit the same color as the trajectory they belong to. The tracking points are plotted as thick dots.}
 \label{fig:cars_trajectories}
 \end{figure}
 \footnotetext{To generate Figure $\ref{fig:cars_trajectories}$ I used the Cars dataset from the BMS-26 dataset: Source\\ 
@@ -980,9 +980,11 @@ First let us have a look at the \textbf{data term}. It ensures that the reconstr
 \begin{center}
 \includegraphics[width=0.8\linewidth] {implementation/dense_seg/cars_1}
 \end{center}
-\caption[Dense Segmentation Cars]{A dense segmentation produced by our pipeline. We see an overlay of the sparse segmentation on top of the dense masks. As we can see, the dense segmentation is basically a blur of the initial given sparse segments.}
+\caption[Dense Segmentation Cars]{A dense segmentation$\footnotemark$ produced by our pipeline. We see an overlay of the sparse segmentation on top of the dense masks. As we can see, the dense segmentation is basically a blur of the initial given sparse segments.}
 \label{fig:dense_segmentation_cars_1}
 \end{figure}
+\footnotetext{To generate Figure $\ref{fig:dense_segmentation_cars_1}$ I used the Cars dataset from the BMS-26 dataset: Source\\ 
+\url{http://lmb.informatik.uni-freiburg.de/resources/datasets/}}
 In Section $\ref{sec:primal_dual_form}$ described how to solve this optimization problem by formulating its Primal-Dual form. Such a formulation allows us to derive an iterative solver to address this optimization. A detailed, step by step derivation can be found in the appendix in Chapter $\ref{chap:appendix_demosaicing}$. One iteration of our solver runs the following steps:
 \begin{equation}
 \begin{aligned}
