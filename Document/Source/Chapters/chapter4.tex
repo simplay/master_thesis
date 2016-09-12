@@ -835,7 +835,7 @@ Note that $c_{a,b}$ in Equation $\ref{eq:kl_difference_ext_int_costs}$ defines t
 The $KL$ algorithm attempts to find an optimal series of interchange operations between the elements in $A$ and $B$, which maximizes the value of Equation $\ref{eq:kl_difference_ext_int_costs}$. The determined optimal operation sequence is then executed to compute the partition of the graph into the sets $A$ and $B$. \\ \\
 In the following we offer the reader some details about the \emph{Kernighan-Lin} heuristic formulated in Algorithm $\ref{alg:kernighan_lin}$. 
 \begin{algorithm}[H]
-\caption{Kernighan-Lin}
+\caption{Kernighan-Lin Algorithm (\textbf{KL2})}
 \begin{table}[H]
   \begin{tabular}{@{}lll@{}}
     \textbf{Input:} & Graph \emph{G = (V, E)} \\
@@ -870,7 +870,6 @@ In the inner loop, we determine a ranking of the vertices according to their gai
 In the list of gains we look for the maximal partial sum of gains. The index in the gain list that produced the maximum sum is used as the permutation index for performing a series of interchange operation. Relying on partial sums makes sense, since, as long as the sum increases, the gain in the next iteration gets bigger. We continue permuting until the maximal partial sum would result in having a lower gain in the next outer iteration. We repeat these steps of the most outer loop until there is no more gain. \\ \\
 Our Java implementation initially loads the corresponding $\textit{S-affinity}$ matrix and its corresponding nearest neighbor list. Then, an internal undirected graph $G = \left( V, E \right)$ is constructed. Its vertices represent individual trajectories and two vertices are connected if they are actual neighbors. Moreover, The edge weights represent the affinity value between two vertices. Usually, the full neighborhood is loaded into the pipeline and thus the complete graph is formed, i.e. every vertex is interconnected with any other vertex. However, the number of neighbors per trajectory, that should be loaded into the pipeline, can be directly specified by a user via a neighborhood size parameter. \\ \\
 An example of the Kernighan-Lin heuristic is illustrated in Figure $\ref{fig:kl_2_part_eg}$.
-% put e.g
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=1\linewidth] {implementation/segmentation/kl_2_part_example}
@@ -932,7 +931,7 @@ To address this problem we apply a greedy strategy. Let us assume that we want t
   	  \State $\text{Append D dummy vertices to each initial set} A_k$ 
       \ForAll{$\text{distinct vertex set pair} \left( A_k, A_l\right)$}
         \State $ \text{Form the subgraph } G_{k,l} = (V, E)$
-		\State $\text{Run } KernighanLin(G_{k,l}) \text{ and Update G}$
+		\State $\text{Run the two partition Kernighan-Lin Algorithm } KL2(G_{k,l}) \text{ and Update G}$
       \EndFor
     \EndFor{$\text{d}$}
   \end{algorithmic}
@@ -940,7 +939,14 @@ To address this problem we apply a greedy strategy. Let us assume that we want t
   \vskip1.5pt
 \label{alg:kl_multiple_segments}
 \end{algorithm}
-In our implementation we want to use the following initialization: One set among the $k$ sets is initialized with all $n$ vertices and the other sets are empty. This will give every set the same change to get some vertices in a fair amount of time. However, this also violates our restriction that \textit{the subsets have to be of equal size}. The solution to this problem is to introduce so-called \textit{dummy vertices}, which are placeholders and exhibit zero similarities. This means that they do not affect the cost terms used during the optimization.
+In our implementation we want to use the following initialization: One set among the $k$ sets is initialized with all $n$ vertices and the other sets are empty. This will give every set the same change to get some vertices in a fair amount of time. However, this also violates our restriction that \textit{the subsets have to be of equal size}. The solution to this problem is to introduce so-called \textit{dummy vertices}, which are placeholders and exhibit zero similarities. This means that they do not affect the cost terms used during the optimization. Additionally, Figure $\ref{fig:kl_multipart_label}$ visualizes one iteration of Algorithm $\ref{alg:kl_multiple_segments}$.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1\linewidth] {implementation/segmentation/kl_multiple_clusters_example}
+\end{center}
+\caption[Kernighan-Lin 3 Partitions Example]{In this example we show one iteration of Algorithm $\ref{alg:kl_multiple_segments}$ when solving for three optimal partitions on a given graph. We initially partition our graph into three optimal partitions $A$, $B$, $C$ as shown on the left image. Set A and set B contain dummy vertices. Then, we run the Kernighan-Lin (KL2) (Algorithm $\ref{alg:kernighan_lin}$) on every possible set pair and update the graph. The final result after one iteration is shown on the right.}. 
+\label{fig:kl_multipart_label}
+\end{figure}
 
 \section{Dense Motion Segmentation}
 \label{sec:dense_motion_segmentation}
