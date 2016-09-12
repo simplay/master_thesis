@@ -264,7 +264,7 @@ The idea is to find the ground truth mask $i$ that yields the most point interse
 \label{sec:methodology}
 In this section we give a brief description about the methodology used to perform our experiments. \\ \\
 We want to quantitatively evaluate the quality of segmentations produces by running different pipeline combinations. In particular we propose to evaluate the quality of how well moving objects were segmented. We use the datasets described in Section $\ref{sec:datasets}$. Produced motion segmentations are compared against available ground truth images. While running the pipeline we rely on the defaults described in Section $\ref{sec:spectral_clustering_parameters}$.\\ \\
-Before evaluating the performance of generated segmentations, we run our segment merger, which is described in Section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. After running the merger, each GT object is assigned to at most one label. Therefore, the evaluation measures can be computed independently per object. In particular, for each segmentation result we compute their precession, recall and their f1 score by comparing them against their ground truth. The definition of these measures is listed in Equation $\ref{eq:statistical_measures}$. 
+Before evaluating the performance of generated segmentations, we run our segment merger, which is described in Section $\ref{sec:seg_merger}$, as a post-processing step. The merged segments are quantitatively evaluated using different statistical measures. After running the merger, each GT object is assigned to at most one label. Therefore, the evaluation measures can be computed independently per object. In particular, for each segmentation result we compute their precession, recall and their F1 score by comparing them against their ground truth. The definition of these measures is listed in Equation $\ref{eq:statistical_measures}$. 
 \begin{equation}
 \begin{aligned}
 	& \text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \\
@@ -423,10 +423,10 @@ In this experiment we have a closer look at the convergence rate of the Minimum 
 \begin{center}
 \includegraphics[width=0.47\linewidth] {evaluation/two_chairs/performance_iter/iter_f1}
 \end{center}
-\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of Minimum Cut when running LDOF PED MC. We observe, that the more iterations are run, the higher the F1-Score gets. However}
+\caption[Convergence Rate MinCut Segmentation]{Visualizing the convergence rate of Minimum Cut when running LDOF PED MC. We observe, that the more iterations are run, the higher the F1 Score gets. However}
 \label{fig:convergence_rate_mc}
 \end{figure}
-We observe that the more iterations we run, the higher the F1-Score gets. However, we also observe, that the F1 Score is converging already after 4 iterations. This matches with our assumption that no more than 20 iterations have to be run when using the MC segmentation method.
+We observe that the more iterations we run, the higher the F1 Score gets. However, we also observe, that the F1 Score is converging already after 4 iterations. This matches with our assumption that no more than 20 iterations have to be run when using the MC segmentation method.
 
 \begin{figure}[H]
 \begin{center}
@@ -521,7 +521,7 @@ As we can see, the optimal value $\lambda = 0.01$ produced the best segmentation
 
 \subsubsection{Examine Eigenvector-/Cluster-Count Defaults}
 In Section $\ref{sec:spectral_clustering_parameters}$ we mentioned what default values we use for the number of clusters and eigenvectors, when either running the SC or the MD segmentation method. We stated, that we use twice the estimated count of the moving objects present in the video as the cluster count and twice the cluster count as the number of eigenvalues. In order to legitimize the usage of those defaults, we created a series of segmentations for a varying number of clusters and eigenvectors. \\ \\
-In this experiment we evaluate the Cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs as shown in Figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the f1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of used eigenvectors but keeps the cluster count as a free variable.
+In this experiment we evaluate the Cars dataset, since it has a static camera and a known number of large moving objects. In particular, there are two moving cars, each forming a moving objects and the background. Therefore we use the estimate \textit{3 segments}. Moreover, we use the optimal $\lambda$ value for PD affinities. Finally, we run the SC segmentation method on every cluster-/eigenvector-count combination between 3 to 6 clusters and 3 to 12 eigenvectors. To ease the readability of the results, we produced two graphs as shown in Figure $\ref{fig:cc_ev_combinations}$. The graph on the left plots the F1 score against a fixed number of clusters and a varying number of eigenvectors. In contrast, the graph on the right side fixes the number of used eigenvectors but keeps the cluster count as a free variable.
 \begin{figure}[H]
 \begin{center}
 \subfigure[Fixed Clusters and Varying Eigenvectors]{
@@ -531,11 +531,11 @@ In this experiment we evaluate the Cars dataset, since it has a static camera an
    \includegraphics[width=0.505\linewidth] {evaluation/exploring_params/free_cc}
 }
 \end{center}
-\caption[Varying number of Clusters / Eigenvectors]{Two graphs that show the f1 score for a varying number of clusters and eigenvectors on the cars dataset. The graph on the left shows plots for fixed cluster numbers and the graph on the right plots the f1 score for a fixed eigenvalue count and varying cluster counts.}
+\caption[Varying number of Clusters / Eigenvectors]{Two graphs that show the F1 score for a varying number of clusters and eigenvectors on the cars dataset. The graph on the left shows plots for fixed cluster numbers and the graph on the right plots the F1 score for a fixed eigenvalue count and varying cluster counts.}
 \label{fig:cc_ev_combinations}
 \end{figure}
-At first glance, the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the f1 scores, when increasing the number of clusters. This behaviour seems to be counterintuitive. Hence, the optimal cluster/eigenvalue count choice seems to be more complex than our simple heuristic. However, when considering the fixed clusters graph, we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
-However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations also produce top results, according to the f1 score. Despite this last observation we can conclude, that our defaults for the cluster- and and eigenvector count allow to produce good results. Therefore we will use this cluster and eigenvector heuristic during this evaluation. \\ \\
+At first glance, the resulting graphs seem to have a very complicated behaviour. We observe oscillations in the F1 scores, when increasing the number of clusters. This behaviour seems to be counterintuitive. Hence, the optimal cluster/eigenvalue count choice seems to be more complex than our simple heuristic. However, when considering the fixed clusters graph, we observe that our assumption to use \textit{6 clusters} ranks amongst the best variants. Moreover, when considering the plots for fixed eigenvectors, then we see that using 6 clusters together with 12 eigenvectors also yields top results. \\ \\
+However, we also notice, that this assumption may not be the best variant, since other cluster-eigenvector combinations also produce top results, according to the F1 score. Despite this last observation we can conclude, that our defaults for the cluster- and and eigenvector count allow to produce good results. Therefore we will use this cluster and eigenvector heuristic during this evaluation. \\ \\
 Additional \enquote{varying the cluster-eigenvalue count} experiments and their measurements can be found in the appendix in Section $\ref{sec:additional_cc_ev_exp}$.
 
 \subsection{On Exploring Flow Methods}
@@ -655,7 +655,7 @@ We notice that the LRGBD flow fields are locally homogenous within the layer the
 \subsection{Overall Performance}
 \label{sec:overall_performance}
 So far, we justified our default parameter choices and we were able to drop two poorly behaving flow methods (HS and LRGBD). In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm and Statue). Unfortunately, we cannot use every dataset in this experiment because not every pipeline method can be run on every available dataset. For instance, SRSF flow fields can only be generated for images with a resolution of $640 \times 480$ pixels. Furthermore, we only use datasets that have measured depth fields.\\ \\
-In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first combination resembles to the implementation described in $\cite{OB14b}$$\footnote{Both implementations use LDOF flow fields, a similar affinity measure and a similar spectral clustering technique.}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged f1 scores of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measurements are listed in Table $\ref{tab:overall_performance}$.
+In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first combination resembles to the implementation described in $\cite{OB14b}$$\footnote{Both implementations use LDOF flow fields, a similar affinity measure and a similar spectral clustering technique.}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged F1 scores of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measurements are listed in Table $\ref{tab:overall_performance}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.7\linewidth] {evaluation/overall/all}
@@ -684,7 +684,7 @@ LDOF PED MC & 64.11\%   & 67.27\%     & 65.65\%  \\ \hline
 \caption[Overall Performance LDOF P-Affinities]{Evaluation of all LDOF-P-affinity pipeline combinations on every dataset. }
 \label{tab:overall_performance_ldof}
 \end{table}
-From these measurements we observe again, that incorporating depths (via running PED) into the pipeline yields significant better results than without doing so. Moreover, MC achieves higher f1 scores than SC. 
+From these measurements we observe again, that incorporating depths (via running PED) into the pipeline yields significant better results than without doing so. Moreover, MC achieves higher F1 scores than SC. 
 
 \subsection{Pipeline Combination Comparisons}
 \label{sec:pipeline_combination_cmp}
@@ -706,7 +706,7 @@ SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
 \caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flow fields using MC}
 \label{tab:bonn_datasets_ldof_vs_srsf}
 \end{table}
-We observe that segmentations based on SRSF flow fields always obtain higher f1 scores. Therefore, using SRSF flow fields seems to be beneficial.
+We observe that segmentations based on SRSF flow fields always obtain higher F1 scores. Therefore, using SRSF flow fields seems to be beneficial.
 
 \subsubsection{2D vs. 3D}
 In this section we want to illustrate the dominance of affinities that incorporate depth measurements. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flow fields and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
@@ -726,7 +726,7 @@ LDOF SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 \caption[2D vs. 3D: Bonn Datasets]{Comparing affinities computed by 3D trajectories against 2D trajectories.}
 \label{tab:bonn_datasets_2d_vs_3d}
 \end{table}
-We observe that, regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
+We observe that, regardless of the choice of segmentation method, affinities produced by using depths achieve higher F1 scores than does without. Therefore, using depths seems to be beneficial.
 
 \subsubsection{SC vs. MC}
 In this experiment we compare our two P-affinity segmentation methods, SC and MC. For this purpose we strictly used LDOF flow fields and evaluated the generated segmentations of the following combinations: PD SC, PD MC, PED SC and PED MC. The corresponding results are listed in Table $\ref{tab:one_chair_sc_vs_mc}$
@@ -744,7 +744,7 @@ LDOF PED MC & 62.23\% & 58.07\% & 60.08\% \\ \hline
 \caption[SC vs. MC]{Comparing the segmentation methods SC and MC} 
 \label{tab:one_chair_sc_vs_mc}
 \end{table}
-We observe, that segmentations produced by MC always obtain higher f1 scores than SC methods. It seems beneficial to use the MC segmentation method when using P-affinities.
+We observe, that segmentations produced by MC always obtain higher F1 scores than SC methods. It seems beneficial to use the MC segmentation method when using P-affinities.
 
 \section{Runtime Measurements}
 \label{sec:runtime_measurements}
