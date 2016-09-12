@@ -654,8 +654,8 @@ We notice that the LRGBD flow fields are locally homogenous within the layer the
 
 \subsection{Overall Performance}
 \label{sec:overall_performance}
-So far, we justified our default parameter selections and were able to drop two poorly behaving flow methods (HS and LRGBD). In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm and Statue). The reason for not using every dataset is because not every method can be run on every available dataset. For instance, SRSF flow fields can only be generated for images with a resolution of $640 \times 480$ pixels. Furthermore, we do not use datasets that do not have depth fields.\\ \\
-In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first combination resembles to the implementation described in $\cite{OB14b}$$\footnote{Both implementations use LDOF flow fields, a similar affinity measure and a similar spectral clustering technique.}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged performance of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measured data is listed in Table $\ref{tab:overall_performance}$.
+So far, we justified our default parameter choices and we were able to drop two poorly behaving flow methods (HS and LRGBD). In this experiment, we want to evaluate the segmentation quality of all LDOF and SRSF pipeline combinations applied on five datasets (Cerealbox, Chairs, Watercan, Waving-Arm and Statue). Unfortunately, we cannot use every dataset in this experiment because not every pipeline method can be run on every available dataset. For instance, SRSF flow fields can only be generated for images with a resolution of $640 \times 480$ pixels. Furthermore, we only use datasets that have measured depth fields.\\ \\
+In particular we are interested in comparing the modes LDOF PD SC and SRSF PED MC, since the first combination resembles to the implementation described in $\cite{OB14b}$$\footnote{Both implementations use LDOF flow fields, a similar affinity measure and a similar spectral clustering technique.}$ and the second is supposed to be our best P-affinity variant. Moreover, we used $\cite{KB15b}$' GraphCut$\footnote{This method does not use depth data.}$ implementation and let it compete against our pipeline. The averaged f1 scores of this experiment is visualized in Figure $\ref{fig:overall_performance_bar_chart}$. The corresponding measurements are listed in Table $\ref{tab:overall_performance}$.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.7\linewidth] {evaluation/overall/all}
@@ -663,9 +663,13 @@ In particular we are interested in comparing the modes LDOF PD SC and SRSF PED M
 \caption[Overall Performance Bar Chart]{Evaluation of LDOF and SRSF flow fields using all pipeline combinations on all compatible datasets.}
 \label{fig:overall_performance_bar_chart}
 \end{figure}
-We observe the following facts: Methods using SRSF flow fields achieve better results than those using LDOF flow fields. Methods that make use of depth cues are generally performing better than two dimensional approaches. And lastly, using Minimum Cut (MC) for generating the segmentation is better than running spectral clustering (SC). \\ \\
-Overall, KL yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we just used its standard parameters but used specifically good parameters in our pipeline (determined for our datasets).
-Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are listed in Table $\ref{tab:overall_performance_ldof}$.
+We observe the following facts: 
+\begin{itemize}
+	\item Combinations that use SRSF flow fields achieve better results than those that use LDOF flow fields.
+	\item Methods that make use of depth cues are generally performing better than two dimensional approaches.
+	\item Lastly, using the Minimum Cut (MC) segmentation technique produces better results than spectral clustering (SC)
+\end{itemize}
+Overall, The Kernighan-Lin (KL) heuristic yields the best segmentations among all segmentation methods. Lastly, Brox's GraphCut does not produce very good segmentation results. However, to be fair, we used its standard parameters but used optimal parameters in our pipeline (determined for the used datasets). Additionally, we evaluated all LDOF P-affinity pipeline combinations on every dataset. The results are listed in Table $\ref{tab:overall_performance_ldof}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|}
@@ -687,7 +691,7 @@ From these measurements we observe again, that incorporating depths (via running
 Our pipeline allows to alter between many different flow estimation-, affinity matrix computation- and segmentation methods. In this section we want to determine an optimal pipeline combination by comparing the methods of each stage and choosing the best one.
 
 \subsubsection{LDOF vs. SRSF}
-In this section we want to illustrate the dominance of SRSF flow fields. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinities. The results are listed in Table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
+In this section we want to illustrate the dominance of SRSF flow fields. For this purpose we evaluated the segmentations of the Bonn datasets. In this experiment we strictly use the MC segmentation method and generated segmentations for all P-affinity measures. The results are listed in Table $\ref{tab:bonn_datasets_ldof_vs_srsf}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -702,10 +706,10 @@ SRSF PED & 81.88\% & 59.32\% & 68.80\% \\ \hline
 \caption[LDOF vs. SRSF: Bonn Datasets]{Comparing segmentations on LDOF and SRSF flow fields using MC}
 \label{tab:bonn_datasets_ldof_vs_srsf}
 \end{table}
-We observe, that segmentations based on SRSF flow fields always obtain higher f1 scores. Therefore, using SRSF flow fields seems to be beneficial.
+We observe that segmentations based on SRSF flow fields always obtain higher f1 scores. Therefore, using SRSF flow fields seems to be beneficial.
 
 \subsubsection{2D vs. 3D}
-In this section we want to illustrate the dominance of affinities that use depth cues. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flow fields and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
+In this section we want to illustrate the dominance of affinities that incorporate depth measurements. For this purpose we evaluated the segmentations of the Bonn Chairs dataset. In this experiment we strictly use LDOF flow fields and generated segmentations for every possible pipeline mode. The results are listed in Table $\ref{tab:bonn_datasets_2d_vs_3d}$.
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
@@ -722,15 +726,15 @@ LDOF SED KL & 68.42\% & 69.63\% & 69.01\% \\ \hline
 \caption[2D vs. 3D: Bonn Datasets]{Comparing affinities computed by 3D trajectories against 2D trajectories.}
 \label{tab:bonn_datasets_2d_vs_3d}
 \end{table}
-We observe, that regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
+We observe that, regardless of the choice of segmentation method, affinities produced by using depths achieve higher f1 scores than does without. Therefore, using depths seems to be beneficial.
 
 \subsubsection{SC vs. MC}
-In this experiment we compare our two P-affinity segmentation methods. For this purpose we evaluated the segmentations of the One Chair dataset. For this experiment we strictly use LDOF flow fields and then generated segmentations for the modes PD SC, PD MC, PED SC and PED MC. The results are listed in Table $\ref{tab:one_chair_sc_vs_mc}$
+In this experiment we compare our two P-affinity segmentation methods, SC and MC. For this purpose we strictly used LDOF flow fields and evaluated the generated segmentations of the following combinations: PD SC, PD MC, PED SC and PED MC. The corresponding results are listed in Table $\ref{tab:one_chair_sc_vs_mc}$
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\multicolumn{4}{|c|}{Comparison one chair dataset on LDOF}                        \\ \hline
+\multicolumn{4}{|c|}{Comparison one Chair dataset on LDOF}                        \\ \hline
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score}  \\ \hline
 LDOF PD SC & 54.23\% & 47.82\% & 50.82\% \\ \hline
 LDOF PD MC & 55.64\% & 49.50\% & 52.39\% \\ \hline
@@ -740,7 +744,7 @@ LDOF PED MC & 62.23\% & 58.07\% & 60.08\% \\ \hline
 \caption[SC vs. MC]{Comparing the segmentation methods SC and MC} 
 \label{tab:one_chair_sc_vs_mc}
 \end{table}
-We observe, that segmentations produced by MC always obtain higher f1 scores than SC methods. It seems benefical to use the MC segmentation method when using P-affinities.
+We observe, that segmentations produced by MC always obtain higher f1 scores than SC methods. It seems beneficial to use the MC segmentation method when using P-affinities.
 
 \section{Runtime Measurements}
 \label{sec:runtime_measurements}
