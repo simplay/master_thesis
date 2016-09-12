@@ -807,7 +807,7 @@ For computing pseudo-probabilities, we use the inverse of the logit function, th
 	f(z) = \frac{1}{1 + \exp \left( -z \right)}.
 	\label{eq:logistic_function}
 \end{equation}
-This function can therefore be used to define pseudo cut probabilities. Next we have to determine what the input value $z$ represents. Clearly, $z$ is equal to the result of the logit function applied on the psuedo-probability. However, such a definition is not helpful at all, since we defined $f(z)$ as the inverse of the logit and thus end up with a recursive definition. Another interpretation of the negative logit is that it models distances between edges. If the distances are too large, a cut should be performed. Here, the S-affinity distance measure defined in Equation $\ref{eq:sum_dist}$ can be used to compute such a distance $d$. Then, the final expression for $z$ becomes:
+This function can therefore be used to define pseudo cut probabilities. Next we have to determine what the input value $z$ represents. Clearly, $z$ is equal to the result of the logit function applied on the pseudo-probability. However, such a definition is not helpful at all, since we defined $f(z)$ as the inverse of the logit and thus end up with a recursive definition. Another interpretation of the negative logit is that it models distances between edges. If the distances are too large, a cut should be performed. Here, the S-affinity distance measure defined in Equation $\ref{eq:sum_dist}$ can be used to compute such a distance $d$. Then, the final expression for $z$ becomes:
 \begin{equation}
 	z = d - \log \left( \frac{p}{1-p} \right) + \log \left( \frac{\tilde{p}}{1-\tilde{p}} \right).
 \label{eq:edge_dist_weights}

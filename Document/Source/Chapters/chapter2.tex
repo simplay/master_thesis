@@ -202,14 +202,8 @@ In the following some details according to their implementation:
 
 \subsubsection{Layered RGB-D Flow Fields}
 \label{sec:lrgbd_flows}
-%s1
-%estimate general 2D motion by decomposition into several layers, which enables occlusion reasoning
-%s2
-%Other methods do segment the scene to impose rigidity or strong regularization over the regions (or segments). However, these segmentations are only used as tools to improve the accuracy of the estimates, and do not really cor-
-%respond to the underlying/independent motions of the scene => partitions the scene into depth layers
 In $\cite{Deq10}$ Dequing Sun et al present a layered RGBD scene flow estimation  method. They make use of the fact that depth information allows to recover 3D motion from a single view. However, in that case, depth boundaries are not well aligned with RGB images. Especially in occluded regions methods produce large errors. As a remedy, they therefore, use the depth fields for occlusion reasoning and formulate a layered RGBD scene flow method that jointly solves for the scene segmentation and the motion. In their formulation, the depth fields are used to estimate the per-layer 3D rigid motion to constraint the motion of each layer. \\ \\
-The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flow fields produced by their implementation. \\ \\
-
+The implementation of their method is freely available on the authors website, written in Matlab. In the following we use the abbreviation LRGBD for flow fields produced by their implementation. 
 
 \section{On Data Clustering}
 \label{sec:on_data_clustering}
