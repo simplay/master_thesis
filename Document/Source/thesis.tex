@@ -1,0 +1,169 @@
+\documentclass[a4paper]{report}
+
+\usepackage{natbib}
+\bibpunct{[}{]}{,}{a}{}{;}
+\usepackage{fancyheadings}
+\usepackage{iamdip}
+
+% allow to include graphics
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{subfigure}
+
+
+\usepackage[table,xcdraw]{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bbm}
+
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{color}
+\usepackage{mathtools}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{listings} 
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+% enable to use \enquote{text}
+\usepackage{csquotes}
+
+\usepackage[export]{adjustbox}
+
+% enables typesetting of hyperlinks
+\usepackage{hyperref}
+
+
+% have a 3 cm padding (left and right)
+\usepackage[hmargin=3cm]{geometry}
+
+\usepackage{tabularx}
+
+% algorithms
+\usepackage{boxedminipage}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+\usepackage{algorithm}
+\renewcommand{\algorithmicforall}{\textbf{Foreach}}
+\newcommand{\init}{\textbf{INIT }}
+\newcommand{\pluseq}{\mathrel{+}=}
+\newcommand{\asteq}{\mathrel{*}=}
+\newcommand{\myto}{\textbf{TO }}
+
+% usage: \colvec[a]{b}{c} or \colvec{a}{b}
+\newcommand*\colvec[3][]{
+    \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
+}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+
+\lstset{% 
+   language=Matlab, 
+   basicstyle=\small\ttfamily, 
+} 
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\prox}{\text{prox}}
+
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\newcommand*{\argminl}{\argmin\limits}
+% use `limits` notation for subscripts: 
+% => example: $\argmaxl_{i} \norm{S_j \cap M_i}$ 
+\newcommand*{\argmaxl}{\argmax\limits}
+
+
+\newcommand{\twonorm}[1]{\left\lVert#1\right\rVert_2}
+
+\headrulewidth 0.5pt \addtolength{\headheight}{5pt}
+
+\lhead[\fancyplain{}{\rm\thepage}]{\fancyplain{}{\rightmark}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{}{\rm\thepage}}
+\cfoot{}
+
+
+\graphicspath{{../Figures/}}
+
+\begin{document}
+
+
+\title{Motion Segmentation on RGB-D Sequences using Optical Flow Fields}
+\author{Michael Single}
+\betreuer{Prof. Dr. Matthias Zwicker \\ Peter Bertholet}
+\ort{Bern}
+\datum{2016}
+
+\pagenumbering{roman} \setcounter{page}{1}
+\maketitle
+
+\newpage
+\thispagestyle{empty}
+\vspace{8cm}
+\noindent
+{\centerline {\bf \large Abstract}}
+\vspace{1cm}
+
+
+\noindent
+
+%abstract
+The task of an accurate detection and extraction of the moving objects in a video, captured by a moving camera, is nowadays still a very challenging problem. In this thesis, we present a method for producing spatio-temporal consistent motion segmentation from RGB-D videos by using optical flow. Our framework consists of an optical flow estimation, motion trajectory tracking, affinity matrix formation and a segmentation stage. Our implementation can produce sparse as well as dense motion segmentations. Furthermore, we implemented several flow methods, similarity measures and segmentation techniques and examined their influence on the final segmentation quality. Finally, we quantitatively evaluated the quality of our segmentation results and determined an optimal pipeline assignment. In particular, we could successfully demonstrate, that incorporating depth data into our pipeline produces best results. 
+
+\pagenumbering{roman} \setcounter{page}{1}
+\tableofcontents
+
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+% Hauptdokument
+\pagenumbering{arabic} \setcounter{page}{1}
+\pagestyle{fancy}
+
+\include{Chapters/chapter1}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+\include{Chapters/chapter2}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+\include{Chapters/chapter4}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+\include{Chapters/chapter5}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+\include{Chapters/chapter6}
+\newpage{\pagestyle{empty} \cleardoublepage}
+
+\begin{appendix}
+\include{Chapters/appendix}
+\newpage{\pagestyle{empty} \cleardoublepage}
+\include{Chapters/additional_experiments}
+\newpage{\pagestyle{empty} \cleardoublepage}
+\include{Chapters/demosaicing}
+\newpage{\pagestyle{empty} \cleardoublepage}
+\include{Chapters/measurements}
+\newpage{\pagestyle{empty} \cleardoublepage}
+\end{appendix}
+\addcontentsline{toc}{chapter}{\numberline{}List of Tables}
+\listoftables
+
+\addcontentsline{toc}{chapter}{\numberline{}List of Figures}
+\listoffigures
+
+\addcontentsline{toc}{chapter}{\numberline{}List of Algorithms}
+\listofalgorithms
+
+\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+\bibliographystyle{alphadin}
+\nocite{*}
+\bibliography{thesis}
+
+% This is required since 2012!!
+\includepdf{Erklaerung.pdf}
+
+\end{document}

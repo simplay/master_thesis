@@ -1,0 +1,62 @@
+OLD
+SRSF
+
+ped
+-d statue_SRSF -task 3 -var 1 -nn 200 -nnm top -lambda 5
+
+mc
+statue_SRSF_srsf_uvw_ped_mc_iters_80_c_20_ev_25_nu_1e-07
+
+statue_SRSF_srsf_ped_mc_iters_0_c_20_ev_30_nu_1e-07
+statue_SRSF_srsf_uvw_ped_mc_iters_30_c_20_ev_25_nu_1e-07
+
+====================
+
+
+NEW
+
+=>
+both, SRSF, LDOF
+
+PED
+-d statue -task 3 -var 1 -nn 200 -nnm top -lambda 5
+
+mc
+statue_ldof_out_ldof_ped_mc_iters_30_c_14_ev_28_nu_1e-08
+statue_SRSF_srsf_out_ldof_ped_mc_iters_30_c_14_ev_28_nu_1e-08
+statue_LRGBD_lrgbd_knorke_abc_iters_30_c_14_ev_28_nu_1e-07
+
+
+
+frame 60
+ldof ped mc
+density: 0.73665%
+precission: 69.9309%
+recall: 38.2318%
+F1 score: 49.4363%
+
+srsf ped mc
+precission: 72.4712%
+recall: 70.6758%
+F1 score: 71.5622%
+
+lrgbd ped mc
+precission: 61.4583%
+recall: 8.3657%
+F1 score: 14.7268%
+
+f30
+ldof
+precission: 50%
+recall: 15.3568%
+F1 score: 23.4969%
+
+srsf
+precission: 49.026%
+recall: 38.7656%
+F1 score: 43.2962%
+
+precission: 25%
+recall: 0.22857%
+F1 score: 0.453%
+

@@ -1,0 +1,117 @@
+srsf ped mc
+
+f40
+precission: 86.0219%
+recall: 87.7881%
+F1 score: 86.896%
+
+f60
+density: 0.55632%
+precission: 85.5487%
+recall: 84.5535%
+F1 score: 85.0482%
+
+f80
+precission: 84.1554%
+recall: 84.2917%
+F1 score: 84.2235%
+
+
+srsf ped sc
+
+f40
+precission: 56.0571%
+recall: 60.1074%
+F1 score: 58.0117%
+
+f60
+precission: 58.5409%
+recall: 55.5357%
+F1 score: 56.9987%
+
+f80
+precission: 56.8749%
+recall: 58.5683%
+F1 score: 57.7092%
+
+
+srsf pd mc
+
+f40
+precission: 44.0617%
+recall: 56.8889%
+F1 score: 49.6603%
+
+f60
+precission: 46.1262%
+recall: 52.9881%
+F1 score: 49.3196%
+
+f80
+precission: 46.2378%
+recall: 56.6696%
+F1 score: 50.925%
+
+
+ldof ped mc
+
+f40
+precission: 29.798%
+recall: 32.7778%
+F1 score: 31.2169%
+
+f60
+precission: 28.58%
+recall: 33.378%
+F1 score: 30.7932%
+
+f80
+precission: 16.3842%
+recall: 33.3333%
+F1 score: 21.9697%
+
+
+ldof pd sc
+
+f40
+precission: 30.8017%
+recall: 26.7399%
+F1 score: 28.6275%
+
+f60
+precission: 34.7009%
+recall: 57.9502%
+F1 score: 43.4085%
+
+f80
+precission: 13.9837%
+recall: 32.2097%
+F1 score: 19.5011%
+
+
+srsf sed kl
+
+81.1544
+94.1033
+87.1505
+
+
+============
+
+
+T. Brox’ GraphCut
+
+f40
+precission: 11.0382%
+recall: 13.8635%
+F1 score: 12.2906%
+
+f60
+precission: 10.8736%
+recall: 14.6769%
+F1 score: 12.4922%
+
+f80
+precission: 11.6741%
+recall: 13.8829%
+F1 score: 12.683%

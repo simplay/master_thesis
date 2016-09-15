@@ -1,0 +1,168 @@
+OLD
+bonn_watercan_713_3_884_SRSF_srsf_ped_10_iter_iters_30_c_12_ev_18_nu_1e-08_200_nn_l_10_ct
+===============================
+
+watercan
+c_12_ev_18
+N = 100
+
+bonn_watercan_713_3_884_ldof_ldof_pd_sc_l10_s_12_ct_c_18_ev_12
+bonn_watercan_713_3_884_ldof_ldof_ped_sc_l10_s_12_ct_c_18_ev_12
+
+bonn_watercan_713_3_884_ldof_pd_10_iter_sc_iters_30_c_12_ev_18_nu_1e-08
+bonn_watercan_713_3_884_ldof_ped_10_iter_sc_iters_30_c_12_ev_18_nu_1e-08
+
+
+
+
+bonn_watercan_713_3_884_SRSF_srsf_ped_s_12_ct_1_l_5_c_12_ev_18
+
+
+new srsf ped mc
+-d bonn_watercan_713_3_884_SRSF -task 3 -var 1 -nn 202 -nnm top -lambda 10 -metl 10
+bonn_watercan_713_3_884_SRSF_srsf_srsf_new_mc_iters_30_c_12_ev_18_nu_1e-07
+
+bonn_watercan_713_3_884_LRGBD_lrgbd_pew_foobar_c_12_ev_18
+
+
+LDOF
+
+pd sc
+l = 10
+c_12_ev_18
+
+pd mc
+12_ev_18_nu_1e-08
+N = 100
+
+ped sc
+l = 10
+c_12_ev_18
+
+
+srsf 
+
+ped mc
+bonn_watercan_713_3_884_SRSF_ped_top_202_sim
+-nn 202 -nnm top -lambda 10 -metl 10
+iters_30_c_12_ev_18_nu_1e-07
+
+precission: 94.2308%
+recall: 95.0381%
+F1 score: 94.6327%
+
+pd mc
+bonn_watercan_713_3_884_LRGBD_pd_top_200_sim
+bonn_watercan_713_3_884_SRSF_srsf_srsf_mc_pd_sc_c_12_ev_18
+-d bonn_watercan_713_3_884_SRSF -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 6
+
+srsf ped sc
+density: 0.11816%
+precission: 90.0042%
+recall: 96.25%
+F1 score: 93.02%
+
+srsf pd mc
+
+density: 0.15039%
+precission: 95.122%
+recall: 86.9626%
+F1 score: 90.8595%
+Fragmentation: 0.66667
+
+srsf pd sc
+density: 0.15039%
+precission: 96.25%
+recall: 83.0303%
+F1 score: 89.1528%
+Fragmentation: 0.66667
+
+lrgbd
+
+sc
+
+ped
+N = 202
+pd mc
+-d bonn_watercan_713_3_884_LRGBD -task 2 -var 1 -nn 200 -nnm top -lambda 0.1 -metl 6
+nu = 1.0000e-08
+c_12_ev_18
+
+
+hs
+ped mc
+-d bonn_watercan_713_3_884_HS -task 3 -var 1 -nn 200 -nnm top -lambda 5
+bonn_watercan_713_3_884_HS_hs_knorke_abc_iters_30_c_12_ev_18_nu_1e-07
+
+ped sc
+precission: 71.5873%
+recall: 81.958%
+F1 score: 76.4224%
+
+ped mc
+precission: 71.8356%
+recall: 74.5944%
+F1 score: 73.189%
+
+pd sc
+precission: 90%
+recall: 31.258%
+F1 score: 46.4006%
+
+pd mc
+precission: 41.9811%
+recall: 39.3805%
+F1 score: 40.6393%
+
+
+
+
+===
+unmerged
+
+ldof pd sc
+precission: 58.138%
+recall: 57.6492%
+F1 score: 57.8925%
+
+
+precission: 80.2669%
+recall: 53.184%
+F1 score: 63.9773%
+
+
+
+
+
+
+
+
+=====
+=> ldof_pd_sc.jpg
+   58.7338  45.6922  51.3986
+=> ldof_ped_sc.jpg
+   65.1446  48.3306  55.4919
+=> ldof_pd_mc.jpg
+   56.5843  48.6905  52.3414
+=> ldof_ped_mc.jpg
+   71.8775  44.66  55.0904
+=> ldof_sd_kl.jpg
+   53.1543  52.1232  52.6337
+=> ldof_sed_kl.jpg
+   54.574  48.8511  51.5542
+merged:
+=> ldof_pd_sc.jpg
+   56.9323  52.3166  54.5269
+=> ldof_ped_sc.jpg
+   58.0366  46.1999  51.4462
+=> ldof_pd_mc.jpg
+   50.6771  49.9371  50.3044
+=> ldof_ped_mc.jpg
+   64.3547  52.5607  57.8628
+=> ldof_sd_kl.jpg
+   67.8651  62.5778  65.1143
+=> ldof_sed_kl.jpg
+   79.1254  76.8788  77.9859
+
+
+

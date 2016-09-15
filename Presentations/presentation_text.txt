@@ -1,0 +1,1161 @@
+Motion Segmentation on RGB-D Videos using Optical Flows
+Master Thesis
+Michael Single
+Supervised by
+P. Bertholet, Prof. Dr. M. Zwicker
+					
+				
+			
+		
+	 
+Hello everyone
+
+I am glad to present you today my master thesis
+Which is about
+Motion seg on rgbd videos using optical flows
+
+“Motion perception is the process of inferring the speed and direction of elements in a scene based on visual inputs.”
+Motion perception is the process of inferring the speed 
+and direction of elements in a scene based on visual inputs.
+
+Motivation (1)
+Stealth attack
+Hiding
+In nature, the ability to visually perceive the surrounding environment determines the individual odds of survival.
+Especially the proper sensation of motion makes the difference between successfully hanting as a predator or surviving as a prey
+
+
+Linksaugenflunder
+
+Sources:
+http://www.freenet.de/lifestyle/frauen/die-verruecktesten-tarnungen-der-tierwelt_4246988_4744024.html
+
+
+
+
+
+Motivation (2)
+Frame t
+Frame t+1
+mountains
+mountains
+bush
+bush
+Alongside with the ability to sense color, depths and brightness, motion is a fundamental visual cue
+Allowing for estimation speed, the direction of movement and relative object distances.
+
+Objects further apart, such as the mountains in the background, seem not to move, 
+whereas the nearby bushes exhibit motion blur and a large displacements
+
+
+Motivation (3)
+Grouping Objects
+In particular, motion is of great importance for interpreting visual information such as object groupings and their structure.
+For instance in surveillance videos we can extract the mask of moving cars by tracking their motion.
+
+Motion Segmentation
+Separate moving objects from background
+Partition into logical parts
+In this thesis we are interested in the task of motion segmentation
+=>
+motion segmentation aims at decomposing a video into moving objects and background or 
+even to partition moving objects into their logical parts
+
+MoSeg is the first fundamental step in many computer vision algorithms, 
+Particular applications are: video surveillance, traffic tracking and object recognition.  
+
+
+
+Thesis Goals
+Implement Motion Segmentation Pipeline that uses Optical Flows and Depth Data
+Based on [OB14b], [KB15b]
+
+Examine influence of:
+Optical Flow Methods, Trajectory Analysis, Segmentation Technique
+
+Qualitative and Quantitative Evaluation
+In this master thesis i formulated the following 3 goals:
+
+First, based on the work of T.Brox et al
+we want to Implement a pipeline that can segment moving objects 
+by clustering trajectories established via optical flow and depth cues.
+
+Moreover, we want to 
+examine the influence of the used flows, the method of trajectory analysis and segmentation technique
+and how they affect the segmentation quality by altering those components in the pipeline
+
+Last, perform a qualitative and quantitative evaluation of generated segmentations
+
+
+
+Problem Statement
+In particular, our pipeline addresses the following problem statement:
+
+For a given RGB-D video, consisting of color frames and associated depth measurements,  And the camera calibration data
+We want to produce sparse segmentations of moving objects present in that video.
+
+Related Work
+Image Differences
+Layer Based
+Factorization Method
+Us ⇒ Optical Flow
+Before discussing our pipeline let me mention some related approaches
+Methods based on Image Differences: 
+Thresholds the intensity difference of a frame pair. 
+The changing areas in the resulting image are used as a guide to extract spatial and temporal information.
+Layer based mehtods: 
+divide the images into layers that have uniform motion. 
+Such approaches determine the different depth layer in the image and find in which layer an object lies.
+and last Factorization methods: 
+Allow to recover the structure and motion by using traced features over the an image sequence
+KLICK
+Our pipeline is based on optical flows
+
+
+
+
+General Motion Segmentation Pipeline
+Trajectories
+Groups
+Segmentation
+Video Sequence
+By summarizing recent literature about optical flow based motion segmentations
+we could formulate a minimal pipeline:
+
+On a given video sequence we first have to track motion trajectories on reliable features. 
+
+By comparing the resulting trajectories according to a certain measure we can perform a grouping.
+every group consists of similar trajectories.
+The final moSeg is directly represented by the grouped trajectories.
+
+
+2. Group Trajectories on their similarities
+
+General Motion Segmentation Pipeline
+Track Motion Trajectories
+
+
+What features to track?
+When to start?
+When to stop?
+Where to track?
+
+2. 
+What measure?
+How to group?
+We conclude that such a MoSeg pipeline consists of the two following main stages,
+Track motion trajectories and group trajectories on their similarities.
+
+But then the following questions arise:  KLICK
+What features should be used to start a trajectory?
+When should we stop the tracking?
+And how is the tracking even be performed?
+And about the grouping we have to answer  KLICK
+What measure do we use to compare trajectories?
+And how is the grouping process performed?
+
+
+
+2. Group Trajectories on their similarities
+What measure?
+How to group?
+General Motion Segmentation Pipeline
+Track Motion Trajectories
+What features to track?
+When to start?
+When to stop?
+Where to track?
+
+Feature Detector
+Occlusion Detection
+Optical Flows
+Similarity Graph
+Segmentation Method
+To determine traceable features, used to start trajectories. KLICK
+we apply a certain feature detector. KLICK
+Moreover, the trajectory tracking has to be stopped in occluded areas.KLICK
+For the actual tracking we rely on optical flows.KLICK
+
+The grouping is performed by segmenting the trajectories’ similarity graph,KLICK
+The measures we utilize and the actual segmentation techniques are discussed later on.KLICK
+
+Feature Detection: Which Features
+
+Frame
+Sparse Features
+Later, in our motion tracking stage, we want to start trajectories on reliable feature locations.  
+Furthermore, due to efficiency reasons, we want to start as few trajectories as possible per frame
+Since image corners exhibit a lot of structural information, we sparsely extract strong corner location
+And use them as the starting positions.
+
+
+Harris Detector
+Corner Response
+Input Frame
+Feature Detector
+To extract the image corners we use a Harris corner detector.
+
+The idea is the following:
+A corner defines an intersection of two edges. 
+Therefore, it represents a point in which the directions of these two edges change. 
+For images this means that the gradient has a large variance at that location.
+the harris corner detector, therefore, extracts such strong gradient variances from an image.
+
+Feature Locations
+Harris Corners
+Thresholding
+Filter Corners
+Since we are interested in strong corner, we threshold the corner response.
+This gives us a binary image, containing a dense sampling of strong corner locations
+as shown on the right.
+
+Strong Corners
+all dense corner location
+Strong dense corner location
+To even strengthen the corner selection, we further compare them against their flow magnitude.
+We only keep corners that map to a strong flow magnitude.
+On the left image we colored strong flow magnitude locations in different shades of blue.
+
+Feature Density
+K = 4
+K = 8
+K = 16
+Finally, to generate a sparse sampling of the corner locations, we 
+Select only every k-th corner location.
+Selecting too few corners may result in missing details
+Whereas a too dense sampling results in an oversampling.
+We found that sampling every 8th corner is a solid choice.
+
+======
+Sample only every k-th corner location:
+ apply a boolean grid onto corner candidates to reject corners => reduces oversampling
+
+Optical Flow
+⇒ displacement to successor frame
+In order to estimate the motion between two frames we utilize their optical flow field.
+The OF is a vector field that defines a point-to-point correspondence between two successive frames. 
+Each vector acts as the displacement of a point in the first frame to match its corresponding point in the second frame. 
+
+In other words, the OF represents the pixel motion field as observed in images and hence answers the question: “which pixel went where in its successor frame.”
+
+
+Flow Field
+Color Coding
+Flow Visualization
+For visualizing flow fields we use the Middlebury  flow color coding.
+The shown color plate provides color values for the normalized flow vectors. 
+KLICK
+The angle in the circle corresponds to the flow direction and the distance to the center corresponds to the flow velocity
+
+
+
+I(x, y, t) = I(x + u(x,y), y + v(x,y), t+1)
+Displacement (u,v) is unknown ⇒ Estimate it!
+Brightness Constancy:
+Smooth Flows ⇒ system becomes solvable
+Unknown Flow Fields
+In general, the motion between two frames is unknown.
+KLICK
+To estimate optical flows, most methods assume constancy in the brightness 
+Meaning that the apparent brightness of moving objects remains constant between frames.
+This yields one linear equation with two unknowns (u,v). 
+KLICK
+By further assuming smoothness in the flow fields, this system becomes solvable.
+
+
+
+Optical Flows in Pipeline
+For each Frame compute:
+Forward Flow : Frame t → Frame t+1
+Backward Flow: Frame t → Frame t-1
+
+tracking, occlusion detection, similarity measure
+
+4 Flow methods: HS, LDOF, SRSF, LRGBD
+In our pipeline we rely heavily on optical flow fields. 
+In particular, flow fields are used to perform the point tracking required to extract motion trajectories, 
+to detect occlusions and to compute affinities between trajectories. 
+Therefore, the quality of the flow fields highly affects the final outcome of the motion segmentation.
+
+For each frame in a video we compute the forward and backward flows:
+The forward flow is the flow from a frame to its successor frame
+And the bf is the flow to its previous frame
+
+For generating the optical flows we rely on existing implementations.
+In particular, our pipeline integrates 4 flow estimation methods
+
+
+Flow Estimation Methods
+HS: Horn & Schunk Flows
+Brightness Constancy & Smooth Flow
+simple, fast
+sensitive to noise, small displacements
+
+
+LDOF: Large displacement Optical Flows:
+Feature Descriptor + Variational Approach
+Smooth flows with large displacements 
+temporal inconsistency
+
+
+LRGBD: Layered RGB-D Flows
+Flow via Depth layer ordering
+Robust occlusion handling
+Very slow
+
+
+SRSF: Semi Rigid Scene Flows
+global rigid + non-rigid residual
+Smooth, deformation, 3d flows
+Restricted to 640 x 480 resolution
+
+
+No depth
+Uses depth
+In the following a brief listing of our flow methods and some of their properties
+Two of our methods make use of depth data and two that do not use depths
+The abbreviations of these methods are written in bold face letters.
+
+HS: is based on the original flow estimation formulation by Horn and Schunks.
+It combines the brightness constancy & flow smoothness assumption in a variational approach.
+Their formulation is simple and fast but is very sensitive to noise. Furthermore, it only can handle
+Small motion displacements.
+
+LDOF combines this variational approach together with a feature discriptor.
+This allows LDOF to handle large motion displacement, meaning fast moving objects.
+However, is also suffers from the issues of used descriptors, 
+resulting in potential temporal Inconsistencies. 
+
+LRGBD: is a layered approach which uses depths to detect occlusion and solve
+For the motion between the layers. Unfortunately, this method is very slow.
+
+SRSF: combines the depths in a global rigid and non-rigid residual motion model. 
+THis allows them to produce smooth 3d flows, handle deformation and simple camera shaking.
+The downside of this method is that it only can be run on frames having a certain pixels.
+
+
+
+Occlusion Detection: when to stop
+Occluded Regions
+Frame t
+Occlusion may occur whenever a previously visible moving object gets covered by another object.
+Therefore, it tells us when to stop tracking a trajectory 
+and also when to start NEW trajectories (at the occluded regions).
+Without stopping, two distinct objects would be tracked by the same trajectory
+
+We generate an occlusion map for every dataset frame as shown on the right.
+Here: white pixels indicate occluded regions and black non-occluded regions
+In the following an example of occlusion: “A happy little troll face is crossing the street and occluding the two poor cars.“
+
+
+
+
+
+
+
+Camera View
+Frame t
+A happy little troll face is crossing the street and occluding the two poor cars. 
+
+Frame t+1
+Camera View
+Trollface is occluding the car in the background
+
+Frame t+2
+Camera View
+
+Frame t+3
+Camera View
+
+Frame t+4
+Camera View
+
+Occlusion Detection Strategy
+Consistency Check:
+dist
+So, How can we actually detect occlusions?
+The Rationale behind our approach is the following: 
+forward flows can be used to compute the tracked to position
+Whereas the Bf can be used to get an approx. tracked from position
+
+Hence, we detect occlusions by verifying a consistency check between the forward- and backward flows on every frame.
+Meaning, that for any point p_t [K], we apply the forward flow to get the tracked to position p_(t+1) [K].
+Afterwards, we apply the corresponding BF [K] at p_(t+1) 
+and check whether we obtain approximately the same starting position p_t.
+If the difference is smaller than the corresponding forward and backward flow distance [K], we say, 
+that there is no occlusion, otherwise we got occluded.
+
+
+=============
+Hence, for every frame position we check whether we approx. land at the same starting position when applying the forward and backward flow.
+
+Recap
+Starting Positions
+Displacement
+Validity Check
+Harris Corners
+Flow Field
+Occlusion Map
+So far, we computed for each frame
+
+The Harris corners which act as the starting position for tracking trajectories
+The flow fields which are used to compute the tracked to position during tracking
+And the occlusion map which tells us when to stop tracking a trajectory or even when and where to start new trajectories.
+
+now we are ready to discuss the actual trajectory tracking.
+
+Motion Trajectory Tracking
+Time
+Frame t
+Trajectories
+T1 = {(pt-3, pt-2, pt-1, pt), t-1}
+T1
+Frame t-3
+pt
+pt-3
+pt-2
+pt-1
+Trajectory
+Tracking a trajectory works as the follows:
+Any corner location that belongs to a certain frame is tracked to a position in its successor frame 
+by adding its corresponding Forward flow vector.
+This addition procedure is repeated until the trajectory gets either occluded or has reached the last video frame
+
+Therefore, a trajectory represents a spatial and temporal data structure 
+In particular, it contains a set of ordered image locations, 
+That reference the frames in which they were extracted from
+And an index to its starting frame.  
+
+In the following I explain one tracking iteration in detail
+
+.
+Motion Trajectory Tracking: Fetch Tracking Point
+p
+Frame t
+Initially we load the extracted harris corners.
+let us consider the corner at position p which lives in frame t
+
+Motion Trajectory Tracking: Tracked to position
+.
+tp
+p
+.
+v
+.
+v
+Flow Field
+Frame t
+To compute the tracked to position of p to its succor frame, we have to perform the following steps:
+First, we use p as the lookup coordinate in the forward flow field of frame t
+This gives us its corresponding forward flow vector v.
+Then, the tracked-to position tp is computed by adding the forward flow vector to the tracking point p.
+
+There are two possible outcomes: either, the tracked to position hits a occluded region or it doesn’t
+
+Motion Trajectory Tracking: Unoccluded Case
+.
+.
+tp
+p
+.
+v
+Occlusion Map
+Frame t
+In case a point was not occluded, 
+we append the computed tracked to position to the trajectory 
+and continue to track the next trajectory
+
+To check whether a point was tracked to an occluded region 
+We reference its corresponding occlusion map location.
+
+Here: tp was tracked to an unoccluded image location indicated 
+by a black pixel in the occlusion map at the position tp
+
+
+
+
+Motion Trajectory Tracking: Occluded Case
+.
+.
+tp
+.
+p
+v
+Occlusion Map
+Frame t
+However,  When tp lands on occluded region 
+we have to stop the tracking process of the trajectory
+
+Whenever a trajectory got occluded 
+this also means that a new moving object appeared.
+In that case a new trajectory has to be started in that occluded location
+
+This tracking algorithm is repeated for every corner and every dataset frame. 
+
+Trajectory Similarities
+How to compare trajectories in grouping?
+Pairwise similarities via handcrafted measure
+Combines spatial-, color-, motion distance
+
+Grouping becomes graph problem
+Until now we have extracted a series of trajectories, all having different lengths, starting- and ending positions.
+So, how can we compare the trajectories in order to group them?
+
+In our pipeline we compute pairwise similarities between trajectories according to a certain measure. 
+Their similarity values can then be used to build a similarity graph.
+Note that our similarity measure is handcrafted 
+and combines the spatial-color and motion difference between trajectories.
+
+Following this approach, the final trajectory grouping becomes then a graph cut problem.
+
+
+
+Comparing Trajectory Pair
+From the previously tracked trajectories, 
+we initially discard every trajectory that is shorter than a certain threshold.
+This will reduce the effect of noisy and invalid tracings. 
+From the remaining trajectories we form every possible pair combination
+For any pair (A,B) we compute the following distances between their temporal overlapping segments:
+
+
+===
+As the very first step, our pipeline loads the previously extracted trajectories into its memory. 
+Next, we discard every trajectory that is shorter than a certain threshold to reduce the effect of noisy and invalid tracings. 
+
+
+
+Spatial Distance
+AVG
+Using depths ⇒  3D points
+The spatial distance: 
+we assume that Trajectories that belong to the same object are usually spatially close to each other.
+We compute the l2 norm on the overlapping tracking points. 
+The average [K] of these distances gives us the spatial distance
+
+The spatial distance can either be computed on the given 2d tracking points 
+or on their transformed 3D versions generated by using the available depth measurements.
+
+Transformation to 3D points
+a
+Camera Matrix
+A
+Projection onto Image Plane:
+Image Point a = (x,y) 
+A =
+Pinhole Camera Model
+Let me briefly explain how to transform tracking points to 3d points:
+
+In the following, let us assume the pinhole camera model.
+
+Although this might look complicated, the idea of such a transformation is straight forward:
+To generate a 3d world point A from 2d pixel coordinates a
+We only have to apply the inverse camera matrix onto a
+By factoring out this multiplication we get the representation of A.
+
+Here: Z denotes the measured depths
+
+=====
+In order to transform 2d tracking points, which live in the image space
+We rely on the pinhole camera model.
+A 3d point A in homogeneous coordinates
+can be mapped onto the image space by apply the camera matrix
+This matrix defines a projection onto the image space using the focal lengths and principal points.
+
+Factoring out this matrix multiplication we get the identity for pixel coordinates.
+
+The inverse transformation of the camera matrix allows us compute 3d points 
+
+
+
+Color Distance
+AVG
+=> The color distance:
+Within a certain object region, associated trajectories are supposed to be tracked at locations that have a similar color values
+
+We compute the color distance between the overlapping tracking points. 
+To fetch the color values, we use the points as lookup positions on their corresponding frames.
+The actual distance is computed on cielab colors using the l2 norm.
+
+The final [K] color distance is the average between all these distances.
+
+=
+Using Cielab colors enables us to use the l2 norm in order to compute color distances.
+
+Motion Distance
+max
+Flow Difference
+And finally the motion distance:
+The rationale of this measure is to exploit the maximal dissimilarity of the two given trajectories via their maximal motion difference among all overlapping frames.
+
+Therefore, for every overlapping segment-point, we lookup its forward flow vector [K]
+And compute the distance [K] of the difference vector between the two forward flow vectors per segment.
+
+The maximum distances [K] gives us the motion distance between the trajectories A and B
+
+
+Distance Combination
+d(A,B)
+Product of distances (PD) [OB14b]
+
+Sum of distances (SD) [KB15b]
+Our pipeline supports two distance combination variant
+The product of distances and a weighted sum of distances.
+Both measures were originally formulated by other authors.
+
+Since we compute pairwise affinities we implicitly are assuming a translational motion model.
+However, any affine motion can be locally approximated by translation.
+Therefore, we have to penalize the case when the spatial distance between trajectories is large.
+
+In the PD combination, 
+this done by multiplying the spatial distance by the motion distance.
+
+In the SD combination, the weights are chosen such that:
+If the sum of the spatial or the color distance is large 
+then only the motion distances are considered
+
+
+
+
+
+
+Similarities in Similarity Graph
+A
+B
+Similarity Matrix W
+Similarity between two trajectories (A,B): 
+The final similarity between two trajectories is computed by 
+taking the negative exponential of their squared distance.
+this function yields values between zero and one
+
+The similarities between every trajectory pair yields a similarity matrix as shown on the left image.
+Here: a bright color indicates a high similarity and a dark color a low similarity
+
+How to group Trajectories?
+So far: similarity graph
+
+
+o1
+o2
+Moving objects
+Trajectories
+So far: similarity graph
+
+3 Clustering Methods: 
+SC, MC, KL
+
+
+So far we have compute similarities between all trajectories
+To do so, our pipeline offers 4 different measures:
+PD (product of distances) and SD (summed distances) 
+and their 3d versions when incorporating depths.
+
+So, how can we group the trajectories to obtain moving objects similar as shown in figure on the right?
+
+To answer this I will present you 3 different segmentation techniques: SC, MC and KL
+
+
+How to group Trajectories?
+So far: similarity graph
+
+3 clustering methods: 
+SC, MC, KL
+
+Common grouping technique: k-means clustering 
+⇒ What!?
+
+o1
+o2
+Moving objects
+Trajectories
+A general approach to group unstructured data is
+ to run k-mean clustering on the given data.
+
+The idea of the k-means clustering algorithm is to partition 
+Given data-points into $k$ clusters in which each data point belongs to the cluster with the nearest mean
+
+To emphasize this k-means concept let us consider the following example:
+
+
+K-means algorithm
+Given data points in R^2 
+We want to separate the data using 2 clusters
+
+K-means algorithm
+Initially, we choose 2 random cluster centers
+
+K-means algorithm
+Then, assign each data-point to its closest center.
+
+
+K-means algorithm
+next , Update cluster centers:  the mean of their data-points becomes the new center 
+
+K-means algorithm
+And repeat ….
+
+K-means algorithm
+...
+
+Graph Laplacian Matrix
+K-means only works with data in R^n
+
+How to embed trajectories into R^n?
+
+⇒ Transform Similarity graph Laplacian Matrix L
+
+The k-means algorithm can only cluster data embedded in R^n
+Ideally, we would like to use k-means to group our trajectories due to its simplicity.
+However, trajectories form a spatio-temporal graph structure. 
+Therefore we have to find a way to embed the trajectory in R^n
+
+A common way to represent a Graph is by its Laplacian matrix. 
+The Laplacian matrix is a special transformation of the similarity matrix
+and encodes information about connected components.
+
+AAAAND The best part of it is that such a laplacian forms an embedding in the real space
+
+Spectral Clustering (SC)
+Compute Laplacian Matrix L on W
+[V, Λ] = eigs(L)
+K-means on V_m
+V_m the m smallest eigenvectors
+V1
+V2
+This leads us to our first segmentation method, SC.
+
+The rationale of the spectral clustering algorithm is to change the abstract representation of the data points 
+Such as our trajectories
+to points in the n dim. Real space, which are easy to cluster using k-means
+
+The algorithm works as the follows: 
+first we decompose the Laplacian matrix $L$  of a similarity matrix
+into its eigenvalues and eigenvectors $V$ and then to run k-means on $V$. 
+For the actual k-means clustering we only use the smallest m eigenvectors.
+(k and m are provided by the user)
+
+A resulting segmentation is shown on the lower left.
+Additionally, the two smallest eigenvectors are visualized. 
+These eigenvector visualization already hint the segments
+
+==
+We conclude, SC performs a clustering of graph structures using their similarity value
+And the same time performs a dimensionality reduction.
+
+MinCut (MC)
+SC ⇒ Motion boundaries along smooth regions (1) 😓
+Find optimal trajectory cluster assignment 𝛑 for K clusters s.t. (1) ✅  ⇔ minimizing energy E taken from [TJ10]:
+Vp the p-th components of all eigenvectors
+𝛑p the segment assignment of the p-th trajectory
+𝜇kthe k-th cluster center
+Next, let me introduce the segmentation method Mincut (MC).
+
+Typically, eigenvectors show smooth transitions within a cluster region and more or less clear edges between regions. 
+Unfortunately, the k-means algorithm cannot properly deal with this setting.
+
+The energy from [TJ10] offers a solution to this problem.
+It gives us the optimal cluster assignment for a variable number of clusters
+And the same time addresses the issue from above.
+
+Its Data Term ensures that eigenvectors that separate more distinct clusters correspond to smaller eigenvalues.
+And its Smoothness Term penalizes the spatial boundaries between clusters: 
+if are boundaries within smooth areas this term is large otherwise small
+
+
+=====
+If there are clear discontinuities along cluster boundaries then this term is small
+And if are boundaries within a smooth areas it is large.
+due to smooth transitions in the eigenvectors.
+
+MinCut (MC)
+[TFM10] & [FVS09] ⇒ 
+Given: K, m, V
+Find: assignment (𝛑1,...,𝛑K)
+Initialize (𝛑1,...,𝛑K)
+Loop until convergence
+(𝞵1,...,𝞵K) ← K-Means((𝛑1,...,𝛑K), V_m, K)
+(𝛑1,...,𝛑K)← minCut((𝞵1,...,𝞵K), V_m, K)
+So, how do we optimize this energy?
+from the paper TFM10 we use the fact that By fixing the number of cluster $K$, 
+our energy optimization becomes a multi-label CRF optimization problem with unknown centroids.
+
+Furthermore, in FVS09 is shown that multi-label CRF problem can be solved via max-flows.
+Due to the max-flow-min-cut theorem, we can instead solve for the min cut.
+To solve the multi-mincut we used the GCMEX Matlab framework
+
+our optimization problem can then be solved iteratively.
+First, we fix the trajectory assignments (of the eigenvectors) and solve for the cluster centroids by running k-means. 
+Second, we fix the centroids by using the previously computed centers and optimize for the assignments by running mincut
+
+In addition, different iterative solutions are shown below.
+
+==
+Markov Chain Random Field = CRF
+For a given label, we fetch all eigenvectors that belong to that label and compute their centroid.
+
+
+
+
+Kernighan-Lin Graph Partitioning (KL)
+Separate vertices evenly with minimum edge cost
+
+Swap until optimal
+
+Pay to swap (a,b)
+
+
+b
+wab
+The last segmentation method we implemented is the Kernighan Lin (KL) Algorithm.
+The idea of this algorithm is to 
+Divide a weighted graph into 2 disjoint subgraphs of equal size
+such that the edge weights between the subgraphs is minimized
+To do so we
+start with some partition that satisfies the size requirement and repeatedly swap vertices between the partitions.
+
+Let us consider the graph on the right.
+When swapping two vertices (a,b) we have to pay for interchanging their internal and external vertices.
+the internal cost I of the vertex $a$ is the sum of weights between $a$ and its neighbors in $A$, 
+and the external cost E is the sum between its neighbors in $B$
+
+Therefore $KL$ optimizes for a series of vertex-swap operations between $A$ and $B$
+
+KL can be extended to partition n optimal subgraphs by Initially define n sets that are evenly sized
+And then apply the algorithm from before between every set pair until there is no improvement
+
+
+
+==
+
+Da + Db - 2wab
+
+Dense Segmentations
+Optionally, our pipeline allows to produce a dense motion segmentations from previously generated sparse segmentations.
+
+The idea is to interpret the sparse segmentation as an image with missing data due to its sparsity.
+In that case our initial problem becomes the problem of hole filling.
+
+An example is show on this slide.
+
+=====
+To solve this problem we formulate a Energy term consisting of a smoothness and data term.
+The data term ensures that the reconstructed image does not deviate too much from the given input
+ensures a smooth transition between the colors in the image
+
+We solved this optimization by formulating its primal-dual form and solving it iteratively.
+This energy basically produces a blur of the given segments.
+We did not perform any evaluation on the resulting segmentations.
+
+
+Pipeline Combinations
+4 Flow Methods: HS, LDOF, SRSF, LRGBD
+4 Similarity Measures: PD, PED, SD, SED
+3 Segmentation Techniques: SC, MC, KL
+We now have fully explain the relevant implementation details of our pipeline.
+
+In summary. We implemented 4 flow methods, 4 similarity measures and 3 segmentation techniques.
+
+The figure on this slides shows all available pipeline combinations.
+
+Remember, the abbreviation PD stands for product of distances,
+SD for summed distances, and PED and SED are their 3d versions 
+
+In the remaining slides I will present our experiments and results.
+
+Datasets
+
+RGB-D videos & GT images
+Expected Segments Count
+Diverse Scenes + Moving Camera
+
+In our experiments We use a diverse collection of datasets, 
+which include different types of motion, 
+show in-and outdoor scenes and are captured by a static or moving cameras
+
+every dataset consists of color and depth frames, camera calibrations, the number of estimated moving objects and certain gt moseg images.
+The gt images hand-drawn and segments reflect the painter's opinion about the present motion. 
+
+
+Methodology
+Evaluate sparse Segmentation on GT images.
+1.
+2.
+In our evaluation we want to quantitatively measure  the quality of segmentations 
+Produced by running different pipeline combinations.
+
+For a given segmentation image
+We iterate over all points in every cluster and compare them against an available ground image. 
+While doing so we count their true positives, false positives and their false negatives.
+From these measurements we compute the precision, recall and f1 scores
+
+The Precision tells us what rate of positive predictions were correct.
+And the recall What rate of the positive cases were found.
+The F1 score can be interpreted as a normalized weighted average 
+of the precision and recall. The best possible F1 score is equals 1 and its worst value is 0
+
+The final reported results are the average values of these measurement
+The exact definition of these measurements listed in this slide.
+
+===
+Precision: What percent of positive predictions were correct?
+Recall : What percent of the positive cases did we catch?
+
+
+
+
+
+
+Challenges
+Oversegmentation 😱
+
+
+Number of Combinations to evaluate 😱
+There two major challenges we have to address:
+First, our pipeline usually produces oversegmentations 
+And second the large amount of available pipeline combinations we have to evaluate.
+
+The Number of combinations can be reduced by rejecting weak pipeline combinations from further consideration.
+There are sophisticated heuristics to reduce oversegmentation. 
+However, in this thesis, we do not want to evaluate the quality of such a reduction step.
+Therefore, we merge segments directly onto their best matching ground truth segment.
+
+
+  
+
+Segment Merger
+Our segment merger requires a oversegmentation (as shown on the right) and its corresponding gt image (on the left).
+then , For every sample in a segment (such as the blue dots on the front car), we determine its intersecting gt label. 
+The gt label with the most intersections becomes then the new segment label
+By Repeating this procedure for every segment in the oversegmentation we get a result as shown on the lower right 
+
+
+Experiments
+8 Datasets
+Evaluation on:
+Optimal Parameters on DS
+Reject Flow methods
+Overall performance
+
+
+
+
+
+In our experiments we evaluated the segmentation quality of 8 datasets.
+In particular, 
+we determined the optimal pipeline parameter setup for these datasets,
+Examined our flow methods and rejected the weakest from further consideration and last
+Performed an overall evaluation on the remaining pipeline combinations on our datasets.
+
+The experiments were run on a machine with the following specs.
+In this talk i will discuss the examination of the flow methods and the overall performance experiment.
+
+
+
+Quality of Flow Methods: LRGBD
+⇒  LRGB produces poor flows
+In this first experiment we examined the quality of LRGBD flows.
+For this purpose we generated segmentations by Fixing the segmentation method and the affinity measure AND altered between the flow methods.
+The resulting evaluations are represented as bar chart. 
+As we can see, the LRGBD method yields poor segmentations.
+Therefore we drop LRGBD from further consideration
+
+
+Quality of Flow Methods: HS
+LDOF >> HS
+We performed a similar experiment by comparing HS against LDOF flows
+We found that LDOF flows produce significantly better results, both in 2d and 3d cases.
+Therefore, we drop HS flows from further considerations
+
+Overall Performance
+SRSF SED KL wins
+Finally, we Evaluated the remaining pipeline combinations on all our datasets.
+For each dataset segmentation we computed its precision, recall and f1 scores on the available gt frames
+In the following bar chart we illustrate the f1 scores together with the used method.
+
+From these results we can conclude, that our pipeline seems to produce reliable motion segmentations.
+Moreover, the combination SRSF SED KL is the clear winner
+This abbreviation stands for 
+semi-rigid scene flows using similarities based on summed distances with incorporated depths and running the Kernighan-Lin partitioning 
+
+In the following slides we use different visualizations of these results to detect more findings.
+
+LDOF vs SRSF
+SRSF > LDOF
+By Grouping results according to their (sim measure and segmentation method)
+We can compare the performance of the flow methods w.r.t. To their f1 score.
+From this bar chart we can conclude that using SRSF flows always produces better results
+Than LDOF.
+
+2D vs 3D
+3D > 2D
+In this visualization we Grouped the results according to their (flow method and segmentation method)
+This allows to check whether incorporating depths into the pipeline is beneficial.
+We observe that using depths always produces better segmentations
+
+SC vs MC
+MC > SC
+Finally we Grouped the results according to their (flow method and sim measure)
+This allows us to compare quality of the utilized segmentation methods.
+From the charts we conclude that 
+regardless of the used flow method and similarity measure, MinCut produces the best results
+
+Runtime Measurements
+Segmentation Methods
+⇒ 5k Trajectories, 10 Clusters:
+SC: ~3min
+MC: ~5min
+KL: ~4h
+Computing Similarity Matrix
+Finally, we ran some runtime measurements on several pipeline combinations
+Main observations
+LDOF runs faster than SRSF
+KL is very slow
+The runtime of computing similarities resembles a quadratic function
+
+Conclusion
+Implemented successful multistage Motion Segmentation 
+Heuristic pipeline stages
+Difficult to specify optimal parameters
+Incorporating depth is beneficial
+SRSF best flow method
+KL best segmentation method
+We’ve discussed a multistage Motion Segmentation pipeline that uses depths and optical flows
+This pipeline can successfully generate motion segmentations 
+However, Each pipeline stage is individually tuned. By tweaking them specifically, we can drastically improve the segmentations quality.
+In our experiments we found that
+Incorporating depth into our pipeline produces significant better segmentation results
+The best flow estimation method is SRSF, but it only runs on datasets having a certain resolution
+Finally, KL is the best segmentation method but the same is a very slow method. 
+
+Future Work
+Learning based parameter assignment
+
+Use a higher order motion model as in [PT12]
+
+Estimate depths from single image as described in [EPF14]
+Learning based parameter assignment
+Use a higher order motion model 
+Estimate depths from single image 
+
+Bibliography
+
+Thanks for your attendance
+Questions
+???
+
+Supplementary Material
+
+Dense Segmentations
+Optionally, our pipeline allows to produce a dense motion segmentations from previously generated sparse segmentations.
+
+The idea is to interpret the sparse segmentation as an image with missing data due to its sparsity.
+In that case our initial problem becomes the problem of hole filling.
+
+An example is show on this slide.
+
+=====
+To solve this problem we formulate a Energy term consisting of a smoothness and data term.
+The data term ensures that the reconstructed image does not deviate too much from the given input
+ensures a smooth transition between the colors in the image
+
+We solved this optimization by formulating its primal-dual form and solving it iteratively.
+This energy basically produces a blur of the given segments.
+We did not perform any evaluation on the resulting segmentations.
+
+
+2-Part. KL Algorithm
+
+Quality of Flow Methods: LRGBD
+⇒  LRGB produces poor flows
+In this first experiment we examined the quality of LRGBD flows.
+For this purpose we generated segmentations by Fixing the segmentation method and the affinity measure AND altered between the flow methods.
+The resulting evaluations are shown in the bar plot. As we can see, the LRGBD method yields poor segmentations.
+This is additionally shown in FIGURE…
+Therefore, we can drop it
+
+Pioneering work of H.S
+E(x, y, t) = E(x + u(x,y), y + v(x,y), t+1)
+Based on brightness consistancy and a smoothness term derived a solution to variational problem
+Mention problems
+
+Taylor-Approximation
+
+Flow Variance
+
+Computing The Flow Variance
+
+Harris Corner Detector
+Corner
+Edge
+Edge
+Flat Area
+1.
+2.
+3.
+No change in all directions
+No change along the edge direction
+Significant change in all directions
+
+Transformation to 3D points (1)
+a
+Camera Matrix
+A
+Projection onto Image Plane:
+a / Z = (x,y) := 
+A =
+Pinhole Camera Model
+In the following, let us assume the pinhole camera matrix.
+
+To generate a 3d world point A from 2d pixel coordinates a
+We only have to apply the inverse camera matrix onto a
+
+
+In order to transform 2d tracking points, which live in the image space
+We rely on the pinhole camera model.
+A 3d point A in homogeneous coordinates
+can be mapped onto the image space by apply the camera matrix
+This matrix defines a projection onto the image space using the focal lengths and principal points.
+
+Factoring out this matrix multiplication we get the identity for pixel coordinates.
+
+The inverse transformation of the camera matrix allows us compute 3d points 
+
+
+
+Transformation to 3d points (2)
+
+Motion Trajectory Tracking
+Time
+Frame t
+Trajectories
+Briefly state idea: track trajectories on features, until they get occluded.
+The tracking is performed by using the optical flows
+
+KL-Algorithm
+
+Raw vs Merged
+
+Varying number of clusters
+
+Varying number of clusters
+
+#CC ⇔ #EV 
+
+Optimal Lambda
+
+MinCut (MC)
+Issue (SC): motion boundaries along smooth regions
+Again use [V, Λ] = eigs(L)
+Minimize the following energy:
+Typically, eigenvectors show smooth transitions within a region and more or less clear edges between regions. 
+Unfortunately, the k-means algorithm cannot properly deal with this setting.
+
+To address this issue we the energy from [TJ10]  which
+avoids splitting clusters at arbitrary locations
+
+Data Term:ensures that eigenvectors \enquote{that separate more distinct clusters} correspond to smaller eigenvalues.
+Smoothness Term: penalizes the spatial boundaries between clusters: 
+It is very small when there are clear discontinuities along cluster boundaries 
+and it is large if there are boundaries within a smooth areas.
+
+=====
+due to smooth transitions in the eigenvectors.

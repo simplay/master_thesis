@@ -1,0 +1,112 @@
+srsf ped mc
+
+f20
+precission: 75.6458%
+recall: 100%
+F1 score: 86.1345%
+
+f30
+precission: 75.9511%
+recall: 100%
+F1 score: 86.332%
+
+f40
+precission: 72.6532%
+recall: 91.0783%
+F1 score: 80.829%
+
+
+srsf ped sc
+
+f20
+precission: 67.5427%
+recall: 70.0368%
+F1 score: 68.7671%
+
+f30
+precission: 75.8816%
+recall: 67.5152%
+F1 score: 71.4544%
+
+f40
+precission: 78.094%
+recall: 56.1541%
+F1 score: 65.3313%
+
+
+srsf pd mc
+
+f20
+precission: 80.6202%
+recall: 63.6199%
+F1 score: 71.1182%
+
+f30
+precission: 80.2%
+recall: 66.0023%
+F1 score: 72.4118%
+
+f40
+precission: 82.7843%
+recall: 71.1103%
+F1 score: 76.5045%
+
+
+ldof ped mc
+
+f20
+precission: 65.694%
+recall: 46.9782%
+F1 score: 54.7817%
+
+f30
+precission: 69.0632%
+recall: 68.9958%
+F1 score: 69.0295%
+
+f40
+precission: 69.0129%
+recall: 56.2052%
+F1 score: 61.954%
+
+
+ldof pd sc
+
+f20
+precission: 80.7158%
+recall: 23.353%
+F1 score: 36.2252%
+
+f30
+precission: 77.977%
+recall: 31.3594%
+F1 score: 44.73%
+
+f40
+precission: 71.9559%
+recall: 28.3304%
+F1 score: 40.6544%
+
+
+srsf sed kl
+
+84.6202
+recall: 94.24%
+
+
+
+===============
+
+T.Brox’s GraphCut
+
+f20
+precission: 10.7166%
+recall: 14.6847%
+
+f30
+precission: 25%
+recall: 20.9981%
+
+f40
+precission: 26.9471%
+recall: 20.0761%

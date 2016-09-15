@@ -1,0 +1,25 @@
+ldof
+pd, sc
+
+l 
+
+5
+density: 0.58724%
+precission: 99.697%
+recall: 57.9876%
+F1 score: 73.326%
+
+0.01
+density: 0.66829%
+precission: 91.0669%
+recall: 92.8458%
+F1 score: 91.9478%
+Fragmentation: 0.66667
+
+0.0001
+density: 0.6696%
+precission: 47.9064%
+recall: 49.6173%
+F1 score: 48.7469%
+Fragmentation: 0.66667
+
